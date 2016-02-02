@@ -3,6 +3,7 @@ X->ZZ->2l2nu Analysis Package
 
   Analysis package heavy resonnance search using X->ZZ->2l2nu final states.
  
+  For 76X analysis.
 
 Instructions for package development.
 ---------------------------------
@@ -10,9 +11,9 @@ Instructions for package development.
 1. Setup Environment
 
   ```
-  release=CMSSW_7_4_12_patch4
+  release=CMSSW_7_6_3_patch2
   tag=""
-  export SCRAM_ARCH=slc6_amd64_gcc491
+  export SCRAM_ARCH=slc6_amd64_gcc493
   alias cmsenv='eval `scramv1 runtime -sh`'
   alias cmsrel='scramv1 project CMSSW'
 
@@ -30,76 +31,114 @@ Instructions for package development.
 3. Add MMHY repository which contains the CMGTools/XZZ2l2nu package, and fetch it
 
   ```
-  git remote add mmhy https://github.com/MMHY/cmg-cmssw.git
+  git remote add mmhy https://github.com/mmhy/cmg-cmssw.git
   git fetch mmhy
   ```
 
-4. Configure the sparse checkout (to only checkout needed packages)
+4. Configure the sparse checkout (to only checkout needed packages), and check out only the Heppy framework
 
   ```
-  curl -O https://raw.githubusercontent.com/MMHY/cmg-cmssw/xzz2l2nu_v1/CMGTools/XZZ2l2nu/tools/sparse-checkout
+  curl -O https://raw.githubusercontent.com/mmhy/cmgtools-lite/xzz2l2nu_76x/XZZ2l2nu/tools/sparse-checkout
   mv sparse-checkout .git/info/sparse-checkout
+  git checkout -b xzz2l2nu_heppy_76X mmhy/xzz2l2nu_heppy_76X
   ```
 
-5. Checkout the CMGTools/XZZ2l2nu package, currently the main branch is xzz2l2nu_v1
-
-  ```
-  git checkout -b xzz2l2nu_v1 mmhy/xzz2l2nu_v1
-  ```
-
-6. Add your mirror (see https://twiki.cern.ch/twiki/bin/viewauth/CMS/CMGToolsGitMigration#Prerequisites )
+4.1. Optionally, you can store the Heppy branch into your own repository if you need to do some developement on the Heppy framework directly:
 
   ```
   git remote add origin https://github.com/<your own github name>/cmg-cmssw.git
+  git push origin xzz2l2nu_heppy_76X 
   ```
   Don't for get to replace "<your own github name>" with your own github user name.
 
- 
-7. Push the package CMGTools/XZZ2l2nu in the branch xzz2l2nu_v1 into your own github repository
+  Create a developement branch:
 
   ```
-  git push origin xzz2l2nu_v1
+  git checkout -b xzz2l2nu_heppy_76X_dev
   ```
 
-8. Make a copy of branch xzz2l2nu_v1 for your own developement, you can choose a branch name as you want, such as xzz2l2nu_v1_mydev
+  Do modifications, commit changes, and push to your own repository:
 
   ```
-  git checkout -b xzz2l2nu_v1_mydev
+  git commit -m 'message of the change' -a
+  git push origin xzz2l2nu_heppy_76X_dev
+  ```
+
+  To update the mmhy repository with your own Heppy framework developement, similar way is required as described in section 11 below. 
+
+  **If ever possible, please don't change the Heppy framework.**
+
+5. Checkout the CMGTools/XZZ2l2nu package, currently the main branch is xzz2l2nu_76x.
+
+  From 76x, the CMGTools is made as a standalone package. So we need to add repository separately:
+
+  ```
+  git clone -o mmhy https://github.com/mmhy/cmgtools-lite.git -b xzz2l2nu_76x CMGTools
+  ```
+
+6. Compile the package together with Heppy Framework:
+   Note, do this in CMSSWxxx/src instead of your CMSSWxxx/src/CMSTools/ directory.
+
+  ```
+  scram b -j 3
+  ```
+
+
+7. Add your repository, and store the main branch in your repository:
+
+  Note, do this in your CMSSWxxx/src/CMSTools/ directory, not the CMSSWxxx/src.
+  And, don't for get to replace "<your own github name>" with your own github user name.
+  ```
+  cd CMGTools
+  git remote add origin https://github.com/<your own github name>/cmgtools-lite.git
+  git push origin xzz2l2nu_76x
+  ```
+
+
+8. Make a copy of branch xzz2l2nu_76x for your own developement, you can choose a branch name as you want, such as xzz2l2nu_76x_dev
+
+  Note, do this in your CMSSWxxx/src/CMSTools/ directory, not the CMSSWxxx/src.
+  ```
+  git checkout -b xzz2l2nu_76x_dev
   ```
 
 9. Please frequently commit your changes and push your development branch to your own repository
 
+  Note, do this in your CMSSWxxx/src/CMSTools/ directory, not the CMSSWxxx/src.
   ```
   git commit -m 'describe your change here.' -a
-  git push origin xzz2l2nu_v1_mydev
+  git push origin xzz2l2nu_76x_dev
   ```
 
 
-10. Once your developement is done, you can update the central branch xzz2l2nu_v1 with a Pull Request. Steps below:
+10. Once your developement is done, you can update the central branch xzz2l2nu_76x with a Pull Request. Steps below:
 
-  * Update the branch xzz2l2nu_v1 in your local repository with others developements on mmhy
+  Note, do all following in your CMSSWxxx/src/CMSTools/ directory, not the CMSSWxxx/src.
+
+  * Update the branch xzz2l2nu_76x in your local repository with others developements on mmhy
     ```
-    git checkout xzz2l2nu_v1
+    git checkout xzz2l2nu_76x
     git fetch mmhy 
     ```
 
-  * Rebased your development branch to the head of xzz2l2nu_v1, and update it in your own repository
+  * Rebased your development branch to the head of xzz2l2nu_76x, and update it in your own repository
     ```
-    git checkout xzz2l2nu_v1_mydev
-    git merge xzz2l2nu_v1
-    git push origin xzz2l2nu_v1_mydev
+    git checkout xzz2l2nu_76x_dev
+    git merge xzz2l2nu_76x
+    git push origin xzz2l2nu_76x_dev
     ```
 
-11. Make a PR from branch xzz2l2nu_v1_mydev in your own respository to branch xzz2l2nu_v1 in MMHY respository to let others cross-check your changes. Once looks good, merge it.
+11. Make a PR from branch xzz2l2nu_76x_dev in your own respository to branch xzz2l2nu_76x in MMHY respository to let others cross-check your changes. Once looks good, merge it.
 
   The PR can be created on the webpage of your own repository:
 
-      https://github.com/<your own github name>/cmg-cmssw/tree/xzz2l2nu_v1_mydev
+      https://github.com/<your own github name>/cmgtools-lite/tree/xzz2l2nu_76x_dev
 
-  E.g. A PR from hengne's xzz2l2nu_v1_mydev branch to MMHY's xzz2l2nu_v1 will look like this in the following link:
+  E.g. A PR from hengne's xzz2l2nu_76x_dev branch to MMHY's xzz2l2nu_76x will look like this in the following link:
 
-      https://github.com/MMHY/cmg-cmssw/compare/xzz2l2nu_v1...hengne:xzz2l2nu_v1_mydev  
+      https://github.com/mmhy/cmgtools-lite/compare/xzz2l2nu_76x...hengne:xzz2l2nu_76x_dev  
 
-  **Let's make it a rule here: Please always let other collabrators to view and sign your PR before merging it, even if you have the permission to do it all by yourself.**
+
+**Let's make it a rule here: Please always let other collabrators to view and sign your PR before merging it, even if you have the permission to do it all by yourself.**
   
 
