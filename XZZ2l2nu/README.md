@@ -8,6 +8,16 @@ X->ZZ->2l2nu Analysis Package
 Instructions for package development.
 ---------------------------------
 
+0. Fork the following two repositories into your own github directory if you didn't do this before:
+
+   Note: do this on the webpage, just click the links below and find the "Fork" button on the webpage.
+
+   The Heppy Framework:
+   https://github.com/mmhy/cmg-cmssw.git
+
+   The analysis package:
+   https://github.com/mmhy/cmgtools-lite.git
+
 1. Setup Environment
 
   ```
@@ -43,7 +53,9 @@ Instructions for package development.
   git checkout -b xzz2l2nu_heppy_76X mmhy/xzz2l2nu_heppy_76X
   ```
 
-4.1. Optionally, you can store the Heppy branch into your own repository if you need to do some developement on the Heppy framework directly:
+  [below is not need for everyday life.]
+
+  Optionally, you can store the Heppy branch into your own repository if you need to do some developement on the Heppy framework directly:
 
   ```
   git remote add origin https://github.com/<your own github name>/cmg-cmssw.git
