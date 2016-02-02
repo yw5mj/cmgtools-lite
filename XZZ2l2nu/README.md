@@ -8,7 +8,7 @@ X->ZZ->2l2nu Analysis Package
 Instructions for package development.
 ---------------------------------
 
-0. Fork the following two repositories into your own github directory if you didn't do this before:
+1. Fork the following two repositories into your own github directory if you didn't do this before:
 
    Note: do this on the webpage, just click the links below and find the "Fork" button on the webpage.
 
@@ -18,7 +18,7 @@ Instructions for package development.
    The analysis package:
    https://github.com/mmhy/cmgtools-lite.git
 
-1. Setup Environment
+2. Setup Environment
 
   ```
   release=CMSSW_7_6_3_patch2
@@ -32,20 +32,20 @@ Instructions for package development.
   cmsenv
   ```
 
-2. Create empty repository (with the cmssw trick to keep the repository small)
+3. Create empty repository (with the cmssw trick to keep the repository small)
 
   ```
   git cms-init
   ```
 
-3. Add MMHY repository which contains the CMGTools/XZZ2l2nu package, and fetch it
+4. Add MMHY repository which contains the CMGTools/XZZ2l2nu package, and fetch it
 
   ```
   git remote add mmhy https://github.com/mmhy/cmg-cmssw.git
   git fetch mmhy
   ```
 
-4. Configure the sparse checkout (to only checkout needed packages), and check out only the Heppy framework
+5. Configure the sparse checkout (to only checkout needed packages), and check out only the Heppy framework
 
   ```
   curl -O https://raw.githubusercontent.com/mmhy/cmgtools-lite/xzz2l2nu_76x/XZZ2l2nu/tools/sparse-checkout
@@ -53,7 +53,7 @@ Instructions for package development.
   git checkout -b xzz2l2nu_heppy_76X mmhy/xzz2l2nu_heppy_76X
   ```
 
-  [below is not need for everyday life.]
+  [the rest in this section is not need for everyday life.]
 
   Optionally, you can store the Heppy branch into your own repository if you need to do some developement on the Heppy framework directly:
 
@@ -76,11 +76,11 @@ Instructions for package development.
   git push origin xzz2l2nu_heppy_76X_dev
   ```
 
-  To update the mmhy repository with your own Heppy framework developement, similar way is required as described in section 11 below. 
+  To update the mmhy repository with your own Heppy framework developement, similar way is required as described in section 12 below. 
 
   **If ever possible, please don't change the Heppy framework.**
 
-5. Checkout the CMGTools/XZZ2l2nu package, currently the main branch is xzz2l2nu_76x.
+6. Checkout the CMGTools/XZZ2l2nu package, currently the main branch is xzz2l2nu_76x.
 
   From 76x, the CMGTools is made as a standalone package. So we need to add repository separately:
 
@@ -88,7 +88,7 @@ Instructions for package development.
   git clone -o mmhy https://github.com/mmhy/cmgtools-lite.git -b xzz2l2nu_76x CMGTools
   ```
 
-6. Compile the package together with Heppy Framework:
+7. Compile the package together with Heppy Framework:
    Note, do this in CMSSWxxx/src instead of your CMSSWxxx/src/CMSTools/ directory.
 
   ```
@@ -96,7 +96,7 @@ Instructions for package development.
   ```
 
 
-7. Add your repository, and store the main branch in your repository:
+8. Add your repository, and store the main branch in your repository:
 
   Note, do this in your CMSSWxxx/src/CMSTools/ directory, not the CMSSWxxx/src.
   And, don't for get to replace "<your own github name>" with your own github user name.
@@ -107,14 +107,14 @@ Instructions for package development.
   ```
 
 
-8. Make a copy of branch xzz2l2nu_76x for your own developement, you can choose a branch name as you want, such as xzz2l2nu_76x_dev
+9. Make a copy of branch xzz2l2nu_76x for your own developement, you can choose a branch name as you want, such as xzz2l2nu_76x_dev
 
   Note, do this in your CMSSWxxx/src/CMSTools/ directory, not the CMSSWxxx/src.
   ```
   git checkout -b xzz2l2nu_76x_dev
   ```
 
-9. Please frequently commit your changes and push your development branch to your own repository
+10. Please frequently commit your changes and push your development branch to your own repository
 
   Note, do this in your CMSSWxxx/src/CMSTools/ directory, not the CMSSWxxx/src.
   ```
@@ -123,7 +123,7 @@ Instructions for package development.
   ```
 
 
-10. Once your developement is done, you can update the central branch xzz2l2nu_76x with a Pull Request. Steps below:
+11. Once your developement is done, you can update the central branch xzz2l2nu_76x with a Pull Request. Steps below:
 
   Note, do all following in your CMSSWxxx/src/CMSTools/ directory, not the CMSSWxxx/src.
 
@@ -140,7 +140,7 @@ Instructions for package development.
     git push origin xzz2l2nu_76x_dev
     ```
 
-11. Make a PR from branch xzz2l2nu_76x_dev in your own respository to branch xzz2l2nu_76x in MMHY respository to let others cross-check your changes. Once looks good, merge it.
+12. Make a PR from branch xzz2l2nu_76x_dev in your own respository to branch xzz2l2nu_76x in MMHY respository to let others cross-check your changes. Once looks good, merge it.
 
   The PR can be created on the webpage of your own repository:
 
