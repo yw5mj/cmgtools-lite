@@ -139,3 +139,32 @@ MuonEG_Run2015B_05Oct         = kreator.makeDataComponent("MuonEG_Run2015B_05Oct
 DoubleMuon_Run2015B_05Oct     = kreator.makeDataComponent("DoubleMuon_Run2015B_05Oct"    , "/DoubleMuon/Run2015B-05Oct2015-v1/MINIAOD"    , "CMS", ".*root", json)
 
 
+
+### ----------------------------- Run2015C_25ns-16Dec2015  ----------------------------------------
+## https://cmsweb.cern.ch/das/request?view=list&limit=50&instance=prod%2Fglobal&input=dataset+dataset%3D%2F*%2F*2015C_25ns*16Dec2015*%2F*+status%3D*
+
+JetHT_Run2015C_25ns_16Dec          = kreator.makeDataComponent("JetHT_Run2015C_25ns_16Dec"         , "/JetHT/Run2015C_25ns-16Dec2015-v1/MINIAOD"         , "CMS", ".*root", json)
+HTMHT_Run2015C_25ns_16Dec          = kreator.makeDataComponent("HTMHT_Run2015C_25ns_16Dec"         , "/HTMHT/Run2015C_25ns-16Dec2015-v1/MINIAOD"         , "CMS", ".*root", json)
+MET_Run2015C_25ns_16Dec            = kreator.makeDataComponent("MET_Run2015C_25ns_16Dec"           , "/MET/Run2015C_25ns-16Dec2015-v1/MINIAOD"           , "CMS", ".*root", json)
+SingleElectron_Run2015C_25ns_16Dec = kreator.makeDataComponent("SingleElectron_Run2015C_25ns_16Dec", "/SingleElectron/Run2015C_25ns-16Dec2015-v1/MINIAOD", "CMS", ".*root", json)
+SingleMuon_Run2015C_25ns_16Dec     = kreator.makeDataComponent("SingleMuon_Run2015C_25ns_16Dec"    , "/SingleMuon/Run2015C_25ns-16Dec2015-v1/MINIAOD"    , "CMS", ".*root", json)
+SinglePhoton_Run2015C_25ns_16Dec   = kreator.makeDataComponent("SinglePhoton_Run2015C_25ns_16Dec"  , "/SinglePhoton/Run2015C_25ns-16Dec2015-v1/MINIAOD"  , "CMS", ".*root", json)
+DoubleEG_Run2015C_25ns_16Dec       = kreator.makeDataComponent("DoubleEG_Run2015C_25ns_16Dec"      , "/DoubleEG/Run2015C_25ns-16Dec2015-v1/MINIAOD"      , "CMS", ".*root", json)
+MuonEG_Run2015C_25ns_16Dec         = kreator.makeDataComponent("MuonEG_Run2015C_25ns_16Dec"        , "/MuonEG/Run2015C_25ns-16Dec2015-v1/MINIAOD"        , "CMS", ".*root", json)
+DoubleMuon_Run2015C_25ns_16Dec     = kreator.makeDataComponent("DoubleMuon_Run2015C_25ns_16Dec"    , "/DoubleMuon/Run2015C_25ns-16Dec2015-v1/MINIAOD"    , "CMS", ".*root", json)
+
+
+### ----------------------------- Run2015D-16Dec2015 ----------------------------------------
+## https://cmsweb.cern.ch/das/request?view=list&limit=50&instance=prod%2Fglobal&input=dataset+dataset%3D%2F*%2F*2015D*16Dec2015*%2F*+status%3D*
+
+JetHT_Run2015D_16Dec          = kreator.makeDataComponent("JetHT_Run2015D_16Dec"         , "/JetHT/Run2015D-16Dec2015-v1/MINIAOD"         , "CMS", ".*root", json)
+HTMHT_Run2015D_16Dec          = kreator.makeDataComponent("HTMHT_Run2015D_16Dec"         , "/HTMHT/Run2015D-16Dec2015-v1/MINIAOD"         , "CMS", ".*root", json)
+MET_Run2015D_16Dec            = kreator.makeDataComponent("MET_Run2015D_16Dec"           , "/MET/Run2015D-16Dec2015-v1/MINIAOD"           , "CMS", ".*root", json)
+SingleElectron_Run2015D_16Dec = kreator.makeDataComponent("SingleElectron_Run2015D_16Dec", "/SingleElectron/Run2015D-16Dec2015-v1/MINIAOD", "CMS", ".*root", json)
+SingleMuon_Run2015D_16Dec     = kreator.makeDataComponent("SingleMuon_Run2015D_16Dec"    , "/SingleMuon/Run2015D-16Dec2015-v1/MINIAOD"    , "CMS", ".*root", json)
+SinglePhoton_Run2015D_16Dec   = kreator.makeDataComponent("SinglePhoton_Run2015D_16Dec"  , "/SinglePhoton/Run2015D-16Dec2015-v1/MINIAOD"  , "CMS", ".*root", json)
+DoubleEG_Run2015D_16Dec       = kreator.makeDataComponent("DoubleEG_Run2015D_16Dec"      , "/DoubleEG/Run2015D-16Dec2015-v2/MINIAOD"      , "CMS", ".*root", json)
+MuonEG_Run2015D_16Dec         = kreator.makeDataComponent("MuonEG_Run2015D_16Dec"        , "/MuonEG/Run2015D-16Dec2015-v1/MINIAOD"        , "CMS", ".*root", json)
+DoubleMuon_Run2015D_16Dec     = kreator.makeDataComponent("DoubleMuon_Run2015D_16Dec"    , "/DoubleMuon/Run2015D-16Dec2015-v1/MINIAOD"    , "CMS", ".*root", json)
+
+
