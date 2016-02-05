@@ -93,8 +93,8 @@ otherMcSamples = bulkJetsSamples
 
 # data
 SingleMuon=[SingleMuon_Run2015C_25ns_16Dec,SingleMuon_Run2015D_16Dec]
-SingleElectron=[SingleElectron_Run2015D_25ns_16Dec,SingleElectron_Run2015D_16Dec]
-SinglePhoton=[SinglePhoton_Run2015D_25ns_16Dec,SinglePhoton_Run2015D_16Dec]
+SingleElectron=[SingleElectron_Run2015C_25ns_16Dec,SingleElectron_Run2015D_16Dec]
+SinglePhoton=[SinglePhoton_Run2015C_25ns_16Dec,SinglePhoton_Run2015D_16Dec]
 
 for s in SingleMuon:
     s.triggers = triggers_1mu_noniso

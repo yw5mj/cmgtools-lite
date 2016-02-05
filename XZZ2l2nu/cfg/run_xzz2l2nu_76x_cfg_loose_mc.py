@@ -12,7 +12,7 @@ from PhysicsTools.HeppyCore.framework.heppy_loop import getHeppyOption
 from CMGTools.XZZ2l2nu.analyzers.coreXZZ_cff import *
 
 #-------- SAMPLES AND TRIGGERS -----------
-from CMGTools.XZZ2l2nu.samples.loadSamples import *
+from CMGTools.XZZ2l2nu.samples.loadSamples76x import *
 selectedComponents = mcSamples+dataSamples
 
 triggerFlagsAna.triggerBits ={
