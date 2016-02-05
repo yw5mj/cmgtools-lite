@@ -6,9 +6,9 @@ import PhysicsTools.HeppyCore.framework.config as cfg
 import os
 
 # Load backgrounds
-from CMGTools.XZZ2l2nu.samples.samples_13TeV_RunIISpring15MiniAODv2 import *
+from CMGTools.XZZ2l2nu.samples.samples_13TeV_RunIIFall15MiniAODv2 import *
 # Load signals
-from CMGTools.XZZ2l2nu.samples.samples_13TeV_signal import *
+from CMGTools.XZZ2l2nu.samples.samples_13TeV_signal76X import *
 # Load Data 
 from CMGTools.XZZ2l2nu.samples.samples_13TeV_DATA2015 import *
 # Load triggers
@@ -26,8 +26,8 @@ WZ,
 ZZ,
 DYJetsToLL_M50,
 WJetsToLNu,
-TT_pow,
-TTLep_pow,
+TT,
+TTTo2L2Nu,
 ZZTo2L2Nu,
 ZZTo4L,
 ZZTo2L2Q,
@@ -43,7 +43,7 @@ TTWJetsToLNu,
 
 # signals
 signalSamples = [
-#RSGravToZZToZZinv_narrow_600,
+RSGravToZZToZZinv_narrow_600,
 RSGravToZZToZZinv_narrow_800,
 RSGravToZZToZZinv_narrow_1000,
 RSGravToZZToZZinv_narrow_1200,

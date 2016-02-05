@@ -7,3 +7,8 @@ and a brief python script for making the MC pileup input file is provided here w
 
 More information can be found here: 
 https://twiki.cern.ch/twiki/bin/view/Sandbox/Xzz2l2nuStudy
+
+76X MC:
+mcpileup76x.py
+pileup76x.eps/pdf shows the MC and data pileup profiles.
+ 
