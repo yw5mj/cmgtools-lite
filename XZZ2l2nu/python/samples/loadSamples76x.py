@@ -122,7 +122,7 @@ for comp in mcSamples+otherMcSamples:
     comp.isMC = True
     comp.isData = False
     comp.splitFactor = 250
-    comp.puFileMC=dataDir+"/pileup_MC.root"
+    comp.puFileMC=dataDir+"/pileup_MC_76x.root"
     comp.puFileData=dataDir+"/pileup_DATA.root"
     comp.efficiency = eff2012
     comp.triggers=triggers_1mu_noniso+triggers_1e_noniso
