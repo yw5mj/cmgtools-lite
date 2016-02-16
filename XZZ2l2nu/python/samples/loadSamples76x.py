@@ -70,7 +70,8 @@ RSGravToZZToZZinv_narrow_4500,
 ]
 
 # mc samples
-mcSamples = signalSamples + backgroundSamples
+#mcSamples = signalSamples + backgroundSamples
+mcSamples = backgroundSamples
 
 # other mc samples
 bulkJetsSamples = [
@@ -109,8 +110,10 @@ for s in SinglePhoton:
 dataSamples=SingleMuon+SingleElectron
 
 # JSON
-silverJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt'
-goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt'
+# https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2015Analysis#ReReco_at_25_ns
+# note, but the golden one doesn't change wrt. the prompt reco one as expected. 
+silverJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_Silver.txt'
+goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON.txt'
 
 jsonFile = goldenJson
 
