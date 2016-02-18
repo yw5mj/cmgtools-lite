@@ -66,6 +66,23 @@ def GetRatioHist(h1, hstack,blinding=False,blindingCut=100):
     hratio.GetXaxis().SetTitle('')
     hratio.GetYaxis().SetTitle('Data/MC')
     hratio.GetYaxis().SetRangeUser(0.0,2.0)
+    hratio.GetXaxis().SetLabelFont(42)
+    hratio.GetXaxis().SetLabelOffset(0.007)
+    hratio.GetXaxis().SetLabelSize(0.1)
+    hratio.GetXaxis().SetTitleSize(0.05)
+    hratio.GetXaxis().SetTitleOffset(1.15)
+    hratio.GetXaxis().SetTitleFont(42)
+    hratio.GetYaxis().SetLabelFont(42)
+    hratio.GetYaxis().SetLabelOffset(0.01)
+    hratio.GetYaxis().SetLabelSize(0.06)
+    hratio.GetYaxis().SetTitleSize(0.12)
+    hratio.GetYaxis().SetTitleOffset(0.5)
+    hratio.GetYaxis().SetTitleFont(42)
+    hratio.GetZaxis().SetLabelFont(42)
+    hratio.GetZaxis().SetLabelOffset(0.007)
+    hratio.GetZaxis().SetLabelSize(0.045)
+    hratio.GetZaxis().SetTitleSize(0.05)
+    hratio.GetZaxis().SetTitleFont(42)
 
     return hratio
 
@@ -93,15 +110,17 @@ class StackPlotter(object):
     def drawStack(self,var,cut,lumi,bins,mini,maxi,titlex = "", units = "", output = 'out.eps', separateSignal=False, blinding=False, blindingCut=100.0):
 
         c1 = ROOT.TCanvas("c1", "c1", 600, 750); c1.Draw()
-        c1.SetWindowSize(600 + (600 - c1.GetWw()), (750 + (750 - c1.GetWh())));
-        p1 = ROOT.TPad("pad1","pad1",0,0.2,1,0.99);
-        p1.SetBottomMargin(0.15);
-        p1.Draw();
-        p2 = ROOT.TPad("pad2","pad2",0,0,1,0.2);
-        p2.SetTopMargin(0.03);
-        p2.SetBottomMargin(0.3);
-        p2.SetFillStyle(0);
-        p2.Draw();
+        c1.SetWindowSize(600 + (600 - c1.GetWw()), (750 + (750 - c1.GetWh())))
+        p1 = ROOT.TPad("pad1","pad1",0,0.25,1,0.99)
+        p1.SetBottomMargin(0.15)
+        p1.SetLeftMargin(0.15)
+        p1.Draw()
+        p2 = ROOT.TPad("pad2","pad2",0,0,1,0.25)
+        p2.SetTopMargin(0.03)
+        p2.SetBottomMargin(0.3)
+        p2.SetLeftMargin(0.15)
+        p2.SetFillStyle(0)
+        p2.Draw()
 
         ROOT.gStyle.SetOptStat(0)
         ROOT.gStyle.SetOptTitle(0)
@@ -236,8 +255,9 @@ class StackPlotter(object):
         legend.Draw()
         if self.log:
             p1.SetLogy()
-        p1.SetLeftMargin(p1.GetLeftMargin()*1.15)
+        #p1.SetLeftMargin(p1.GetLeftMargin()*1.15)
         p1.Update()
+        p2.Update()
         c1.Update()
 
 
@@ -268,16 +288,19 @@ class StackPlotter(object):
 	pt.Draw()   
         
 
-#        latex1 = ROOT.TLatex(frame.GetXaxis().GetXmin()*1.01,frame.GetYaxis().GetXmax()*1.01,'CMS Preliminary 2011-2012, #sqrt{s} = 7+8 TeV')
-#        latex1.SetTextSize(0.037)
-#        latex1.Draw()
-
         if self.doRatioPlot:
             hratio = GetRatioHist(dataH,stack,blinding, blindingCut)
+            hline = hratio.Clone("hline")
+            for ii in range(hline.GetNbinsX()+1): 
+                hline.SetBinContent(ii,1.0)
+                hline.SetBinError(ii,0.0)
+            hline.SetLineColor(ROOT.kRed)
+            hline.SetFillStyle(0)
             p2.cd()
-            hratio.Draw('P')
-            #line1 = ROOT.TLine()
-            #line1.DrawLineNDC(0,0.1,1,0.1)
+            hratio.Draw('AXIS')
+            hline.Draw('HIST,SAME')
+            hratio.Draw('P,SAME')
+                
 
         plot={'canvas':c1,'stack':stack,'legend':legend,'data':dataH,'dataG':dataG,'latex1':pt}
         if separateSignal and len(signalHs)>0:
