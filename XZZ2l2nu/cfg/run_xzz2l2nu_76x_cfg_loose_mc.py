@@ -67,7 +67,7 @@ if test==1:
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
     #selectedComponents = [DYJetsToLL_M50_Ext]
     #selectedComponents = [WWToLNuQQ, WZTo1L1Nu2Q, WZTo2L2Q, ZZTo2L2Nu]
-    selectedComponents = [ZZTo2L2Nu]
+    selectedComponents = [ZZTo2L2Nu,DYJetsToLL_M50]
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
