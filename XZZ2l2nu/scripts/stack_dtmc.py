@@ -247,7 +247,7 @@ if DrawLeptons:
 
 
 # merge all output plots into one pdf file
-os.system('convert '+tag+'*.pdf '+tag+'.pdf')
+os.system('gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile='+tag+'.pdf '+tag+'*.eps')
 print 'All plots merged in single pdf file '+tag+'.pdf .'
 
 
