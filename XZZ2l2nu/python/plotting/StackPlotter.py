@@ -181,7 +181,7 @@ class StackPlotter(object):
                 dataG.SetLineWidth(1)
                 print label+" : %f\n" % hist.Integral()
                 
-       
+ 
         #if data not found plot stack only
 
         if dataH != None:                  
@@ -301,6 +301,38 @@ class StackPlotter(object):
             hline.Draw('HIST,SAME')
             hratio.Draw('P,SAME')
                 
+
+        # blinding mask 
+        if blinding : 
+            hmask_data = dataH.Clone("hmask_data")
+            for ibb in range(hmask_data.GetNbinsX()+1): 
+                if hmask_data.GetBinCenter(ibb)<=blindingCut: 
+                    hmask_data.SetBinContent(ibb,-100)
+                    hmask_data.SetBinError(ibb,0)
+                else:
+                    hmask_data.SetBinContent(ibb,1e100)
+                    hmask_data.SetBinError(ibb,0)
+            hmask_data.SetFillStyle(3002)
+            hmask_data.SetFillColor(36)
+            hmask_data.SetLineStyle(6)
+            hmask_data.SetLineColor(16)
+            p1.cd()
+            hmask_data.Draw("HIST,SAME")
+
+            hmask_ratio = hratio.Clone("hmask_ratio")
+            for ibb in range(hmask_ratio.GetNbinsX()+1):
+                if hmask_ratio.GetBinCenter(ibb)<=blindingCut:
+                    hmask_ratio.SetBinContent(ibb,-100)
+                    hmask_ratio.SetBinError(ibb,0)
+                else:
+                    hmask_ratio.SetBinContent(ibb,1e100)
+                    hmask_ratio.SetBinError(ibb,0)
+            hmask_ratio.SetFillStyle(3002)
+            hmask_ratio.SetFillColor(36)
+            hmask_ratio.SetLineStyle(6)
+            hmask_ratio.SetLineColor(16)
+            p2.cd()
+            hmask_ratio.Draw("HIST,SAME")
 
         plot={'canvas':c1,'stack':stack,'legend':legend,'data':dataH,'dataG':dataG,'latex1':pt}
         if separateSignal and len(signalHs)>0:

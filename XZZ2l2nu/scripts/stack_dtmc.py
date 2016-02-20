@@ -6,10 +6,10 @@ from CMGTools.XZZ2l2nu.plotting.TreePlotter import TreePlotter
 from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
-cutChain='loosecut'
+#cutChain='loosecut'
 #cutChain='tightzpt100'
 #cutChain='tightzpt100met100'
-#cutChain='tightzpt100met100dphi'
+cutChain='tightzpt100met100dphi'
 #cutChain='tightmet250dphi'
 
 outdir='plots'
@@ -183,7 +183,7 @@ Stack.doRatio(doRatio)
 
 Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 60, 0.0, 1200.0, titlex = "M_{T}", units = "GeV",output=tag+'out_mt_stack.eps',separateSignal=sepSig,blinding=Blind,blindingCut=300)
 Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 150, 0.0, 3000.0, titlex = "M_{T}", units = "GeV",output=tag+'out_mt_high_stack.eps',separateSignal=sepSig,blinding=Blind,blindingCut=300)
-#Stack.drawStack('llnunu_l1_mass', cuts, str(lumi*1000), 50, 50, 150, titlex = "M(Z)", units = "GeV",output=tag+'out_zmass_stack.eps',separateSignal=sepSig)
+Stack.drawStack('llnunu_l1_mass', cuts, str(lumi*1000), 50, 50, 150, titlex = "M(Z)", units = "GeV",output=tag+'out_zmass_stack.eps',separateSignal=sepSig)
 Stack.drawStack('met_pt', cuts, str(lumi*1000), 100, 0, 1000, titlex = "MET", units = "GeV",output=tag+'out_met_stack.eps',separateSignal=sepSig,blinding=Blind,blindingCut=100)
 Stack.drawStack('met_pt', cuts, str(lumi*1000), 50, 0, 500, titlex = "MET", units = "GeV",output=tag+'out_met_low_stack.eps',separateSignal=sepSig,blinding=Blind,blindingCut=100)
 Stack.drawStack('met_pt', cuts, str(lumi*1000), 150, 0, 1500, titlex = "MET", units = "GeV",output=tag+'out_met_high_stack.eps',separateSignal=sepSig,blinding=Blind,blindingCut=100)
@@ -247,6 +247,7 @@ if DrawLeptons:
 
 
 # merge all output plots into one pdf file
+#os.system('convert '+tag+'*.pdf '+tag+'.pdf')
 os.system('gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile='+tag+'.pdf '+tag+'*.eps')
 print 'All plots merged in single pdf file '+tag+'.pdf .'
 
