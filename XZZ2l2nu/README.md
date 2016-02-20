@@ -154,3 +154,74 @@ Instructions for package development.
 **Let's make it a rule here: Please always let other collabrators to view and sign your PR before merging it, even if you have the permission to do it all by yourself.**
   
 
+Instruction to run jobs 
+---------------------------------
+
+1. run single job interactively
+
+ Example configuration files are in cfg/ folder, e.g.
+  
+  ```
+  heppy mc_test run_xzz2l2nu_76x_cfg_loose_mc.py
+  ```
+ this will run config file run_xzz2l2nu_76x_cfg_loose_mc.py and output to directory mc_test
+
+
+2. run batch jobs on lsf
+
+  Example scripts to submit lsf batch jobs are:
+  ```
+    cfg/loose_lsf_dt/sub_xzz2l2nu_76x_cfg_loose_dt.sh 
+    cfg/loose_lsf_mc/sub_xzz2l2nu_76x_cfg_loose_mc.sh 
+  ```
+  for data and mc respectively.
+
+  LSF jobs can only be submitted on lxplus, your local machine doesn't work. 
+
+  One can then go to the output directory ('LSF/' in above example) to check the status:
+  ```
+   heppy_check.py *
+  ```
+
+  If you see some jobs are finished but not showing the results here, you can resub the jobs by running:
+  ```
+   heppy_check.py * -b 'bsub -q 8nh'
+  ```
+  which will resub the jobs with missing outputs.
+
+  Once the jobs are all done, you can merge the outputs by running:
+  ```
+   heppy_hadd.py .
+  ```
+  this will collect all "Chunk"s of one sample and merge them into one folder.
+
+
+Instruction to run jobs 
+---------------------------------
+  
+  A ready to use automated scripts is provided:
+  ```
+   scripts/stack_dtmc.py
+  ```
+  In side you can see some pre-configured cutChains:
+  ```
+    cutChain='loosecut'
+    #cutChain='tightzpt100'
+    #cutChain='tightzpt100met100'
+    #cutChain='tightzpt100met100dphi'
+    #cutChain='tightmet250dphi'
+  ```
+  you can find the definition of these cutChains in the codes. 
+
+  To draw the plots, un-comment the one you want to use, such as the "loosecut", and run:
+  ```
+   ./stack_dtmc.py 
+  ```
+  This will read the root trees I have put at:
+  ```
+   /afs/cern.ch/work/h/heli/public/XZZ/76X/
+  ```
+  and draw all the plots, which will then store in sub-directory "plots/".
+
+  All plots are merged into one single .pdf file, such as "plots/loosecut_log_.pdf"
+
