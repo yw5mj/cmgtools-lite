@@ -196,7 +196,7 @@ Instruction to run jobs
   this will collect all "Chunk"s of one sample and merge them into one folder.
 
 
-Instruction to run jobs 
+Instruction to draw plots 
 ---------------------------------
   
   A ready to use automated scripts is provided:
