@@ -11,4 +11,6 @@ https://twiki.cern.ch/twiki/bin/view/Sandbox/Xzz2l2nuStudy
 76X MC:
 mcpileup76x.py
 pileup76x.eps/pdf shows the MC and data pileup profiles.
+
+pileupCalc.py -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON.txt --inputLumiJSON  /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/pileup_JSON_11-19-2015.txt --calcMode true --minBiasXsec 69400 --maxPileupBin 52 --numPileupBins 52  pileup_DATA_76x.root
  

@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 from ROOT import *
+gROOT.ProcessLine('.x tdrstyle.C')
 
+lumi=2.169126704526
 #pileup pdf from:  https://github.com/cms-sw/cmssw/blob/CMSSW_7_6_3/SimGeneral/MixingModule/python/mix_2015_25ns_FallMC_matchData_PoissonOOTPU_cfi.py
 pdf = [0.000108643,
                 0.000388957,
@@ -55,31 +57,54 @@ pdf = [0.000108643,
                 1.433e-08, 
                 0.0, 0.0, 0.0]
 
-fdt=TFile('../../data/pileup_DATA.root')
+fdt=TFile('pileup_DATA_76x.root')
 pileup_dt = fdt.Get('pileup')
-scl=pileup_dt.Integral()
-fmc=TFile('pileup_MC.root','recreate')
+pileup_dt.Scale(1.0/pileup_dt.Integral())
+fmc=TFile('pileup_MC_76x.root','recreate')
 pileup_mc=TH1F('pileup','pileup',52,0,52)
 pileup_mc.Sumw2()
 for i in range(52):    pileup_mc.SetBinContent(i+1,pdf[i])
-pileup_mc.Scale(scl/pileup_mc.Integral())
+pileup_mc.Scale(1.0/pileup_mc.Integral())
 gStyle.SetStatStyle(0)
 pileup_dt.SetStats(0)
 pileup_mc.SetStats(0)
 
-c1 = TCanvas("c1","c1")
+c1 = TCanvas("c1","c1",600,600)
+c1.SetLeftMargin(0.15)
+c1.SetBottomMargin(0.15)
+
 pileup_dt.SetLineColor(kRed)
 pileup_dt.SetMarkerColor(kRed)
 pileup_dt.SetMarkerStyle(20)
+pileup_dt.GetXaxis().SetTitle('N pileup')
+pileup_dt.GetYaxis().SetTitle('Norm.')
 pileup_mc.SetLineColor(kBlue)
 pileup_mc.SetMarkerColor(kBlue)
 pileup_mc.SetMarkerStyle(20)
+pileup_mc.SetLineWidth(2)
+pileup_mc.GetXaxis().SetTitle('N pileup')
+pileup_mc.GetYaxis().SetTitle('Norm.')
+
+pileup_mc.GetYaxis().SetTitleOffset(1.5)
+pileup_dt.GetYaxis().SetTitleOffset(1.5)
 lg = TLegend(0.6,0.7,0.85,0.85)
 lg.AddEntry(pileup_dt, "Data", "pl")
 lg.AddEntry(pileup_mc, "MC", "pl")
+
+pt = TPaveText(0.1577181,0.9562937,0.9580537,0.9947552,"brNDC")
+pt.SetBorderSize(0)
+pt.SetTextAlign(12)
+pt.SetFillStyle(0)
+pt.SetTextFont(42)
+pt.SetTextSize(0.03)
+text = pt.AddText(0.15,0.3,"CMS Preliminary")
+text = pt.AddText(0.55,0.3,"#sqrt{s} = 13 TeV, L = "+"{:.3}".format(float(lumi))+" fb^{-1}")
+
+
 pileup_dt.Draw()
-pileup_mc.Draw("same")
+pileup_mc.Draw("HIST,SAME")
 lg.Draw("same")
+pt.Draw()
 c1.SaveAs("pileup76x.eps")
 c1.SaveAs("pileup76x.pdf")
 
