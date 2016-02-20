@@ -40,4 +40,30 @@ BrZinv = 0.200 #PDG value
 for mass in masses:
   print mass,"{:.5e}".format(BulkGXsec[mass]*BrZll*BrZinv*2.0)
 
+#print latex table
+
+def latex_float(f):
+    float_str = "{0:.3e}".format(f)
+    if "e" in float_str:
+        base, exponent = float_str.split("e")
+        return r"${0} \times 10^{{{1}}}$".format(base, int(exponent))
+    else:
+        return float_str
+
+
+print '\\begin{table}[htdp]'
+print '\\caption{BulkGrav$\\rightarrow$ZZ$\\rightarrow ll\\nu\\nu$ cross-sections.}'
+print '\\begin{center}'
+print '\\begin{tabular}{c c}'
+print '\\hline'
+print 'mass points (GeV) & cross-section (pb$^{-1}$) \\\\'
+print '\\hline'
+for mass in masses:
+  print str(mass)+" & "+latex_float(BulkGXsec[mass]*BrZll*BrZinv*2.0)+" \\\\"
+print '\\hline'
+print '\\end{tabular}'
+print '\\end{center}'
+print '\\label{default}'
+print '\\end{table}'
+
 
