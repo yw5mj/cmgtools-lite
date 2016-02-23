@@ -3,7 +3,7 @@
 from ROOT import *
 gROOT.ProcessLine('.x tdrstyle.C')
 
-lumi=2.169126704526
+lumi=76.6
 #pileup pdf from:  https://github.com/cms-sw/cmssw/blob/CMSSW_7_6_3/SimGeneral/MixingModule/python/mix_2015_25ns_FallMC_matchData_PoissonOOTPU_cfi.py
 pdf = [0.000108643,
                 0.000388957,
@@ -57,10 +57,11 @@ pdf = [0.000108643,
                 1.433e-08, 
                 0.0, 0.0, 0.0]
 
-fdt=TFile('pileup_DATA_76x.root')
+fdt=TFile('pileup_DATA_76x_50ns.root')
 pileup_dt = fdt.Get('pileup')
 pileup_dt.Scale(1.0/pileup_dt.Integral())
-fmc=TFile('pileup_MC_76x.root','recreate')
+# still save 25ns mc pileup, but data/mc ratio take the 50ns data
+fmc=TFile('pileup_MC_76x_50ns.root','recreate')
 pileup_mc=TH1F('pileup','pileup',52,0,52)
 pileup_mc.Sumw2()
 for i in range(52):    pileup_mc.SetBinContent(i+1,pdf[i])
@@ -88,8 +89,8 @@ pileup_mc.GetYaxis().SetTitle('Norm.')
 pileup_mc.GetYaxis().SetTitleOffset(1.5)
 pileup_dt.GetYaxis().SetTitleOffset(1.5)
 lg = TLegend(0.6,0.7,0.85,0.85)
-lg.AddEntry(pileup_dt, "Data", "pl")
-lg.AddEntry(pileup_mc, "MC", "pl")
+lg.AddEntry(pileup_dt, "Data 50ns", "pl")
+lg.AddEntry(pileup_mc, "MC 25ns", "pl")
 
 pt = TPaveText(0.1577181,0.9562937,0.9580537,0.9947552,"brNDC")
 pt.SetBorderSize(0)
@@ -98,23 +99,25 @@ pt.SetFillStyle(0)
 pt.SetTextFont(42)
 pt.SetTextSize(0.03)
 text = pt.AddText(0.15,0.3,"CMS Preliminary")
-text = pt.AddText(0.55,0.3,"#sqrt{s} = 13 TeV, L = "+"{:.3}".format(float(lumi))+" fb^{-1}")
+text = pt.AddText(0.55,0.3,"#sqrt{s} = 13 TeV, L = "+"{:.3}".format(float(lumi))+" pb^{-1}")
 
+pileup_dt.SetMaximum(pileup_mc.GetBinContent(pileup_mc.GetMaximumBin())*1.2)
 
 pileup_dt.Draw()
 pileup_mc.Draw("HIST,SAME")
 lg.Draw("same")
 pt.Draw()
-c1.SaveAs("pileup76x.eps")
-c1.SaveAs("pileup76x.pdf")
+c1.SaveAs("pileup76x50ns.eps")
+c1.SaveAs("pileup76x50ns.pdf")
 
 
 # ratio
 puweight = pileup_dt.Clone("puweight")
 puweight.Divide(pileup_mc)
 puweight.GetYaxis().SetTitle("PU Weight")
-lg1 = TLegend(0.36,0.7,0.85,0.85)
-lg1.AddEntry(puweight, "Data/MC 2015 C+D 25ns", "pl")
+lg1 = TLegend(0.56,0.7,0.85,0.85)
+lg1.AddEntry(puweight, "Data/MC ", "pl")
+lg1.AddEntry(puweight, "2015 B+C 50ns", "")
 
 c2 = TCanvas("c2","c2",600,600)
 c2.SetLeftMargin(0.15)
@@ -122,8 +125,8 @@ c2.SetBottomMargin(0.15)
 puweight.Draw()
 lg1.Draw()
 pt.Draw()
-c2.SaveAs("puweight76x.eps")
-c2.SaveAs("puweight76x.pdf")
+c2.SaveAs("puweight76x50ns.eps")
+c2.SaveAs("puweight76x50ns.pdf")
 
 # print ratio 
 puwts = [puweight.GetBinContent(i) for i in range(52)]
