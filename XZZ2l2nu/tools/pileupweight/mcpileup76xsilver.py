@@ -62,7 +62,7 @@ pdf = [0.000108643,
 fdt=TFile('pileup_DATA_76x_25ns_silver_50ns.root')
 pileup_dt = fdt.Get('pileup')
 pileup_dt.Scale(1.0/pileup_dt.Integral())
-fmc=TFile('pileup_MC_76x_50ns_25ns_silver.root','recreate')
+fmc=TFile('pileup_MC_Data_76x_50ns_25ns_silver.root','recreate')
 pileup_mc=TH1F('pileup','pileup',52,0,52)
 pileup_mc.Sumw2()
 for i in range(52):    pileup_mc.SetBinContent(i+1,pdf[i])
@@ -131,9 +131,14 @@ c2.SaveAs("puweight76x50ns25nsSilver.eps")
 c2.SaveAs("puweight76x50ns25nsSilver.pdf")
 
 # print ratio 
-puwts = [puweight.GetBinContent(i) for i in range(52)]
+puwts = [puweight.GetBinContent(i+1) for i in range(52)]
 print puwts
+#for wt in puwts:
+#    print '       '+str(wt)+','
 
-pileup_mc.Write()
+
+
+pileup_mc.Write("pileup_mc")
+pileup_dt.Write("pileup_dt")
 puweight.Write()
 fmc.Close()

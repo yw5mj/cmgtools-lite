@@ -126,7 +126,7 @@ c2.SaveAs("puweight76x.eps")
 c2.SaveAs("puweight76x.pdf")
 
 # print ratio 
-puwts = [puweight.GetBinContent(i) for i in range(52)]
+puwts = [puweight.GetBinContent(i+1) for i in range(52)]
 print puwts
 
 pileup_mc.Write()

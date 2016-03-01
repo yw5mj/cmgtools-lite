@@ -2,7 +2,7 @@
 
 #total xsec:
 # https://github.com/acarvalh/Cross_sections_CMS/blob/master/WED/bulk_KKgrav_LHC13.txt
-masses = [800,1000,1200,1400,2000,2500,3000]
+masses = [600,800,1000,1200,2000,2500]
 BulkGXsec = {200:5.649417401247585,
 260:1.9429371431011526,
 300:1.0684873854214705,

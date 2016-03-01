@@ -44,54 +44,22 @@ TTWJetsToLNu,
 
 # signals
 signalSamples = [
-RSGravToZZToZZinv_narrow_600,
-RSGravToZZToZZinv_narrow_800,
-RSGravToZZToZZinv_narrow_1000,
-RSGravToZZToZZinv_narrow_1200,
-RSGravToZZToZZinv_narrow_1400,
-RSGravToZZToZZinv_narrow_1600,
-RSGravToZZToZZinv_narrow_2000,
-RSGravToZZToZZinv_narrow_2500,
-RSGravToZZToZZinv_narrow_3000,
-RSGravToZZToZZinv_narrow_3500,
-RSGravToZZToZZinv_narrow_4500,
-#BulkGravToZZ_narrow_600,
-#BulkGravToZZ_narrow_800,
-#BulkGravToZZ_narrow_1000,
-#BulkGravToZZ_narrow_1200,
-#BulkGravToZZ_narrow_1400,
-#BulkGravToZZ_narrow_1600,
-#BulkGravToZZ_narrow_1800,
-#BulkGravToZZ_narrow_2000,
-#BulkGravToZZ_narrow_2500,
-#BulkGravToZZ_narrow_3000,
-#BulkGravToZZ_narrow_3500,
-#BulkGravToZZ_narrow_4000,
-#BulkGravToZZ_narrow_4500,
+BulkGravToZZToZlepZinv_narrow_600,
+BulkGravToZZToZlepZinv_narrow_800,
+BulkGravToZZToZlepZinv_narrow_1000,
+BulkGravToZZToZlepZinv_narrow_1200,
+BulkGravToZZToZlepZinv_narrow_1800,
+BulkGravToZZToZlepZinv_narrow_2000,
+BulkGravToZZToZlepZinv_narrow_2500,
+BulkGravToZZToZlepZinv_narrow_3500,
+BulkGravToZZToZlepZinv_narrow_4000,
 ]
 
 # mc samples
-#mcSamples = signalSamples + backgroundSamples
-mcSamples = backgroundSamples
+mcSamples = signalSamples + backgroundSamples
+#mcSamples = backgroundSamples
 
-# other mc samples
-bulkJetsSamples = [
-BulkGravToZZToZlepZhad_narrow_600,
-BulkGravToZZToZlepZhad_narrow_800,
-BulkGravToZZToZlepZhad_narrow_1000,
-BulkGravToZZToZlepZhad_narrow_1200,
-BulkGravToZZToZlepZhad_narrow_1400,
-BulkGravToZZToZlepZhad_narrow_1600,
-BulkGravToZZToZlepZhad_narrow_1800,
-BulkGravToZZToZlepZhad_narrow_2000,
-BulkGravToZZToZlepZhad_narrow_2500,
-BulkGravToZZToZlepZhad_narrow_3000,
-BulkGravToZZToZlepZhad_narrow_3500,
-BulkGravToZZToZlepZhad_narrow_4000,
-BulkGravToZZToZlepZhad_narrow_4500,
-]
 
-otherMcSamples = bulkJetsSamples
 
 # data
 SingleMuon=[SingleMuon_Run2015C_25ns_16Dec,SingleMuon_Run2015D_16Dec]
@@ -122,7 +90,7 @@ jsonFile = goldenJson
 from CMGTools.XZZ2l2nu.setup.Efficiencies import *
 dataDir = "$CMSSW_BASE/src/CMGTools/XZZ2l2nu/data"
 
-for comp in mcSamples+otherMcSamples:
+for comp in mcSamples: #+otherMcSamples:
     comp.isMC = True
     comp.isData = False
     comp.splitFactor = 250
