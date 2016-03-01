@@ -120,26 +120,20 @@ TT.setFillProperties(1001,ROOT.kAzure-9)
 
 sigPlotters=[]
 sigSamples = [
-'RSGravToZZToZZinv_narrow_M-800', 
-'RSGravToZZToZZinv_narrow_M-1000', 
-'RSGravToZZToZZinv_narrow_M-1200', 
-#'RSGravToZZToZZinv_narrow_M-1400', 
-#'RSGravToZZToZZinv_narrow_M-2000',
+'BulkGravToZZToZlepZinv_narrow_800', 
+'BulkGravToZZToZlepZinv_narrow_1000', 
+'BulkGravToZZToZlepZinv_narrow_1200', 
 ]
 k=1000
 sigSampleNames = [
 str(k)+' x BulkG-800',
 str(k)+' x BulkG-1000',
 str(k)+' x BulkG-1200',
-#str(k)+' x BulkG-1400',
-#str(k)+' x BulkG-2000',
 ]
 sigXsec = {
-'RSGravToZZToZZinv_narrow_M-800'  : 4.42472e-04*k,
-'RSGravToZZToZZinv_narrow_M-1000' : 1.33926e-04*k,
-'RSGravToZZToZZinv_narrow_M-1200' : 4.76544e-05*k,
-#'RSGravToZZToZZinv_narrow_M-1400' : 1.89392e-05*k,
-#'RSGravToZZToZZinv_narrow_M-2000' : 1.83514e-06*k,
+'BulkGravToZZToZlepZinv_narrow_800'  : 4.42472e-04*k,
+'BulkGravToZZToZlepZinv_narrow_1000' : 1.33926e-04*k,
+'BulkGravToZZToZlepZinv_narrow_1200' : 4.76544e-05*k,
 }
 
 for sample in sigSamples:
