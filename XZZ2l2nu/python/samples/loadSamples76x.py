@@ -55,7 +55,23 @@ BulkGravToZZToZlepZinv_narrow_3500,
 BulkGravToZZToZlepZinv_narrow_4000,
 ]
 
+BulkGravToZZToZlepZhad = [
+BulkGravToZZToZlepZhad_narrow_600,
+BulkGravToZZToZlepZhad_narrow_800,
+BulkGravToZZToZlepZhad_narrow_1000,
+BulkGravToZZToZlepZhad_narrow_1200,
+BulkGravToZZToZlepZhad_narrow_1400,
+BulkGravToZZToZlepZhad_narrow_1600,
+BulkGravToZZToZlepZhad_narrow_1800,
+BulkGravToZZToZlepZhad_narrow_2000,
+BulkGravToZZToZlepZhad_narrow_2500,
+BulkGravToZZToZlepZhad_narrow_3000,
+BulkGravToZZToZlepZhad_narrow_3500,
+BulkGravToZZToZlepZhad_narrow_4000,
+BulkGravToZZToZlepZhad_narrow_4500,
+]
 # mc samples
+otherMcSamples=BulkGravToZZToZlepZhad
 mcSamples = signalSamples + backgroundSamples
 #mcSamples = backgroundSamples
 
@@ -90,7 +106,7 @@ jsonFile = goldenJson
 from CMGTools.XZZ2l2nu.setup.Efficiencies import *
 dataDir = "$CMSSW_BASE/src/CMGTools/XZZ2l2nu/data"
 
-for comp in mcSamples: #+otherMcSamples:
+for comp in mcSamples+otherMcSamples:
     comp.isMC = True
     comp.isData = False
     comp.splitFactor = 250
