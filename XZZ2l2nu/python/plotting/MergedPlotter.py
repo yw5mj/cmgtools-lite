@@ -27,7 +27,8 @@ class MergedPlotter(PlotterBase):
         h.SetFillStyle(self.fillstyle)
         h.SetFillColor(self.fillcolor)
         h.SetMarkerStyle(self.markerstyle)
-        h.GetXaxis().SetTitle(titlex+ " ["+units+"]")
+        h.GetXaxis().SetTitle(titlex)
+        if units != '': h.GetXaxis().SetTitle(titlex+ " ("+units+")")
         return h
 
     def drawTH2(self,var,cuts,lumi,binsx,minx,maxx,binsy,miny,maxy,titlex = "",unitsx = "",titley = "",unitsy = "",drawStyle = "COLZ"):
@@ -44,8 +45,10 @@ class MergedPlotter(PlotterBase):
         h.SetFillStyle(self.fillstyle)
         h.SetFillColor(self.fillcolor)
         h.SetMarkerStyle(self.markerstyle)
-        h.GetXaxis().SetTitle(titlex+ " ["+unitsx+"]")
-        h.GetYaxis().SetTitle(titley+ " ["+unitsy+"]")
+        h.GetXaxis().SetTitle(titlex)
+        if unitsx != '' : h.GetXaxis().SetTitle(titlex+ " ("+unitsx+")")
+        h.GetYaxis().SetTitle(titley)
+        if unitsy != '' : h.GetYaxis().SetTitle(titley+ " ("+unitsy+")")
         return h
 
 
