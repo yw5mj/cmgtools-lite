@@ -120,16 +120,22 @@ class XZZGenLep( Analyzer ):
           else: 
               raise RuntimeError,  "Unsupported value for ele_effectiveAreas: can only use Data2012 (rho: ?), Phys14_v1 and Spring15_v1 (rho: fixedGridRhoFastjetAll)"
 
-        # calculate miniIso
+        # calculate miniIso and relisoea
         for ele in allelectrons:
             self.attachMiniIsolation(ele)
+            ele.relIsoea03=ele.absIsoWithFSR(0.3)/ele.pt()
+            if abs(ele.physObj.superCluster().eta())<1.479:
+                ele.looseiso=True if ele.relIsoea03<0.0893 else False
+            else:
+                ele.looseiso=True if ele.relIsoea03<0.121 else False
             ele.xdaughter=self.checkgen(ele)
         # Attach the vertex
         for ele in allelectrons:
             ele.associatedVertex = event.goodVertices[0] if len(event.goodVertices)>0 else event.vertices[0]
 
-        # define electron ID
+        # define electron ID and loose id no iso
         for ele in allelectrons:
+            ele.loose_nonISO=ele.electronID("POG_Cuts_ID_full5x5_SPRING15_25ns_v1_Loose")
             ele.heepV60_noISO_EB = ele.pt()>35.0 \
                          and abs(ele.superCluster().eta())<1.4442 \
                          and abs(ele.deltaEtaSeedClusterTrackAtVtx())<0.004 \
