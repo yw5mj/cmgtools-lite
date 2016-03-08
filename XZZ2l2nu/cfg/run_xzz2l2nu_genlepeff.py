@@ -21,6 +21,7 @@ genLep=cfg.Analyzer(
     packedCandidates = 'packedPFCandidates',
     rhoMuon= 'fixedGridRhoFastjetCentralNeutral',
     rhoElectron = 'fixedGridRhoFastjetCentralNeutral',
+#    rhoElectron = 'fixedGridRhoFastjetAll',
     mu_isoCorr = "rhoArea" ,
     ele_isoCorr = "rhoArea" ,
     mu_effectiveAreas = "Spring15_25ns_v1", 
@@ -30,9 +31,21 @@ genLep=cfg.Analyzer(
                                      # Choose None to just use the individual object's PU correction
     )
 
-leptonType.variables.extend([
+leptonType = NTupleObjectType("lepton", baseObjectTypes = [ particleType ], variables = [
+    NTupleVariable("charge",   lambda x : x.charge(), int),
+    # Impact parameter
+    NTupleVariable("dxy",   lambda x : x.dxy(), help="d_{xy} with respect to PV, in cm (with sign)"),
+    NTupleVariable("dz",    lambda x : x.dz() , help="d_{z} with respect to PV, in cm (with sign)"),
+    NTupleVariable("edxy",  lambda x : x.edB(), help="#sigma(d_{xy}) with respect to PV, in cm"),
+    NTupleVariable("edz",   lambda x : x.edz(), help="#sigma(d_{z}) with respect to PV, in cm"),
+    NTupleVariable("ip3d",  lambda x : x.ip3D() , help="d_{3d} with respect to PV, in cm (absolute value)"),
+    # Conversion rejection
+    NTupleVariable("miniRelIso",  lambda x : x.miniRelIso if hasattr(x,'miniRelIso') else  -999, help="PF Rel miniRel, pile-up corrected"),
+    # id and iso
+    NTupleVariable("heepV60_noISO",  lambda x : x.heepV60_noISO if hasattr(x,'heepV60_noISO') else  -999, help="heepV60_noISO"),
+    NTupleVariable("highPtID",  lambda x : x.highPtID if hasattr(x,'highPtID') else  -999, help="highPtID"),
+    NTupleVariable("trackerHighPtID",  lambda x : x.trackerHighPtID if hasattr(x,'trackerHighPtID') else  -999, help="trackerHighPtID"),
     NTupleVariable("isfromX", lambda x : x.xdaughter if hasattr(x,'xdaughter') else -100, help="is from X"),
-#    NTupleVariable("isprobe", lambda x : x.isprobe if hasattr(x,'isprobe') else -100, help="is probe lepton"),
     # Extra isolation variables
     NTupleVariable("chargedHadRelIso03",  lambda x : x.chargedHadronIsoR(0.3)/x.pt(), help="PF Rel Iso, R=0.3, charged hadrons only"),
     NTupleVariable("chargedHadRelIso04",  lambda x : x.chargedHadronIsoR(0.4)/x.pt(), help="PF Rel Iso, R=0.4, charged hadrons only"),
@@ -41,9 +54,10 @@ leptonType.variables.extend([
     NTupleVariable("pfMuonId",   lambda x : x.muonID("POG_ID_Loose") if abs(x.pdgId())==13 else -999, int, help="Muon POG Loose id"),
     # Extra electron ID working points
     NTupleVariable("looseelectron",   lambda x : x.physObj.electronID("cutBasedElectronID-Spring15-25ns-V1-standalone-loose") if abs(x.pdgId())==11 else -999, int, help="electron POG Loose id"),
+    NTupleVariable("eSCeta",   lambda x : x.physObj.superCluster().eta() if abs(x.pdgId())==11 else -999, float, help="electron SC eta"),
     NTupleVariable("looseelectronnoiso",   lambda x : x.loose_nonISO if abs(x.pdgId())==11 else -999, int, help="electron POG Loose id no iso"),
-    NTupleVariable("looseisoelectron",   lambda x : x.looseiso if abs(x.pdgId())==11 else -999, int, help="electron POG Loose id default iso"),
-    NTupleVariable("electronrelIsoea03",   lambda x : x.relIsoea03 if abs(x.pdgId())==11 else -999, float, help="electron relisoea03"),
+#    NTupleVariable("looseisoelectron",   lambda x : x.looseiso if abs(x.pdgId())==11 else -999, int, help="electron POG Loose id default iso"),
+#    NTupleVariable("electronrelIsoea03",   lambda x : x.relIsoea03 if abs(x.pdgId())==11 else -999, float, help="electron relisoea03"),
     NTupleVariable("eleCutId2012_full5x5",     lambda x : (1*x.electronID("POG_Cuts_ID_2012_full5x5_Veto") + 1*x.electronID("POG_Cuts_ID_2012_full5x5_Loose") + 1*x.electronID("POG_Cuts_ID_2012_full5x5_Medium") + 1*x.electronID("POG_Cuts_ID_2012_full5x5_Tight")) if abs(x.pdgId()) == 11 else -999, int, help="Electron cut-based id (POG 2012, full5x5 shapes): 0=none, 1=veto, 2=loose, 3=medium, 4=tight"),
     # Extra muon ID variables
     NTupleVariable("nStations",    lambda lepton : lepton.numberOfMatchedStations() if abs(lepton.pdgId()) == 13 else 4, help="Number of matched muons stations (4 for electrons)"),
@@ -80,8 +94,8 @@ sequence = [
 test = 1
 if test==1:
     # test a single component, using a single thread.
-    #selectedComponents = [BulkGravToZZToZlepZhad_narrow_1600]
-    selectedComponents = BulkGravToZZToZlepZhad
+    selectedComponents = [BulkGravToZZToZlepZhad_narrow_1600]
+    #selectedComponents = BulkGravToZZToZlepZhad
     #selectedComponents = [JetHT_Run2015D_Promptv4,JetHT_Run2015D_05Oct]
     #selectedComponents = [SingleMuon_Run2015D_05Oct]
     #selectedComponents = mcSamples
