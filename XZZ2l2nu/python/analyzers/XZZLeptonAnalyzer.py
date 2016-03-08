@@ -34,8 +34,12 @@ class XZZLeptonAnalyzer( Analyzer ):
         self.handles['rhoEleMiniIso'] = AutoHandle( self.cfg_ana.rhoElectronMiniIso, 'double')
         #rho for electron pfIso
         self.handles['rhoElePfIso'] = AutoHandle( self.cfg_ana.rhoElectronPfIso, 'double')
-        # use miniISO
-        self.applyMiniIso = getattr(self.cfg_ana, 'applyMiniIso', True)
+        # use ISO
+        self.applyIso = getattr(self.cfg_ana, 'applyIso', True)
+        # electronIDVersion
+        self.electronIDVersion = getattr(self.cfg_ana, 'electronIDVersion', 'looseID') # can be looseID or HEEPv6
+        # electronIsoVersion
+        self.electronIsoVersion = getattr(self.cfg_ana, 'electronIsoVersiin', 'pfISO') # can be pfISO or miniISO
 
         # effective area
         self.ele_effectiveAreas = getattr(self.cfg_ana, 'ele_effectiveAreas', "Spring15_25ns_v1")
@@ -102,16 +106,16 @@ class XZZLeptonAnalyzer( Analyzer ):
         for mu in allmuons:
             if (mu.highPtID or mu.trackerHighPtID ):
                 self.n_mu_passId += 1
-                if (self.applyMiniIso and mu.miniRelIso<0.2):
+                if (self.applyIso and mu.miniRelIso<0.2):
                     event.selectedLeptons.append(mu)
                     event.selectedMuons.append(mu)
                     self.n_mu_passIso += 1
             else:
                 event.otherLeptons.append(mu)
         for ele in allelectrons:
-            if (ele.heepV60_noISO):
+            if ( (self.electronIDVersion=='HEEPv6' and ele.heepV60_noISO) or (self.electronIDVersion=='looseID' and ele.loose_nonISO)):
                 self.n_el_passId += 1
-                if (self.applyMiniIso and ele.miniRelIso<0.1):
+                if (self.applyIso and ((self.electronIsoVersion=='miniISO' and ele.miniRelIso<0.1) or (self.electronIsoVersion=='pfISO' and ele.looseiso)) ):
                     event.selectedLeptons.append(ele)
                     event.selectedElectrons.append(ele)
                     self.n_el_passIso += 1
@@ -351,7 +355,9 @@ setattr(XZZLeptonAnalyzer,"defaultConfig",cfg.Analyzer(
     rhoMuon= 'fixedGridRhoFastjetCentralNeutral',
     rhoElectronMiniIso = 'fixedGridRhoFastjetCentralNeutral',
     rhoElectronPfIso = 'fixedGridRhoFastjetAll',
-    applyMiniIso = True,
+    electronIDVersion = 'looseID', # can bee looseID or HEEPv6
+    applyIso = True,
+    electronIsoVersion = 'pfISO', # can be pfISO or miniISO
     mu_isoCorr = "rhoArea" ,
     ele_isoCorr = "rhoArea" ,
     mu_effectiveAreas = "Spring15_25ns_v1", 
