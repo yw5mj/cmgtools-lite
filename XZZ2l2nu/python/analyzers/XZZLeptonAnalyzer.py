@@ -31,9 +31,15 @@ class XZZLeptonAnalyzer( Analyzer ):
         #rho for muons
         self.handles['rhoMu'] = AutoHandle( self.cfg_ana.rhoMuon, 'double')
         #rho for electrons
-        self.handles['rhoEle'] = AutoHandle( self.cfg_ana.rhoElectron, 'double')
-        # use miniISO
-        self.applyMiniIso = getattr(self.cfg_ana, 'applyMiniIso', True)
+        self.handles['rhoEleMiniIso'] = AutoHandle( self.cfg_ana.rhoElectronMiniIso, 'double')
+        #rho for electron pfIso
+        self.handles['rhoElePfIso'] = AutoHandle( self.cfg_ana.rhoElectronPfIso, 'double')
+        # use ISO
+        self.applyIso = getattr(self.cfg_ana, 'applyIso', True)
+        # electronIDVersion
+        self.electronIDVersion = getattr(self.cfg_ana, 'electronIDVersion', 'looseID') # can be looseID or HEEPv6
+        # electronIsoVersion
+        self.electronIsoVersion = getattr(self.cfg_ana, 'electronIsoVersiin', 'pfISO') # can be pfISO or miniISO
 
         # effective area
         self.ele_effectiveAreas = getattr(self.cfg_ana, 'ele_effectiveAreas', "Spring15_25ns_v1")
@@ -100,16 +106,16 @@ class XZZLeptonAnalyzer( Analyzer ):
         for mu in allmuons:
             if (mu.highPtID or mu.trackerHighPtID ):
                 self.n_mu_passId += 1
-                if (self.applyMiniIso and mu.miniRelIso<0.2):
+                if (self.applyIso and mu.miniRelIso<0.2):
                     event.selectedLeptons.append(mu)
                     event.selectedMuons.append(mu)
                     self.n_mu_passIso += 1
             else:
                 event.otherLeptons.append(mu)
         for ele in allelectrons:
-            if (ele.heepV60_noISO):
+            if ( (self.electronIDVersion=='HEEPv6' and ele.heepV60_noISO) or (self.electronIDVersion=='looseID' and ele.loose_nonISO)):
                 self.n_el_passId += 1
-                if (self.applyMiniIso and ele.miniRelIso<0.1):
+                if (self.applyIso and ((self.electronIsoVersion=='miniISO' and ele.miniRelIso<0.1) or (self.electronIsoVersion=='pfISO' and ele.looseiso)) ):
                     event.selectedLeptons.append(ele)
                     event.selectedElectrons.append(ele)
                     self.n_el_passIso += 1
@@ -181,7 +187,6 @@ class XZZLeptonAnalyzer( Analyzer ):
 
         # fill EA for rho-corrected isolation
         for ele in allelectrons:
-          ele.rho = float(self.handles['rhoEle'].product()[0])
           if self.ele_effectiveAreas == "Spring15_25ns_v1":
               SCEta = abs(ele.superCluster().eta())
               ## ----- https://github.com/ikrav/cmssw/blob/egm_id_747_v2/RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_25ns.txt
@@ -196,9 +201,16 @@ class XZZLeptonAnalyzer( Analyzer ):
           else: 
               raise RuntimeError,  "Unsupported value for ele_effectiveAreas: can only use Data2012 (rho: ?), Phys14_v1 and Spring15_v1 (rho: fixedGridRhoFastjetAll)"
 
-        # calculate miniIso
+        # calculate miniIso and pfIso
         for ele in allelectrons:
+            ele.rho = float(self.handles['rhoEleMiniIso'].product()[0])
             self.attachMiniIsolation(ele)
+            ele.rho = float(self.handles['rhoElePfIso'].product()[0])
+            ele.relIsoea03=ele.absIsoWithFSR(0.3)/ele.pt()
+            if abs(ele.physObj.superCluster().eta())<1.479:
+                ele.looseiso=True if ele.relIsoea03<0.0893 else False
+            else:
+                ele.looseiso=True if ele.relIsoea03<0.121 else False
 
         # Attach the vertex
         for ele in allelectrons:
@@ -206,6 +218,7 @@ class XZZLeptonAnalyzer( Analyzer ):
 
         # define electron ID
         for ele in allelectrons:
+            ele.loose_nonISO=ele.electronID("POG_Cuts_ID_full5x5_SPRING15_25ns_v1_ConvVetoDxyDz_Loose")
             ele.heepV60_noISO_EB = ele.pt()>35.0 \
                          and abs(ele.superCluster().eta())<1.4442 \
                          and abs(ele.deltaEtaSeedClusterTrackAtVtx())<0.004 \
@@ -340,8 +353,11 @@ setattr(XZZLeptonAnalyzer,"defaultConfig",cfg.Analyzer(
     electrons='slimmedElectrons',
     packedCandidates = 'packedPFCandidates',
     rhoMuon= 'fixedGridRhoFastjetCentralNeutral',
-    rhoElectron = 'fixedGridRhoFastjetCentralNeutral',
-    applyMiniIso = True,
+    rhoElectronMiniIso = 'fixedGridRhoFastjetCentralNeutral',
+    rhoElectronPfIso = 'fixedGridRhoFastjetAll',
+    electronIDVersion = 'looseID', # can bee looseID or HEEPv6
+    applyIso = True,
+    electronIsoVersion = 'pfISO', # can be pfISO or miniISO
     mu_isoCorr = "rhoArea" ,
     ele_isoCorr = "rhoArea" ,
     mu_effectiveAreas = "Spring15_25ns_v1", 
