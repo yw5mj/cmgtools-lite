@@ -31,8 +31,8 @@ class XZZTrgEff(Analyzer):
     def __init__(self, cfg_ana, cfg_comp, looperName):
         super(XZZTrgEff, self).__init__(cfg_ana, cfg_comp, looperName)
         self.trgeff=TrgEffHists('/'.join([self.dirName,'trgeff.root']))
-        self.eleHLT=cfg_ana.eleHLT
-        self.muHLT=cfg_ana.muHLT
+        self.eleHLT=cfg_ana.eleHLT if hasattr(cfg_ana,'eleHLT') else ''
+        self.muHLT=cfg_ana.muHLT if hasattr(cfg_ana,'muHLT') else ''
     def declareHandles(self):
         super(XZZTrgEff, self).declareHandles()
         self.handles['trgresults']=AutoHandle(("TriggerResults","","HLT"),"edm::TriggerResults")
@@ -59,16 +59,16 @@ class XZZTrgEff(Analyzer):
         for i in self.handles['selectedtrg'].product():
             i.unpackPathNames(names)
             pNames=list(i.pathNames())
-            if [pN for pN in pNames if self.eleHLT in pN]:eleob.append(i)
-            if [pN for pN in pNames if self.muHLT in pN]:muob.append(i)
-        if abs(Zll.leg1.pdgId())==11:
+            if self.eleHLT and [pN for pN in pNames if self.eleHLT in pN]:eleob.append(i)
+            if self.muHLT and [pN for pN in pNames if self.muHLT in pN]:muob.append(i)
+        if abs(Zll.leg1.pdgId())==11 and self.eleHLT:
             self.trgeff.dRelnoHLT.Fill(deltr)
             self.counters.counter('events').inc('events with ele no HLT')
             if eleob:
                 self.trgeff.dRelHLT.Fill(deltr)
                 self.counters.counter('events').inc('events pass ele HLT')
-                lmatch1=[i for i in eleob if deltR(Zll.leg1,i)<.3]
-                lmatch2=[i for i in eleob if deltR(Zll.leg2,i)<.3]
+                lmatch1=[i for i in eleob if deltR(Zll.leg1,i)<.3 and deltR(Zll.leg1,i)<=deltR(Zll.leg2,i)]
+                lmatch2=[i for i in eleob if deltR(Zll.leg2,i)<.3 and deltR(Zll.leg2,i)<deltR(Zll.leg1,i)]
                 if lmatch1:
                     m1=min(lmatch1,key=lambda x:deltR(Zll.leg1,x))
                     Zll.leg1.triggerob=TrgObj(m1.pt(),m1.eta(),m1.phi())
@@ -78,14 +78,14 @@ class XZZTrgEff(Analyzer):
                 if lmatch1+lmatch2:
                     self.trgeff.dRelHLTmatch.Fill(deltr)
                     self.counters.counter('events').inc('events pass ele HLT and matching')
-        if abs(Zll.leg1.pdgId())==13:
+        if abs(Zll.leg1.pdgId())==13 and self.muHLT:
             self.trgeff.dRmunoHLT.Fill(deltr)
             self.counters.counter('events').inc('events with mu no HLT')
             if muob:
                 self.trgeff.dRmuHLT.Fill(deltr)
                 self.counters.counter('events').inc('events pass mu HLT')
-                lmatch1=[i for i in muob if deltR(Zll.leg1,i)<.3]
-                lmatch2=[i for i in muob if deltR(Zll.leg2,i)<.3]
+                lmatch1=[i for i in muob if deltR(Zll.leg1,i)<.3 and deltR(Zll.leg1,i)<=deltR(Zll.leg2,i)]
+                lmatch2=[i for i in muob if deltR(Zll.leg2,i)<.3 and deltR(Zll.leg2,i)<deltR(Zll.leg1,i)]
                 if lmatch1:
                     m1=min(lmatch1,key=lambda x:deltR(Zll.leg1,x))
                     Zll.leg1.triggerob=TrgObj(m1.pt(),m1.eta(),m1.phi())

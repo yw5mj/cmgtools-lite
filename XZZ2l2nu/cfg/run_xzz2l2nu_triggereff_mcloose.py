@@ -10,6 +10,7 @@ from PhysicsTools.HeppyCore.framework.heppy_loop import getHeppyOption
 
 #Load all common analyzers
 from CMGTools.XZZ2l2nu.analyzers.coreXZZ_cff import *
+from CMGTools.XZZ2l2nu.analyzers.XZZTrgEff import *
 
 #-------- SAMPLES AND TRIGGERS -----------
 from CMGTools.XZZ2l2nu.samples.loadSamples76x import *
@@ -29,13 +30,18 @@ triggerFlagsAna.triggerBits ={
 
 #-------- Analyzer
 from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
-
 leptonicVAna.selectMuMuPair = (lambda x: ((x.leg1.pt()>35 or x.leg2.pt()>35)))
 leptonicVAna.selectElElPair =(lambda x: x.leg1.pt()>50.0 or x.leg2.pt()>50.0 )
 leptonicVAna.selectVBoson = (lambda x: x.mass()>50.0 and x.mass()<180.0)
 multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>50.0 and x.leg1.mass()<180.0)
+
 #-------- SEQUENCE
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
+trgEffAna = cfg.Analyzer(
+    XZZTrgEff, name="TriggerEfficiencyAnalyzer",
+    eleHLT='HLT_Ele105_CaloIdVT_GsfTrkIdT',
+    muHLT='HLT_Mu45_eta2p1'
+    )
 
 coreSequence = [
     skimAnalyzer,
@@ -50,9 +56,10 @@ coreSequence = [
     multiStateAna,
     triggerFlagsAna,
 ]
-    
+
 #sequence = cfg.Sequence(coreSequence)
-sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
+sequence = cfg.Sequence(coreSequence+[vvSkimmer,trgEffAna,vvTreeProducer])
+
 
  
 
@@ -60,21 +67,19 @@ sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
 test = 1
 if test==1:
     # test a single component, using a single thread.
-    #selectedComponents = dataSamples
-    #selectedComponents = mcSamples
+    #selectedComponents = [SingleMuon_Run2015D_05Oct]
+    selectedComponents = mcSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
-    selectedComponents = [DYJetsToLL_M50]
-    #selectedComponents = [WWToLNuQQ, WZTo1L1Nu2Q, WZTo2L2Q, ZZTo2L2Nu]
-    #selectedComponents = [ZZTo2L2Nu,DYJetsToLL_M50]
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        c.files = c.files[0]
-        #c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
-        c.splitFactor = 1
-        #c.triggers=triggers_1mu_noniso
+        #c.files = c.files[0]
+        c.splitFactor =  (len(c.files)/5 if len(c.files)>5 else 1)
+        #c.splitFactor = 1
+        c.triggers=[]
+        c.vetoTriggers = []
         #c.triggers=triggers_1e_noniso
 
 ## output histogram

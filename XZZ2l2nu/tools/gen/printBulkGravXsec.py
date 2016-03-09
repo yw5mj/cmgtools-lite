@@ -2,7 +2,7 @@
 
 #total xsec:
 # https://github.com/acarvalh/Cross_sections_CMS/blob/master/WED/bulk_KKgrav_LHC13.txt
-masses = [800,1000,1200,1400,2000,2500,3000]
+masses = [600,800,1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
 BulkGXsec = {200:5.649417401247585,
 260:1.9429371431011526,
 300:1.0684873854214705,
@@ -38,7 +38,10 @@ BrZll = (3.363+3.366+3.370)*0.01 # PDG value
 BrZinv = 0.200 #PDG value
 
 for mass in masses:
-  print mass,"{:.5e}".format(BulkGXsec[mass]*BrZll*BrZinv*2.0)
+    if mass in BulkGXsec.keys():
+        print mass,"{:.5e}".format(BulkGXsec[mass]*BrZll*BrZinv*2.0)
+    else:
+        print mass,"--"
 
 #print latex table
 
@@ -58,8 +61,13 @@ print '\\begin{tabular}{c c}'
 print '\\hline'
 print 'mass points (GeV) & cross-section (pb$^{-1}$) \\\\'
 print '\\hline'
+
 for mass in masses:
-  print str(mass)+" & "+latex_float(BulkGXsec[mass]*BrZll*BrZinv*2.0)+" \\\\"
+    if mass in BulkGXsec.keys():
+        print str(mass)+" & "+latex_float(BulkGXsec[mass]*BrZll*BrZinv*2.0)+" \\\\"
+    else:
+        print str(mass)+" & "+" --- "+" \\\\"
+
 print '\\hline'
 print '\\end{tabular}'
 print '\\end{center}'

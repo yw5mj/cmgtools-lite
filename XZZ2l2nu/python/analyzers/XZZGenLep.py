@@ -9,19 +9,13 @@ from PhysicsTools.Heppy.physicsutils.genutils import *
 import ROOT
 
 from ROOT import heppy
-cmgMuonCleanerBySegments = heppy.CMGMuonCleanerBySegmentsAlgo()
 
-class XZZLeptonAnalyzer( Analyzer ):
-
-    
-    def __init__(self, cfg_ana, cfg_comp, looperName ):
-        super(XZZLeptonAnalyzer,self).__init__(cfg_ana,cfg_comp,looperName)
-
+class XZZGenLep( Analyzer ):
     #----------------------------------------
     # DECLARATION OF HANDLES OF LEPTONS STUFF   
     #----------------------------------------
     def declareHandles(self):
-        super(XZZLeptonAnalyzer, self).declareHandles()
+        super(XZZGenLep, self).declareHandles()
 
         #leptons
         self.handles['muons'] = AutoHandle(self.cfg_ana.muons,"std::vector<pat::Muon>")            
@@ -31,16 +25,7 @@ class XZZLeptonAnalyzer( Analyzer ):
         #rho for muons
         self.handles['rhoMu'] = AutoHandle( self.cfg_ana.rhoMuon, 'double')
         #rho for electrons
-        self.handles['rhoEleMiniIso'] = AutoHandle( self.cfg_ana.rhoElectronMiniIso, 'double')
-        #rho for electron pfIso
-        self.handles['rhoElePfIso'] = AutoHandle( self.cfg_ana.rhoElectronPfIso, 'double')
-        # use ISO
-        self.applyIso = getattr(self.cfg_ana, 'applyIso', True)
-        # electronIDVersion
-        self.electronIDVersion = getattr(self.cfg_ana, 'electronIDVersion', 'looseID') # can be looseID or HEEPv6
-        # electronIsoVersion
-        self.electronIsoVersion = getattr(self.cfg_ana, 'electronIsoVersiin', 'pfISO') # can be pfISO or miniISO
-
+        self.handles['rhoEle'] = AutoHandle( self.cfg_ana.rhoElectron, 'double')
         # effective area
         self.ele_effectiveAreas = getattr(self.cfg_ana, 'ele_effectiveAreas', "Spring15_25ns_v1")
         self.mu_effectiveAreas  = getattr(self.cfg_ana, 'mu_effectiveAreas',  "Spring15_25ns_v1")
@@ -51,82 +36,22 @@ class XZZLeptonAnalyzer( Analyzer ):
         else:
             self.IsolationComputer = heppy.IsolationComputer()
 
-
-    def beginLoop(self, setup):
-        super(XZZLeptonAnalyzer,self).beginLoop(setup)
-        self.counters.addCounter('events')
-        count = self.counters.counter('events')
-        count.register('all events')
-        count.register('pass events')
-        count.register('pass 2mu events')
-        count.register('pass 2el events')
-        count.register('pass 2mu kin events')
-        count.register('pass 2el kin events')
-        count.register('pass 2mu kin+id events')
-        count.register('pass 2el kin+id events')
-        count.register('pass 2mu kin+id+iso events')
-        count.register('pass 2el kin+id+iso events')
-        count.register('pass 2mu kin+id+iso+acc events')
-        count.register('pass 2el kin+id+iso+acc events')
-        count.register('pass 1mu kin events')
-        count.register('pass 1el kin events')
-        count.register('pass 1mu kin+id events')
-        count.register('pass 1el kin+id events')
-        count.register('pass 1mu kin+id+iso events')
-        count.register('pass 1el kin+id+iso events')
-
-
+    def checkgen(self,lep):
+        try:
+            mom=lep.physObj.genParticle()
+            while mom.pdgId()!=39:
+                mom=mom.mother()
+            return True
+        except:
+            return False
+        
     #------------------
     # MAKE LEPTON LISTS
     #------------------
     def makeLeptons(self, event):
-        event.selectedLeptons = []
-        event.selectedMuons = []
-        event.selectedElectrons = []
-        event.otherLeptons = []
-        
-
         self.IsolationComputer.setPackedCandidates(self.handles['packedCandidates'].product())
-        #for lep in self.handles['muons'].product():
-        #    self.IsolationComputer.addVetos(lep)
-        #for lep in self.handles['electrons'].product():
-        #    self.IsolationComputer.addVetos(lep)
-
-        #muons
-        allmuons = self.makeAllMuons(event)
-
-        #electrons        
-        allelectrons = self.makeAllElectrons(event)
-       
-        #pass kin selection
-        self.n_mu_passKin = len(allmuons)
-        self.n_el_passKin = len(allelectrons)
-
-        # lepton ID
-        for mu in allmuons:
-            if (mu.highPtID or mu.trackerHighPtID ):
-                self.n_mu_passId += 1
-                if (self.applyIso and mu.miniRelIso<0.2):
-                    event.selectedLeptons.append(mu)
-                    event.selectedMuons.append(mu)
-                    self.n_mu_passIso += 1
-            else:
-                event.otherLeptons.append(mu)
-        for ele in allelectrons:
-            if ( (self.electronIDVersion=='HEEPv6' and ele.heepV60_noISO) or (self.electronIDVersion=='looseID' and ele.loose_nonISO)):
-                self.n_el_passId += 1
-                if (self.applyIso and ((self.electronIsoVersion=='miniISO' and ele.miniRelIso<0.1) or (self.electronIsoVersion=='pfISO' and ele.looseiso)) ):
-                    event.selectedLeptons.append(ele)
-                    event.selectedElectrons.append(ele)
-                    self.n_el_passIso += 1
-            else:
-                event.otherLeptons.append(ele)        
-
-        event.otherLeptons.sort(key = lambda l : l.pt(), reverse = True)
+        event.selectedLeptons = self.makeAllMuons(event)+self.makeAllElectrons(event)
         event.selectedLeptons.sort(key = lambda l : l.pt(), reverse = True)
-        event.selectedMuons.sort(key = lambda l : l.pt(), reverse = True)
-        event.selectedElectrons.sort(key = lambda l : l.pt(), reverse = True)
-
 
     def makeAllMuons(self, event):
         """
@@ -134,9 +59,6 @@ class XZZLeptonAnalyzer( Analyzer ):
         """
         allmuons = map( Muon, self.handles['muons'].product() )
 
-        # pre-selection with kinematic cut
-        allmuons = [mu for mu in allmuons if mu.pt()>20.0 and abs(mu.eta())<2.4]
-       
         # Attach EAs for isolation:
         for mu in allmuons:
           mu.rho = float(self.handles['rhoMu'].product()[0])
@@ -154,6 +76,7 @@ class XZZLeptonAnalyzer( Analyzer ):
         # calculate miniIso
         for mu in allmuons:
             self.attachMiniIsolation(mu)
+            mu.xdaughter=self.checkgen(mu)
 
         # Attach the vertex to them, for dxy/dz calculation
         for mu in allmuons:
@@ -171,8 +94,6 @@ class XZZLeptonAnalyzer( Analyzer ):
                          and abs(mu.physObj.muonBestTrack().dz(mu.associatedVertex.position()))<0.5 \
                          and mu.physObj.innerTrack().hitPattern().numberOfValidPixelHits()>0 \
                          and mu.physObj.track().hitPattern().trackerLayersWithMeasurement()>5 
-
-
         return allmuons
 
 
@@ -182,11 +103,9 @@ class XZZLeptonAnalyzer( Analyzer ):
         """
         allelectrons = map( Electron, self.handles['electrons'].product() )
 
-        # pre-selection with kinematic cut
-        allelectrons = [el for el in allelectrons if el.pt()>35.0 and abs(el.eta())<2.5]
-
         # fill EA for rho-corrected isolation
         for ele in allelectrons:
+          ele.rho = float(self.handles['rhoEle'].product()[0])
           if self.ele_effectiveAreas == "Spring15_25ns_v1":
               SCEta = abs(ele.superCluster().eta())
               ## ----- https://github.com/ikrav/cmssw/blob/egm_id_747_v2/RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_25ns.txt
@@ -201,22 +120,20 @@ class XZZLeptonAnalyzer( Analyzer ):
           else: 
               raise RuntimeError,  "Unsupported value for ele_effectiveAreas: can only use Data2012 (rho: ?), Phys14_v1 and Spring15_v1 (rho: fixedGridRhoFastjetAll)"
 
-        # calculate miniIso and pfIso
+        # calculate miniIso and relisoea
         for ele in allelectrons:
-            ele.rho = float(self.handles['rhoEleMiniIso'].product()[0])
             self.attachMiniIsolation(ele)
-            ele.rho = float(self.handles['rhoElePfIso'].product()[0])
-            ele.relIsoea03=ele.absIsoWithFSR(0.3)/ele.pt()
-            if abs(ele.physObj.superCluster().eta())<1.479:
-                ele.looseiso=True if ele.relIsoea03<0.0893 else False
-            else:
-                ele.looseiso=True if ele.relIsoea03<0.121 else False
-
+#            ele.relIsoea03=ele.absIsoWithFSR(0.3)/ele.pt()
+#            if abs(ele.physObj.superCluster().eta())<1.479:
+#                ele.looseiso=True if ele.relIsoea03<0.0893 else False
+#            else:
+#                ele.looseiso=True if ele.relIsoea03<0.121 else False
+            ele.xdaughter=self.checkgen(ele)
         # Attach the vertex
         for ele in allelectrons:
             ele.associatedVertex = event.goodVertices[0] if len(event.goodVertices)>0 else event.vertices[0]
 
-        # define electron ID
+        # define electron ID and loose id no iso
         for ele in allelectrons:
             ele.loose_nonISO=ele.electronID("POG_Cuts_ID_full5x5_SPRING15_25ns_v1_ConvVetoDxyDz_Loose")
             ele.heepV60_noISO_EB = ele.pt()>35.0 \
@@ -240,9 +157,6 @@ class XZZLeptonAnalyzer( Analyzer ):
                          and ele.ecalDriven() 
 
             ele.heepV60_noISO = ele.heepV60_noISO_EB or ele.heepV60_noISO_EE
-
-
-
         return allelectrons 
 
 
@@ -284,86 +198,9 @@ class XZZLeptonAnalyzer( Analyzer ):
 
     def process(self, event):
         self.readCollections( event.input )
-        self.counters.counter('events').inc('all events')
-
-        # counters
-        self.n_el_passKin=0
-        self.n_mu_passKin=0
-        self.n_el_passId=0
-        self.n_mu_passId=0
-        self.n_el_passIso=0
-        self.n_mu_passIso=0
-
-        #call the leptons functions
         self.makeLeptons(event)
-
-        if self.n_mu_passId>=1:
-            self.counters.counter('events').inc('pass 1mu kin+id events')
-        if self.n_el_passId>=1:
-            self.counters.counter('events').inc('pass 1el kin+id events')
-
-        if self.n_mu_passIso>=1:
-            self.counters.counter('events').inc('pass 1mu kin+id+iso events')
-        if self.n_el_passIso>=1:
-            self.counters.counter('events').inc('pass 1el kin+id+iso events')
-
-        if self.n_mu_passKin>=1:
-            self.counters.counter('events').inc('pass 1mu kin events')
-        if self.n_el_passKin>=1:
-            self.counters.counter('events').inc('pass 1el kin events')
-
-        if self.n_mu_passKin>=2:
-            self.counters.counter('events').inc('pass 2mu kin events')
-        if self.n_el_passKin>=2:
-            self.counters.counter('events').inc('pass 2el kin events')
-
-        if self.n_mu_passId>=2:
-            self.counters.counter('events').inc('pass 2mu kin+id events')
-        if self.n_el_passId>=2:
-            self.counters.counter('events').inc('pass 2el kin+id events')
-
-        if self.n_mu_passIso>=2:
-            self.counters.counter('events').inc('pass 2mu kin+id+iso events')
-        if self.n_el_passIso>=2:
-            self.counters.counter('events').inc('pass 2el kin+id+iso events')
-
-        if len(event.selectedMuons)>=2:
-            self.counters.counter('events').inc('pass 2mu events')
-            if (event.selectedMuons[0].pt()>50.0 and abs(event.selectedMuons[0].eta())<2.1 and
-                event.selectedMuons[1].pt()>20.0 and abs(event.selectedMuons[1].eta())<2.4):
-                self.counters.counter('events').inc('pass 2mu kin+id+iso+acc events')
-        if len(event.selectedElectrons)>=2 :
-            self.counters.counter('events').inc('pass 2el events')
-            if (event.selectedElectrons[0].pt()>115.0 and abs(event.selectedElectrons[0].eta())<2.5 and
-                event.selectedElectrons[1].pt()>35.0 and abs(event.selectedElectrons[1].eta())<2.5):
-                self.counters.counter('events').inc('pass 2el kin+id+iso+acc events')
-
-        if len(event.selectedMuons)>=2 or len(event.selectedElectrons)>=2 :
-            self.counters.counter('events').inc('pass events')
-            return True
-        else: 
+        if not event.selectedLeptons:
             return False
+        else:
+            return True
 
-#A default config
-setattr(XZZLeptonAnalyzer,"defaultConfig",cfg.Analyzer(
-    verbose=False,
-    class_object=XZZLeptonAnalyzer,
-    # input collections
-    muons='slimmedMuons',
-    electrons='slimmedElectrons',
-    packedCandidates = 'packedPFCandidates',
-    rhoMuon= 'fixedGridRhoFastjetCentralNeutral',
-    rhoElectronMiniIso = 'fixedGridRhoFastjetCentralNeutral',
-    rhoElectronPfIso = 'fixedGridRhoFastjetAll',
-    electronIDVersion = 'looseID', # can bee looseID or HEEPv6
-    applyIso = True,
-    electronIsoVersion = 'pfISO', # can be pfISO or miniISO
-    mu_isoCorr = "rhoArea" ,
-    ele_isoCorr = "rhoArea" ,
-    mu_effectiveAreas = "Spring15_25ns_v1", 
-    ele_effectiveAreas = "Spring15_25ns_v1",
-    miniIsolationPUCorr = None, # Allowed options: 'rhoArea' (EAs for 03 cone scaled by R^2), 'deltaBeta', 
-                                     # 'raw' (uncorrected), 'weights' (delta beta weights; not validated)
-                                     # Choose None to just use the individual object's PU correction
-    )
-)
