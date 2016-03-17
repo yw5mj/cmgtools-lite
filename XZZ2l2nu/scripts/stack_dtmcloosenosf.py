@@ -14,7 +14,7 @@ cutChain='loosecut'
 #cutChain='zjetscut'
 #cutChain='zjetscutmet50'
 
-outdir='plots'
+outdir='plotsnoesf'
 #indir="/afs/cern.ch/work/h/heli/public/XZZ/76X"
 indir="/afs/cern.ch/work/y/yanchu/public/analysis/76X"
 lumi=2.169126704526
