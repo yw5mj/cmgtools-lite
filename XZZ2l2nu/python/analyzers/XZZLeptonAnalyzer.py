@@ -50,7 +50,9 @@ class XZZLeptonAnalyzer( Analyzer ):
             self.IsolationComputer = heppy.IsolationComputer(0.4)
         else:
             self.IsolationComputer = heppy.IsolationComputer()
-
+        if self.cfg_comp.isMC:
+            self.esfinput=ROOT.TFile(self.cfg_comp.eSFinput)
+            self.esfh2=self.esfinput.Get("EGamma_SF2D")
 
     def beginLoop(self, setup):
         super(XZZLeptonAnalyzer,self).beginLoop(setup)
@@ -240,9 +242,10 @@ class XZZLeptonAnalyzer( Analyzer ):
                          and ele.ecalDriven() 
 
             ele.heepV60_noISO = ele.heepV60_noISO_EB or ele.heepV60_noISO_EE
-
-
-
+        if self.cfg_comp.isMC:
+            for ele in allelectrons:
+                ele.lepsf=self.esfh2.GetBinContent(self.esfh2.GetXaxis().FindBin(abs(ele.superCluster().eta())),self.esfh2.GetYaxis().FindBin(ele.pt()))
+                ele.lepsf=ele.lepsf if ele.lepsf else 1
         return allelectrons 
 
 
