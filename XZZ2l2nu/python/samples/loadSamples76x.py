@@ -48,11 +48,15 @@ BulkGravToZZToZlepZinv_narrow_600,
 BulkGravToZZToZlepZinv_narrow_800,
 BulkGravToZZToZlepZinv_narrow_1000,
 BulkGravToZZToZlepZinv_narrow_1200,
+BulkGravToZZToZlepZinv_narrow_1400,
+BulkGravToZZToZlepZinv_narrow_1600,
 BulkGravToZZToZlepZinv_narrow_1800,
 BulkGravToZZToZlepZinv_narrow_2000,
 BulkGravToZZToZlepZinv_narrow_2500,
+BulkGravToZZToZlepZinv_narrow_3000,
 BulkGravToZZToZlepZinv_narrow_3500,
 BulkGravToZZToZlepZinv_narrow_4000,
+BulkGravToZZToZlepZinv_narrow_4500,
 ]
 
 BulkGravToZZToZlepZhad = [
