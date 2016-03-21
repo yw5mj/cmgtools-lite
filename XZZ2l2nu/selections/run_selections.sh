@@ -5,7 +5,7 @@ for i in $(ls ./76X/);do
     #    a=\"76X/WJetsToLNu\"
     b=\"$i\"
     root -l <<EOF
-.L selections.cxx+
+.L ./selections/selections.cxx+
 Selections s($a, $b);
 s.skimming();
 .q
@@ -15,7 +15,7 @@ done
 # a=\"76X/BulkGravToZZToZlepZinv_narrow_1000\"
 # b=\"BulkGravToZZToZlepZinv_narrow_1000\"
 # root -l <<EOF
-#     .L selections.cxx+
+#     .L ./selections/selections.cxx+
 #     Selections s($a, $b);
 #     s.skimming();
 #     .q

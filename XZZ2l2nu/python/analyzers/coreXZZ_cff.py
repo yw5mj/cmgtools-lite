@@ -208,6 +208,7 @@ coreSequence = [
     pileUpAna,
     vertexAna,
     lepAna,
+    jetAna,
     metAna,
     leptonicVAna,
 #    packedAna,
