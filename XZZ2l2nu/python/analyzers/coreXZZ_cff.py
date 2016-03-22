@@ -15,6 +15,7 @@ from CMGTools.XZZ2l2nu.analyzers.XZZTriggerBitFilter import *
 from CMGTools.XZZ2l2nu.analyzers.XZZVertexAnalyzer import *
 from CMGTools.XZZ2l2nu.analyzers.XZZMETAnalyzer import *
 from CMGTools.XZZ2l2nu.analyzers.XZZDumpEvtList import *
+from CMGTools.XZZ2l2nu.analyzers.XZZJetAnalyzer import *
 
 ###########################
 # define analyzers
@@ -78,7 +79,7 @@ lepAna = cfg.Analyzer(
     miniIsolationPUCorr = None, # Allowed options: 'rhoArea' (EAs for 03 cone scaled by R^2), 'deltaBeta', 
                                      # 'raw' (uncorrected), 'weights' (delta beta weights; not validated)
                                      # Choose None to just use the individual object's PU correction
-)
+    )
 
 ## Jets Analyzer (generic)
 jetAna = cfg.Analyzer(
