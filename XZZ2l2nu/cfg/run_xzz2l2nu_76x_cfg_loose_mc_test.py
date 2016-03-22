@@ -30,8 +30,8 @@ triggerFlagsAna.triggerBits ={
 #-------- Analyzer
 from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
 
-leptonicVAna.electronIDVersion = 'HEEPv6', # can be looseID or HEEPv6
-leptonicVAna.electronIsoVersion = 'miniISO', # can be pfISO or miniISO
+lepAna.electronIDVersion = 'HEEPv6' # can be looseID or HEEPv6
+lepAna.electronIsoVersion = 'miniISO' # can be pfISO or miniISO
 
 leptonicVAna.selectMuMuPair = (lambda x: ((x.leg1.pt()>35 or x.leg2.pt()>35)))
 leptonicVAna.selectElElPair =(lambda x: x.leg1.pt()>50.0 or x.leg2.pt()>50.0 )
@@ -61,6 +61,7 @@ sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
  
 
 #-------- HOW TO RUN
+print "[debug]:", coreSequence
 test = 1
 if test==1:
     # test a single component, using a single thread.
@@ -76,9 +77,9 @@ if test==1:
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        #c.files = c.files[0]
-        c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
-        #c.splitFactor = 1
+        c.files = c.files[0]
+        #c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
+        c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso
 
