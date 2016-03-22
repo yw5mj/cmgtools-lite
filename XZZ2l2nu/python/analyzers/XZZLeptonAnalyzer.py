@@ -39,7 +39,7 @@ class XZZLeptonAnalyzer( Analyzer ):
         # electronIDVersion
         self.electronIDVersion = getattr(self.cfg_ana, 'electronIDVersion', 'looseID') # can be looseID or HEEPv6
         # electronIsoVersion
-        self.electronIsoVersion = getattr(self.cfg_ana, 'electronIsoVersiin', 'pfISO') # can be pfISO or miniISO
+        self.electronIsoVersion = getattr(self.cfg_ana, 'electronIsoVersion', 'pfISO') # can be pfISO or miniISO
 
         # effective area
         self.ele_effectiveAreas = getattr(self.cfg_ana, 'ele_effectiveAreas', "Spring15_25ns_v1")
