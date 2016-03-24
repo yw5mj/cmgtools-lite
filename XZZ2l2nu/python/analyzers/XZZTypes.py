@@ -25,3 +25,20 @@ LLNuNuType = NTupleObjectType("LLNuNuType", baseObjectTypes=[VVType], variables 
     NTupleSubObject("l2",  lambda x : x['pair'].leg2,metType),
 ])
 
+JetType = NTupleObjectType("JetType", baseObjectTypes=[fourVectorType], variables = [
+    NTupleVariable("area",   lambda x : x.jetArea(), float),
+    NTupleVariable("rawFactor",   lambda x : x.rawFactor(), float),
+#    NTupleVariable("btag",   lambda x : x.bTag(), float),
+#    NTupleVariable("nConstituents",   lambda x : len(x.constituents), int),
+    # NTupleVariable("looseID",   lambda x : x.looseID, int),
+    # NTupleVariable("tightID",   lambda x : x.tightID, int),
+    # NTupleVariable("chargedHadronEnergyFraction",   lambda x : x.chargedHadronEnergyFraction(), float),
+    # NTupleVariable("neutralHadronEnergyFraction",   lambda x : x.neutralHadronEnergyFraction(), float),
+    # NTupleVariable("photonEnergyFraction",   lambda x : x.photonEnergyFraction(), float),
+    # NTupleVariable("HFHadronEnergyFraction",   lambda x : x.HFHadronEnergyFraction(), float),
+    # NTupleVariable("HFEMEnergyFraction",   lambda x : x.HFEMEnergyFraction(), float),
+    # NTupleVariable("muonEnergyFraction",   lambda x : x.muonEnergyFraction(), float),
+    # NTupleVariable("electronEnergyFraction",   lambda x : x.electronEnergyFraction(), float),
+    # NTupleVariable("leptonEnergyFraction",   lambda x : x.leptonEnergyFraction(), float),
+
+])
