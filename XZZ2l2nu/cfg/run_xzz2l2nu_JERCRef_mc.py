@@ -69,14 +69,19 @@ if test==1:
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
-    selectedComponents = [JERCRef_MC]
+    selectedComponents = [JERCRef_MC_eos]
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1000] #for locally test
     #selectedComponents = [WWToLNuQQ, WZTo1L1Nu2Q, WZTo2L2Q, ZZTo2L2Nu]
     #selectedComponents = [ZZTo2L2Nu,DYJetsToLL_M50]
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        c.files = c.files[0]
+        for i in c.files:
+            if ROOT.TString(i).Contains("02837459-03C2-E511-8EA2-002590A887AC.root"):
+                c.files=i
+                print c.files
+        
+        #c.files = c.files[0]
         #c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
         c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso

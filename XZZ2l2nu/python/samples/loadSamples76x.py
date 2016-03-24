@@ -17,7 +17,7 @@ from CMGTools.XZZ2l2nu.samples.triggers_13TeV_Spring15 import *
 from CMGTools.XZZ2l2nu.samples.samples_JERCReference import * 
 
 # mc reference sample for jet energy corrections and jet resolution
-jercRefMC=[JERCRef_MC]
+jercRefMC=[JERCRef_MC, JERCRef_MC_eos]
 
 # backgrounds
 backgroundSamples = [
