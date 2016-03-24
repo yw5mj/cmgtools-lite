@@ -7,6 +7,7 @@ from PhysicsTools.Heppy.physicsutils.JetReCalibrator import JetReCalibrator
 import PhysicsTools.HeppyCore.framework.config as cfg
 
 from PhysicsTools.Heppy.physicsutils.QGLikelihoodCalculator import QGLikelihoodCalculator
+from PhysicsTools.HeppyCore.statistics.counter import Counter, Counters
 
 import copy
 def cleanNearestJetOnly(jets,leptons,deltaR):
@@ -111,6 +112,12 @@ class JetAnalyzer( Analyzer ):
     
     def beginLoop(self, setup):
         super(JetAnalyzer,self).beginLoop(setup)
+        self.counters.addCounter('jets')
+        count = self.counters.counter('jets')
+        count.register('all events')
+        count.register('at least 2 good jets')
+        count.register('at least 2 clean jets')
+    #    count.register('veto b jest')
 
     def process(self, event):
         self.readCollections( event.input )
@@ -173,6 +180,7 @@ class JetAnalyzer( Analyzer ):
         if self.cfg_ana.cleanJetsFromIsoTracks and hasattr(event, 'selectedIsoCleanTrack'):
             leptons = leptons[:] + event.selectedIsoCleanTrack
 
+        self.counters.counter('jets').inc('all events')
 	## Apply jet selection
         self.jets = []
         self.jetsFailId = []
