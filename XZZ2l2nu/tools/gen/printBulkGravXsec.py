@@ -34,12 +34,54 @@ BulkGXsec = {200:5.649417401247585,
 2500:8.674571731526816e-6,
 3000:1.9201182127764607e-6}
 
+# BulkGrav to ZZ branch ratio:
+# https://github.com/acarvalh/Cross_sections_CMS/blob/master/WED/bulk_KKgrav_decay.txt
+ZZBr = {200:0.316483,
+300:0.355847,
+400:0.308107,
+500:0.230339,
+600:0.184219,
+700:0.158352,
+800:0.142802,
+900:0.132777,
+1000:0.125936,
+1100:0.121055,
+1200:0.117445,
+1300:0.114697,
+1400:0.112554,
+1500:0.110851,
+1600:0.109472,
+1700:0.108341,
+1800:0.107401,
+1900:0.106611,
+2000:0.10594,
+2100:0.105366,
+2200:0.104871,
+2300:0.10444,
+2400:0.104063,
+2500:0.103732,
+2600:0.103439,
+2700:0.103178,
+2800:0.102945,
+2900:0.102737,
+3000:0.102549,
+3100:0.102379,
+3200:0.102225,
+3300:0.102086,
+3400:0.101958,
+3500:0.101841,
+3600:0.101734,
+3700:0.101636,
+3800:0.101546,
+3900:0.101462,
+4000:0.101384}
+
 BrZll = (3.363+3.366+3.370)*0.01 # PDG value
 BrZinv = 0.200 #PDG value
 
 for mass in masses:
-    if mass in BulkGXsec.keys():
-        print mass,"{:.5e}".format(BulkGXsec[mass]*BrZll*BrZinv*2.0)
+    if mass in BulkGXsec.keys() and mass in ZZBr.keys():
+        print mass,"{:.5e}".format(BulkGXsec[mass]*ZZBr[mass]*BrZll*BrZinv*2.0)
     else:
         print mass,"--"
 
@@ -63,8 +105,8 @@ print 'mass points (GeV) & cross-section (pb$^{-1}$) \\\\'
 print '\\hline'
 
 for mass in masses:
-    if mass in BulkGXsec.keys():
-        print str(mass)+" & "+latex_float(BulkGXsec[mass]*BrZll*BrZinv*2.0)+" \\\\"
+    if mass in BulkGXsec.keys() and mass in ZZBr.keys() :
+        print str(mass)+" & "+latex_float(BulkGXsec[mass]*ZZBr[mass]*BrZll*BrZinv*2.0)+" \\\\"
     else:
         print str(mass)+" & "+" --- "+" \\\\"
 
