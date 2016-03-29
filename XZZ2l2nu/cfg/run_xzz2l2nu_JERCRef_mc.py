@@ -32,6 +32,7 @@ from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
 
 lepAna.electronIDVersion = 'HEEPv6' # can be looseID or HEEPv6
 lepAna.electronIsoVersion = 'miniISO' # can be pfISO or miniISO
+lepAna.do_filter=False
 
 leptonicVAna.selectMuMuPair = (lambda x: ((x.leg1.pt()>35 or x.leg2.pt()>35)))
 leptonicVAna.selectElElPair =(lambda x: x.leg1.pt()>50.0 or x.leg2.pt()>50.0 )
@@ -57,7 +58,8 @@ coreSequence = [
 ]
     
 #sequence = cfg.Sequence(coreSequence)
-sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
+#sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
+sequence = cfg.Sequence(coreSequence+[jetTreeProducer])
  
 
 #-------- HOW TO RUN
