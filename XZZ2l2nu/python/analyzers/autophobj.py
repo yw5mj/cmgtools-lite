@@ -66,6 +66,7 @@ leptonType = NTupleObjectType("lepton", baseObjectTypes = [ particleType ], vari
     NTupleVariable("looseelectronnoiso",   lambda x : x.loose_nonISO if abs(x.pdgId())==11 else -999, int, help="electron POG Loose id no iso"),
     NTupleVariable("looseisoelectron",   lambda x : x.looseiso if abs(x.pdgId())==11 else -999, int, help="electron POG Loose id default iso"),
     NTupleVariable("electronrelIsoea03",   lambda x : x.relIsoea03 if abs(x.pdgId())==11 else -999, float, help="electron relisoea03"),
+    NTupleVariable("lepsf",  lambda x : getattr(x,'lepsf',1), help="lepton sf"),
 ])
 
 ### EXTENDED VERSION WITH INDIVIUAL DISCRIMINATING VARIABLES
