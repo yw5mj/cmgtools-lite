@@ -28,6 +28,7 @@ LLNuNuType = NTupleObjectType("LLNuNuType", baseObjectTypes=[VVType], variables 
 JetType = NTupleObjectType("JetType", baseObjectTypes=[fourVectorType], variables = [
     NTupleVariable("area",   lambda x : x.jetArea(), float),
     NTupleVariable("rawFactor",   lambda x : x.rawFactor(), float),
+    NTupleVariable("jec_corr",   lambda x : x.corr, float),
 #    NTupleVariable("btag",   lambda x : x.bTag(), float),
 #    NTupleVariable("nConstituents",   lambda x : len(x.constituents), int),
     # NTupleVariable("looseID",   lambda x : x.looseID, int),

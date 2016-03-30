@@ -46,7 +46,7 @@ coreSequence = [
     skimAnalyzer,
     genAna,
     jsonAna,
-    triggerAna,
+#    triggerAna,
     pileUpAna,
     vertexAna,
     lepAna,

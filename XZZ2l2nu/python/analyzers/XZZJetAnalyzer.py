@@ -80,17 +80,18 @@ class JetAnalyzer( Analyzer ):
         calculateType1METCorrection  = getattr(cfg_ana,"calculateType1METCorrection",  False);
         self.doJEC = self.recalibrateJets or (self.shiftJEC != 0) or self.addJECShifts or calculateSeparateCorrections or calculateType1METCorrection
         if self.doJEC:
-          doResidual = getattr(cfg_ana, 'applyL2L3Residual', 'Data')
-          if   doResidual == "MC":   doResidual = self.cfg_comp.isMC
-          elif doResidual == "Data": doResidual = not self.cfg_comp.isMC
-          elif doResidual not in [True,False]: raise RuntimeError, "If specified, applyL2L3Residual must be any of { True, False, 'MC', 'Data'(default)}"
-          GT = getattr(cfg_comp, 'jecGT', mcGT if self.cfg_comp.isMC else dataGT)
-          # Now take care of the optional arguments
-          kwargs = { 'calculateSeparateCorrections':calculateSeparateCorrections,
-                     'calculateType1METCorrection' :calculateType1METCorrection, }
-          if kwargs['calculateType1METCorrection']: kwargs['type1METParams'] = cfg_ana.type1METParams
-          # instantiate the jet re-calibrator
-          self.jetReCalibrator = JetReCalibrator(GT, cfg_ana.recalibrationType, doResidual, cfg_ana.jecPath, **kwargs)
+#            print "[Debug] I am doing Jet energy calibration :D"
+            doResidual = getattr(cfg_ana, 'applyL2L3Residual', 'Data')
+            if   doResidual == "MC":   doResidual = self.cfg_comp.isMC
+            elif doResidual == "Data": doResidual = not self.cfg_comp.isMC
+            elif doResidual not in [True,False]: raise RuntimeError, "If specified, applyL2L3Residual must be any of { True, False, 'MC', 'Data'(default)}"
+            GT = getattr(cfg_comp, 'jecGT', mcGT if self.cfg_comp.isMC else dataGT)
+            # Now take care of the optional arguments
+            kwargs = { 'calculateSeparateCorrections':calculateSeparateCorrections,
+                       'calculateType1METCorrection' :calculateType1METCorrection, }
+            if kwargs['calculateType1METCorrection']: kwargs['type1METParams'] = cfg_ana.type1METParams
+            # instantiate the jet re-calibrator
+            self.jetReCalibrator = JetReCalibrator(GT, cfg_ana.recalibrationType, doResidual, cfg_ana.jecPath, **kwargs)
         self.doPuId = getattr(self.cfg_ana, 'doPuId', True)
         self.jetLepDR = getattr(self.cfg_ana, 'jetLepDR', 0.4)
         self.jetLepArbitration = getattr(self.cfg_ana, 'jetLepArbitration', lambda jet,lepton: lepton) 
