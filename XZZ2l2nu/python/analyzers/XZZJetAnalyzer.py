@@ -80,7 +80,7 @@ class JetAnalyzer( Analyzer ):
         calculateType1METCorrection  = getattr(cfg_ana,"calculateType1METCorrection",  False);
         self.doJEC = self.recalibrateJets or (self.shiftJEC != 0) or self.addJECShifts or calculateSeparateCorrections or calculateType1METCorrection
         if self.doJEC:
-#            print "[Debug] I am doing Jet energy calibration :D"
+            print "[Debug] I am doing Jet energy calibration :D"
             doResidual = getattr(cfg_ana, 'applyL2L3Residual', 'Data')
             if   doResidual == "MC":   doResidual = self.cfg_comp.isMC
             elif doResidual == "Data": doResidual = not self.cfg_comp.isMC
@@ -115,9 +115,7 @@ class JetAnalyzer( Analyzer ):
         super(JetAnalyzer,self).beginLoop(setup)
         self.counters.addCounter('jets')
         count = self.counters.counter('jets')
-        count.register('all events')
-        count.register('at least 2 good jets')
-        count.register('at least 2 clean jets')
+        count.register('All Events')
     #    count.register('veto b jest')
 
     def process(self, event):
@@ -139,6 +137,11 @@ class JetAnalyzer( Analyzer ):
         self.deltaMetFromJEC = [0.,0.]
         self.type1METCorr    = [0.,0.,0.]
 #        print "before. rho",self.rho,self.cfg_ana.collectionPostFix,'allJets len ',len(allJets),'pt', [j.pt() for j in allJets]
+        
+        self.jets_raw=[]
+        for jet in allJets:
+            self.jets_raw.append(jet)            
+            
         if self.doJEC:
             if not self.recalibrateJets:  # check point that things won't change
                 jetsBefore = [ (j.pt(),j.eta(),j.phi(),j.rawFactor()) for j in allJets ]
@@ -334,6 +337,7 @@ class JetAnalyzer( Analyzer ):
         setattr(event,"deltaMetFromJEC"        +self.cfg_ana.collectionPostFix, self.deltaMetFromJEC        ) 
         setattr(event,"type1METCorr"           +self.cfg_ana.collectionPostFix, self.type1METCorr           ) 
         setattr(event,"allJetsUsedForMET"      +self.cfg_ana.collectionPostFix, self.allJetsUsedForMET      ) 
+        setattr(event,"jets_raw"               +self.cfg_ana.collectionPostFix, self.jets_raw               )
         setattr(event,"jets"                   +self.cfg_ana.collectionPostFix, self.jets                   ) 
         setattr(event,"jetsFailId"             +self.cfg_ana.collectionPostFix, self.jetsFailId             ) 
         setattr(event,"jetsAllNoID"            +self.cfg_ana.collectionPostFix, self.jetsAllNoID            ) 
