@@ -30,8 +30,6 @@ triggerFlagsAna.triggerBits ={
 #-------- Analyzer
 from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
 
-metAna.recalibrate = False
-
 leptonicVAna.selectMuMuPair = (lambda x: ((x.leg1.pt()>35 or x.leg2.pt()>35)))
 leptonicVAna.selectElElPair =(lambda x: x.leg1.pt()>50.0 or x.leg2.pt()>50.0 )
 leptonicVAna.selectVBoson = (lambda x: x.mass()>50.0 and x.mass()<180.0)

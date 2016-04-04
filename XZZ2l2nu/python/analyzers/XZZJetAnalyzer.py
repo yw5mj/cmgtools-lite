@@ -91,6 +91,8 @@ class JetAnalyzer( Analyzer ):
                        'calculateType1METCorrection' :calculateType1METCorrection, }
             if kwargs['calculateType1METCorrection']: kwargs['type1METParams'] = cfg_ana.type1METParams
             # instantiate the jet re-calibrator
+            print "[Debug] check input for jetReCalibrator: tell me if it is MC -- %r; tell me the doResidual is %r\n" % (self.cfg_comp.isMC, doResidual)
+            
             self.jetReCalibrator = JetReCalibrator(GT, cfg_ana.recalibrationType, doResidual, cfg_ana.jecPath, **kwargs)
         self.doPuId = getattr(self.cfg_ana, 'doPuId', True)
         self.jetLepDR = getattr(self.cfg_ana, 'jetLepDR', 0.4)

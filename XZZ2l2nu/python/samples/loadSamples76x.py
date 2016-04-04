@@ -18,6 +18,7 @@ from CMGTools.XZZ2l2nu.samples.samples_JERCReference import *
 
 # mc reference sample for jet energy corrections and jet resolution
 jercRefMC=[JERCRef_MC, JERCRef_MC_eos]
+jercRefdt=[JERCRef_data]
 
 # backgrounds
 backgroundSamples = [
@@ -100,7 +101,7 @@ for s in SinglePhoton:
     s.trigers = triggers_photon_unbias
 
 
-dataSamples=SingleMuon+SingleElectron
+dataSamples=SingleMuon+SingleElectron+jercRefdt
 
 # JSON
 # https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2015Analysis#ReReco_at_25_ns
