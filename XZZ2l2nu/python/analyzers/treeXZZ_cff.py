@@ -50,7 +50,6 @@ vvTreeProducer = cfg.Analyzer(
      ],
      globalObjects =  {
          "met" : NTupleObject("met", metType, help="PF E_{T}^{miss}, after type 1 corrections"),
-         "type1METCorr" : NTupleObject("met_corr", metType, help="PF E_{T}^{miss}, after type 1 corrections"),
      },
 
      collections = {
