@@ -73,6 +73,8 @@ VVType = NTupleObjectType("VVType", baseObjectTypes=[], variables = [
   NTupleVariable("deltaPhi",   lambda x : x['pair'].deltaPhi(), float),       
   NTupleVariable("deltaR",   lambda x : x['pair'].deltaR(), float),       
   NTupleVariable("mt",   lambda x : x['pair'].mt(), float),       
+  NTupleVariable("mta",   lambda x : x['pair'].mta(), float),       
+  NTupleVariable("mtb",   lambda x : x['pair'].mtb(), float),       
   NTupleSubObject("event",  lambda x : x,JTopologyType),
 ])
 
