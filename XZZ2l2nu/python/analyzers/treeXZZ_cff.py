@@ -15,6 +15,28 @@ leptonSkimmer = cfg.Analyzer(
     required = ['inclusiveLeptons']
 )
 
+jetTreeProducer = cfg.Analyzer(
+     AutoFillTreeProducer, name='jetTreeProducer',
+     vectorTree = True,
+     saveTLorentzVectors = False,  # can set to True to get also the TLorentzVectors, but trees will be bigger
+     defaultFloatType = 'F', # use Float_t for floating point
+     globalVariables = [
+         NTupleVariable("nVert",  lambda ev: len(ev.goodVertices), int, help="Number of good vertices"), 
+     ],
+     globalObjects =  {
+         "met" : NTupleObject("met", metType, help="PF E_{T}^{miss}, after type 1 corrections"),
+#         "type1METCorr" : NTupleObject("met_corr", metType, help="PF E_{T}^{miss}, after type 1 corrections"),
+     },
+
+     collections = {
+         "selectedLeptons" : NTupleCollection("lep",leptonType,10, help="selected leptons"),
+         "genLeptons" : NTupleCollection("genLep", genParticleType, 10, help="Generated leptons (e/mu) from W/Z decays"),
+         "genZBosons" : NTupleCollection("genZ", genParticleType, 10, help="Generated V bosons"),
+         "genLeptons" : NTupleCollection("genLep", genParticleType, 10, help="Generated leptons (e/mu) from W/Z decays"),
+         "genZBosons" : NTupleCollection("genZ", genParticleType, 10, help="Generated V bosons"),
+         "jets"  : NTupleCollection("jet_corr",corrJetType,15, help="all jets with new JEC for 76X applied"),
+     }
+)
 
 vvTreeProducer = cfg.Analyzer(
      AutoFillTreeProducer, name='vvTreeProducer',
@@ -28,6 +50,7 @@ vvTreeProducer = cfg.Analyzer(
      ],
      globalObjects =  {
          "met" : NTupleObject("met", metType, help="PF E_{T}^{miss}, after type 1 corrections"),
+         "type1METCorr" : NTupleObject("met_corr", metType, help="PF E_{T}^{miss}, after type 1 corrections"),
      },
 
      collections = {
@@ -41,29 +64,6 @@ vvTreeProducer = cfg.Analyzer(
          "jets"  : NTupleCollection("jet",corrJetType,15, help="all jets"),
      }
 )
-
-jetTreeProducer = cfg.Analyzer(
-     AutoFillTreeProducer, name='jetTreeProducer',
-     vectorTree = True,
-     saveTLorentzVectors = False,  # can set to True to get also the TLorentzVectors, but trees will be bigger
-     defaultFloatType = 'F', # use Float_t for floating point
-     globalVariables = [
-         NTupleVariable("nVert",  lambda ev: len(ev.goodVertices), int, help="Number of good vertices"), 
-     ],
-     globalObjects =  {
-         "met" : NTupleObject("met", metType, help="PF E_{T}^{miss}, after type 1 corrections"),
-     },
-
-     collections = {
-         "selectedLeptons" : NTupleCollection("lep",leptonType,10, help="selected leptons"),
-         "genLeptons" : NTupleCollection("genLep", genParticleType, 10, help="Generated leptons (e/mu) from W/Z decays"),
-         "genZBosons" : NTupleCollection("genZ", genParticleType, 10, help="Generated V bosons"),
-         "genLeptons" : NTupleCollection("genLep", genParticleType, 10, help="Generated leptons (e/mu) from W/Z decays"),
-         "genZBosons" : NTupleCollection("genZ", genParticleType, 10, help="Generated V bosons"),
-         "jets"  : NTupleCollection("jets",corrJetType,15, help="all jets from miniAOD"),
-     }
-)
-
 
 leptonTreeProducer = cfg.Analyzer(
      AutoFillTreeProducer, name='leptonTreeProducer',

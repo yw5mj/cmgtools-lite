@@ -184,7 +184,7 @@ class JetAnalyzer( Analyzer ):
         if self.cfg_ana.cleanJetsFromIsoTracks and hasattr(event, 'selectedIsoCleanTrack'):
             leptons = leptons[:] + event.selectedIsoCleanTrack
 
-        self.counters.counter('jets').inc('all events')
+        self.counters.counter('jets').inc('All Events')
 	## Apply jet selection
         self.jets = []
         self.jetsFailId = []
@@ -461,8 +461,29 @@ class JetAnalyzer( Analyzer ):
                    factorJERDown= shiftJERfactor(-1, aeta)
                    ptscaleJERDown = max(0.0, (jetpt + (factorJERDown-1)*(jetpt-genpt))/jetpt)
                    setattr(jet, "corrJERDown", ptscaleJERDown)
+    
+    def jerCorrection(self, jet):
+        ''' Adds JER correction according to first method at
+        https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution
+        
+        Requires some attention when genJet matching fails.
+        '''
+        if not hasattr(jet, 'matchedGenJet'):
+            return
+        #import pdb; pdb.set_trace()
+        corrections = [0.052, 0.057, 0.096, 0.134, 0.288]
+        maxEtas = [0.5, 1.1, 1.7, 2.3, 5.0]
+        eta = abs(jet.eta())
+        for i, maxEta in enumerate(maxEtas):
+            if eta < maxEta:
+                pt = jet.pt()
+                deltaPt = (pt - jet.matchedGenJet.pt()) * corrections[i]
+                totalScale = (pt + deltaPt) / pt
 
-
+                if totalScale < 0.:
+                    totalScale = 0.
+                jet.scaleEnergy(totalScale)
+                break
 
 
 
