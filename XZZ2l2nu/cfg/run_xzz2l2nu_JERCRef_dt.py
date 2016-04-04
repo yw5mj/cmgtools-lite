@@ -30,10 +30,13 @@ triggerFlagsAna.triggerBits ={
 #-------- Analyzer
 from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
 
-leptonicVAna.selectMuMuPair = (lambda x: ((x.leg1.pt()>35 or x.leg2.pt()>35)))
-leptonicVAna.selectElElPair =(lambda x: x.leg1.pt()>50.0 or x.leg2.pt()>50.0 )
-leptonicVAna.selectVBoson = (lambda x: x.mass()>50.0 and x.mass()<180.0)
-multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>50.0 and x.leg1.mass()<180.0)
+lepAna.electronIDVersion = 'HEEPv6' # can be looseID or HEEPv6
+lepAna.electronIsoVersion = 'miniISO' # can be pfISO or miniISO
+lepAna.do_filter=False
+
+metAna.recalibrate = "type1"
+#metAna.old74XMiniAODs = True
+
 #-------- SEQUENCE
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
 
@@ -41,38 +44,35 @@ coreSequence = [
     skimAnalyzer,
     genAna,
     jsonAna,
-    triggerAna,
+#    triggerAna,
     pileUpAna,
     vertexAna,
     lepAna,
     jetAna,
     metAna,
-    leptonicVAna,
-    multiStateAna,
+#    leptonicVAna,
+#    multiStateAna,
     triggerFlagsAna,
 ]
     
 #sequence = cfg.Sequence(coreSequence)
-sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
-
+#sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
+sequence = cfg.Sequence(coreSequence+[jetTreeProducer])
  
 
 #-------- HOW TO RUN
 test = 1
 if test==1:
     # test a single component, using a single thread.
-    selectedComponents = dataSamples
-    #selectedComponents = mcSamples
-    #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
-    #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
-    #selectedComponents = [RSGravToZZToZZinv_narrow_800]
-    #selectedComponents = [DYJetsToLL_M50]
-    #selectedComponents = [BulkGravToZZ_narrow_800]
-    #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
+    selectedComponents = [JERCRef_data]
     for c in selectedComponents:
+        for i in c.files:
+            if ROOT.TString(i).Contains("000913F7-E9A7-E511-A286-003048FFD79C.root"):
+                c.files=i
+                print c.files
         #c.files = c.files[0]
-        c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
-        #c.splitFactor = 1
+        #c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
+        c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso
 
