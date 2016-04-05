@@ -45,6 +45,7 @@ coreSequence = [
     pileUpAna,
     vertexAna,
     lepAna,
+    jetAna,
     metAna,
     leptonicVAna,
     multiStateAna,

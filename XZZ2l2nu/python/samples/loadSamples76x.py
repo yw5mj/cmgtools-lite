@@ -13,7 +13,12 @@ from CMGTools.XZZ2l2nu.samples.samples_13TeV_signal76X import *
 from CMGTools.XZZ2l2nu.samples.samples_13TeV_DATA2015 import *
 # Load triggers
 from CMGTools.XZZ2l2nu.samples.triggers_13TeV_Spring15 import *
+# Load reference sample for jet energy corrections and jet resolution
+from CMGTools.XZZ2l2nu.samples.samples_JERCReference import * 
 
+# mc reference sample for jet energy corrections and jet resolution
+jercRefMC=[JERCRef_MC, JERCRef_MC_eos]
+jercRefdt=[JERCRef_data]
 
 # backgrounds
 backgroundSamples = [
@@ -75,8 +80,8 @@ BulkGravToZZToZlepZhad_narrow_4000,
 BulkGravToZZToZlepZhad_narrow_4500,
 ]
 # mc samples
-otherMcSamples=BulkGravToZZToZlepZhad
-mcSamples = signalSamples + backgroundSamples
+otherMcSamples=BulkGravToZZToZlepZhad  
+mcSamples = signalSamples + backgroundSamples + jercRefMC
 #mcSamples = backgroundSamples
 
 
@@ -96,7 +101,7 @@ for s in SinglePhoton:
     s.trigers = triggers_photon_unbias
 
 
-dataSamples=SingleMuon+SingleElectron
+dataSamples=SingleMuon+SingleElectron+jercRefdt
 
 # JSON
 # https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2015Analysis#ReReco_at_25_ns

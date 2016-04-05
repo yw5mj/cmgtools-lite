@@ -15,6 +15,7 @@ from CMGTools.XZZ2l2nu.analyzers.XZZTriggerBitFilter import *
 from CMGTools.XZZ2l2nu.analyzers.XZZVertexAnalyzer import *
 from CMGTools.XZZ2l2nu.analyzers.XZZMETAnalyzer import *
 from CMGTools.XZZ2l2nu.analyzers.XZZDumpEvtList import *
+from CMGTools.XZZ2l2nu.analyzers.XZZJetAnalyzer import *
 
 ###########################
 # define analyzers
@@ -78,7 +79,7 @@ lepAna = cfg.Analyzer(
     miniIsolationPUCorr = None, # Allowed options: 'rhoArea' (EAs for 03 cone scaled by R^2), 'deltaBeta', 
                                      # 'raw' (uncorrected), 'weights' (delta beta weights; not validated)
                                      # Choose None to just use the individual object's PU correction
-)
+    )
 
 ## Jets Analyzer (generic)
 jetAna = cfg.Analyzer(
@@ -99,9 +100,9 @@ jetAna = cfg.Analyzer(
     recalibrateJets = True, #'MC', # True, False, 'MC', 'Data'
     applyL2L3Residual = True, # Switch to 'Data' when they will become available for Data
     recalibrationType = "AK4PFchs",
-    mcGT     = "Summer15_25nsV6_MC",
-    dataGT   = "Summer15_25nsV6_DATA",
-    jecPath = "${CMSSW_BASE}/src/CMGTools/RootTools/data/jec/",
+    mcGT     = "Fall15_25nsV2_MC", # txt file pattern used in 74X: 'Summer15_25nsV6_MC'
+    dataGT   = "Fall15_25nsV2_DATA", #Summer15_25nsV6_DATA
+    jecPath = "${CMSSW_BASE}/src/CMGTools/XZZ2l2nu/data/jec/", #${CMSSW_BASE}/src/CMGTools/RootTools/data/jec/
     shiftJEC = 0, # set to +1 or -1 to apply +/-1 sigma shift to the nominal jet energies
     addJECShifts = False, # if true, add  "corr", "corrJECUp", and "corrJECDown" for each jet (requires uncertainties to be available!)
     smearJets = False,
@@ -129,7 +130,7 @@ metAna = cfg.Analyzer(
     doMetNoMu = False,
     doMetNoEle = False,
     doMetNoPhoton = False,
-    recalibrate = False, # or "type1", or True
+    recalibrate = "type1", # or "type1", or True, or False
     applyJetSmearing = False, # does nothing unless the jet smearing is turned on in the jet analyzer
     old74XMiniAODs = False, # set to True to get the correct Raw MET when running on old 74X MiniAODs
     jetAnalyzerPostFix = "",
@@ -208,6 +209,7 @@ coreSequence = [
     pileUpAna,
     vertexAna,
     lepAna,
+    jetAna,
     metAna,
     leptonicVAna,
 #    packedAna,

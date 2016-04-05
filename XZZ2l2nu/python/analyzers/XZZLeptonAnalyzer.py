@@ -22,7 +22,7 @@ class XZZLeptonAnalyzer( Analyzer ):
     #----------------------------------------
     def declareHandles(self):
         super(XZZLeptonAnalyzer, self).declareHandles()
-
+        
         #leptons
         self.handles['muons'] = AutoHandle(self.cfg_ana.muons,"std::vector<pat::Muon>")            
         self.handles['electrons'] = AutoHandle(self.cfg_ana.electrons,"std::vector<pat::Electron>")            
@@ -34,6 +34,10 @@ class XZZLeptonAnalyzer( Analyzer ):
         self.handles['rhoEleMiniIso'] = AutoHandle( self.cfg_ana.rhoElectronMiniIso, 'double')
         #rho for electron pfIso
         self.handles['rhoElePfIso'] = AutoHandle( self.cfg_ana.rhoElectronPfIso, 'double')
+
+        # decide to filter events not passing lepton requirements
+        self.do_filter = getattr(self.cfg_ana, 'do_filter', True)
+
         # use ISO
         self.applyIso = getattr(self.cfg_ana, 'applyIso', True)
         # electronIDVersion
@@ -341,11 +345,15 @@ class XZZLeptonAnalyzer( Analyzer ):
                 event.selectedElectrons[1].pt()>35.0 and abs(event.selectedElectrons[1].eta())<2.5):
                 self.counters.counter('events').inc('pass 2el kin+id+iso+acc events')
 
-        if len(event.selectedMuons)>=2 or len(event.selectedElectrons)>=2 :
+        if self.do_filter:
+            if len(event.selectedMuons)>=2 or len(event.selectedElectrons)>=2 :
+                self.counters.counter('events').inc('pass events')
+                return True
+            else: 
+                return False
+        else:
             self.counters.counter('events').inc('pass events')
             return True
-        else: 
-            return False
 
 #A default config
 setattr(XZZLeptonAnalyzer,"defaultConfig",cfg.Analyzer(
@@ -368,5 +376,6 @@ setattr(XZZLeptonAnalyzer,"defaultConfig",cfg.Analyzer(
     miniIsolationPUCorr = None, # Allowed options: 'rhoArea' (EAs for 03 cone scaled by R^2), 'deltaBeta', 
                                      # 'raw' (uncorrected), 'weights' (delta beta weights; not validated)
                                      # Choose None to just use the individual object's PU correction
+    do_filter=True,
     )
 )
