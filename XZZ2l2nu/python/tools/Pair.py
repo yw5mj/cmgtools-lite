@@ -14,7 +14,17 @@ class Pair(object):
         self.MT  =math.sqrt(self.leg1.p4().mass()*self.leg1.p4().mass()+\
             self.leg2.p4().mass()*self.leg2.p4().mass()+2*(et1*et2-self.leg1.p4().px()*self.leg2.p4().px()-self.leg1.p4().py()*self.leg2.p4().py()))
 
-        
+        et2a = math.sqrt(91.188**2+leg2.pt()*leg2.pt())  
+        self.MTa = math.sqrt(self.leg1.p4().mass()*self.leg1.p4().mass()+\
+            91.188**2+2*(et1*et2a-self.leg1.p4().px()*self.leg2.p4().px()-self.leg1.p4().py()*self.leg2.p4().py()))
+
+        et1b = leg1.p4().Et()
+        et2b = math.sqrt(91.188**2+leg2.pt()**2)
+        self.MTb = math.sqrt( (et1b+et2b)**2 - (leg1.pt()**2+leg2.pt()**2+2.0*(self.leg1.p4().px()*self.leg2.p4().px()+self.leg1.p4().py()*self.leg2.p4().py())) ) 
+
+        et1c = math.sqrt((leg1.mass())**2+leg1.pt()**2)
+        et2c = math.sqrt((leg1.mass())**2+leg2.pt()**2)
+        self.MTc = math.sqrt( (et1c+et2c)**2 - (leg1.pt()**2+leg2.pt()**2+2.0*(self.leg1.p4().px()*self.leg2.p4().px()+self.leg1.p4().py()*self.leg2.p4().py())) )
 
     def rawP4(self):
         return self.leg1.p4()+self.leg2.p4()
@@ -33,7 +43,16 @@ class Pair(object):
 
     def mt(self):
         return self.MT
-   
+  
+    def mta(self):
+        return self.MTa
+
+    def mtb(self):
+        return self.MTb
+
+    def mtc(self):
+        return self.MTc
+ 
     def pt(self):
         return self.LV.pt()
 
