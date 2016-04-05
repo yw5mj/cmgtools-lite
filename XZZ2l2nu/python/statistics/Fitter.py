@@ -491,30 +491,42 @@ class Fitter(object):
 
     def fit(self,model = "model",data="data",options=[]):
         if len(options)==0:
-            self.w.pdf(model).fitTo(self.w.data("data"))
+            self.w.pdf(model).fitTo(self.w.data(data))
         if len(options)==1:
-            self.w.pdf(model).fitTo(self.w.data("data"),options[0])
+            self.w.pdf(model).fitTo(self.w.data(data),options[0])
         if len(options)==2:
-            self.w.pdf(model).fitTo(self.w.data("data"),options[0],options[1])
+            self.w.pdf(model).fitTo(self.w.data(data),options[0],options[1])
         if len(options)==3:
-            self.w.pdf(model).fitTo(self.w.data("data"),options[0],options[1],options[2])
+            self.w.pdf(model).fitTo(self.w.data(data),options[0],options[1],options[2])
         if len(options)==4:
-            self.w.pdf(model).fitTo(self.w.data("data"),options[0],options[1],options[2],options[3])
+            self.w.pdf(model).fitTo(self.w.data(data),options[0],options[1],options[2],options[3])
 
+    def getModel(self,model='model'):
+        return self.w.pdf(model)
+
+    def getData(self,data='data'):
+        return self.w.data(data)
+   
+    def getFrame(self,name='frame',poi='x'):
+        self.frame = self.w.var(poi).frame()
+        self.frame.SetName(name)
+        return self.frame
 
     def fetch(self,var):
         return (self.w.var(var).getVal(), self.w.var(var).getError())
 
-    def projection(self,model = "model",data="data",poi="x",filename="fit.root"):
+    def projection(self,model = "model",data="data",poi="x",name='frame'):
         
         self.frame=self.w.var(poi).frame()
+        self.frame.SetName(name)
         self.w.data(data).plotOn(self.frame)
         self.w.pdf(model).plotOn(self.frame)
-        self.c=ROOT.TCanvas("c","c")
-        self.c.cd()
-        self.frame.Draw()
-        self.c.SaveAs(filename)
-        return self.frame.chiSquare()
+        #self.c=ROOT.TCanvas("c","c")
+        #self.c.cd()
+        #self.frame.Draw()
+        #self.c.SaveAs(filename)
+        #return self.frame.chiSquare()
+        return self.frame
         
         
                                 

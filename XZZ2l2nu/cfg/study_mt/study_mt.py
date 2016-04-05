@@ -137,6 +137,7 @@ h2 = []
 h3 = []
 h4 = []
 lg = []
+
 for idx,sample in enumerate(sigSamples):
     nbins = sigMassWindow[sample][0]
     xmin = sigMassWindow[sample][1]
