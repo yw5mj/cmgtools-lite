@@ -9,6 +9,8 @@ import PhysicsTools.HeppyCore.framework.config as cfg
 from PhysicsTools.Heppy.physicsutils.QGLikelihoodCalculator import QGLikelihoodCalculator
 from PhysicsTools.HeppyCore.statistics.counter import Counter, Counters
 
+from CMGTools.XZZ2l2nu.analyzers.JetResolution import JetResolution
+
 import copy
 def cleanNearestJetOnly(jets,leptons,deltaR):
     dr2 = deltaR**2
@@ -69,6 +71,10 @@ class JetAnalyzer( Analyzer ):
         super(JetAnalyzer,self).__init__(cfg_ana, cfg_comp, looperName)
         mcGT   = cfg_ana.mcGT   if hasattr(cfg_ana,'mcGT')   else "PHYS14_25_V2"
         dataGT = cfg_ana.dataGT if hasattr(cfg_ana,'dataGT') else "GR_70_V2_AN1"
+
+        mcGT_jer   = cfg_ana.mcGT_jer   if hasattr(cfg_ana,'mcGT_jer')   else "Summer15_25nsV6_MC"
+        dataGT_jer = cfg_ana.dataGT_jer if hasattr(cfg_ana,'dataGT_jer') else "Summer15_25nsV6_DATA"
+        
         self.shiftJEC = self.cfg_ana.shiftJEC if hasattr(self.cfg_ana, 'shiftJEC') else 0
         self.recalibrateJets = self.cfg_ana.recalibrateJets
         self.addJECShifts = self.cfg_ana.addJECShifts if hasattr(self.cfg_ana, 'addJECShifts') else 0
@@ -86,6 +92,7 @@ class JetAnalyzer( Analyzer ):
             elif doResidual == "Data": doResidual = not self.cfg_comp.isMC
             elif doResidual not in [True,False]: raise RuntimeError, "If specified, applyL2L3Residual must be any of { True, False, 'MC', 'Data'(default)}"
             GT = getattr(cfg_comp, 'jecGT', mcGT if self.cfg_comp.isMC else dataGT)
+            GT_jer= getattr(cfg_comp, 'jerGT', mcGT_jer if self.cfg_comp.isMC else dataGT_jer)
             # Now take care of the optional arguments
             kwargs = { 'calculateSeparateCorrections':calculateSeparateCorrections,
                        'calculateType1METCorrection' :calculateType1METCorrection, }
@@ -94,6 +101,7 @@ class JetAnalyzer( Analyzer ):
             print "[Debug] check input for jetReCalibrator: tell me if it is MC -- %r; tell me the doResidual is %r\n" % (self.cfg_comp.isMC, doResidual)
             
             self.jetReCalibrator = JetReCalibrator(GT, cfg_ana.recalibrationType, doResidual, cfg_ana.jecPath, **kwargs)
+        self.jetResolution = JetResolution(GT_jer, cfg_ana.recalibrationType, cfg_ana.jerPath)
         self.doPuId = getattr(self.cfg_ana, 'doPuId', True)
         self.jetLepDR = getattr(self.cfg_ana, 'jetLepDR', 0.4)
         self.jetLepArbitration = getattr(self.cfg_ana, 'jetLepArbitration', lambda jet,lepton: lepton) 
@@ -165,15 +173,32 @@ class JetAnalyzer( Analyzer ):
 
         if self.cfg_comp.isMC:
             self.genJets = [ x for x in self.handles['genJet'].product() ]
-            if self.cfg_ana.do_mc_match:
-                for igj, gj in enumerate(self.genJets):
-                    gj.index = igj
-                self.matchJets(event, allJets)
-            if getattr(self.cfg_ana, 'smearJets', False):
-                self.smearJets(event, allJets)
-
-
+        #     if self.cfg_ana.do_mc_match:
+        #         for igj, gj in enumerate(self.genJets):
+        #             gj.index = igj
+        #         self.matchJets(event, allJets)
+        #     if getattr(self.cfg_ana, 'smearJets', False):
+        #         self.smearJets(event, allJets)
                 
+        
+        # ==> following matching example from PhysicsTools/Heppy/python/analyzers/examples/JetAnalyzer.py
+        for jet in allJets:
+            if self.cfg_comp.isMC and hasattr( self.cfg_comp, 'jetScale'):
+                scale = random.gauss( self.cfg_comp.jetScale,
+                                      self.cfg_comp.jetSmear )
+                jet.scaleEnergy( scale )
+            if self.genJets:
+                # Use DeltaR = 0.2 matching like JetMET from 
+                # https://github.com/blinkseb/JMEReferenceSample/blob/master/test/createReferenceSample.py
+                pairs = matchObjectCollection( [jet], self.genJets, 0.2*0.2)
+                if pairs[jet] is None:
+                    pass
+                else:
+                    jet.matchedGenJet = pairs[jet] 
+            if self.cfg_comp.isMC and hasattr(jet, 'matchedGenJet'):
+                self.jetResolution.getResolution(jet,rho)
+
+               
         
 	##Sort Jets by pT 
         allJets.sort(key = lambda j : j.pt(), reverse = True)
@@ -515,6 +540,7 @@ setattr(JetAnalyzer,"defaultConfig", cfg.Analyzer(
     smearJets = True,
     shiftJER = 0, # set to +1 or -1 to get +/-1 sigma shifts    
     jecPath = "",
+    jerPath = "",
     calculateSeparateCorrections = False,
     calculateType1METCorrection  = False,
     type1METParams = { 'jetPtThreshold':15., 'skipEMfractionThreshold':0.9, 'skipMuons':True },

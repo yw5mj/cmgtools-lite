@@ -22,7 +22,8 @@ class JetResolution:
 #        self.type1METParams  = type1METParams
         path = os.path.expandvars(jerPath) #"%s/src/CMGTools/XZZ2l2nu/data/jer" % os.environ['CMSSW_BASE'];
 
-        print '[Debug]',jerPath
+        print '[Debug] I am JetResolution.py: ',path
+        print "[Debug] %s/%s_PtResolution_%s.txt" % (path,globalTag,jetFlavour)
      # Step1 : Construct a FactorizedJetResObject object
         self.JetResObject = ROOT.JME.JetResolutionObject("%s/%s_PtResolution_%s.txt" % (path,globalTag,jetFlavour))
         self.JetSFObject = ROOT.JME.JetResolutionObject("%s/%s_SF_%s.txt" % (path,globalTag,jetFlavour))
@@ -39,15 +40,32 @@ class JetResolution:
 #        self.vPar = ROOT.vector(ROOT.JetCorrectorParameters)()
         
 
-    def getResolution(self,jet,delta=0,resolution=None):
+    def getResolution(self,jet,rho,delta=0,resolution=None):
         if not resolution: resolution = self.JetResObject
         if resolution != self.JetResObject and delta!=0: raise RuntimeError, 'Configuration not supported'
-        resPar.setJetPt(jet.pt());
-        resPar.setJetEta(jet.eta());
-        if not resolution.getRecord(resPar):
+        self.resPar.setJetPt(jet.pt())
+        self.resPar.setJetEta(jet.eta())
+        self.resPar.setRho(rho)
+        print '[Debug] I am in JetResolution.py to getResolution for jet(pT, eta) = (',jet.pt() ,jet.eta(),'), ', 'rho = ', rho  
+        if not resolution.getRecord(self.resPar):
             res=1
         else:
-            res=resolution.evaluateFormula(resolution.getRecord(resPar), resPar)
+            res=resolution.evaluateFormula(resolution.getRecord(self.resPar), self.resPar)
+        print '[Debug] I am in JetResolution.py: res = ',res
+        return res
+
+    def getResolution(self,jet,rho,delta=0,resolution=None):
+        if not resolution: resolution = self.JetResObject
+        if resolution != self.JetResObject and delta!=0: raise RuntimeError, 'Configuration not supported'
+        self.resPar.setJetPt(jet.pt())
+        self.resPar.setJetEta(jet.eta())
+        self.resPar.setRho(rho)
+        print '[Debug] I am in JetResolution.py to getResolution for jet(pT, eta) = (',jet.pt() ,jet.eta(),'), ', 'rho = ', rho  
+        if not resolution.getRecord(self.resPar):
+            res=1
+        else:
+            res=resolution.evaluateFormula(resolution.getRecord(self.resPar), self.resPar)
+        print '[Debug] I am in JetResolution.py: res = ',res
         return res
 
 
