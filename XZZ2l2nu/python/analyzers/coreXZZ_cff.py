@@ -87,8 +87,8 @@ jetAna = cfg.Analyzer(
     jetCol = 'slimmedJets',
     copyJetsByValue = False,      #Whether or not to copy the input jets or to work with references (should be 'True' if JetAnalyzer is run more than once)
     genJetCol = 'slimmedGenJets',
-    rho = ('fixedGridRhoFastjetAll','',''),
-    jetPt = 25.,
+    rho = ('fixedGridRhoAll','',''), # it was ('fixedGridRhoFastjetAll','','') 
+    jetPt = 5., # default used to be 25.
     jetEta = 4.7,
     jetEtaCentral = 2.4,
     jetLepDR = 0.4,
@@ -120,7 +120,7 @@ jetAna = cfg.Analyzer(
     collectionPostFix = "",
     calculateSeparateCorrections = True, # should be True if recalibrateJets is True, otherwise L1s will be inconsistent
     calculateType1METCorrection  = True,
-    type1METParams = { 'jetPtThreshold':15., 'skipEMfractionThreshold':0.9, 'skipMuons':True },
+    type1METParams = { 'jetPtThreshold':15., 'skipEMfractionThreshold':0.9, 'skipMuons':True }, # numbers for AK4CHS jets
     )
 
 metAna = cfg.Analyzer(

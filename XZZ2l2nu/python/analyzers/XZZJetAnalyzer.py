@@ -13,6 +13,35 @@ from CMGTools.XZZ2l2nu.analyzers.JetResolution import JetResolution
 
 import copy
 
+def XZZbestMatch( object, matchCollection, dPtMaxFactor):
+    '''Return the best match to object in matchCollection, which is the closest object in delta R'''
+    deltaR2Min = float('+inf')
+    bm = None
+    for match in matchCollection:
+        dR2 = deltaR2( object.eta(), object.phi(),
+                       match.eta(), match.phi() )
+        dPt = abs(match.pt()-object.pt())
+        if dR2 < deltaR2Min and dPt < dPtMaxFactor * object.pt() * object.resolution:
+            deltaR2Min = dR2
+            bm = match
+    return bm, deltaR2Min
+
+def XZZmatchObjectCollection( objects, matchCollection,
+                              deltaR2Max, dPtMaxFactor, 
+                              filter = lambda x,y : True):
+    pairs = {}
+    if len(objects)==0:
+        return pairs
+    if len(matchCollection)==0:
+        return dict( zip(objects, [None]*len(objects)) )
+    for object in objects:
+        bm, dr2 = XZZbestMatch( object, [mob for mob in matchCollection if filter(object,mob)], dPtMaxFactor )
+        if dr2<deltaR2Max:
+            pairs[object] = bm
+        else:
+            pairs[object] = None
+    return pairs
+
 def cleanNearestJetOnly(jets,leptons,deltaR):
     dr2 = deltaR**2
     good = [ True for j in jets ]
@@ -185,10 +214,14 @@ class JetAnalyzer( Analyzer ):
         # ==> following matching example from PhysicsTools/Heppy/python/analyzers/examples/JetAnalyzer.py
         if self.cfg_comp.isMC:
             for jet in allJets:
+                jet.resolution = self.jetResolution.getResolution(jet,rho)
+                jet.jerfactor = self.jetResolution.getScaleFactor(jet)
+                print '[Debug] resolution = %.2f, sf = %.2f '  % (jet.resolution, jet.jerfactor)
+
                 if self.genJets:
                     # Use DeltaR = 0.2 matching jet and genJet from 
                     # https://github.com/blinkseb/JMEReferenceSample/blob/master/test/createReferenceSample.py
-                    pairs = matchObjectCollection( [jet], self.genJets, 0.2*0.2)
+                    pairs = XZZmatchObjectCollection( [jet], self.genJets, 0.2*0.2, 3)
                     if pairs[jet] is None:
                         pass
                     else:
@@ -441,62 +474,48 @@ class JetAnalyzer( Analyzer ):
 
         self.heaviestQCDFlavour = 5 if len(self.bqObjects) else (4 if len(self.cqObjects) else 1);
  
-    def matchJets(self, event, jets):
-        match = matchObjectCollection2(jets,
-                                       event.genbquarks + event.genwzquarks,
-                                       deltaRMax = 0.3)
-        for jet in jets:
-            gen = match[jet]
-            jet.mcParton    = gen
-            jet.mcMatchId   = (gen.sourceId     if gen != None else 0)
-            jet.mcMatchFlav = (abs(gen.pdgId()) if gen != None else 0)
+    # def matchJets(self, jet):
+    #     ''' @ Apr-6-16 Adds genJets matching for JER according to 
+    #     https://github.com/cms-sw/cmssw/blob/518995a62433825453d7ccf9ec222d782086cad9/PhysicsTools/PatUtils/interface/SmearedJetProducerT.h
+        
+    #     used to produce the sync table:
+    #     https://twiki.cern.ch/twiki/bin/view/CMS/JERCReference
+    #     '''
+    #     if self.genJets:
+    #         # Use DeltaR = 0.2 matching jet and genJet from 
+    #         # https://github.com/blinkseb/JMEReferenceSample/blob/master/test/createReferenceSample.py
+    #         pairs = XZZmatchObjectCollection( [jet], self.genJets, 0.2*0.2)
+            
 
-        match = matchObjectCollection2(jets,
-                                       self.genJets,
-                                       deltaRMax = 0.3)
-        for jet in jets:
-            jet.mcJet = match[jet]
+    #         if pairs[jet] is None:
+    #             pass
+    #         else:
+                
+    #             jet.matchedGenJet = pairs[jet] 
 
-    def smearJets(self, event, jets):
-        # https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiTopRefSyst#Jet_energy_resolution
-       for jet in jets:
-            gen = jet.mcJet 
-            if gen != None:
-               genpt, jetpt, aeta = gen.pt(), jet.pt(), abs(jet.eta())
-               # from https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution
-               #8 TeV tables
-               factor = shiftJERfactor(self.shiftJER, aeta)
-               ptscale = max(0.0, (jetpt + (factor-1)*(jetpt-genpt))/jetpt)             
-               #print "get with pt %.1f (gen pt %.1f, ptscale = %.3f)" % (jetpt,genpt,ptscale)
-               jet.deltaMetFromJetSmearing = [ -(ptscale-1)*jet.rawFactor()*jet.px(), -(ptscale-1)*jet.rawFactor()*jet.py() ]
-               if ptscale != 0:
-                  jet.setP4(jet.p4()*ptscale)
-                  # leave the uncorrected unchanged for sync
-                  jet.setRawFactor(jet.rawFactor()/ptscale)
-            #else: print "jet with pt %.1d, eta %.2f is unmatched" % (jet.pt(), jet.eta())
-               if (self.shiftJER==0) and (self.addJERShifts):
-                   setattr(jet, "corrJER", ptscale )
-                   factorJERUp= shiftJERfactor(1, aeta)
-                   ptscaleJERUp = max(0.0, (jetpt + (factorJERUp-1)*(jetpt-genpt))/jetpt)
-                   setattr(jet, "corrJERUp", ptscaleJERUp)
-                   factorJERDown= shiftJERfactor(-1, aeta)
-                   ptscaleJERDown = max(0.0, (jetpt + (factorJERDown-1)*(jetpt-genpt))/jetpt)
-                   setattr(jet, "corrJERDown", ptscaleJERDown)
     
     def jerCorrection(self, jet, rho):
         ''' @ Apr-6-16 Adds JER correction 
         according to the recommended 'hybrid' method at
         https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution
+        
+        algorithm following:
+        https://github.com/cms-sw/cmssw/blob/518995a62433825453d7ccf9ec222d782086cad9/PhysicsTools/PatUtils/interface/SmearedJetProducerT.h
         '''
-        res = self.jetResolution.getResolution(jet,rho)
-        factor = self.jetResolution.getScaleFactor(jet)
+        res = jet.resolution
+        factor = jet.jerfactor
+        ptScale = 1.0
+        jetpt = jet.pt()
         if hasattr(jet, 'matchedGenJet'):
-            jetpt = jet.pt()
-            deltaPt =  (jetpt - jet.matchedGenJet.pt()) * factor
-            ptScale = max(0.0, (jetpt + deltaPt) / jetpt )
+            genpt = jet.matchedGenJet.pt()
+            ptScale = 1 + (factor - 1)*(jetpt - genpt)/jetpt
+        elif factor > 1.0:
+            ptScale = 1 + random.gauss(0, res*math.sqrt(factor**2-1))/jetpt
         else:
-            ptScale = random.gauss(1, math.sqrt(factor**2-1)*res)
+            print '[Info] Impossible to smear this jet -- check if genJet (%r), and factor>1.0 (%r) '% (hasattr(jet, 'matchedGenJet'), (factor > 1.0))
 #        print '[Debug] is table or not? %r, ptScale = %.2f' %( hasattr(jet, 'matchedGenJet'),ptScale)
+#        jet.deltaMetFromJetSmearing = [ -(ptscale-1)*jet.rawFactor()*jet.px(), -(ptscale-1)*jet.rawFactor()*jet.py() ]
+
         if ptScale!=0: 
             jet.scaleEnergy(ptScale)            
         else:
@@ -545,3 +564,32 @@ setattr(JetAnalyzer,"defaultConfig", cfg.Analyzer(
     )
 )
  
+
+
+
+
+    # def smearJets(self, event, jets):
+    #     # https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiTopRefSyst#Jet_energy_resolution
+    #    for jet in jets:
+    #         gen = jet.mcJet 
+    #         if gen != None:
+    #            genpt, jetpt, aeta = gen.pt(), jet.pt(), abs(jet.eta())
+    #            # from https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution
+    #            #8 TeV tables
+    #            factor = shiftJERfactor(self.shiftJER, aeta)
+    #            ptscale = max(0.0, (jetpt + (factor-1)*(jetpt-genpt))/jetpt)             
+    #            #print "get with pt %.1f (gen pt %.1f, ptscale = %.3f)" % (jetpt,genpt,ptscale)
+    #            jet.deltaMetFromJetSmearing = [ -(ptscale-1)*jet.rawFactor()*jet.px(), -(ptscale-1)*jet.rawFactor()*jet.py() ]
+    #            if ptscale != 0:
+    #               jet.setP4(jet.p4()*ptscale)
+    #               # leave the uncorrected unchanged for sync
+    #               jet.setRawFactor(jet.rawFactor()/ptscale)
+    #         #else: print "jet with pt %.1d, eta %.2f is unmatched" % (jet.pt(), jet.eta())
+    #            if (self.shiftJER==0) and (self.addJERShifts):
+    #                setattr(jet, "corrJER", ptscale )
+    #                factorJERUp= shiftJERfactor(1, aeta)
+    #                ptscaleJERUp = max(0.0, (jetpt + (factorJERUp-1)*(jetpt-genpt))/jetpt)
+    #                setattr(jet, "corrJERUp", ptscaleJERUp)
+    #                factorJERDown= shiftJERfactor(-1, aeta)
+    #                ptscaleJERDown = max(0.0, (jetpt + (factorJERDown-1)*(jetpt-genpt))/jetpt)
+    #                setattr(jet, "corrJERDown", ptscaleJERDown)
