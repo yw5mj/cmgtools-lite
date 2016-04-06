@@ -1,4 +1,4 @@
-import math, os
+import math, os, random
 from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
 from PhysicsTools.Heppy.physicsobjects.PhysicsObjects import Jet
@@ -63,11 +63,11 @@ def shiftJERfactor(JERShift, aeta):
         return factor 
 
 
-
-
-
 class JetAnalyzer( Analyzer ):
-    """Taken from RootTools.JetAnalyzer, simplified, modified, added corrections    """
+    """Taken from RootTools.JetAnalyzer, simplified, modified, added corrections    
+       Please sync your jet output and MET output with: (Apr-2016)
+       https://twiki.cern.ch/twiki/bin/view/CMS/JERCReference#Reference_table_for_MC
+    """
     def __init__(self, cfg_ana, cfg_comp, looperName):
         super(JetAnalyzer,self).__init__(cfg_ana, cfg_comp, looperName)
         mcGT   = cfg_ana.mcGT   if hasattr(cfg_ana,'mcGT')   else "PHYS14_25_V2"
@@ -183,23 +183,17 @@ class JetAnalyzer( Analyzer ):
                 
         
         # ==> following matching example from PhysicsTools/Heppy/python/analyzers/examples/JetAnalyzer.py
-        for jet in allJets:
-            if self.cfg_comp.isMC and hasattr( self.cfg_comp, 'jetScale'):
-                scale = random.gauss( self.cfg_comp.jetScale,
-                                      self.cfg_comp.jetSmear )
-                jet.scaleEnergy( scale )
-            if self.genJets:
-                # Use DeltaR = 0.2 matching like JetMET from 
-                # https://github.com/blinkseb/JMEReferenceSample/blob/master/test/createReferenceSample.py
-                pairs = matchObjectCollection( [jet], self.genJets, 0.2*0.2)
-                if pairs[jet] is None:
-                    pass
-                else:
-                    jet.matchedGenJet = pairs[jet] 
-            if self.cfg_comp.isMC and hasattr(jet, 'matchedGenJet'):
-                self.jetResolution.getResolution(jet,rho)
-                self.jetResolution.getScaleFactor(jet)
-
+        if self.cfg_comp.isMC:
+            for jet in allJets:
+                if self.genJets:
+                    # Use DeltaR = 0.2 matching jet and genJet from 
+                    # https://github.com/blinkseb/JMEReferenceSample/blob/master/test/createReferenceSample.py
+                    pairs = matchObjectCollection( [jet], self.genJets, 0.2*0.2)
+                    if pairs[jet] is None:
+                        pass
+                    else:
+                        jet.matchedGenJet = pairs[jet] 
+                self.jerCorrection(jet, rho)
                
         
 	##Sort Jets by pT 
@@ -463,8 +457,6 @@ class JetAnalyzer( Analyzer ):
         for jet in jets:
             jet.mcJet = match[jet]
 
-
- 
     def smearJets(self, event, jets):
         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiTopRefSyst#Jet_energy_resolution
        for jet in jets:
@@ -491,30 +483,24 @@ class JetAnalyzer( Analyzer ):
                    ptscaleJERDown = max(0.0, (jetpt + (factorJERDown-1)*(jetpt-genpt))/jetpt)
                    setattr(jet, "corrJERDown", ptscaleJERDown)
     
-    def jerCorrection(self, jet):
-        ''' Adds JER correction according to first method at
+    def jerCorrection(self, jet, rho):
+        ''' @ Apr-6-16 Adds JER correction 
+        according to the recommended 'hybrid' method at
         https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution
-        
-        Requires some attention when genJet matching fails.
         '''
-        if not hasattr(jet, 'matchedGenJet'):
-            return
-        #import pdb; pdb.set_trace()
-        corrections = [0.052, 0.057, 0.096, 0.134, 0.288]
-        maxEtas = [0.5, 1.1, 1.7, 2.3, 5.0]
-        eta = abs(jet.eta())
-        for i, maxEta in enumerate(maxEtas):
-            if eta < maxEta:
-                pt = jet.pt()
-                deltaPt = (pt - jet.matchedGenJet.pt()) * corrections[i]
-                totalScale = (pt + deltaPt) / pt
-
-                if totalScale < 0.:
-                    totalScale = 0.
-                jet.scaleEnergy(totalScale)
-                break
-
-
+        res = self.jetResolution.getResolution(jet,rho)
+        factor = self.jetResolution.getScaleFactor(jet)
+        if hasattr(jet, 'matchedGenJet'):
+            jetpt = jet.pt()
+            deltaPt =  (jetpt - jet.matchedGenJet.pt()) * factor
+            ptScale = max(0.0, (jetpt + deltaPt) / jetpt )
+        else:
+            ptScale = random.gauss(1, math.sqrt(factor**2-1)*res)
+#        print '[Debug] is table or not? %r, ptScale = %.2f' %( hasattr(jet, 'matchedGenJet'),ptScale)
+        if ptScale!=0: 
+            jet.scaleEnergy(ptScale)            
+        else:
+            pass
 
 setattr(JetAnalyzer,"defaultConfig", cfg.Analyzer(
     class_object = JetAnalyzer,
@@ -558,3 +544,4 @@ setattr(JetAnalyzer,"defaultConfig", cfg.Analyzer(
     collectionPostFix = ""
     )
 )
+ 

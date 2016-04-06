@@ -5,10 +5,12 @@ from PhysicsTools.HeppyCore.utils.deltar import *
 
 class JetResolution:
     def __init__(self,globalTag="",jetFlavour="",jerPath="" ):
-        """Create a corrector object that reads the payloads from the text dumps of a global tag under
-            CMGTools/RootTools/data/jec  (see the getJec.py there to make the dumps).
-           It will apply the L1,L2,L3 and possibly the residual corrections to the jets.
-           If configured to do so, it will also compute the type1 MET corrections."""
+        """Create resolution and scalefactor objects to read the payloads from the text dumps from global tag under
+            CMGTools/XZZ2l2nu/data/jer  (provided from https://github.com/cms-jet/JRDatabase/tree/master/textFiles/Fall15_25nsV2_MC).
+           It will jet PtResolution and resolution scale factors for jets.
+           Receipt from 
+           https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyResolution
+           """
         debug=False
 
         if globalTag=="" and jetFlavour=="" and jerPath=="": raise RuntimeError, 'Configuration not supported'
@@ -34,32 +36,35 @@ class JetResolution:
         self.sfPar = ROOT.JME.JetParameters()
        
 
-    def getResolution(self,jet,rho,delta=0,resolution=None):
+    def getResolution(self,jet,rho,resolution=None):
         if not resolution: resolution = self.JetResObject
-        if resolution != self.JetResObject and delta!=0: raise RuntimeError, 'Configuration not supported'
+        if resolution != self.JetResObject : raise RuntimeError, 'Configuration not supported'
         self.resPar.setJetPt(jet.pt())
         self.resPar.setJetEta(jet.eta())
         self.resPar.setRho(rho)
 #        print '[Debug] I am in JetResolution.py to getResolution for jet(pT, eta) = (',jet.pt() ,jet.eta(),'), ', 'rho = ', rho  
         if not resolution.getRecord(self.resPar):
             res = 1.0
-            print '[Info] [JetResolution.py] no resolution record for [jet (pT, eta), rho] = [(%.f, %.f), %.f]' % (jet.pt(), jet.eta(),rho)
+            print '[Info] [JetResolution.py] no resolution record for [jet (pT, eta), rho] = [(%.2f, %.2f), %.2f]' % (jet.pt(), jet.eta(),rho)
         else:
             res = resolution.evaluateFormula(resolution.getRecord(self.resPar), self.resPar)
 #        print '[Debug] I am in JetResolution.py: res = ',res
         return res
 
-    def getScaleFactor(self,jet,delta=0,scalefactor=None):
+    def getScaleFactor(self,jet,variation='norminal',scalefactor=None):
+
+        Variation={'norminal':0,'down':1,'up':2} 
+
         if not scalefactor: scalefactor = self.JetSFObject
-        if scalefactor != self.JetSFObject and delta!=0: raise RuntimeError, 'Configuration not supported'
+        if scalefactor != self.JetSFObject : raise RuntimeError, 'Configuration not supported'
         self.sfPar.setJetEta(jet.eta())
 #        print '[Debug] I am in JetResolution.py to getScaleFactor for jet(eta) = (',jet.eta(),')'
         if not scalefactor.getRecord(self.sfPar):
             res_sf = 1.0
-            print '[Info] [JetResolution.py] no scale factor record for jet(pT, eta) = (%.f, %.f)' % (jet.pt(), jet.eta()) 
+            print '[Info] [JetResolution.py] no scale factor record for jet(pT, eta) = (%.2f, %.2f)' % (jet.pt(), jet.eta()) 
         else:
-            res_sf = scalefactor.getRecord(self.sfPar).getParametersValues()
-#            print '[Debug] I am in JetResolution.py: res_sf = ',res_sf.at(0)
+            res_sf = scalefactor.getRecord(self.sfPar).getParametersValues().at(Variation[variation])
+#            print '[Debug] I am in JetResolution.py: res_sf = ',res_sf
         return res_sf
 
 
