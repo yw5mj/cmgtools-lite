@@ -12,6 +12,7 @@ from PhysicsTools.HeppyCore.statistics.counter import Counter, Counters
 from CMGTools.XZZ2l2nu.analyzers.JetResolution import JetResolution
 
 import copy
+
 def cleanNearestJetOnly(jets,leptons,deltaR):
     dr2 = deltaR**2
     good = [ True for j in jets ]
@@ -197,6 +198,7 @@ class JetAnalyzer( Analyzer ):
                     jet.matchedGenJet = pairs[jet] 
             if self.cfg_comp.isMC and hasattr(jet, 'matchedGenJet'):
                 self.jetResolution.getResolution(jet,rho)
+                self.jetResolution.getScaleFactor(jet)
 
                
         

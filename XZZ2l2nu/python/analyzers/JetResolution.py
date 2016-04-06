@@ -9,36 +9,30 @@ class JetResolution:
             CMGTools/RootTools/data/jec  (see the getJec.py there to make the dumps).
            It will apply the L1,L2,L3 and possibly the residual corrections to the jets.
            If configured to do so, it will also compute the type1 MET corrections."""
-        debug=True
+        debug=False
 
-        if globalTag=="" and jetFlavour=="" and jerPath=="":
-            globalTag="Summer15_25nsV6_MC"
-            jetFlavour="AK4PFchs"
-            jerPath="../../data/jer/Summer15_25nsV6_MC"
+        if globalTag=="" and jetFlavour=="" and jerPath=="": raise RuntimeError, 'Configuration not supported'
             
         self.globalTag = globalTag # "Summer15_25nsV6_DATA" or "Summer15_25nsV6_MC"
         self.jetFlavour = jetFlavour # "AK4PFchs" 
-        self.jerPath = jerPath 
-#        self.type1METParams  = type1METParams
-        path = os.path.expandvars(jerPath) #"%s/src/CMGTools/XZZ2l2nu/data/jer" % os.environ['CMSSW_BASE'];
+        self.jerPath = jerPath #"%s/src/CMGTools/XZZ2l2nu/data/jer" % os.environ['CMSSW_BASE'];
+        path = os.path.expandvars(jerPath) 
+        if debug:
+            print '[Debug] I am JetResolution.py: ',path
+            print "[Debug] %s/%s_PtResolution_%s.txt" % (path,globalTag,jetFlavour)
+            print "[Debug] %s/%s_SF_%s.txt" % (path,globalTag,jetFlavour)
 
-        print '[Debug] I am JetResolution.py: ',path
-        print "[Debug] %s/%s_PtResolution_%s.txt" % (path,globalTag,jetFlavour)
-     # Step1 : Construct a FactorizedJetResObject object
+        # Step1 : Construct a FactorizedJetResObject object
         self.JetResObject = ROOT.JME.JetResolutionObject("%s/%s_PtResolution_%s.txt" % (path,globalTag,jetFlavour))
         self.JetSFObject = ROOT.JME.JetResolutionObject("%s/%s_SF_%s.txt" % (path,globalTag,jetFlavour))
-        
         if debug : 
             self.JetResObject.dump() 
+            self.JetSFObject.dump()
+
         # Step2 : initialize JetParameters object for pt and eta (rho if it is sf)
-        
         self.resPar = ROOT.JME.JetParameters()
         self.sfPar = ROOT.JME.JetParameters()
-#        self.L1JetPar  = ROOT.JetCorrectorParameters("%s/%s_L1FastJet_%s.txt" % (path,globalTag,jetFlavour),"");
-#        self.L2JetPar  = ROOT.JetCorrectorParameters("%s/%s_L2Relative_%s.txt" % (path,globalTag,jetFlavour),"");
-#        self.L3JetPar  = ROOT.JetCorrectorParameters("%s/%s_L3Absolute_%s.txt" % (path,globalTag,jetFlavour),"");
-#        self.vPar = ROOT.vector(ROOT.JetCorrectorParameters)()
-        
+       
 
     def getResolution(self,jet,rho,delta=0,resolution=None):
         if not resolution: resolution = self.JetResObject
@@ -46,42 +40,28 @@ class JetResolution:
         self.resPar.setJetPt(jet.pt())
         self.resPar.setJetEta(jet.eta())
         self.resPar.setRho(rho)
-        print '[Debug] I am in JetResolution.py to getResolution for jet(pT, eta) = (',jet.pt() ,jet.eta(),'), ', 'rho = ', rho  
+#        print '[Debug] I am in JetResolution.py to getResolution for jet(pT, eta) = (',jet.pt() ,jet.eta(),'), ', 'rho = ', rho  
         if not resolution.getRecord(self.resPar):
-            res=1
+            res = 1.0
+            print '[Info] [JetResolution.py] no resolution record for [jet (pT, eta), rho] = [(%.f, %.f), %.f]' % (jet.pt(), jet.eta(),rho)
         else:
-            res=resolution.evaluateFormula(resolution.getRecord(self.resPar), self.resPar)
-        print '[Debug] I am in JetResolution.py: res = ',res
+            res = resolution.evaluateFormula(resolution.getRecord(self.resPar), self.resPar)
+#        print '[Debug] I am in JetResolution.py: res = ',res
         return res
 
-    def getResolution(self,jet,rho,delta=0,resolution=None):
-        if not resolution: resolution = self.JetResObject
-        if resolution != self.JetResObject and delta!=0: raise RuntimeError, 'Configuration not supported'
-        self.resPar.setJetPt(jet.pt())
-        self.resPar.setJetEta(jet.eta())
-        self.resPar.setRho(rho)
-        print '[Debug] I am in JetResolution.py to getResolution for jet(pT, eta) = (',jet.pt() ,jet.eta(),'), ', 'rho = ', rho  
-        if not resolution.getRecord(self.resPar):
-            res=1
+    def getScaleFactor(self,jet,delta=0,scalefactor=None):
+        if not scalefactor: scalefactor = self.JetSFObject
+        if scalefactor != self.JetSFObject and delta!=0: raise RuntimeError, 'Configuration not supported'
+        self.sfPar.setJetEta(jet.eta())
+#        print '[Debug] I am in JetResolution.py to getScaleFactor for jet(eta) = (',jet.eta(),')'
+        if not scalefactor.getRecord(self.sfPar):
+            res_sf = 1.0
+            print '[Info] [JetResolution.py] no scale factor record for jet(pT, eta) = (%.f, %.f)' % (jet.pt(), jet.eta()) 
         else:
-            res=resolution.evaluateFormula(resolution.getRecord(self.resPar), self.resPar)
-        print '[Debug] I am in JetResolution.py: res = ',res
-        return res
+            res_sf = scalefactor.getRecord(self.sfPar).getParametersValues()
+#            print '[Debug] I am in JetResolution.py: res_sf = ',res_sf.at(0)
+        return res_sf
 
-
-    # def rawP4forType1MET_(self, jet):
-    #     """Return the raw 4-vector, after subtracting the muons (if requested),
-    #        or None if the jet fails the EMF cut."""
-    #     p4 = jet.p4() * jet.rawFactor()
-    #     emf = ( jet.physObj.neutralEmEnergy() + jet.physObj.chargedEmEnergy() )/p4.E()
-    #     if emf > self.type1METParams['skipEMfractionThreshold']:
-    #         return None
-    #     if self.type1METParams['skipMuons']:
-    #         for idau in xrange(jet.numberOfDaughters()):
-    #             pfcand = jet.daughter(idau)
-    #             if pfcand.isGlobalMuon() or pfcand.isStandAloneMuon(): 
-    #                 p4 -= pfcand.p4()
-    #     return p4
 
 #     def correct(self,jet,rho,delta=0,addCorr=False,addShifts=False, metShift=[0,0],type1METCorr=[0,0,0]):
 #         """Corrects a jet energy (optionally shifting it also by delta times the JEC uncertainty)
@@ -140,47 +120,4 @@ class JetResolution:
     #         print "Warning: %d out of %d jets flagged bad by JEC." % (len(badJets), len(jets))
     #     for bj in badJets:
     #         jets.remove(bj)
-
-# class Type1METCorrector:
-#     def __init__(self, old74XMiniAODs):
-#         """Object to apply type1 corrections computed by the JetReCalibrator to the MET.
-#            old74XMiniAODs should be True if using inputs produced with CMSSW_7_4_11 or earlier."""
-#         self.oldMC = old74XMiniAODs
-#     def correct(self,met,type1METCorrections):
-#         oldpx, oldpy = met.px(), met.py()
-#         #print "old met: px %+10.5f, py %+10.5f" % (oldpx, oldpy)
-#         if self.oldMC:
-#             raw  = met.shiftedP2_74x(12,0);
-#             rawsumet =  met.shiftedSumEt_74x(12,0);
-#         else:
-#             raw = met.uncorP2()
-#             rawsumet =  met.uncorSumEt();
-#         rawpx, rawpy = raw.px, raw.py
-#         #print "raw met: px %+10.5f, py %+10.5f" % (rawpx, rawpy)
-#         corrpx = rawpx + type1METCorrections[0]
-#         corrpy = rawpy + type1METCorrections[1]
-#         corrsumet = rawsumet  + type1METCorrections[2]
-#         #print "done met: px %+10.5f, py %+10.5f\n" % (corrpx,corrpy)
-#         met.setP4(ROOT.reco.Particle.LorentzVector(corrpx,corrpy,0,hypot(corrpx,corrpy)))
-#         ## workaround for missing setSumEt in reco::MET and pat::MET
-#         met._sumEt = corrsumet
-#         met.sumEt = types.MethodType(lambda myself : myself._sumEt, met, met.__class__) 
-#         if not self.oldMC:
-#             met.setCorShift(rawpx, rawpy, rawsumet, met.Raw)
-#         else: 
-#             # to avoid segfauls in pat::MET, I need a more ugly solution
-#             setFakeRawMETOnOldMiniAODs(met, rawpx,rawpy, rawsumet)
-
-# def setFakeRawMETOnOldMiniAODs(met, rawpx, rawpy, rawsumet):
-#         met._rawSumEt = rawsumet
-#         met._rawP4    = ROOT.reco.Particle.LorentzVector(rawpx,rawpy,0,hypot(rawpx,rawpy))
-#         met.uncorPt  = types.MethodType(lambda myself : myself._rawP4.Pt(), met, met.__class__)
-#         met.uncorPx  = types.MethodType(lambda myself : myself._rawP4.Px(), met, met.__class__)
-#         met.uncorPy  = types.MethodType(lambda myself : myself._rawP4.Py(), met, met.__class__)
-#         met.uncorPhi = types.MethodType(lambda myself : myself._rawP4.Phi(), met, met.__class__)
-#         met.uncorP4  = types.MethodType(lambda myself : myself._rawP4, met, met.__class__)
-#         met.uncorSumEt = types.MethodType(lambda myself : myself._rawSumEt, met, met.__class__)
-#         # the two below are a bit more tricky, but probably less needed, but something dummy
-#         met.uncorP2 = types.MethodType(lambda myself : None, met, met.__class__)
-#         met.uncorP3 = types.MethodType(lambda myself : None, met, met.__class__)
 
