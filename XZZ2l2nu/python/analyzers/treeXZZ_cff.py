@@ -47,6 +47,7 @@ vvTreeProducer = cfg.Analyzer(
          NTupleVariable("nLL",lambda ev: len(ev.LL) , int),       
          NTupleVariable("nLLNuNu",lambda ev: len(ev.LLNuNu) , int),       
          NTupleVariable("nVert",  lambda ev: len(ev.goodVertices), int, help="Number of good vertices"), 
+         NTupleVariable("triggersf",  lambda x : getattr(x,'trgsf',1), help="singleelectron/muon trigger sf"),
      ],
      globalObjects =  {
          "met" : NTupleObject("met", metType, help="PF E_{T}^{miss}, after type 1 corrections"),
