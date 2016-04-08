@@ -4,15 +4,13 @@ from math import *
 from PhysicsTools.HeppyCore.utils.deltar import *
 
 class JetResolution:
-    def __init__(self,globalTag="",jetFlavour="",jerPath="" ):
+    def __init__(self,globalTag="",jetFlavour="",jerPath="" ,debug=False):
         """Create resolution and scalefactor objects to read the payloads from the text dumps from global tag under
             CMGTools/XZZ2l2nu/data/jer  (provided from https://github.com/cms-jet/JRDatabase/tree/master/textFiles/Fall15_25nsV2_MC).
            It will jet PtResolution and resolution scale factors for jets.
            Receipt from 
            https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyResolution
            """
-        debug=False
-
         if globalTag=="" and jetFlavour=="" and jerPath=="": raise RuntimeError, 'Configuration not supported'
             
         self.globalTag = globalTag # "Summer15_25nsV6_DATA" or "Summer15_25nsV6_MC"
@@ -43,11 +41,11 @@ class JetResolution:
         self.resPar.setJetEta(jet.eta())
         self.resPar.setRho(rho)
 #        print '[Debug] I am in JetResolution.py to getResolution for jet(pT, eta) = (',jet.pt() ,jet.eta(),'), ', 'rho = ', rho  
-        if not resolution.getRecord(self.resPar):
-            res = 1.0
-            print '[Info] [JetResolution.py] no resolution record for [jet (pT, eta), rho] = [(%.2f, %.2f), %.2f]' % (jet.pt(), jet.eta(),rho)
-        else:
+        res = 1.0
+        if resolution.getRecord(self.resPar):
             res = resolution.evaluateFormula(resolution.getRecord(self.resPar), self.resPar)
+        else:
+            print '[Info] [JetResolution.py] no resolution record for [jet (pT, eta), rho] = [(%.2f, %.2f), %.2f]' % (jet.pt(), jet.eta(),rho)
 #        print '[Debug] I am in JetResolution.py: res = ',res
         return res
 
@@ -59,11 +57,11 @@ class JetResolution:
         if scalefactor != self.JetSFObject : raise RuntimeError, 'Configuration not supported'
         self.sfPar.setJetEta(jet.eta())
 #        print '[Debug] I am in JetResolution.py to getScaleFactor for jet(eta) = (',jet.eta(),')'
-        if not scalefactor.getRecord(self.sfPar):
-            res_sf = 1.0
-            print '[Info] [JetResolution.py] no scale factor record for jet(pT, eta) = (%.2f, %.2f)' % (jet.pt(), jet.eta()) 
-        else:
+        res_sf = 1.0
+        if scalefactor.getRecord(self.sfPar):
             res_sf = scalefactor.getRecord(self.sfPar).getParametersValues().at(Variation[variation])
+        else:
+            print '[Info] [JetResolution.py] no scale factor record for jet(pT, eta) = (%.2f, %.2f)' % (jet.pt(), jet.eta()) 
 #            print '[Debug] I am in JetResolution.py: res_sf = ',res_sf
         return res_sf
 

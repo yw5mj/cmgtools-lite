@@ -1,4 +1,4 @@
-import math, os, random
+import math, os, random, ROOT
 from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
 from PhysicsTools.Heppy.physicsobjects.PhysicsObjects import Jet
@@ -13,15 +13,14 @@ from CMGTools.XZZ2l2nu.analyzers.JetResolution import JetResolution
 
 import copy
 
-def XZZbestMatch( object, matchCollection, dPtMaxFactor):
+def XZZbestMatch( object, matchCollection):
     '''Return the best match to object in matchCollection, which is the closest object in delta R'''
     deltaR2Min = float('+inf')
     bm = None
     for match in matchCollection:
         dR2 = deltaR2( object.eta(), object.phi(),
                        match.eta(), match.phi() )
-        dPt = abs(match.pt()-object.pt())
-        if dR2 < deltaR2Min and dPt < dPtMaxFactor * object.pt() * object.resolution:
+        if dR2 < deltaR2Min:
             deltaR2Min = dR2
             bm = match
     return bm, deltaR2Min
@@ -35,8 +34,9 @@ def XZZmatchObjectCollection( objects, matchCollection,
     if len(matchCollection)==0:
         return dict( zip(objects, [None]*len(objects)) )
     for object in objects:
-        bm, dr2 = XZZbestMatch( object, [mob for mob in matchCollection if filter(object,mob)], dPtMaxFactor )
-        if dr2<deltaR2Max:
+        bm, dr2 = XZZbestMatch( object, [mob for mob in matchCollection if filter(object,mob)])
+        dPt = abs(bm.pt() - object.pt())
+        if dr2<deltaR2Max and dPt < dPtMaxFactor * object.pt() * object.resolution:
             pairs[object] = bm
         else:
             pairs[object] = None
@@ -216,7 +216,7 @@ class JetAnalyzer( Analyzer ):
             for jet in allJets:
                 jet.resolution = self.jetResolution.getResolution(jet,rho)
                 jet.jerfactor = self.jetResolution.getScaleFactor(jet)
-                print '[Debug] resolution = %.2f, sf = %.2f '  % (jet.resolution, jet.jerfactor)
+#                print '[Debug] resolution = %.2f, sf = %.2f '  % (jet.resolution, jet.jerfactor)
 
                 if self.genJets:
                     # Use DeltaR = 0.2 matching jet and genJet from 
@@ -505,12 +505,17 @@ class JetAnalyzer( Analyzer ):
         res = jet.resolution
         factor = jet.jerfactor
         ptScale = 1.0
-        jetpt = jet.pt()
+        #jetpt = jet.pt()
+        jetpt=jet.energy()
         if hasattr(jet, 'matchedGenJet'):
-            genpt = jet.matchedGenJet.pt()
+            #genpt = jet.matchedGenJet.pt()
+            genpt=jet.matchedGenJet.energy()
             ptScale = 1 + (factor - 1)*(jetpt - genpt)/jetpt
         elif factor > 1.0:
-            ptScale = 1 + random.gauss(0, res*math.sqrt(factor**2-1))/jetpt
+            #random.seed(37428479) # for syncing to the reference table
+            ran = ROOT.TRandom(37428479)
+            #ptScale = 1 + random.gauss(0, res*math.sqrt(factor**2 - 1))/jetpt
+            ptScale = 1 + ran.Gaus(0, res*math.sqrt(factor**2 - 1))/jetpt
         else:
             print '[Info] Impossible to smear this jet -- check if genJet (%r), and factor>1.0 (%r) '% (hasattr(jet, 'matchedGenJet'), (factor > 1.0))
 #        print '[Debug] is table or not? %r, ptScale = %.2f' %( hasattr(jet, 'matchedGenJet'),ptScale)
