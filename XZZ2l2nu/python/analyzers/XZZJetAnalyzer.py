@@ -13,28 +13,22 @@ from CMGTools.XZZ2l2nu.analyzers.JetResolution import JetResolution
 
 import copy
 
-def XZZbestMatch( object, matchCollection):
-    '''Return the best match to object in matchCollection, which is the closest object in delta R'''
-    deltaR2Min = float('+inf')
-    bm = None
-    for match in matchCollection:
-        dR2 = deltaR2( object.eta(), object.phi(),
-                       match.eta(), match.phi() )
-        if dR2 < deltaR2Min:
-            deltaR2Min = dR2
-            bm = match
-    return bm, deltaR2Min
-
 def XZZmatchObjectCollection( objects, matchCollection,
                               deltaR2Max, dPtMaxFactor, 
                               filter = lambda x,y : True):
+    ''' @ Apr-6-16 Adds genJets matching for JER according to 
+    https://github.com/cms-sw/cmssw/blob/518995a62433825453d7ccf9ec222d782086cad9/PhysicsTools/PatUtils/interface/SmearedJetProducerT.h
+    
+    used to produce the sync table:
+    https://twiki.cern.ch/twiki/bin/view/CMS/JERCReference
+    '''
     pairs = {}
     if len(objects)==0:
         return pairs
     if len(matchCollection)==0:
         return dict( zip(objects, [None]*len(objects)) )
     for object in objects:
-        bm, dr2 = XZZbestMatch( object, [mob for mob in matchCollection if filter(object,mob)])
+        bm, dr2 = bestMatch( object, [mob for mob in matchCollection if filter(object,mob)])
         dPt = abs(bm.pt() - object.pt())
         if dr2<deltaR2Max and dPt < dPtMaxFactor * object.pt() * object.resolution:
             pairs[object] = bm
@@ -98,6 +92,8 @@ class JetAnalyzer( Analyzer ):
        https://twiki.cern.ch/twiki/bin/view/CMS/JERCReference#Reference_table_for_MC
     """
     def __init__(self, cfg_ana, cfg_comp, looperName):
+        self.debug = getattr(cfg_ana, 'debug', False)
+
         super(JetAnalyzer,self).__init__(cfg_ana, cfg_comp, looperName)
         mcGT   = cfg_ana.mcGT   if hasattr(cfg_ana,'mcGT')   else "PHYS14_25_V2"
         dataGT = cfg_ana.dataGT if hasattr(cfg_ana,'dataGT') else "GR_70_V2_AN1"
@@ -116,7 +112,7 @@ class JetAnalyzer( Analyzer ):
         calculateType1METCorrection  = getattr(cfg_ana,"calculateType1METCorrection",  False);
         self.doJEC = self.recalibrateJets or (self.shiftJEC != 0) or self.addJECShifts or calculateSeparateCorrections or calculateType1METCorrection
         if self.doJEC:
-            print "[Debug] I am doing Jet energy calibration :D"
+            if self.debug: print "[Debug] I am doing Jet energy calibration :D"
             doResidual = getattr(cfg_ana, 'applyL2L3Residual', 'Data')
             if   doResidual == "MC":   doResidual = self.cfg_comp.isMC
             elif doResidual == "Data": doResidual = not self.cfg_comp.isMC
@@ -128,7 +124,7 @@ class JetAnalyzer( Analyzer ):
                        'calculateType1METCorrection' :calculateType1METCorrection, }
             if kwargs['calculateType1METCorrection']: kwargs['type1METParams'] = cfg_ana.type1METParams
             # instantiate the jet re-calibrator
-            print "[Debug] check input for jetReCalibrator: tell me if it is MC -- %r; tell me the doResidual is %r\n" % (self.cfg_comp.isMC, doResidual)
+            if self.debug: print "[Debug] check input for jetReCalibrator: tell me if it is MC -- %r; tell me the doResidual is %r\n" % (self.cfg_comp.isMC, doResidual)
             
             self.jetReCalibrator = JetReCalibrator(GT, cfg_ana.recalibrationType, doResidual, cfg_ana.jecPath, **kwargs)
         self.jetResolution = JetResolution(GT_jer, cfg_ana.recalibrationType, cfg_ana.jerPath)
@@ -149,8 +145,9 @@ class JetAnalyzer( Analyzer ):
         self.handles['genJet'] = AutoHandle( self.cfg_ana.genJetCol, 'vector<reco::GenJet>' )
         self.shiftJER = self.cfg_ana.shiftJER if hasattr(self.cfg_ana, 'shiftJER') else 0
         self.addJERShifts = self.cfg_ana.addJERShifts if hasattr(self.cfg_ana, 'addJERShifts') else 0
-        self.handles['rho'] = AutoHandle( self.cfg_ana.rho, 'double' )
-    
+        self.handles['rho'] = AutoHandle( self.cfg_ana.rho[0], 'double' )
+        self.handles['rho_jer'] = AutoHandle( self.cfg_ana.rho[1], 'double' )
+
     def beginLoop(self, setup):
         super(JetAnalyzer,self).beginLoop(setup)
         self.counters.addCounter('jets')
@@ -161,6 +158,7 @@ class JetAnalyzer( Analyzer ):
     def process(self, event):
         self.readCollections( event.input )
         rho  = float(self.handles['rho'].product()[0])
+        rho_jer = float(self.handles['rho_jer'].product()[0])
         self.rho = rho
 
         ## Read jets, if necessary recalibrate and shift MET
@@ -203,20 +201,12 @@ class JetAnalyzer( Analyzer ):
 
         if self.cfg_comp.isMC:
             self.genJets = [ x for x in self.handles['genJet'].product() ]
-        #     if self.cfg_ana.do_mc_match:
-        #         for igj, gj in enumerate(self.genJets):
-        #             gj.index = igj
-        #         self.matchJets(event, allJets)
-        #     if getattr(self.cfg_ana, 'smearJets', False):
-        #         self.smearJets(event, allJets)
-                
         
         # ==> following matching example from PhysicsTools/Heppy/python/analyzers/examples/JetAnalyzer.py
         if self.cfg_comp.isMC:
             for jet in allJets:
-                jet.resolution = self.jetResolution.getResolution(jet,rho)
+                jet.resolution = self.jetResolution.getResolution(jet,rho_jer)
                 jet.jerfactor = self.jetResolution.getScaleFactor(jet)
-#                print '[Debug] resolution = %.2f, sf = %.2f '  % (jet.resolution, jet.jerfactor)
 
                 if self.genJets:
                     # Use DeltaR = 0.2 matching jet and genJet from 
@@ -226,7 +216,9 @@ class JetAnalyzer( Analyzer ):
                         pass
                     else:
                         jet.matchedGenJet = pairs[jet] 
-                self.jerCorrection(jet, rho)
+                if self.debug: print '[Debug] I am event = ', event.input.eventAuxiliary().id().event()
+                if getattr(self.cfg_ana, 'smearJets', False):
+                    self.jerCorrection(jet, rho_jer)
                
         
 	##Sort Jets by pT 
@@ -473,28 +465,8 @@ class JetAnalyzer( Analyzer ):
                    jet.mcFlavour = 0
 
         self.heaviestQCDFlavour = 5 if len(self.bqObjects) else (4 if len(self.cqObjects) else 1);
- 
-    # def matchJets(self, jet):
-    #     ''' @ Apr-6-16 Adds genJets matching for JER according to 
-    #     https://github.com/cms-sw/cmssw/blob/518995a62433825453d7ccf9ec222d782086cad9/PhysicsTools/PatUtils/interface/SmearedJetProducerT.h
-        
-    #     used to produce the sync table:
-    #     https://twiki.cern.ch/twiki/bin/view/CMS/JERCReference
-    #     '''
-    #     if self.genJets:
-    #         # Use DeltaR = 0.2 matching jet and genJet from 
-    #         # https://github.com/blinkseb/JMEReferenceSample/blob/master/test/createReferenceSample.py
-    #         pairs = XZZmatchObjectCollection( [jet], self.genJets, 0.2*0.2)
-            
-
-    #         if pairs[jet] is None:
-    #             pass
-    #         else:
-                
-    #             jet.matchedGenJet = pairs[jet] 
-
     
-    def jerCorrection(self, jet, rho):
+    def jerCorrection(self, jet, rho_jer):
         ''' @ Apr-6-16 Adds JER correction 
         according to the recommended 'hybrid' method at
         https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution
@@ -511,27 +483,33 @@ class JetAnalyzer( Analyzer ):
             #genpt = jet.matchedGenJet.pt()
             genpt=jet.matchedGenJet.energy()
             ptScale = 1 + (factor - 1)*(jetpt - genpt)/jetpt
+            if self.debug: print '[Debug] I am scaling jet: jet(pT, eta, rho, rho_jer) = (%.4f, %.4f, %.4f, %.4f)' % (jet.pt(), jet.eta(), self.rho, rho_jer) 
         elif factor > 1.0:
             #random.seed(37428479) # for syncing to the reference table
             ran = ROOT.TRandom(37428479)
             #ptScale = 1 + random.gauss(0, res*math.sqrt(factor**2 - 1))/jetpt
             ptScale = 1 + ran.Gaus(0, res*math.sqrt(factor**2 - 1))/jetpt
+            if self.debug: print '[Debug] I am smearing jet: jet(pT, eta, rho, rho_jer) = (%.4f, %.4f, %.4f, %.4f) ' % (jet.pt(), jet.eta(), self.rho, rho_jer) 
         else:
             print '[Info] Impossible to smear this jet -- check if genJet (%r), and factor>1.0 (%r) '% (hasattr(jet, 'matchedGenJet'), (factor > 1.0))
-#        print '[Debug] is table or not? %r, ptScale = %.2f' %( hasattr(jet, 'matchedGenJet'),ptScale)
-#        jet.deltaMetFromJetSmearing = [ -(ptscale-1)*jet.rawFactor()*jet.px(), -(ptscale-1)*jet.rawFactor()*jet.py() ]
+
+        jet.deltaMetFromJetSmearing = [ -(ptScale-1)*jet.rawFactor()*jet.px(), -(ptScale-1)*jet.rawFactor()*jet.py() ]
 
         if ptScale!=0: 
             jet.scaleEnergy(ptScale)            
         else:
             pass
-
+        if self.debug and factor > 1.0 and not hasattr(jet, 'matchedGenJet'):
+            print '[Debug] I am scaling jet: jer_sf = %.4f, jer_jetpt = %.4f' % (jet.jerfactor, jet.pt() )
+            print '[Debug] I am smearing jet: jer_sf = %.4f, res = %.4f, jer_jetpt = %.4f' % (jet.jerfactor, jet.resolution, jet.pt() )
+        
 setattr(JetAnalyzer,"defaultConfig", cfg.Analyzer(
+    debug=False,    
     class_object = JetAnalyzer,
     jetCol = 'slimmedJets',
     copyJetsByValue = False,      #Whether or not to copy the input jets or to work with references (should be 'True' if JetAnalyzer is run more than once)
     genJetCol = 'slimmedGenJets',
-    rho = ('fixedGridRhoFastjetAll','',''),
+    rho = ('fixedGridRhoFastjetAll','fixedGridRhoAll',''),
     jetPt = 25.,
     jetEta = 4.7,
     jetEtaCentral = 2.4,
