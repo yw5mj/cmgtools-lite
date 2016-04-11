@@ -84,11 +84,12 @@ lepAna = cfg.Analyzer(
 ## Jets Analyzer (generic)
 jetAna = cfg.Analyzer(
     JetAnalyzer, name='jetAnalyzer',
+    debug=False,
     jetCol = 'slimmedJets',
     copyJetsByValue = False,      #Whether or not to copy the input jets or to work with references (should be 'True' if JetAnalyzer is run more than once)
     genJetCol = 'slimmedGenJets',
-    rho = ('fixedGridRhoFastjetAll','',''),
-    jetPt = 25.,
+    rho = ('fixedGridRhoFastjetAll','fixedGridRhoAll',''), # it was ('fixedGridRhoFastjetAll','','') 
+    jetPt = 5., # default used to be 25.
     jetEta = 4.7,
     jetEtaCentral = 2.4,
     jetLepDR = 0.4,
@@ -102,7 +103,10 @@ jetAna = cfg.Analyzer(
     recalibrationType = "AK4PFchs",
     mcGT     = "Fall15_25nsV2_MC", # txt file pattern used in 74X: 'Summer15_25nsV6_MC'
     dataGT   = "Fall15_25nsV2_DATA", #Summer15_25nsV6_DATA
+    mcGT_jer    = "Summer15_25nsV6_MC", 
+    dataGT_jer  = "Summer15_25nsV6_DATA", 
     jecPath = "${CMSSW_BASE}/src/CMGTools/XZZ2l2nu/data/jec/", #${CMSSW_BASE}/src/CMGTools/RootTools/data/jec/
+    jerPath = "${CMSSW_BASE}/src/CMGTools/XZZ2l2nu/data/jer/", #${CMSSW_BASE}/src/CMGTools/RootTools/data/jec/
     shiftJEC = 0, # set to +1 or -1 to apply +/-1 sigma shift to the nominal jet energies
     addJECShifts = False, # if true, add  "corr", "corrJECUp", and "corrJECDown" for each jet (requires uncertainties to be available!)
     smearJets = False,
@@ -117,7 +121,7 @@ jetAna = cfg.Analyzer(
     collectionPostFix = "",
     calculateSeparateCorrections = True, # should be True if recalibrateJets is True, otherwise L1s will be inconsistent
     calculateType1METCorrection  = True,
-    type1METParams = { 'jetPtThreshold':15., 'skipEMfractionThreshold':0.9, 'skipMuons':True },
+    type1METParams = { 'jetPtThreshold':15., 'skipEMfractionThreshold':0.9, 'skipMuons':True }, # numbers for AK4CHS jets
     )
 
 metAna = cfg.Analyzer(
