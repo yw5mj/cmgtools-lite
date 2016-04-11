@@ -34,7 +34,6 @@ lepAna.electronIDVersion = 'HEEPv6' # can be looseID or HEEPv6
 lepAna.electronIsoVersion = 'miniISO' # can be pfISO or miniISO
 lepAna.do_filter=False
 
-metAna.recalibrate = "type1"
 #metAna.old74XMiniAODs = True
 
 #-------- SEQUENCE
