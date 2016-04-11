@@ -35,6 +35,8 @@ jetTreeProducer = cfg.Analyzer(
          "genLeptons" : NTupleCollection("genLep", genParticleType, 10, help="Generated leptons (e/mu) from W/Z decays"),
          "genZBosons" : NTupleCollection("genZ", genParticleType, 10, help="Generated V bosons"),
          "jets"  : NTupleCollection("jet_corr",corrJetType,15, help="all jets with new JEC for 76X applied"),
+         "jets_raw"  : NTupleCollection("jet",JetType,15, help="all jets from miniAOD"),
+         #"jets_uncert"  : NTupleCollection("jet_corr_uncert",corrJetType,15, help="jets with jec uncer"),
      }
 )
 
