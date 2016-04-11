@@ -35,7 +35,7 @@ lepAna.electronIsoVersion = 'miniISO' # can be pfISO or miniISO
 lepAna.do_filter=False
 
 jetAna.smearJets=True
-metAna.recalibrate = "type1"
+#metAna.applyJetSmearing=True
 #metAna.old74XMiniAODs = True
 
 #-------- SEQUENCE

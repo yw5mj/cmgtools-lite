@@ -491,7 +491,7 @@ class JetAnalyzer( Analyzer ):
             ptScale = 1 + ran.Gaus(0, res*math.sqrt(factor**2 - 1))/jetpt
             if self.debug: print '[Debug] I am smearing jet: jet(pT, eta, rho, rho_jer) = (%.4f, %.4f, %.4f, %.4f) ' % (jet.pt(), jet.eta(), self.rho, rho_jer) 
         else:
-            print '[Info] Impossible to smear this jet -- check if genJet (%r), and factor>1.0 (%r) '% (hasattr(jet, 'matchedGenJet'), (factor > 1.0))
+            if self.debug: print '[Info] Impossible to smear this jet -- check if genJet (%r), and factor>1.0 (%r) '% (hasattr(jet, 'matchedGenJet'), (factor > 1.0))
 
         jet.deltaMetFromJetSmearing = [ -(ptScale-1)*jet.rawFactor()*jet.px(), -(ptScale-1)*jet.rawFactor()*jet.py() ]
 
@@ -499,10 +499,12 @@ class JetAnalyzer( Analyzer ):
             jet.scaleEnergy(ptScale)            
         else:
             pass
+        setattr(jet, "corrJER", ptScale )
+        
         if self.debug and factor > 1.0 and not hasattr(jet, 'matchedGenJet'):
             print '[Debug] I am scaling jet: jer_sf = %.4f, jer_jetpt = %.4f' % (jet.jerfactor, jet.pt() )
             print '[Debug] I am smearing jet: jer_sf = %.4f, res = %.4f, jer_jetpt = %.4f' % (jet.jerfactor, jet.resolution, jet.pt() )
-        
+            
 setattr(JetAnalyzer,"defaultConfig", cfg.Analyzer(
     debug=False,    
     class_object = JetAnalyzer,

@@ -17,7 +17,8 @@ class JetResolution:
         self.jetFlavour = jetFlavour # "AK4PFchs" 
         self.jerPath = jerPath #"%s/src/CMGTools/XZZ2l2nu/data/jer" % os.environ['CMSSW_BASE'];
         path = os.path.expandvars(jerPath) 
-        if debug:
+        self.debug = debug
+        if self.debug:
             print '[Debug] I am JetResolution.py: ',path
             print "[Debug] %s/%s_PtResolution_%s.txt" % (path,globalTag,jetFlavour)
             print "[Debug] %s/%s_SF_%s.txt" % (path,globalTag,jetFlavour)
@@ -25,7 +26,7 @@ class JetResolution:
         # Step1 : Construct a FactorizedJetResObject object
         self.JetResObject = ROOT.JME.JetResolutionObject("%s/%s_PtResolution_%s.txt" % (path,globalTag,jetFlavour))
         self.JetSFObject = ROOT.JME.JetResolutionObject("%s/%s_SF_%s.txt" % (path,globalTag,jetFlavour))
-        if debug : 
+        if self.debug : 
             self.JetResObject.dump() 
             self.JetSFObject.dump()
 
@@ -40,13 +41,12 @@ class JetResolution:
         self.resPar.setJetPt(jet.pt())
         self.resPar.setJetEta(jet.eta())
         self.resPar.setRho(rho)
-#        print '[Debug] I am in JetResolution.py to getResolution for jet(pT, eta) = (',jet.pt() ,jet.eta(),'), ', 'rho = ', rho  
+
         res = 1.0
         if resolution.getRecord(self.resPar):
             res = resolution.evaluateFormula(resolution.getRecord(self.resPar), self.resPar)
         else:
-            print '[Info] [JetResolution.py] no resolution record for [jet (pT, eta), rho] = [(%.2f, %.2f), %.2f]' % (jet.pt(), jet.eta(),rho)
-#        print '[Debug] I am in JetResolution.py: res = ',res
+            if self.debug: print '[Info] [JetResolution.py] no resolution record for [jet (pT, eta), rho] = [(%.2f, %.2f), %.2f]' % (jet.pt(), jet.eta(),rho)
         return res
 
     def getScaleFactor(self,jet,variation='norminal',scalefactor=None):
@@ -56,71 +56,10 @@ class JetResolution:
         if not scalefactor: scalefactor = self.JetSFObject
         if scalefactor != self.JetSFObject : raise RuntimeError, 'Configuration not supported'
         self.sfPar.setJetEta(jet.eta())
-#        print '[Debug] I am in JetResolution.py to getScaleFactor for jet(eta) = (',jet.eta(),')'
         res_sf = 1.0
         if scalefactor.getRecord(self.sfPar):
             res_sf = scalefactor.getRecord(self.sfPar).getParametersValues().at(Variation[variation])
         else:
-            print '[Info] [JetResolution.py] no scale factor record for jet(pT, eta) = (%.2f, %.2f)' % (jet.pt(), jet.eta()) 
-#            print '[Debug] I am in JetResolution.py: res_sf = ',res_sf
+            if self.debug: print '[Info] [JetResolution.py] no scale factor record for jet(pT, eta) = (%.2f, %.2f)' % (jet.pt(), jet.eta()) 
         return res_sf
-
-
-#     def correct(self,jet,rho,delta=0,addCorr=False,addShifts=False, metShift=[0,0],type1METCorr=[0,0,0]):
-#         """Corrects a jet energy (optionally shifting it also by delta times the JEC uncertainty)
-
-#            If addCorr, set jet.corr to the correction.
-#            If addShifts, set also the +1 and -1 jet shifts 
-
-#            The metShift vector will accumulate the x and y changes to the MET from the JEC, i.e. the 
-#            negative difference between the new and old jet momentum, for jets eligible for type1 MET 
-#            corrections, and after subtracting muons. The pt cut is applied to the new corrected pt.
-#            This shift can be applied on top of the *OLD TYPE1 MET*, but only if there was no change 
-#            in the L1 corrections nor in the definition of the type1 MET (e.g. jet pt cuts).
-
-#            The type1METCorr vector, will accumulate the x, y, sumEt type1 MET corrections, to be
-#            applied to the *RAW MET* (if the feature was turned on in the constructor of the class).
-#         """
-# #        raw = jet.rawFactor()
-#         corr = self.getCorrection(jet,rho,delta)
-#         if addCorr: 
-#             jet.corr = corr
-#             for sepcorr in self.separateJetCorrectors.keys():
-#                 setattr(jet,"CorrFactor_"+sepcorr,self.getCorrection(jet,rho,delta=0,corrector=self.separateJetCorrectors[sepcorr]))
-#         if addShifts:
-#             for cdelta,shift in [(1.0, "JECUp"), (-1.0, "JECDown")]:
-#                 cshift = self.getCorrection(jet,rho,delta+cdelta)
-#                 setattr(jet, "corr"+shift, cshift)
-#         if corr <= 0:
-#             return False
-#         # newpt = jet.pt()*raw*corr
-#         # if newpt > self.type1METParams['jetPtThreshold']:
-#         #     rawP4forT1 = self.rawP4forType1MET_(jet)
-#         #     if rawP4forT1 and rawP4forT1.Pt()*corr > self.type1METParams['jetPtThreshold']:
-#         #         metShift[0] -= rawP4forT1.Px() * (corr - 1.0/raw)
-#         #         metShift[1] -= rawP4forT1.Py() * (corr - 1.0/raw)
-#         #         if self.calculateType1METCorr:
-#         #             l1corr = self.getCorrection(jet,rho,delta=0,corrector=self.separateJetCorrectors["L1"])
-#         #             #print "\tfor jet with raw pt %.5g, eta %.5g, dpx = %.5g, dpy = %.5g" % (
-#         #             #            jet.pt()*raw, jet.eta(), 
-#         #             #            rawP4forT1.Px()*(corr - l1corr), 
-#         #             #            rawP4forT1.Py()*(corr - l1corr))
-#         #             type1METCorr[0] -= rawP4forT1.Px() * (corr - l1corr) 
-#         #             type1METCorr[1] -= rawP4forT1.Py() * (corr - l1corr) 
-#         #             type1METCorr[2] += rawP4forT1.Et() * (corr - l1corr) 
-#         jet.setCorrP4(jet.p4() * (corr * raw))
-#         return True
-
-    # def correctAll(self,jets,rho,delta=0, addCorr=False, addShifts=False, metShift=[0.,0.], type1METCorr=[0.,0.,0.]):
-    #     """Applies 'correct' to all the jets, discard the ones that have bad corrections (corrected pt <= 0)"""
-    #     badJets = []
-    #     if metShift     != [0.,0.   ]: raise RuntimeError, "input metShift tuple is not initialized to zeros"
-    #     if type1METCorr != [0.,0.,0.]: raise RuntimeError, "input type1METCorr tuple is not initialized to zeros"
-    #     for j in jets:
-    #         ok = self.correct(j,rho,delta,addCorr=addCorr,addShifts=addShifts,metShift=metShift,type1METCorr=type1METCorr)
-    #         if not ok: badJets.append(j)
-    #     if len(badJets) > 0:
-    #         print "Warning: %d out of %d jets flagged bad by JEC." % (len(badJets), len(jets))
-    #     for bj in badJets:
-    #         jets.remove(bj)
 
