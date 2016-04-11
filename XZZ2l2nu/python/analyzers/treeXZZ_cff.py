@@ -65,6 +65,16 @@ vvTreeProducer = cfg.Analyzer(
      }
 )
 
+leptonEffTreeProducer = cfg.Analyzer(
+     AutoFillTreeProducer, name='leptonEffTreeProducer',
+     vectorTree = True,
+     saveTLorentzVectors = False,  # can set to True to get also the TLorentzVectors, but trees will be bigger
+     defaultFloatType = 'F', # use Float_t for floating point
+     collections = {
+         "llpair"  : NTupleCollection("llpair",llpairType ,5, help="lepton eff study"),
+     }
+)
+
 leptonTreeProducer = cfg.Analyzer(
      AutoFillTreeProducer, name='leptonTreeProducer',
      vectorTree = True,

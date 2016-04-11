@@ -28,6 +28,12 @@ LLNuNuType = NTupleObjectType("LLNuNuType", baseObjectTypes=[VVType], variables 
     NTupleSubObject("l2",  lambda x : x['pair'].leg2,metType),
 ])
 
+llpairType = NTupleObjectType("llpairType", baseObjectTypes=[], variables = [
+    NTupleSubObject("Z",  lambda x : x,LLType),
+    NTupleSubObject("l1",  lambda x : x.leg1,leptonType),
+    NTupleSubObject("l2",  lambda x : x.leg2,leptonType),
+])
+
 
 JetType = NTupleObjectType("JetType", baseObjectTypes=[fourVectorType], variables = [
     NTupleVariable("area",   lambda x : x.jetArea(), float),

@@ -70,6 +70,7 @@ lepAna = cfg.Analyzer(
     rhoElectronMiniIso = 'fixedGridRhoFastjetCentralNeutral',
     rhoElectronPfIso = 'fixedGridRhoFastjetAll',
     applyIso = True,
+    applyID = True,
     electronIDVersion = 'looseID', # can be looseID or HEEPv6
     electronIsoVersion = 'pfISO', # can be pfISO or miniISO
     mu_isoCorr = "rhoArea" ,

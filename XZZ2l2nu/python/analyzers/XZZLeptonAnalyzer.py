@@ -40,6 +40,8 @@ class XZZLeptonAnalyzer( Analyzer ):
 
         # use ISO
         self.applyIso = getattr(self.cfg_ana, 'applyIso', True)
+        self.applyID = getattr(self.cfg_ana, 'applyID', True)
+
         # electronIDVersion
         self.electronIDVersion = getattr(self.cfg_ana, 'electronIDVersion', 'looseID') # can be looseID or HEEPv6
         # electronIsoVersion
@@ -110,18 +112,18 @@ class XZZLeptonAnalyzer( Analyzer ):
 
         # lepton ID
         for mu in allmuons:
-            if (mu.highPtID or mu.trackerHighPtID ):
+            if (mu.highPtID or mu.trackerHighPtID ) or not self.applyID:
                 self.n_mu_passId += 1
-                if (self.applyIso and mu.miniRelIso<0.2):
+                if mu.miniRelIso<0.2 or not self.applyIso:
                     event.selectedLeptons.append(mu)
                     event.selectedMuons.append(mu)
                     self.n_mu_passIso += 1
             else:
                 event.otherLeptons.append(mu)
         for ele in allelectrons:
-            if ( (self.electronIDVersion=='HEEPv6' and ele.heepV60_noISO) or (self.electronIDVersion=='looseID' and ele.loose_nonISO)):
+            if ( (self.electronIDVersion=='HEEPv6' and ele.heepV60_noISO) or (self.electronIDVersion=='looseID' and ele.loose_nonISO)) or not self.applyID:
                 self.n_el_passId += 1
-                if (self.applyIso and ((self.electronIsoVersion=='miniISO' and ele.miniRelIso<0.1) or (self.electronIsoVersion=='pfISO' and ele.looseiso)) ):
+                if ((self.electronIsoVersion=='miniISO' and ele.miniRelIso<0.1) or (self.electronIsoVersion=='pfISO' and ele.looseiso)) or not self.applyIso:
                     event.selectedLeptons.append(ele)
                     event.selectedElectrons.append(ele)
                     self.n_el_passIso += 1
@@ -163,7 +165,7 @@ class XZZLeptonAnalyzer( Analyzer ):
 
         # Attach the vertex to them, for dxy/dz calculation
         for mu in allmuons:
-            mu.associatedVertex = event.goodVertices[0] if len(event.goodVertices)>0 else event.vertices[0]
+            mu.associatedVertex = event.goodVertices[0] if hasattr(event,"goodVertices") and len(event.goodVertices)>0 else event.vertices[0]
 
         # define muon id
         for mu in allmuons:
@@ -220,7 +222,7 @@ class XZZLeptonAnalyzer( Analyzer ):
 
         # Attach the vertex
         for ele in allelectrons:
-            ele.associatedVertex = event.goodVertices[0] if len(event.goodVertices)>0 else event.vertices[0]
+            ele.associatedVertex = event.goodVertices[0] if hasattr(event,"goodVertices") and len(event.goodVertices)>0 else event.vertices[0]
 
         # define electron ID
         for ele in allelectrons:
@@ -367,6 +369,7 @@ setattr(XZZLeptonAnalyzer,"defaultConfig",cfg.Analyzer(
     rhoElectronMiniIso = 'fixedGridRhoFastjetCentralNeutral',
     rhoElectronPfIso = 'fixedGridRhoFastjetAll',
     electronIDVersion = 'looseID', # can bee looseID or HEEPv6
+    applyID = True,
     applyIso = True,
     electronIsoVersion = 'pfISO', # can be pfISO or miniISO
     mu_isoCorr = "rhoArea" ,
