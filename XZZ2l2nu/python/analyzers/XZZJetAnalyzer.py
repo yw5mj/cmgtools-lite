@@ -182,6 +182,7 @@ class JetAnalyzer( Analyzer ):
         if self.doJEC:
             if not self.recalibrateJets:  # check point that things won't change
                 jetsBefore = [ (j.pt(),j.eta(),j.phi(),j.rawFactor()) for j in allJets ]
+            #print '[Debug] I am event = ', event.input.eventAuxiliary().id().event()
             self.jetReCalibrator.correctAll(allJets, rho, delta=self.shiftJEC, 
                                                 addCorr=True, addShifts=self.addJECShifts,
                                                 metShift=self.deltaMetFromJEC, type1METCorr=self.type1METCorr )           
@@ -492,7 +493,6 @@ class JetAnalyzer( Analyzer ):
             if self.debug: print '[Info] Impossible to smear this jet -- check if genJet (%r), and factor>1.0 (%r) '% (hasattr(jet, 'matchedGenJet'), (factor > 1.0))
 
         jet.deltaMetFromJetSmearing = [ -(ptScale-1)*jet.rawFactor()*jet.px(), -(ptScale-1)*jet.rawFactor()*jet.py() ]
-
         if ptScale!=0: 
             jet.scaleEnergy(ptScale)            
         else:
