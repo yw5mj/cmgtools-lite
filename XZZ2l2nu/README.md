@@ -166,6 +166,13 @@ Instruction to run jobs
   ```
  this will run config file run_xzz2l2nu_76x_cfg_loose_mc.py and output to directory mc_test
 
+ N.B. 
+  There are many options to pass to the main function of Heppy,
+  one useful example is to run few (e.g. 100) events test:
+  ```
+  heppy mc_test run_xzz2l2nu_76x_cfg_loose_mc.py -N 100
+  ```
+  you will have the first 100 events processed only.
 
 2. run batch jobs on lsf
 
@@ -224,4 +231,3 @@ Instruction to draw plots
   and draw all the plots, which will then store in sub-directory "plots/".
 
   All plots are merged into one single .pdf file, such as "plots/loosecut_log_.pdf"
-
