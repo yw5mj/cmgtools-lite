@@ -142,6 +142,7 @@ class JetAnalyzer( Analyzer ):
     def declareHandles(self):
         super(JetAnalyzer, self).declareHandles()
         self.handles['jets']   = AutoHandle( self.cfg_ana.jetCol, 'std::vector<pat::Jet>' )
+        self.handles['jets_raw']   = AutoHandle( self.cfg_ana.jetCol, 'std::vector<pat::Jet>' )
         self.handles['genJet'] = AutoHandle( self.cfg_ana.genJetCol, 'vector<reco::GenJet>' )
         self.shiftJER = self.cfg_ana.shiftJER if hasattr(self.cfg_ana, 'shiftJER') else 0
         self.addJERShifts = self.cfg_ana.addJERShifts if hasattr(self.cfg_ana, 'addJERShifts') else 0
@@ -162,6 +163,7 @@ class JetAnalyzer( Analyzer ):
         self.rho = rho
 
         ## Read jets, if necessary recalibrate and shift MET
+        self.jets_raw = map(Jet, self.handles['jets_raw'].product())
         if self.cfg_ana.copyJetsByValue: 
           import ROOT
           allJets = map(lambda j:Jet(ROOT.pat.Jet(ROOT.edm.Ptr(ROOT.pat.Jet)(ROOT.edm.ProductID(),j,0))), self.handles['jets'].product()) #copy-by-value is safe if JetAnalyzer is ran more than once
@@ -176,10 +178,7 @@ class JetAnalyzer( Analyzer ):
         self.type1METCorr    = [0.,0.,0.]
 #        print "before. rho",self.rho,self.cfg_ana.collectionPostFix,'allJets len ',len(allJets),'pt', [j.pt() for j in allJets]
         
-        self.jets_raw=[]
-        for jet in allJets:
-            self.jets_raw.append(jet)            
-            
+           
         if self.doJEC:
             if not self.recalibrateJets:  # check point that things won't change
                 jetsBefore = [ (j.pt(),j.eta(),j.phi(),j.rawFactor()) for j in allJets ]
