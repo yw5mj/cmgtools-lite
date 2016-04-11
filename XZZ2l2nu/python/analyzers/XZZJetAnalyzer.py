@@ -219,8 +219,7 @@ class JetAnalyzer( Analyzer ):
                 if self.debug: print '[Debug] I am event = ', event.input.eventAuxiliary().id().event()
                 if getattr(self.cfg_ana, 'smearJets', False):
                     self.jerCorrection(jet, rho_jer)
-               
-        
+
 	##Sort Jets by pT 
         allJets.sort(key = lambda j : j.pt(), reverse = True)
         
@@ -548,33 +547,3 @@ setattr(JetAnalyzer,"defaultConfig", cfg.Analyzer(
     collectionPostFix = ""
     )
 )
- 
-
-
-
-
-    # def smearJets(self, event, jets):
-    #     # https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiTopRefSyst#Jet_energy_resolution
-    #    for jet in jets:
-    #         gen = jet.mcJet 
-    #         if gen != None:
-    #            genpt, jetpt, aeta = gen.pt(), jet.pt(), abs(jet.eta())
-    #            # from https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution
-    #            #8 TeV tables
-    #            factor = shiftJERfactor(self.shiftJER, aeta)
-    #            ptscale = max(0.0, (jetpt + (factor-1)*(jetpt-genpt))/jetpt)             
-    #            #print "get with pt %.1f (gen pt %.1f, ptscale = %.3f)" % (jetpt,genpt,ptscale)
-    #            jet.deltaMetFromJetSmearing = [ -(ptscale-1)*jet.rawFactor()*jet.px(), -(ptscale-1)*jet.rawFactor()*jet.py() ]
-    #            if ptscale != 0:
-    #               jet.setP4(jet.p4()*ptscale)
-    #               # leave the uncorrected unchanged for sync
-    #               jet.setRawFactor(jet.rawFactor()/ptscale)
-    #         #else: print "jet with pt %.1d, eta %.2f is unmatched" % (jet.pt(), jet.eta())
-    #            if (self.shiftJER==0) and (self.addJERShifts):
-    #                setattr(jet, "corrJER", ptscale )
-    #                factorJERUp= shiftJERfactor(1, aeta)
-    #                ptscaleJERUp = max(0.0, (jetpt + (factorJERUp-1)*(jetpt-genpt))/jetpt)
-    #                setattr(jet, "corrJERUp", ptscaleJERUp)
-    #                factorJERDown= shiftJERfactor(-1, aeta)
-    #                ptscaleJERDown = max(0.0, (jetpt + (factorJERDown-1)*(jetpt-genpt))/jetpt)
-    #                setattr(jet, "corrJERDown", ptscaleJERDown)
