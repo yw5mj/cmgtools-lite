@@ -47,5 +47,5 @@ JetType = NTupleObjectType("JetType", baseObjectTypes=[fourVectorType], variable
 
 corrJetType = NTupleObjectType("corrJetType", baseObjectTypes=[JetType], variables = [
     NTupleVariable("jec_corr",   lambda x : x.corr, float), # JEC correction factor 
-    NTupleVariable("jer_corr",   lambda x : x.corrJER if hasattr(x,"corrJER") else  1.0 ,float) , # JER correction factor
+    NTupleVariable("jer_corr",   lambda x : x.corrJER if hasattr(x,"corrJER") else  1.0 ,float), # JER correction factor
 ])
