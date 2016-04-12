@@ -25,7 +25,7 @@ def gethist(flnm,att,a,b,c,st=''):
     return lst
 def ercal(a0,b0):
     a1=b0-a0
-    return ((a1**3+a0**3)/b0**4)**.5
+    return (a1*a0/b0**3)**.5
 def geteff(a,b,n=4,nm=''):
     if a.GetSize()!=b.GetSize():
         print 'ERROR: Different bin number!'
@@ -37,7 +37,7 @@ def geteff(a,b,n=4,nm=''):
         if b0:
             e.SetBinContent(i,100.*a0/b0)
             a1=b0-a0
-            e.SetBinError(i,((a1**3+a0**3)/b0**4)**.5*100)
+            e.SetBinError(i,(a1*a0/b0**3)**.5*100)
     e.SetMarkerColor(n)
     e.SetLineColor(n)
     return e
