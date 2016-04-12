@@ -28,6 +28,12 @@ LLNuNuType = NTupleObjectType("LLNuNuType", baseObjectTypes=[VVType], variables 
     NTupleSubObject("l2",  lambda x : x['pair'].leg2,metType),
 ])
 
+llpairType = NTupleObjectType("llpairType", baseObjectTypes=[], variables = [
+    NTupleSubObject("Z",  lambda x : x,LLType),
+    NTupleSubObject("l1",  lambda x : x.leg1,leptonType),
+    NTupleSubObject("l2",  lambda x : x.leg2,leptonType),
+])
+
 
 JetType = NTupleObjectType("JetType", baseObjectTypes=[fourVectorType], variables = [
     NTupleVariable("area",   lambda x : x.jetArea(), float),
@@ -47,8 +53,9 @@ JetType = NTupleObjectType("JetType", baseObjectTypes=[fourVectorType], variable
 
 ])
 
-
 corrJetType = NTupleObjectType("corrJetType", baseObjectTypes=[JetType], variables = [
     NTupleVariable("jec_corr",   lambda x : x.corr, float), # JEC correction factor 
+    NTupleVariable("jec_corrUp",   lambda x : x.corrJECUp if hasattr(x,"corrJECUp") else  1.0 ,float), 
+    NTupleVariable("jec_corrDown",   lambda x : x.corrJECDown if hasattr(x,"corrJECDown") else  1.0 ,float), 
     NTupleVariable("jer_corr",   lambda x : x.corrJER if hasattr(x,"corrJER") else  1.0 ,float), # JER correction factor
 ])
