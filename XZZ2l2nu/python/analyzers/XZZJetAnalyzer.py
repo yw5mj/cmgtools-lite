@@ -493,13 +493,9 @@ class JetAnalyzer( Analyzer ):
         else:
             if self.debug: print '[Info] Impossible to smear this jet -- check if genJet (%r), and factor>1.0 (%r) '% (hasattr(jet, 'matchedGenJet'), (factor > 1.0))
 
-<<<<<<< HEAD
-        jet.deltaMetFromJetSmearing = [ -(ptScale-1)*jet.rawFactor()*jet.px(), -(ptScale-1)*jet.rawFactor()*jet.py() ]
-=======
         # prepare the variable to compute corrected MET after JER correction:
         jet.deltaMetFromJetSmearing = [ -(ptScale-1)*jet.px(), -(ptScale-1)*jet.py() ]
 
->>>>>>> xzz2l2nu_76x
         if ptScale!=0: 
             jet.scaleEnergy(ptScale)            
         else:
