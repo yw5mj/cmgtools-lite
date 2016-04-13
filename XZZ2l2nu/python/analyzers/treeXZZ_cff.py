@@ -25,7 +25,6 @@ jetTreeProducer = cfg.Analyzer(
      ],
      globalObjects =  {
          "met" : NTupleObject("met", metType, help="PF E_{T}^{miss}, after type 1 corrections"),
-#         "type1METCorr" : NTupleObject("met_corr", metType, help="PF E_{T}^{miss}, after type 1 corrections"),
      },
 
      collections = {
@@ -36,7 +35,6 @@ jetTreeProducer = cfg.Analyzer(
          "genZBosons" : NTupleCollection("genZ", genParticleType, 10, help="Generated V bosons"),
          "jets"  : NTupleCollection("jet_corr",corrJetType,15, help="all jets with new JEC for 76X applied"),
          "jets_raw"  : NTupleCollection("jet",JetType,15, help="all jets from miniAOD"),
-         #"jets_uncert"  : NTupleCollection("jet_corr_uncert",corrJetType,15, help="jets with jec uncer"),
      }
 )
 
@@ -60,10 +58,11 @@ vvTreeProducer = cfg.Analyzer(
          "selectedLeptons" : NTupleCollection("lep",leptonType,10, help="selected leptons"),
          "genLeptons" : NTupleCollection("genLep", genParticleType, 10, help="Generated leptons (e/mu) from W/Z decays"),
          "genZBosons" : NTupleCollection("genZ", genParticleType, 10, help="Generated V bosons"),
-         "LLNuNu"  : NTupleCollection("llnunu",LLNuNuType ,5, help="VV candidate with di-lepton and MET"),
+         "LLNuNu"     : NTupleCollection("llnunu",LLNuNuType ,5, help="VV candidate with di-lepton and MET"),
          "genLeptons" : NTupleCollection("genLep", genParticleType, 10, help="Generated leptons (e/mu) from W/Z decays"),
          "genZBosons" : NTupleCollection("genZ", genParticleType, 10, help="Generated V bosons"),
-         "jets"  : NTupleCollection("jet",corrJetType,15, help="all jets"),
+         "jets"       : NTupleCollection("jet_corr",corrJetType,15, help="all jets with new JEC for 76X applied (JER corrected if isMC)"),
+         "jets_raw"   : NTupleCollection("jet",JetType,15, help="all jets from miniAOD"),
      }
 )
 
