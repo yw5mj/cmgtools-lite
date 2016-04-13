@@ -206,6 +206,9 @@ class XZZMETAnalyzer( Analyzer ):
         self.met_sig = self.met.significance()
         self.met_sumet = self.met.sumEt()
 
+        #print '[Debug] I am event = ', event.input.eventAuxiliary().id().event()
+        
+        
         if self.old74XMiniAODs and self.recalibrateMET != "type1":
            oldraw = self.met.shiftedP2_74x(12,0);
            setFakeRawMETOnOldMiniAODs( self.met, oldraw.px, oldraw.py, self.met.shiftedSumEt_74x(12,0) )

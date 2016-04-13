@@ -216,6 +216,7 @@ class JetAnalyzer( Analyzer ):
                         pass
                     else:
                         jet.matchedGenJet = pairs[jet] 
+                else: pass
                 if self.debug: print '[Debug] I am event = ', event.input.eventAuxiliary().id().event()
                 if getattr(self.cfg_ana, 'smearJets', False):
                     self.jerCorrection(jet, rho_jer)
@@ -492,7 +493,9 @@ class JetAnalyzer( Analyzer ):
         else:
             if self.debug: print '[Info] Impossible to smear this jet -- check if genJet (%r), and factor>1.0 (%r) '% (hasattr(jet, 'matchedGenJet'), (factor > 1.0))
 
-        jet.deltaMetFromJetSmearing = [ -(ptScale-1)*jet.rawFactor()*jet.px(), -(ptScale-1)*jet.rawFactor()*jet.py() ]
+        # prepare the variable to compute corrected MET after JER correction:
+        jet.deltaMetFromJetSmearing = [ -(ptScale-1)*jet.px(), -(ptScale-1)*jet.py() ]
+
         if ptScale!=0: 
             jet.scaleEnergy(ptScale)            
         else:
