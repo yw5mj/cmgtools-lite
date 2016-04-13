@@ -34,6 +34,10 @@ leptonicVAna.selectMuMuPair = (lambda x: ((x.leg1.pt()>35 or x.leg2.pt()>35)))
 leptonicVAna.selectElElPair =(lambda x: x.leg1.pt()>50.0 or x.leg2.pt()>50.0 )
 leptonicVAna.selectVBoson = (lambda x: x.mass()>50.0 and x.mass()<180.0)
 multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>50.0 and x.leg1.mass()<180.0)
+
+jetAna.smearJets=True
+metAna.applyJetSmearing=True
+
 #-------- SEQUENCE
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
 coreSequence = [
@@ -44,6 +48,7 @@ coreSequence = [
     pileUpAna,
     vertexAna,
     lepAna,
+    jetAna,
     metAna,
     leptonicVAna,
     multiStateAna,

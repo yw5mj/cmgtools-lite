@@ -22,7 +22,7 @@ class XZZLeptonAnalyzer( Analyzer ):
     #----------------------------------------
     def declareHandles(self):
         super(XZZLeptonAnalyzer, self).declareHandles()
-
+        
         #leptons
         self.handles['muons'] = AutoHandle(self.cfg_ana.muons,"std::vector<pat::Muon>")            
         self.handles['electrons'] = AutoHandle(self.cfg_ana.electrons,"std::vector<pat::Electron>")            
@@ -34,8 +34,14 @@ class XZZLeptonAnalyzer( Analyzer ):
         self.handles['rhoEleMiniIso'] = AutoHandle( self.cfg_ana.rhoElectronMiniIso, 'double')
         #rho for electron pfIso
         self.handles['rhoElePfIso'] = AutoHandle( self.cfg_ana.rhoElectronPfIso, 'double')
+
+        # decide to filter events not passing lepton requirements
+        self.do_filter = getattr(self.cfg_ana, 'do_filter', True)
+
         # use ISO
         self.applyIso = getattr(self.cfg_ana, 'applyIso', True)
+        self.applyID = getattr(self.cfg_ana, 'applyID', True)
+
         # electronIDVersion
         self.electronIDVersion = getattr(self.cfg_ana, 'electronIDVersion', 'looseID') # can be looseID or HEEPv6
         # electronIsoVersion
@@ -106,18 +112,18 @@ class XZZLeptonAnalyzer( Analyzer ):
 
         # lepton ID
         for mu in allmuons:
-            if (mu.highPtID or mu.trackerHighPtID ):
+            if (mu.highPtID or mu.trackerHighPtID ) or not self.applyID:
                 self.n_mu_passId += 1
-                if (self.applyIso and mu.miniRelIso<0.2):
+                if mu.miniRelIso<0.2 or not self.applyIso:
                     event.selectedLeptons.append(mu)
                     event.selectedMuons.append(mu)
                     self.n_mu_passIso += 1
             else:
                 event.otherLeptons.append(mu)
         for ele in allelectrons:
-            if ( (self.electronIDVersion=='HEEPv6' and ele.heepV60_noISO) or (self.electronIDVersion=='looseID' and ele.loose_nonISO)):
+            if ( (self.electronIDVersion=='HEEPv6' and ele.heepV60_noISO) or (self.electronIDVersion=='looseID' and ele.loose_nonISO)) or not self.applyID:
                 self.n_el_passId += 1
-                if (self.applyIso and ((self.electronIsoVersion=='miniISO' and ele.miniRelIso<0.1) or (self.electronIsoVersion=='pfISO' and ele.looseiso)) ):
+                if ((self.electronIsoVersion=='miniISO' and ele.miniRelIso<0.1) or (self.electronIsoVersion=='pfISO' and ele.looseiso)) or not self.applyIso:
                     event.selectedLeptons.append(ele)
                     event.selectedElectrons.append(ele)
                     self.n_el_passIso += 1
@@ -159,7 +165,7 @@ class XZZLeptonAnalyzer( Analyzer ):
 
         # Attach the vertex to them, for dxy/dz calculation
         for mu in allmuons:
-            mu.associatedVertex = event.goodVertices[0] if len(event.goodVertices)>0 else event.vertices[0]
+            mu.associatedVertex = event.goodVertices[0] if hasattr(event,"goodVertices") and len(event.goodVertices)>0 else event.vertices[0]
 
         # define muon id
         for mu in allmuons:
@@ -216,7 +222,7 @@ class XZZLeptonAnalyzer( Analyzer ):
 
         # Attach the vertex
         for ele in allelectrons:
-            ele.associatedVertex = event.goodVertices[0] if len(event.goodVertices)>0 else event.vertices[0]
+            ele.associatedVertex = event.goodVertices[0] if hasattr(event,"goodVertices") and len(event.goodVertices)>0 else event.vertices[0]
 
         # define electron ID
         for ele in allelectrons:
@@ -341,11 +347,15 @@ class XZZLeptonAnalyzer( Analyzer ):
                 event.selectedElectrons[1].pt()>35.0 and abs(event.selectedElectrons[1].eta())<2.5):
                 self.counters.counter('events').inc('pass 2el kin+id+iso+acc events')
 
-        if len(event.selectedMuons)>=2 or len(event.selectedElectrons)>=2 :
+        if self.do_filter:
+            if len(event.selectedMuons)>=2 or len(event.selectedElectrons)>=2 :
+                self.counters.counter('events').inc('pass events')
+                return True
+            else: 
+                return False
+        else:
             self.counters.counter('events').inc('pass events')
             return True
-        else: 
-            return False
 
 #A default config
 setattr(XZZLeptonAnalyzer,"defaultConfig",cfg.Analyzer(
@@ -359,6 +369,7 @@ setattr(XZZLeptonAnalyzer,"defaultConfig",cfg.Analyzer(
     rhoElectronMiniIso = 'fixedGridRhoFastjetCentralNeutral',
     rhoElectronPfIso = 'fixedGridRhoFastjetAll',
     electronIDVersion = 'looseID', # can bee looseID or HEEPv6
+    applyID = True,
     applyIso = True,
     electronIsoVersion = 'pfISO', # can be pfISO or miniISO
     mu_isoCorr = "rhoArea" ,
@@ -368,5 +379,6 @@ setattr(XZZLeptonAnalyzer,"defaultConfig",cfg.Analyzer(
     miniIsolationPUCorr = None, # Allowed options: 'rhoArea' (EAs for 03 cone scaled by R^2), 'deltaBeta', 
                                      # 'raw' (uncorrected), 'weights' (delta beta weights; not validated)
                                      # Choose None to just use the individual object's PU correction
+    do_filter=True,
     )
 )

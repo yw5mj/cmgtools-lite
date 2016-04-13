@@ -34,6 +34,10 @@ leptonicVAna.selectMuMuPair = (lambda x: ((x.leg1.pt()>35 or x.leg2.pt()>35)))
 leptonicVAna.selectElElPair =(lambda x: x.leg1.pt()>50.0 or x.leg2.pt()>50.0 )
 leptonicVAna.selectVBoson = (lambda x: x.mass()>50.0 and x.mass()<180.0)
 multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>50.0 and x.leg1.mass()<180.0)
+
+jetAna.smearJets=True
+metAna.applyJetSmearing=True
+
 #-------- SEQUENCE
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
 coreSequence = [
@@ -44,6 +48,7 @@ coreSequence = [
     pileUpAna,
     vertexAna,
     lepAna,
+    jetAna,
     metAna,
     leptonicVAna,
     multiStateAna,
@@ -64,9 +69,10 @@ if test==1:
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
-    #selectedComponents = [DYJetsToLL_M50]
+    selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = signalSamples
-    selectedComponents = [BulkGravToZZToZlepZinv_narrow_1000]
+    #selectedComponents = [BulkGravToZZToZlepZinv_narrow_600]
+    #selectedComponents = [BulkGravToZZToZlepZinv_narrow_800]
     #selectedComponents = [WWToLNuQQ, WZTo1L1Nu2Q, WZTo2L2Q, ZZTo2L2Nu]
     #selectedComponents = [ZZTo2L2Nu,DYJetsToLL_M50]
     #selectedComponents = [BulkGravToZZ_narrow_800]
