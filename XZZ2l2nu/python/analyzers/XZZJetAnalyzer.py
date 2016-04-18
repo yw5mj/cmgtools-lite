@@ -147,8 +147,8 @@ class JetAnalyzer( Analyzer ):
         self.shiftJER = self.cfg_ana.shiftJER if hasattr(self.cfg_ana, 'shiftJER') else 0
         self.addJERShifts = self.cfg_ana.addJERShifts if hasattr(self.cfg_ana, 'addJERShifts') else 0
         self.handles['rho'] = AutoHandle( self.cfg_ana.rho[0], 'double' )
-        self.handles['rho_jer'] = AutoHandle( self.cfg_ana.rho[1], 'double' )
-
+        self.handles['rho_jer'] = AutoHandle( self.cfg_ana.rho[1] if self.cfg_ana.rho[1]!='' else self.cfg_ana.rho[0], 'double' )
+        
     def beginLoop(self, setup):
         super(JetAnalyzer,self).beginLoop(setup)
         self.counters.addCounter('jets')
@@ -216,6 +216,7 @@ class JetAnalyzer( Analyzer ):
                         pass
                     else:
                         jet.matchedGenJet = pairs[jet] 
+                else: pass
                 if self.debug: print '[Debug] I am event = ', event.input.eventAuxiliary().id().event()
                 if getattr(self.cfg_ana, 'smearJets', False):
                     self.jerCorrection(jet, rho_jer)
@@ -476,11 +477,11 @@ class JetAnalyzer( Analyzer ):
         res = jet.resolution
         factor = jet.jerfactor
         ptScale = 1.0
-        #jetpt = jet.pt()
-        jetpt=jet.energy()
+        jetpt = jet.pt()
+        #jetpt=jet.energy()
         if hasattr(jet, 'matchedGenJet'):
-            #genpt = jet.matchedGenJet.pt()
-            genpt=jet.matchedGenJet.energy()
+            genpt = jet.matchedGenJet.pt()
+            #genpt=jet.matchedGenJet.energy()
             ptScale = 1 + (factor - 1)*(jetpt - genpt)/jetpt
             if self.debug: print '[Debug] I am scaling jet: jet(pT, eta, rho, rho_jer) = (%.4f, %.4f, %.4f, %.4f)' % (jet.pt(), jet.eta(), self.rho, rho_jer) 
         elif factor > 1.0:
@@ -492,7 +493,9 @@ class JetAnalyzer( Analyzer ):
         else:
             if self.debug: print '[Info] Impossible to smear this jet -- check if genJet (%r), and factor>1.0 (%r) '% (hasattr(jet, 'matchedGenJet'), (factor > 1.0))
 
-        jet.deltaMetFromJetSmearing = [ -(ptScale-1)*jet.rawFactor()*jet.px(), -(ptScale-1)*jet.rawFactor()*jet.py() ]
+        # prepare the variable to compute corrected MET after JER correction:
+        jet.deltaMetFromJetSmearing = [ -(ptScale-1)*jet.px(), -(ptScale-1)*jet.py() ]
+
         if ptScale!=0: 
             jet.scaleEnergy(ptScale)            
         else:
@@ -509,7 +512,7 @@ setattr(JetAnalyzer,"defaultConfig", cfg.Analyzer(
     jetCol = 'slimmedJets',
     copyJetsByValue = False,      #Whether or not to copy the input jets or to work with references (should be 'True' if JetAnalyzer is run more than once)
     genJetCol = 'slimmedGenJets',
-    rho = ('fixedGridRhoFastjetAll','fixedGridRhoAll',''),
+    rho = ('fixedGridRhoFastjetAll','',''),
     jetPt = 25.,
     jetEta = 4.7,
     jetEtaCentral = 2.4,
