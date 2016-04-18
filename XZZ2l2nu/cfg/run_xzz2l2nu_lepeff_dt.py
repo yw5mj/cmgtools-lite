@@ -23,6 +23,8 @@ from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
 lepeffAna = cfg.Analyzer(
     XZZLeptonEffTree,
     name='leptonEffTree',
+    genfilter=False,
+    eithercharge=False,
     )
 
 lepAna.applyIso=False
@@ -48,7 +50,7 @@ sequence = [
 test = 1
 if test==1:
     # test a single component, using a single thread.
-    selectedComponents = SingleMuon+SingleElectron+[DYJetsToLL_M50,DYJetsToLL_M50_Ext,ZZTo2L2Nu]
+    selectedComponents = SingleMuon+SingleElectron
     #selectedComponents = mcSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
