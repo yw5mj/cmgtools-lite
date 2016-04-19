@@ -11,9 +11,9 @@ class XZZMultiFinalState( XZZEventInterpretationBase ):
         ep1=array('d',[4.88895e-01,1.20166e+02,1.17300e+01,1.52207e+02,3.01742e+01])
         ep2=array('d',[4.91171e-01,1.15409e+02,1.03195e+01,1.50434e+02,2.85255e+01])
         self.etrgsf=lambda x:eeff.EvalPar(array('d',[x]),ep1)/eeff.EvalPar(array('d',[x]),ep2) if eeff.EvalPar(array('d',[x]),ep2) else 1
-        msff=ROOT.gROOT.GetFunction("pol5")
-        mp=array('d',[0.98395,-4.05067e-05,1.74509e-06,-1.1423e-08,2.67736e-11,-2.00434e-14])
-        self.mtrgsf=lambda x:msff.EvalPar(array('d',[x]),mp)
+        #msff=ROOT.gROOT.GetFunction("pol5")
+        #mp=array('d',[0.98395,-4.05067e-05,1.74509e-06,-1.1423e-08,2.67736e-11,-2.00434e-14])
+        self.mtrgsf=lambda x:0.985759
 
     def gettrigersf(self,zpt,pdgid):
         if abs(pdgid)==11:return self.etrgsf(zpt)
