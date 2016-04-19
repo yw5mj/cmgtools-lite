@@ -16,6 +16,7 @@ class XZZMETAnalyzer( Analyzer ):
     def __init__(self, cfg_ana, cfg_comp, looperName ):
         super(XZZMETAnalyzer,self).__init__(cfg_ana,cfg_comp,looperName)
         self.recalibrateMET   = cfg_ana.recalibrate
+        self.doMetShiftFromJEC= cfg_ana.recalibrate and cfg_ana.doMetShiftFromJEC
         self.applyJetSmearing = cfg_comp.isMC and cfg_ana.applyJetSmearing
         self.old74XMiniAODs         = cfg_ana.old74XMiniAODs
         self.jetAnalyzerPostFix = getattr(cfg_ana, 'jetAnalyzerPostFix', '')
@@ -189,6 +190,17 @@ class XZZMETAnalyzer( Analyzer ):
           self.met_JEC = copy.deepcopy(self.met)
           setattr(event,"met_JEC"+self.cfg_ana.collectionPostFix, self.met_JEC)
 
+          if self.doMetShiftFromJEC:
+              type1METCorrUp = getattr(event, 'type1METCorrUp'+self.jetAnalyzerPostFix)
+              type1METCorrDown = getattr(event, 'type1METCorrDown'+self.jetAnalyzerPostFix)
+              self.met_JECUp = copy.deepcopy(self.met_miniAod)
+              self.met_JECDown = copy.deepcopy(self.met_miniAod)
+              self.type1METCorrector.correct(self.met_JECUp, type1METCorrUp)
+              self.type1METCorrector.correct(self.met_JECDown, type1METCorrDown)
+              setattr(event,"met_JECUp"+self.cfg_ana.collectionPostFix, self.met_JECUp)
+              setattr(event,"met_JECDown"+self.cfg_ana.collectionPostFix, self.met_JECDown)
+              #print "[Debug] I am MET (%.4f), my JECup is %.4f , and JECdown is %.4f" % (self.met_JEC.pt(), self.met_JECup.pt(), self.met_JECdown.pt())
+              
         elif self.recalibrateMET == True:
           deltaMetJEC = getattr(event, 'deltaMetFromJEC'+self.jetAnalyzerPostFix)
           self.applyDeltaMet(self.met, deltaMetJEC)
@@ -276,6 +288,7 @@ setattr(XZZMETAnalyzer,"defaultConfig", cfg.Analyzer(
     noPUMetCollection = "slimmedMETs",
     copyMETsByValue = False,
     recalibrate = True,
+    doMetShiftFromJEC = True, # only works with recalibrate on
     applyJetSmearing = True,
     jetAnalyzerPostFix = "",
     old74XMiniAODs = False, # need to set to True to get proper Raw MET on plain 74X MC produced with CMSSW <= 7_4_12

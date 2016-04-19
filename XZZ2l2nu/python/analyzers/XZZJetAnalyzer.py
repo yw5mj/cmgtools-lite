@@ -3,13 +3,14 @@ from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
 from PhysicsTools.Heppy.physicsobjects.PhysicsObjects import Jet
 from PhysicsTools.HeppyCore.utils.deltar import deltaR2, deltaPhi, matchObjectCollection, matchObjectCollection2, bestMatch,matchObjectCollection3
-from PhysicsTools.Heppy.physicsutils.JetReCalibrator import JetReCalibrator
+#from PhysicsTools.Heppy.physicsutils.JetReCalibrator import JetReCalibrator
 import PhysicsTools.HeppyCore.framework.config as cfg
 
 from PhysicsTools.Heppy.physicsutils.QGLikelihoodCalculator import QGLikelihoodCalculator
 from PhysicsTools.HeppyCore.statistics.counter import Counter, Counters
 
 from CMGTools.XZZ2l2nu.analyzers.JetResolution import JetResolution
+from CMGTools.XZZ2l2nu.analyzers.JetReCalibrator import JetReCalibrator
 
 import copy
 
@@ -75,15 +76,15 @@ def cleanJetsAndLeptons(jets,leptons,deltaR,arbitration):
 
 
 
-def shiftJERfactor(JERShift, aeta):
-        factor = 1.079 + JERShift*0.026
-        if   aeta > 3.2: factor = 1.056 + JERShift * 0.191
-        elif aeta > 2.8: factor = 1.395 + JERShift * 0.063
-        elif aeta > 2.3: factor = 1.254 + JERShift * 0.062
-        elif aeta > 1.7: factor = 1.208 + JERShift * 0.046
-        elif aeta > 1.1: factor = 1.121 + JERShift * 0.029
-        elif aeta > 0.5: factor = 1.099 + JERShift * 0.028
-        return factor 
+# def shiftJERfactor(JERShift, aeta):
+#         factor = 1.079 + JERShift*0.026
+#         if   aeta > 3.2: factor = 1.056 + JERShift * 0.191
+#         elif aeta > 2.8: factor = 1.395 + JERShift * 0.063
+#         elif aeta > 2.3: factor = 1.254 + JERShift * 0.062
+#         elif aeta > 1.7: factor = 1.208 + JERShift * 0.046
+#         elif aeta > 1.1: factor = 1.121 + JERShift * 0.029
+#         elif aeta > 0.5: factor = 1.099 + JERShift * 0.028
+#         return factor 
 
 
 class JetAnalyzer( Analyzer ):
@@ -142,7 +143,7 @@ class JetAnalyzer( Analyzer ):
     def declareHandles(self):
         super(JetAnalyzer, self).declareHandles()
         self.handles['jets']   = AutoHandle( self.cfg_ana.jetCol, 'std::vector<pat::Jet>' )
-        self.handles['jets_raw']   = AutoHandle( self.cfg_ana.jetCol, 'std::vector<pat::Jet>' )
+        #self.handles['jets_raw']   = AutoHandle( self.cfg_ana.jetCol, 'std::vector<pat::Jet>' )
         self.handles['genJet'] = AutoHandle( self.cfg_ana.genJetCol, 'vector<reco::GenJet>' )
         self.shiftJER = self.cfg_ana.shiftJER if hasattr(self.cfg_ana, 'shiftJER') else 0
         self.addJERShifts = self.cfg_ana.addJERShifts if hasattr(self.cfg_ana, 'addJERShifts') else 0
@@ -163,29 +164,33 @@ class JetAnalyzer( Analyzer ):
         self.rho = rho
 
         ## Read jets, if necessary recalibrate and shift MET
-        self.jets_raw = map(Jet, self.handles['jets_raw'].product())
+        #self.jets_raw = map(Jet, self.handles['jets_raw'].product())
         if self.cfg_ana.copyJetsByValue: 
           import ROOT
           allJets = map(lambda j:Jet(ROOT.pat.Jet(ROOT.edm.Ptr(ROOT.pat.Jet)(ROOT.edm.ProductID(),j,0))), self.handles['jets'].product()) #copy-by-value is safe if JetAnalyzer is ran more than once
         else: 
           allJets = map(Jet, self.handles['jets'].product()) 
-       
+        self.jets_raw = copy.deepcopy(allJets)
         #set dummy MC flavour for all jets in case we want to ntuplize discarded jets later
         for jet in allJets:
             jet.mcFlavour = 0
 
         self.deltaMetFromJEC = [0.,0.]
         self.type1METCorr    = [0.,0.,0.]
+        self.type1METCorrUp  = [0.,0.,0.]
+        self.type1METCorrDown = [0.,0.,0.]
 #        print "before. rho",self.rho,self.cfg_ana.collectionPostFix,'allJets len ',len(allJets),'pt', [j.pt() for j in allJets]
-        
-           
+
         if self.doJEC:
             if not self.recalibrateJets:  # check point that things won't change
                 jetsBefore = [ (j.pt(),j.eta(),j.phi(),j.rawFactor()) for j in allJets ]
             #print '[Debug] I am event = ', event.input.eventAuxiliary().id().event()
+                
             self.jetReCalibrator.correctAll(allJets, rho, delta=self.shiftJEC, 
                                                 addCorr=True, addShifts=self.addJECShifts,
-                                                metShift=self.deltaMetFromJEC, type1METCorr=self.type1METCorr )           
+                                                metShift=self.deltaMetFromJEC, type1METCorr=self.type1METCorr,
+                                                type1METCorrUp=self.type1METCorrUp, type1METCorrDown=self.type1METCorrDown)
+
             if not self.recalibrateJets: 
                 jetsAfter = [ (j.pt(),j.eta(),j.phi(),j.rawFactor()) for j in allJets ]
                 if len(jetsBefore) != len(jetsAfter): 
@@ -384,6 +389,8 @@ class JetAnalyzer( Analyzer ):
         setattr(event,"rho"                    +self.cfg_ana.collectionPostFix, self.rho                    ) 
         setattr(event,"deltaMetFromJEC"        +self.cfg_ana.collectionPostFix, self.deltaMetFromJEC        ) 
         setattr(event,"type1METCorr"           +self.cfg_ana.collectionPostFix, self.type1METCorr           ) 
+        setattr(event,"type1METCorrUp"         +self.cfg_ana.collectionPostFix, self.type1METCorrUp         ) 
+        setattr(event,"type1METCorrDown"       +self.cfg_ana.collectionPostFix, self.type1METCorrDown       ) 
         setattr(event,"allJetsUsedForMET"      +self.cfg_ana.collectionPostFix, self.allJetsUsedForMET      ) 
         setattr(event,"jets_raw"               +self.cfg_ana.collectionPostFix, self.jets_raw               )
         setattr(event,"jets"                   +self.cfg_ana.collectionPostFix, self.jets                   ) 
