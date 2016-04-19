@@ -114,7 +114,8 @@ class XZZLeptonAnalyzer( Analyzer ):
         for mu in allmuons:
             if (mu.highPtID or mu.trackerHighPtID ) or not self.applyID:
                 self.n_mu_passId += 1
-                if mu.miniRelIso<0.2 or not self.applyIso:
+#                if mu.miniRelIso<0.2 or not self.applyIso:
+                if mu.trackerIso<0.1 or not self.applyIso:
                     event.selectedLeptons.append(mu)
                     event.selectedMuons.append(mu)
                     self.n_mu_passIso += 1
@@ -162,6 +163,7 @@ class XZZLeptonAnalyzer( Analyzer ):
         # calculate miniIso
         for mu in allmuons:
             self.attachMiniIsolation(mu)
+            mu.trackerIso=mu.physObj.isolationR03().sumPt/mu.pt()
 
         # Attach the vertex to them, for dxy/dz calculation
         for mu in allmuons:
