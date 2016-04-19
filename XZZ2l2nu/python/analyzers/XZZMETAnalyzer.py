@@ -180,16 +180,24 @@ class XZZMETAnalyzer( Analyzer ):
           self.met = self.handles['met'].product()[0]
           if self.cfg_ana.doMetNoPU: self.metNoPU = self.handles['nopumet'].product()[0]
 
+        self.met_miniAod = copy.deepcopy(self.met)
+        setattr(event,"met_miniAod"+self.cfg_ana.collectionPostFix, self.met_miniAod)
+
         if self.recalibrateMET == "type1":
           type1METCorr = getattr(event, 'type1METCorr'+self.jetAnalyzerPostFix)
           self.type1METCorrector.correct(self.met, type1METCorr)
+          self.met_JEC = copy.deepcopy(self.met)
+          setattr(event,"met_JEC"+self.cfg_ana.collectionPostFix, self.met_JEC)
+
         elif self.recalibrateMET == True:
           deltaMetJEC = getattr(event, 'deltaMetFromJEC'+self.jetAnalyzerPostFix)
           self.applyDeltaMet(self.met, deltaMetJEC)
+
         if self.applyJetSmearing:
           deltaMetSmear = getattr(event, 'deltaMetFromJetSmearing'+self.jetAnalyzerPostFix)
           self.applyDeltaMet(self.met, deltaMetSmear)
-
+          self.met_JECJER = copy.deepcopy(self.met)
+          setattr(event,"met_JECJER"+self.cfg_ana.collectionPostFix, self.met_JECJER)
 
         #Shifted METs: to be re-enabled after updates to MiniAOD pass 2
         #Uncertainties defined in https://github.com/cms-sw/cmssw/blob/CMSSW_7_2_X/DataFormats/PatCandidates/interface/MET.h#L168
