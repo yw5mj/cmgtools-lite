@@ -55,6 +55,7 @@ leptonType = NTupleObjectType("lepton", baseObjectTypes = [ particleType ], vari
     NTupleVariable("ip3d",  lambda x : x.ip3D() , help="d_{3d} with respect to PV, in cm (absolute value)"),
     # Conversion rejection
     NTupleVariable("miniRelIso",  lambda x : x.miniRelIso if hasattr(x,'miniRelIso') else  -999, help="PF Rel miniRel, pile-up corrected"),
+    NTupleVariable("trackerIso",  lambda x : getattr(x,"trackerIso",-999), help="muon tracker isolation"),
     # id and iso
     NTupleVariable("heepV60_noISO",  lambda x : x.heepV60_noISO if hasattr(x,'heepV60_noISO') else  -999, help="heepV60_noISO"),
     NTupleVariable("highPtID",  lambda x : x.highPtID if hasattr(x,'highPtID') else  -999, help="highPtID"),
