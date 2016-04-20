@@ -199,17 +199,21 @@ class XZZMETAnalyzer( Analyzer ):
               self.type1METCorrector.correct(self.met_JECDown, type1METCorrDown)
               setattr(event,"met_JECUp"+self.cfg_ana.collectionPostFix, self.met_JECUp)
               setattr(event,"met_JECDown"+self.cfg_ana.collectionPostFix, self.met_JECDown)
-              #print "[Debug] I am MET (%.4f), my JECup is %.4f , and JECdown is %.4f" % (self.met_JEC.pt(), self.met_JECup.pt(), self.met_JECdown.pt())
               
         elif self.recalibrateMET == True:
-          deltaMetJEC = getattr(event, 'deltaMetFromJEC'+self.jetAnalyzerPostFix)
-          self.applyDeltaMet(self.met, deltaMetJEC)
+            deltaMetJEC = getattr(event, 'deltaMetFromJEC'+self.jetAnalyzerPostFix)
+            self.applyDeltaMet(self.met, deltaMetJEC)
 
         if self.applyJetSmearing:
-          deltaMetSmear = getattr(event, 'deltaMetFromJetSmearing'+self.jetAnalyzerPostFix)
-          self.applyDeltaMet(self.met, deltaMetSmear)
-          self.met_JECJER = copy.deepcopy(self.met)
-          setattr(event,"met_JECJER"+self.cfg_ana.collectionPostFix, self.met_JECJER)
+        #     deltaMetSmear = getattr(event, 'deltaMetFromJetSmearing'+self.jetAnalyzerPostFix)
+        #     self.applyDeltaMet(self.met, deltaMetSmear)
+        #     self.met_JECJER = copy.deepcopy(self.met)
+        #     setattr(event,"met_JECJER"+self.cfg_ana.collectionPostFix, self.met_JECJER)
+        # else:
+            deltaMetSmear = getattr(event, 'deltaMetFromJetSmearing'+self.jetAnalyzerPostFix)
+            self.met_JECJER = copy.deepcopy(self.met)
+            self.applyDeltaMet(self.met_JECJER, deltaMetSmear)
+            setattr(event,"met_JECJER"+self.cfg_ana.collectionPostFix, self.met_JECJER)
 
         #Shifted METs: to be re-enabled after updates to MiniAOD pass 2
         #Uncertainties defined in https://github.com/cms-sw/cmssw/blob/CMSSW_7_2_X/DataFormats/PatCandidates/interface/MET.h#L168
@@ -281,6 +285,8 @@ class XZZMETAnalyzer( Analyzer ):
 
         return True
 
+'''MET Corrections:
+   https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETRun2Corrections'''
 
 setattr(XZZMETAnalyzer,"defaultConfig", cfg.Analyzer(
     class_object = XZZMETAnalyzer,
