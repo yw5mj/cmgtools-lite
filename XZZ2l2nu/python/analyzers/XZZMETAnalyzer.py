@@ -16,6 +16,7 @@ class XZZMETAnalyzer( Analyzer ):
     def __init__(self, cfg_ana, cfg_comp, looperName ):
         super(XZZMETAnalyzer,self).__init__(cfg_ana,cfg_comp,looperName)
         self.recalibrateMET   = cfg_ana.recalibrate
+        self.doMetShiftFromJEC= cfg_ana.recalibrate and cfg_ana.doMetShiftFromJEC
         self.applyJetSmearing = cfg_comp.isMC and cfg_ana.applyJetSmearing
         self.old74XMiniAODs         = cfg_ana.old74XMiniAODs
         self.jetAnalyzerPostFix = getattr(cfg_ana, 'jetAnalyzerPostFix', '')
@@ -180,16 +181,39 @@ class XZZMETAnalyzer( Analyzer ):
           self.met = self.handles['met'].product()[0]
           if self.cfg_ana.doMetNoPU: self.metNoPU = self.handles['nopumet'].product()[0]
 
+        self.met_miniAod = copy.deepcopy(self.met)
+        setattr(event,"met_miniAod"+self.cfg_ana.collectionPostFix, self.met_miniAod)
+
         if self.recalibrateMET == "type1":
           type1METCorr = getattr(event, 'type1METCorr'+self.jetAnalyzerPostFix)
           self.type1METCorrector.correct(self.met, type1METCorr)
-        elif self.recalibrateMET == True:
-          deltaMetJEC = getattr(event, 'deltaMetFromJEC'+self.jetAnalyzerPostFix)
-          self.applyDeltaMet(self.met, deltaMetJEC)
-        if self.applyJetSmearing:
-          deltaMetSmear = getattr(event, 'deltaMetFromJetSmearing'+self.jetAnalyzerPostFix)
-          self.applyDeltaMet(self.met, deltaMetSmear)
+          self.met_JEC = copy.deepcopy(self.met)
+          setattr(event,"met_JEC"+self.cfg_ana.collectionPostFix, self.met_JEC)
 
+          if self.doMetShiftFromJEC:
+              type1METCorrUp = getattr(event, 'type1METCorrUp'+self.jetAnalyzerPostFix)
+              type1METCorrDown = getattr(event, 'type1METCorrDown'+self.jetAnalyzerPostFix)
+              self.met_JECUp = copy.deepcopy(self.met_miniAod)
+              self.met_JECDown = copy.deepcopy(self.met_miniAod)
+              self.type1METCorrector.correct(self.met_JECUp, type1METCorrUp)
+              self.type1METCorrector.correct(self.met_JECDown, type1METCorrDown)
+              setattr(event,"met_JECUp"+self.cfg_ana.collectionPostFix, self.met_JECUp)
+              setattr(event,"met_JECDown"+self.cfg_ana.collectionPostFix, self.met_JECDown)
+              
+        elif self.recalibrateMET == True:
+            deltaMetJEC = getattr(event, 'deltaMetFromJEC'+self.jetAnalyzerPostFix)
+            self.applyDeltaMet(self.met, deltaMetJEC)
+
+        if self.applyJetSmearing:
+        #     deltaMetSmear = getattr(event, 'deltaMetFromJetSmearing'+self.jetAnalyzerPostFix)
+        #     self.applyDeltaMet(self.met, deltaMetSmear)
+        #     self.met_JECJER = copy.deepcopy(self.met)
+        #     setattr(event,"met_JECJER"+self.cfg_ana.collectionPostFix, self.met_JECJER)
+        # else:
+            deltaMetSmear = getattr(event, 'deltaMetFromJetSmearing'+self.jetAnalyzerPostFix)
+            self.met_JECJER = copy.deepcopy(self.met)
+            self.applyDeltaMet(self.met_JECJER, deltaMetSmear)
+            setattr(event,"met_JECJER"+self.cfg_ana.collectionPostFix, self.met_JECJER)
 
         #Shifted METs: to be re-enabled after updates to MiniAOD pass 2
         #Uncertainties defined in https://github.com/cms-sw/cmssw/blob/CMSSW_7_2_X/DataFormats/PatCandidates/interface/MET.h#L168
@@ -261,6 +285,8 @@ class XZZMETAnalyzer( Analyzer ):
 
         return True
 
+'''MET Corrections:
+   https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETRun2Corrections'''
 
 setattr(XZZMETAnalyzer,"defaultConfig", cfg.Analyzer(
     class_object = XZZMETAnalyzer,
@@ -268,6 +294,7 @@ setattr(XZZMETAnalyzer,"defaultConfig", cfg.Analyzer(
     noPUMetCollection = "slimmedMETs",
     copyMETsByValue = False,
     recalibrate = True,
+    doMetShiftFromJEC = True, # only works with recalibrate on
     applyJetSmearing = True,
     jetAnalyzerPostFix = "",
     old74XMiniAODs = False, # need to set to True to get proper Raw MET on plain 74X MC produced with CMSSW <= 7_4_12

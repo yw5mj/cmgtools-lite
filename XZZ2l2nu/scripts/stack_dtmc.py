@@ -6,16 +6,17 @@ from CMGTools.XZZ2l2nu.plotting.TreePlotter import TreePlotter
 from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
-#cutChain='loosecut'
+cutChain='loosecut'
 #cutChain='tightzpt100'
 #cutChain='tightzpt100met100'
 #cutChain='tightzpt100met100dphi'
 #cutChain='tightmet250dphi'
 #cutChain='zjetscut'
-cutChain='zjetscutmet50'
+#cutChain='zjetscutmet50'
 
 outdir='plots'
-indir="/afs/cern.ch/work/h/heli/public/XZZ/76X"
+#indir="/afs/cern.ch/work/h/heli/public/XZZ/76X"
+indir="/afs/cern.ch/work/m/mewu/public/76X_new"
 lumi=2.169126704526
 sepSig=True
 LogY=True

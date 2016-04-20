@@ -1,5 +1,5 @@
 import ROOT
-import os, types
+import os, types, copy
 from math import *
 from PhysicsTools.HeppyCore.utils.deltar import *
 
@@ -86,6 +86,8 @@ class JetReCalibrator:
         emf = ( jet.physObj.neutralEmEnergy() + jet.physObj.chargedEmEnergy() )/p4.E()
         if emf > self.type1METParams['skipEMfractionThreshold']:
             return None
+        '''The idea to solve the disambiguations with lepton, see:
+        https://github.com/cms-sw/cmssw/blob/CMSSW_7_4_X/JetMETCorrections/Type1MET/interface/PFJetMETcorrInputProducerT.h#L173-L184'''
         if self.type1METParams['skipMuons']:
             for idau in xrange(jet.numberOfDaughters()):
                 pfcand = jet.daughter(idau)
@@ -93,7 +95,25 @@ class JetReCalibrator:
                     p4 -= pfcand.p4()
         return p4
 
-    def correct(self,jet,rho,delta=0,addCorr=False,addShifts=False, metShift=[0,0],type1METCorr=[0,0,0]):
+    def FillType1METCorr(self, jet, rho, raw, corr, metShift, type1METCorr):
+        newpt = jet.pt()*raw*corr
+        if newpt > self.type1METParams['jetPtThreshold']:
+            rawP4forT1 = self.rawP4forType1MET_(jet)
+            if rawP4forT1 and rawP4forT1.Pt()*corr > self.type1METParams['jetPtThreshold']:
+                metShift[0] -= rawP4forT1.Px() * (corr - 1.0/raw)
+                metShift[1] -= rawP4forT1.Py() * (corr - 1.0/raw)
+                if self.calculateType1METCorr:
+                    l1corr = self.getCorrection(jet,rho,delta=0,corrector=self.separateJetCorrectors["L1"]) # FIXME: to check with MET POG, why L1 corrector can not be varied
+                    #print "\tfor jet with raw pt %.5g, eta %.5g, dpx = %.5g, dpy = %.5g" % (
+                    #            jet.pt()*raw, jet.eta(), 
+                    #            rawP4forT1.Px()*(corr - l1corr), 
+                    #            rawP4forT1.Py()*(corr - l1corr))
+                    type1METCorr[0] -= rawP4forT1.Px() * (corr - l1corr) 
+                    type1METCorr[1] -= rawP4forT1.Py() * (corr - l1corr) 
+                    type1METCorr[2] += rawP4forT1.Et() * (corr - l1corr) 
+                    
+
+    def correct(self,jet,rho,delta=0,addCorr=False,addShifts=False, metShift=[0,0],type1METCorr=[0,0,0], type1METCorrUp=[0,0,0], type1METCorrDown=[0,0,0]):
         """Corrects a jet energy (optionally shifting it also by delta times the JEC uncertainty)
 
            If addCorr, set jet.corr to the correction.
@@ -120,32 +140,24 @@ class JetReCalibrator:
                 setattr(jet, "corr"+shift, cshift)
         if corr <= 0:
             return False
-        newpt = jet.pt()*raw*corr
-        if newpt > self.type1METParams['jetPtThreshold']:
-            rawP4forT1 = self.rawP4forType1MET_(jet)
-            if rawP4forT1 and rawP4forT1.Pt()*corr > self.type1METParams['jetPtThreshold']:
-                metShift[0] -= rawP4forT1.Px() * (corr - 1.0/raw)
-                metShift[1] -= rawP4forT1.Py() * (corr - 1.0/raw)
-                if self.calculateType1METCorr:
-                    l1corr = self.getCorrection(jet,rho,delta=0,corrector=self.separateJetCorrectors["L1"])
-                    #print "\tfor jet with raw pt %.5g, eta %.5g, dpx = %.5g, dpy = %.5g" % (
-                    #            jet.pt()*raw, jet.eta(), 
-                    #            rawP4forT1.Px()*(corr - l1corr), 
-                    #            rawP4forT1.Py()*(corr - l1corr))
-                    type1METCorr[0] -= rawP4forT1.Px() * (corr - l1corr) 
-                    type1METCorr[1] -= rawP4forT1.Py() * (corr - l1corr) 
-                    type1METCorr[2] += rawP4forT1.Et() * (corr - l1corr) 
+
+        self.FillType1METCorr(jet, rho, raw, corr, metShift, type1METCorr)
+        self.FillType1METCorr(jet, rho, raw, jet.corrJECUp, [0.,0.], type1METCorrUp)
+        self.FillType1METCorr(jet, rho, raw, jet.corrJECDown, [0.,0.], type1METCorrDown)
+
         jet.setCorrP4(jet.p4() * (corr * raw))
         return True
 
-    def correctAll(self,jets,rho,delta=0, addCorr=False, addShifts=False, metShift=[0.,0.], type1METCorr=[0.,0.,0.]):
+    def correctAll(self,jets,rho,delta=0, addCorr=False, addShifts=False, metShift=[0.,0.], type1METCorr=[0.,0.,0.], type1METCorrUp=[0.,0.,0.], type1METCorrDown=[0.,0.,0.]):
         """Applies 'correct' to all the jets, discard the ones that have bad corrections (corrected pt <= 0)"""
         badJets = []
         if metShift     != [0.,0.   ]: raise RuntimeError, "input metShift tuple is not initialized to zeros"
         if type1METCorr != [0.,0.,0.]: raise RuntimeError, "input type1METCorr tuple is not initialized to zeros"
         for j in jets:
-            ok = self.correct(j,rho,delta,addCorr=addCorr,addShifts=addShifts,metShift=metShift,type1METCorr=type1METCorr)
+            ok = self.correct(j,rho,delta,addCorr=addCorr,addShifts=addShifts,metShift=metShift,
+                              type1METCorr=type1METCorr, type1METCorrUp=type1METCorrUp, type1METCorrDown=type1METCorrDown)
             if not ok: badJets.append(j)
+
         if len(badJets) > 0:
             print "Warning: %d out of %d jets flagged bad by JEC." % (len(badJets), len(jets))
         for bj in badJets:
@@ -153,8 +165,11 @@ class JetReCalibrator:
 
 class Type1METCorrector:
     def __init__(self, old74XMiniAODs):
-        """Object to apply type1 corrections computed by the JetReCalibrator to the MET.
-           old74XMiniAODs should be True if using inputs produced with CMSSW_7_4_11 or earlier."""
+        """latest recommendations, see
+        https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETRun2Corrections
+        Object to apply type1 corrections computed by the JetReCalibrator to the MET.
+        old74XMiniAODs should be True if using inputs produced with CMSSW_7_4_11 or earlier."""
+
         self.oldMC = old74XMiniAODs
     def correct(self,met,type1METCorrections):
         oldpx, oldpy = met.px(), met.py()

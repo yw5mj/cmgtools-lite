@@ -59,3 +59,4 @@ corrJetType = NTupleObjectType("corrJetType", baseObjectTypes=[JetType], variabl
     NTupleVariable("jec_corrDown",   lambda x : x.corrJECDown if hasattr(x,"corrJECDown") else  1.0 ,float), 
     NTupleVariable("jer_corr",   lambda x : x.corrJER if hasattr(x,"corrJER") else  1.0 ,float), # JER correction factor
 ])
+
