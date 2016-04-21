@@ -148,8 +148,8 @@ class StackPlotter(object):
 
         for (plotter,typeP,label,name) in zip(self.plotters,self.types,self.labels,self.names):
             if (typeP =="background") or (not separateSignal and typeP == "signal"):
-                hist = plotter.drawTH1(var,cutL,lumi,bins,mini,maxi,titlex,units)
-                hist.SetName(output+'_'+name)
+                hist = plotter.drawTH1(output+'_'+name,var,cutL,lumi,bins,mini,maxi,titlex,units)
+                #hist.SetName(output+'_'+name)
                 stack.Add(hist)
                 hists.append(hist)
                 print label+" : %f\n" % hist.Integral()
@@ -161,8 +161,8 @@ class StackPlotter(object):
                     backgroundErr+=error*error
 
             if separateSignal and typeP == "signal":
-                hist = plotter.drawTH1(var,cutL,lumi,bins,mini,maxi,titlex,units)
-                hist.SetName(output+'_'+name)
+                hist = plotter.drawTH1(output+'_'+name,var,cutL,lumi,bins,mini,maxi,titlex,units)
+                #hist.SetName(output+'_'+name)
                 hists.append(hist)
                 signalHs.append(hist)
                 signals.append(hist.Integral())
@@ -170,8 +170,8 @@ class StackPlotter(object):
                 print label+" : %f\n" % hist.Integral()
 
             if typeP =="data":
-                hist = plotter.drawTH1(var,cutL,"1",bins,mini,maxi,titlex,units)
-                hist.SetName(output+'_'+typeP)
+                hist = plotter.drawTH1(output+'_'+typeP,var,cutL,"1",bins,mini,maxi,titlex,units)
+                #hist.SetName(output+'_'+typeP)
                 hists.append(hist)
                 hist.SetMarkerStyle(20)
                 hist.SetLineWidth(1)
@@ -397,9 +397,9 @@ class StackPlotter(object):
 
 
         for (plotter,typeP,label) in zip(self.plotters,self.types,self.labels):
-                hist = plotter.drawTH1(var,cut,"1",bins,mini,maxi,titlex,units)
-#                hist.SetFillStyle(0)
-                hist.SetName(hist.GetName()+label)
+                hist = plotter.drawTH1(hist.GetName()+label,var,cut,"1",bins,mini,maxi,titlex,units)
+                #hist.SetFillStyle(0)
+                #hist.SetName(hist.GetName()+label)
                 hist.Scale(1./hist.Integral())
                 stack.Add(hist)
                 hists.append(hist)

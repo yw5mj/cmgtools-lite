@@ -14,8 +14,9 @@ cutChain='loosecut'
 #cutChain='zjetscut'
 #cutChain='zjetscutmet50'
 
+channel='both' # can be el or mu or both
+
 outdir='plots'
-#indir="/afs/cern.ch/work/h/heli/public/XZZ/76X"
 indir="/afs/cern.ch/work/m/mewu/public/76X_new"
 lumi=2.169126704526
 sepSig=True
@@ -23,11 +24,16 @@ LogY=True
 DrawLeptons=True
 doRatio=True
 test=False
-Blind=False
+Blind=True
+FakeData=False
+
+elChannel='(abs(llnunu_l1_l1_pdgId)==11)'
+muChannel='(abs(llnunu_l1_l1_pdgId)==13)'
 
 if not os.path.exists(outdir): os.system('mkdir '+outdir)
 
 tag = cutChain+'_'
+tag = tag+channel+'_'
 if LogY: tag = tag+'log_'
 
 
@@ -48,6 +54,10 @@ elif cutChain=='tightmet250dphi': cuts=cuts_loose_zll_met250_dphi
 elif cutChain=='zjetscut': cuts=cuts_zjets
 elif cutChain=='zjetscutmet50': cuts=cuts_zjets_met50
 else : cuts=cuts_loose
+
+
+if channel=='el': cuts = cuts+'&&'+elChannel
+elif channel=='mu': cuts = cuts+'&&'+muChannel
 
 
 ROOT.gROOT.ProcessLine('.x tdrstyle.C') 
@@ -127,21 +137,53 @@ TT.setFillProperties(1001,ROOT.kAzure-9)
 
 sigPlotters=[]
 sigSamples = [
-'BulkGravToZZToZlepZinv_narrow_800', 
-'BulkGravToZZToZlepZinv_narrow_1000', 
-'BulkGravToZZToZlepZinv_narrow_1200', 
+'BulkGravToZZToZlepZinv_narrow_600',
+'BulkGravToZZToZlepZinv_narrow_800',
+'BulkGravToZZToZlepZinv_narrow_1000',
+'BulkGravToZZToZlepZinv_narrow_1200',
+'BulkGravToZZToZlepZinv_narrow_1400',
+'BulkGravToZZToZlepZinv_narrow_1600', 
+'BulkGravToZZToZlepZinv_narrow_1800', 
+#'BulkGravToZZToZlepZinv_narrow_2000',
+#'BulkGravToZZToZlepZinv_narrow_2500',
+#'BulkGravToZZToZlepZinv_narrow_3000',
+#'BulkGravToZZToZlepZinv_narrow_3500', 
+#'BulkGravToZZToZlepZinv_narrow_4000', 
+#'BulkGravToZZToZlepZinv_narrow_4500', 
 ]
+
 k=1000
 sigSampleNames = [
+str(k)+' x BulkG-600',
 str(k)+' x BulkG-800',
 str(k)+' x BulkG-1000',
 str(k)+' x BulkG-1200',
+str(k)+' x BulkG-1400',
+str(k)+' x BulkG-1600',
+str(k)+' x BulkG-1800',
+str(k)+' x BulkG-2000',
+str(k)+' x BulkG-2500',
+str(k)+' x BulkG-3000',
+str(k)+' x BulkG-3500',
+str(k)+' x BulkG-4000',
+#str(k)+' x BulkG-4500',
 ]
 sigXsec = {
-'BulkGravToZZToZlepZinv_narrow_800'  : 4.42472e-04*k,
-'BulkGravToZZToZlepZinv_narrow_1000' : 1.33926e-04*k,
-'BulkGravToZZToZlepZinv_narrow_1200' : 4.76544e-05*k,
+'BulkGravToZZToZlepZinv_narrow_600'  : 3.44631e-04*k,
+'BulkGravToZZToZlepZinv_narrow_800'  : 6.31859e-05*k,
+'BulkGravToZZToZlepZinv_narrow_1000' : 1.68661e-05*k,
+'BulkGravToZZToZlepZinv_narrow_1200' : 5.59677e-06*k,
+'BulkGravToZZToZlepZinv_narrow_1400' : 2.13168e-06*k,
+'BulkGravToZZToZlepZinv_narrow_1600' : 8.97713e-07*k,
+'BulkGravToZZToZlepZinv_narrow_1800' : 4.06090e-07*k,
+'BulkGravToZZToZlepZinv_narrow_2000' : 1.94415e-07*k,
+'BulkGravToZZToZlepZinv_narrow_2500' : 3.63496e-08*k,
+'BulkGravToZZToZlepZinv_narrow_3000' : 7.95422e-09*k,
+'BulkGravToZZToZlepZinv_narrow_3500' : 1.95002e-09*k,
+'BulkGravToZZToZlepZinv_narrow_4000' : 5.03747e-10*k,
+#'BulkGravToZZToZlepZinv_narrow_4500' : 1*k,
 }
+
 
 for sample in sigSamples:
     sigPlotters.append(TreePlotter(indir+'/'+sample+'/vvTreeProducer/tree.root','tree'))
@@ -185,10 +227,11 @@ Stack.doRatio(doRatio)
 
 Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 60, 0.0, 1200.0, titlex = "M_{T}", units = "GeV",output=tag+'mt',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
 Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 150, 0.0, 3000.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_high',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
-Stack.drawStack('llnunu_l1_mass', cuts, str(lumi*1000), 50, 50, 150, titlex = "M(Z)", units = "GeV",output=tag+'zmass',outDir=outdir,separateSignal=sepSig)
 Stack.drawStack('met_pt', cuts, str(lumi*1000), 100, 0, 1000, titlex = "MET", units = "GeV",output=tag+'met',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=100)
 Stack.drawStack('met_pt', cuts, str(lumi*1000), 50, 0, 500, titlex = "MET", units = "GeV",output=tag+'met_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=100)
 Stack.drawStack('met_pt', cuts, str(lumi*1000), 150, 0, 1500, titlex = "MET", units = "GeV",output=tag+'met_high',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=100)
+
+
 
 if not test :
     Stack.drawStack('llnunu_l1_mass', cuts, str(lumi*1000), 50, 50, 150, titlex = "M(Z)", units = "GeV",output=tag+'zmass',outDir=outdir,separateSignal=sepSig)
@@ -252,6 +295,7 @@ if DrawLeptons:
 os.system('gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile='+outdir+'/'+tag+'all.pdf '+outdir+'/'+tag+'*.eps')
 print 'All plots merged in single pdf file '+tag+'.pdf .'
 # merge root file
+os.system('rm '+outdir+'/'+tag+'all.root ')
 os.system('hadd -f '+outdir+'/'+tag+'all.root '+outdir+'/'+tag+'*.root')
 
 
