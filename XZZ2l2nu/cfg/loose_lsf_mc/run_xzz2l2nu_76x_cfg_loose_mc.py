@@ -51,6 +51,7 @@ coreSequence = [
     metAna,
     leptonicVAna,
     multiStateAna,
+    eventFlagsAna,
     triggerFlagsAna,
 ]
     
@@ -65,7 +66,7 @@ if test==1:
     # test a single component, using a single thread.
     #selectedComponents = dataSamples
     #selectedComponents = mcSamples
-    selectedComponents = signalSamples
+    selectedComponents = backgroundSamples #signalSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
