@@ -51,6 +51,7 @@ coreSequence = [
     metAna,
     leptonicVAna,
     multiStateAna,
+    eventFlagsAna,
     triggerFlagsAna,
 ]
     
@@ -65,13 +66,15 @@ if test==1:
     # test a single component, using a single thread.
     #selectedComponents = dataSamples
     #selectedComponents = mcSamples
-    selectedComponents = signalSamples
+    selectedComponents = backgroundSamples 
+    #selectedComponents = [BulkGravToZZToZlepZinv_narrow_3500]
+    #selectedComponents = signalSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
     #selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [BulkGravToZZ_narrow_800]
-    #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
+    #selectedComponents = [BulkGravToZZToZlepZhad_narrow_3500]
     for c in selectedComponents:
         #c.files = c.files[0]
         c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)

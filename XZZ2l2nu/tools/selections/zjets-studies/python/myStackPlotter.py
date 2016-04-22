@@ -86,6 +86,22 @@ def GetRatioHist(h1, hstack,blinding=False,blindingCut=100):
 
     return hratio
 
+def DrawTex(input_tex="", channel=""):
+    #-------- draw pave tex
+    pt =ROOT.TLatex() #(0.1577181,0.9562937,0.9580537,0.9947552,"brNDC")
+    pt.SetNDC()
+    pt.SetTextAlign(12)
+    pt.SetTextFont(42)
+    pt.SetTextSize(0.03)
+
+    pt.DrawLatex(0.25,0.85,input_tex)
+
+    if channel and not channel.isspace():
+        channel_tex="ee" if ROOT.TString(channel).Contains("el") else "#mu#mu"
+        pt.DrawLatex(0.25,0.82, channel_tex+" channel")
+
+    return
+    
 class StackPlotter(object):
     def __init__(self,defaultCut="1"):
         self.plotters = []
@@ -95,7 +111,7 @@ class StackPlotter(object):
         self.log=False
         self.defaultCut=defaultCut
         self.doRatioPlot=False
-
+        
     def setLog(self,doLog):
         self.log=doLog
     def addPlotter(self,plotter,name="",label = "label",typeP = "background"):
@@ -104,10 +120,21 @@ class StackPlotter(object):
         self.labels.append(label)
         self.names.append(name)
 
+    def rmPlotter(self, plotter, name="",label = "label", typeP = "background"):
+        self.plotters.remove(plotter)
+        self.types.remove(typeP)
+        self.labels.remove(label)
+        self.names.remove(name)
+                                        
     def doRatio(self,doRatio):
         self.doRatioPlot = doRatio
 
-    def drawStack(self,var,cut,lumi,bins,mini,maxi,titlex = "", units = "", output = 'out', outDir='.', separateSignal=False, blinding=False, blindingCut=100.0, fakeData=False):
+        
+    def drawStack(self,var,cut,lumi,bins,mini,maxi, titlex = "", units = "",
+                  output = 'out', outDir='.',
+                  separateSignal=False,
+                  drawtex="", channel="",
+                  blinding=False, blindingCut=100.0):
 
         fout = ROOT.TFile(outDir+'/'+output+'.root', 'recreate')
 
@@ -148,8 +175,8 @@ class StackPlotter(object):
 
         for (plotter,typeP,label,name) in zip(self.plotters,self.types,self.labels,self.names):
             if (typeP =="background") or (not separateSignal and typeP == "signal"):
-                hist = plotter.drawTH1(output+'_'+name,var,cutL,lumi,bins,mini,maxi,titlex,units)
-                #hist.SetName(output+'_'+name)
+                hist = plotter.drawTH1(var,cutL,lumi,bins,mini,maxi,titlex,units)
+                hist.SetName(output+'_'+name)
                 stack.Add(hist)
                 hists.append(hist)
                 print label+" : %f\n" % hist.Integral()
@@ -161,8 +188,8 @@ class StackPlotter(object):
                     backgroundErr+=error*error
 
             if separateSignal and typeP == "signal":
-                hist = plotter.drawTH1(output+'_'+name,var,cutL,lumi,bins,mini,maxi,titlex,units)
-                #hist.SetName(output+'_'+name)
+                hist = plotter.drawTH1(var,cutL,lumi,bins,mini,maxi,titlex,units)
+                hist.SetName(output+'_'+name)
                 hists.append(hist)
                 signalHs.append(hist)
                 signals.append(hist.Integral())
@@ -170,8 +197,8 @@ class StackPlotter(object):
                 print label+" : %f\n" % hist.Integral()
 
             if typeP =="data":
-                hist = plotter.drawTH1(output+'_'+typeP,var,cutL,"1",bins,mini,maxi,titlex,units)
-                #hist.SetName(output+'_'+typeP)
+                hist = plotter.drawTH1(var,cutL,"1",bins,mini,maxi,titlex,units)
+                hist.SetName(output+'_'+typeP)
                 hists.append(hist)
                 hist.SetMarkerStyle(20)
                 hist.SetLineWidth(1)
@@ -266,7 +293,11 @@ class StackPlotter(object):
         c1.Update()
 
 
-
+        if drawtex and not drawtex.isspace():
+            p1.cd()
+            print "I am drawing extra tex ;)"
+            DrawTex(drawtex, channel)
+            p1.Update()
 
         print"---------------------------"
         if not separateSignal:
@@ -288,8 +319,7 @@ class StackPlotter(object):
 	pt.SetFillStyle(0)
 	pt.SetTextFont(42)
 	pt.SetTextSize(0.03)
-	#text = pt.AddText(0.15,0.3,"CMS Preliminary")
-	text = pt.AddText(0.15,0.3,"CMS Work in progress")
+	text = pt.AddText(0.15,0.3,"CMS Preliminary")
 #	text = pt.AddText(0.25,0.3,"#sqrt{s} = 7 TeV, L = 5.1 fb^{-1}  #sqrt{s} = 8 TeV, L = 19.7 fb^{-1}")
 	text = pt.AddText(0.55,0.3,"#sqrt{s} = 13 TeV, L = "+"{:.3}".format(float(lumi)/1000)+" fb^{-1}")
 	pt.Draw()   
@@ -320,7 +350,7 @@ class StackPlotter(object):
                 else:
                     hmask_data.SetBinContent(ibb,1e100)
                     hmask_data.SetBinError(ibb,0)
-            hmask_data.SetFillStyle(3003)
+            hmask_data.SetFillStyle(3002)
             hmask_data.SetFillColor(36)
             hmask_data.SetLineStyle(6)
             hmask_data.SetLineColor(16)
@@ -335,7 +365,7 @@ class StackPlotter(object):
                 else:
                     hmask_ratio.SetBinContent(ibb,1e100)
                     hmask_ratio.SetBinError(ibb,0)
-            hmask_ratio.SetFillStyle(3003)
+            hmask_ratio.SetFillStyle(3002)
             hmask_ratio.SetFillColor(36)
             hmask_ratio.SetLineStyle(6)
             hmask_ratio.SetLineColor(16)
@@ -397,9 +427,9 @@ class StackPlotter(object):
 
 
         for (plotter,typeP,label) in zip(self.plotters,self.types,self.labels):
-                hist = plotter.drawTH1(hist.GetName()+label,var,cut,"1",bins,mini,maxi,titlex,units)
-                #hist.SetFillStyle(0)
-                #hist.SetName(hist.GetName()+label)
+                hist = plotter.drawTH1(var,cut,"1",bins,mini,maxi,titlex,units)
+#                hist.SetFillStyle(0)
+                hist.SetName(hist.GetName()+label)
                 hist.Scale(1./hist.Integral())
                 stack.Add(hist)
                 hists.append(hist)

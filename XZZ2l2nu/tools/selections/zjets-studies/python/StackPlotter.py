@@ -98,6 +98,7 @@ class StackPlotter(object):
 
     def setLog(self,doLog):
         self.log=doLog
+        
     def addPlotter(self,plotter,name="",label = "label",typeP = "background"):
         self.plotters.append(plotter)
         self.types.append(typeP)
@@ -107,7 +108,7 @@ class StackPlotter(object):
     def doRatio(self,doRatio):
         self.doRatioPlot = doRatio
 
-    def drawStack(self,var,cut,lumi,bins,mini,maxi,titlex = "", units = "", output = 'out', outDir='.', separateSignal=False, blinding=False, blindingCut=100.0, fakeData=False):
+    def drawStack(self,var,cut,lumi,bins,mini,maxi,titlex = "", units = "", output = 'out', outDir='.', separateSignal=False, blinding=False, blindingCut=100.0):
 
         fout = ROOT.TFile(outDir+'/'+output+'.root', 'recreate')
 
@@ -148,8 +149,8 @@ class StackPlotter(object):
 
         for (plotter,typeP,label,name) in zip(self.plotters,self.types,self.labels,self.names):
             if (typeP =="background") or (not separateSignal and typeP == "signal"):
-                hist = plotter.drawTH1(output+'_'+name,var,cutL,lumi,bins,mini,maxi,titlex,units)
-                #hist.SetName(output+'_'+name)
+                hist = plotter.drawTH1(var,cutL,lumi,bins,mini,maxi,titlex,units)
+                hist.SetName(output+'_'+name)
                 stack.Add(hist)
                 hists.append(hist)
                 print label+" : %f\n" % hist.Integral()
@@ -161,8 +162,8 @@ class StackPlotter(object):
                     backgroundErr+=error*error
 
             if separateSignal and typeP == "signal":
-                hist = plotter.drawTH1(output+'_'+name,var,cutL,lumi,bins,mini,maxi,titlex,units)
-                #hist.SetName(output+'_'+name)
+                hist = plotter.drawTH1(var,cutL,lumi,bins,mini,maxi,titlex,units)
+                hist.SetName(output+'_'+name)
                 hists.append(hist)
                 signalHs.append(hist)
                 signals.append(hist.Integral())
@@ -170,8 +171,8 @@ class StackPlotter(object):
                 print label+" : %f\n" % hist.Integral()
 
             if typeP =="data":
-                hist = plotter.drawTH1(output+'_'+typeP,var,cutL,"1",bins,mini,maxi,titlex,units)
-                #hist.SetName(output+'_'+typeP)
+                hist = plotter.drawTH1(var,cutL,"1",bins,mini,maxi,titlex,units)
+                hist.SetName(output+'_'+typeP)
                 hists.append(hist)
                 hist.SetMarkerStyle(20)
                 hist.SetLineWidth(1)
@@ -288,8 +289,7 @@ class StackPlotter(object):
 	pt.SetFillStyle(0)
 	pt.SetTextFont(42)
 	pt.SetTextSize(0.03)
-	#text = pt.AddText(0.15,0.3,"CMS Preliminary")
-	text = pt.AddText(0.15,0.3,"CMS Work in progress")
+	text = pt.AddText(0.15,0.3,"CMS Preliminary")
 #	text = pt.AddText(0.25,0.3,"#sqrt{s} = 7 TeV, L = 5.1 fb^{-1}  #sqrt{s} = 8 TeV, L = 19.7 fb^{-1}")
 	text = pt.AddText(0.55,0.3,"#sqrt{s} = 13 TeV, L = "+"{:.3}".format(float(lumi)/1000)+" fb^{-1}")
 	pt.Draw()   
@@ -320,7 +320,7 @@ class StackPlotter(object):
                 else:
                     hmask_data.SetBinContent(ibb,1e100)
                     hmask_data.SetBinError(ibb,0)
-            hmask_data.SetFillStyle(3003)
+            hmask_data.SetFillStyle(3002)
             hmask_data.SetFillColor(36)
             hmask_data.SetLineStyle(6)
             hmask_data.SetLineColor(16)
@@ -335,21 +335,23 @@ class StackPlotter(object):
                 else:
                     hmask_ratio.SetBinContent(ibb,1e100)
                     hmask_ratio.SetBinError(ibb,0)
-            hmask_ratio.SetFillStyle(3003)
+            hmask_ratio.SetFillStyle(3002)
             hmask_ratio.SetFillColor(36)
             hmask_ratio.SetLineStyle(6)
             hmask_ratio.SetLineColor(16)
             p2.cd()
             hmask_ratio.Draw("HIST,SAME")
 
+
+        p1.RedrawAxis()
+        p1.Update()
+        c1.Update()
+
         plot={'canvas':c1,'stack':stack,'legend':legend,'data':dataH,'dataG':dataG,'latex1':pt}
         if separateSignal and len(signalHs)>0:
             for (sigH,sigLab) in reversed(zip(signalHs,signalLabels)):
                 plot['signal_'+sigLab] = sigH
 
-        p1.RedrawAxis()
-        p1.Update()
-        c1.Update()
 
         c1.Print(outDir+'/'+output+'.eps')
         os.system('epstopdf '+outDir+'/'+output+'.eps')
@@ -397,9 +399,9 @@ class StackPlotter(object):
 
 
         for (plotter,typeP,label) in zip(self.plotters,self.types,self.labels):
-                hist = plotter.drawTH1(hist.GetName()+label,var,cut,"1",bins,mini,maxi,titlex,units)
-                #hist.SetFillStyle(0)
-                #hist.SetName(hist.GetName()+label)
+                hist = plotter.drawTH1(var,cut,"1",bins,mini,maxi,titlex,units)
+#                hist.SetFillStyle(0)
+                hist.SetName(hist.GetName()+label)
                 hist.Scale(1./hist.Integral())
                 stack.Add(hist)
                 hists.append(hist)

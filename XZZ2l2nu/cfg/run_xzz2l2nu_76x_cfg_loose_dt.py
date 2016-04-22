@@ -49,6 +49,7 @@ coreSequence = [
     metAna,
     leptonicVAna,
     multiStateAna,
+    eventFlagsAna,
     triggerFlagsAna,
 ]
     
@@ -61,10 +62,10 @@ sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
 test = 1
 if test==1:
     # test a single component, using a single thread.
-    selectedComponents = dataSamples
+    #selectedComponents = dataSamples
     #selectedComponents = mcSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
-    #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
+    selectedComponents = [SingleMuon_Run2015C_25ns_16Dec]
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
     #selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [BulkGravToZZ_narrow_800]

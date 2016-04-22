@@ -4,6 +4,7 @@ from array import array
 import pickle
 from PlotterBase import PlotterBase
 from array import array
+import subprocess
 
 class TreePlotter(PlotterBase):
 
@@ -17,18 +18,19 @@ class TreePlotter(PlotterBase):
         super(TreePlotter,self).__init__()
 
     def setupFromFile(self,filename):
-        f=open(filename)
-        data=pickle.load(f)
+        #f=open(filename)
+        #data=pickle.load(f)
         #weightinv = float(data['events'])
-        weightinv = float(data['Sum Weights'][1])
+        #weightinv = float(data['Sum Weights'][1])
+        weightinv = float(subprocess.check_output('grep "Sum Weights" '+filename+' | awk {\' print $3 \'}', shell=True))
         self.addCorrectionFactor(1./weightinv,'flat')
 
             
     def applySmoothing(self):
         self.smooth=True
 
-    def drawTH1(self,name,var,cuts,lumi,bins,min,max,titlex = "",units = "",drawStyle = "HIST"):
-        h = ROOT.TH1D(name,name,bins,min,max)
+    def drawTH1(self,var,cuts,lumi,bins,min,max,titlex = "",units = "",drawStyle = "HIST"):
+        h = ROOT.TH1D("tmpTH1","",bins,min,max)
         h.Sumw2()
         h.SetLineStyle(self.linestyle)
         h.SetLineColor(self.linecolor)
@@ -43,13 +45,13 @@ class TreePlotter(PlotterBase):
         corrString='1'
         for corr in self.corrFactors:
                 corrString = corrString+"*("+str(corr['value'])+")" 
-        self.tree.Draw(var+">>"+name,"("+cuts+")*"+lumi+"*"+self.weight+"*("+corrString+")","goff")
+        self.tree.Draw(var+">>tmpTH1","("+cuts+")*"+lumi+"*"+self.weight+"*("+corrString+")","goff")
 
         return h
 
 
-    def drawTH2(self,name,var,cuts,lumi,binsx,minx,maxx,binsy,miny,maxy,titlex = "",unitsx = "",titley="",unitsy="", drawStyle = "COLZ"):
-        h = ROOT.TH2D(name,name,binsx,minx,maxx,binsy,miny,maxy)
+    def drawTH2(self,var,cuts,lumi,binsx,minx,maxx,binsy,miny,maxy,titlex = "",unitsx = "",titley="",unitsy="", drawStyle = "COLZ"):
+        h = ROOT.TH2D("tmpTH2","",binsx,minx,maxx,binsy,miny,maxy)
         h.Sumw2()
         h.SetFillStyle(self.fillstyle)
         h.SetFillColor(self.fillcolor)
@@ -60,12 +62,12 @@ class TreePlotter(PlotterBase):
         corrString='1'
         for corr in self.corrFactors:
                 corrString = corrString+"*"+str(corr['value']) 
-        self.tree.Draw(var+">>"+name,"("+cuts+")*"+lumi+"*"+self.weight+"*("+corrString+")","goff")
+        self.tree.Draw(var+">>tmpTH2","("+cuts+")*"+lumi+"*"+self.weight+"*("+corrString+")","goff")
 
         return h
 
-    def drawProfile(self,name,var,cuts,lumi,binsx,minx,maxx,miny,maxy,titlex = "",unitsx = "",titley="",unitsy="", drawStyle = "COLZ"):
-        h = ROOT.TProfile(name,name,binsx,minx,maxx,miny,maxy)
+    def drawProfile(self,var,cuts,lumi,binsx,minx,maxx,miny,maxy,titlex = "",unitsx = "",titley="",unitsy="", drawStyle = "COLZ"):
+        h = ROOT.TProfile("tmpTH2","",binsx,minx,maxx,miny,maxy)
         h.Sumw2()
         h.SetFillStyle(self.fillstyle)
         h.SetFillColor(self.fillcolor)
@@ -76,15 +78,15 @@ class TreePlotter(PlotterBase):
         corrString='1'
         for corr in self.corrFactors:
                 corrString = corrString+"*"+str(corr['value']) 
-        self.tree.Draw(var+">>"+name,"("+cuts+")*"+lumi+"*"+self.weight+"*("+corrString+")","goff")
+        self.tree.Draw(var+">>tmpTH2","("+cuts+")*"+lumi+"*"+self.weight+"*("+corrString+")","goff")
 
         return h
 
 
 
 
-    def drawTH3(self,name,var,cuts,lumi,binsx,minx,maxx,binsy,miny,maxy,binsz,minz,maxz,titlex = "",unitsx = "",titley="",unitsy="", drawStyle = "COLZ"):
-        h = ROOT.TH3D(name,name,binsx,minx,maxx,binsy,miny,maxy,binsz,minz,maxz)
+    def drawTH3(self,var,cuts,lumi,binsx,minx,maxx,binsy,miny,maxy,binsz,minz,maxz,titlex = "",unitsx = "",titley="",unitsy="", drawStyle = "COLZ"):
+        h = ROOT.TH3D("tmpTH3","",binsx,minx,maxx,binsy,miny,maxy,binsz,minz,maxz)
         h.Sumw2()
         h.SetFillStyle(self.fillstyle)
         h.SetFillColor(self.fillcolor)
@@ -95,13 +97,13 @@ class TreePlotter(PlotterBase):
         corrString='1'
         for corr in self.corrFactors:
                 corrString = corrString+"*"+str(corr['value']) 
-        self.tree.Draw(var+">>"+name,"("+cuts+")*"+lumi+"*"+self.weight+"*("+corrString+")","goff")
+        self.tree.Draw(var+">>tmpTH3","("+cuts+")*"+lumi+"*"+self.weight+"*("+corrString+")","goff")
         return h
 
 
 
-    def drawTH2Binned(self,name,var,cuts,lumi,binningx,binningy,titlex = "",unitsx = "",titley="",unitsy="", drawStyle = "COLZ"):
-        h = ROOT.TH2D(name,name,len(binningx)-1,array('f',binningx),len(binningy)-1,array('f',binningy))
+    def drawTH2Binned(self,var,cuts,lumi,binningx,binningy,titlex = "",unitsx = "",titley="",unitsy="", drawStyle = "COLZ"):
+        h = ROOT.TH2D("tmpTH2","",len(binningx)-1,array('f',binningx),len(binningy)-1,array('f',binningy))
         h.Sumw2()
         h.SetFillStyle(self.fillstyle)
         h.SetFillColor(self.fillcolor)
@@ -112,12 +114,12 @@ class TreePlotter(PlotterBase):
         corrString='1'
         for corr in self.corrFactors:
                 corrString = corrString+"*"+str(corr['value']) 
-        self.tree.Draw(var+">>"+name,"("+cuts+")*"+lumi+"*"+self.weight+"*("+corrString+")","goff")
+        self.tree.Draw(var+">>tmpTH2","("+cuts+")*"+lumi+"*"+self.weight+"*("+corrString+")","goff")
 
         return h
 
-    def drawTH1Binned(self,name,var,cuts,lumi,binningx,titlex = "",unitsx = "", drawStyle = "COLZ"):
-        h = ROOT.TH1D(name,name,len(binningx)-1,array('f',binningx))
+    def drawTH1Binned(self,var,cuts,lumi,binningx,titlex = "",unitsx = "", drawStyle = "COLZ"):
+        h = ROOT.TH1D("tmpTH1","",len(binningx)-1,array('f',binningx))
         h.Sumw2()
         h.SetFillStyle(self.fillstyle)
         h.SetFillColor(self.fillcolor)
@@ -127,7 +129,7 @@ class TreePlotter(PlotterBase):
         corrString='1'
         for corr in self.corrFactors:
                 corrString = corrString+"*"+str(corr['value']) 
-        self.tree.Draw(var+">>"+name,"("+cuts+")*"+lumi+"*"+self.weight+"*("+corrString+")","goff")
+        self.tree.Draw(var+">>tmpTH1","("+cuts+")*"+lumi+"*"+self.weight+"*("+corrString+")","goff")
 
         return h
 
