@@ -90,7 +90,7 @@ jetAna = cfg.Analyzer(
     copyJetsByValue = True,      #Whether or not to copy the input jets or to work with references (should be 'True' if JetAnalyzer is run more than once)
     genJetCol = 'slimmedGenJets',
     rho = ('fixedGridRhoFastjetAll','',''), # it was ('fixedGridRhoFastjetAll','','') 
-    jetPt = 5., # default used to be 25.
+    jetPt = 10., # default used to be 25.
     jetEta = 4.7,
     jetEtaCentral = 2.4,
     jetLepDR = 0.4,
@@ -137,7 +137,7 @@ metAna = cfg.Analyzer(
     doMetNoPhoton = False,
     recalibrate = "type1", # or "type1", or True, or False
     doMetShiftFromJEC = True, # only works with recalibrate on
-    applyJetSmearing = False, # does nothing unless the jet smearing is turned on in the jet analyzer
+    applyJetSmearing = True, # not change the final met used in leptonicVAna and multiStateAna, only works for MC, does nothing unless the jet smearing turned on in jetAna
     old74XMiniAODs = False, # set to True to get the correct Raw MET when running on old 74X MiniAODs
     jetAnalyzerPostFix = "",
     candidates='packedPFCandidates',
@@ -169,7 +169,8 @@ multiStateAna = cfg.Analyzer(
     )
 
 # Create flags for MET filter bits
-
+"""followed by the MET filters recommendations from
+https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFiltersRun2#MiniAOD_76X_v2_produced_with_the"""
 eventFlagsAna = cfg.Analyzer(
     TriggerBitAnalyzer, name="EventFlags",
     processName = 'PAT',
@@ -178,17 +179,18 @@ eventFlagsAna = cfg.Analyzer(
     triggerBits = {
         "HBHENoiseFilter" : [ "Flag_HBHENoiseFilter" ],
         "HBHENoiseIsoFilter" : [ "Flag_HBHENoiseIsoFilter" ],
-        "CSCTightHaloFilter" : [ "Flag_CSCTightHaloFilter" ],
-        "hcalLaserEventFilter" : [ "Flag_hcalLaserEventFilter" ],
+        #"CSCTightHaloFilter" : [ "Flag_CSCTightHaloFilter" ],
+        "CSCTightHalo2015Filter" : [ "Flag_CSCTightHalo2015Filter" ],
+        #"hcalLaserEventFilter" : [ "Flag_hcalLaserEventFilter" ],
         "EcalDeadCellTriggerPrimitiveFilter" : [ "Flag_EcalDeadCellTriggerPrimitiveFilter" ],
         "goodVertices" : [ "Flag_goodVertices" ],
-        "trackingFailureFilter" : [ "Flag_trackingFailureFilter" ],
+        #"trackingFailureFilter" : [ "Flag_trackingFailureFilter" ],
         "eeBadScFilter" : [ "Flag_eeBadScFilter" ],
-        "ecalLaserCorrFilter" : [ "Flag_ecalLaserCorrFilter" ],
-        "trkPOGFilters" : [ "Flag_trkPOGFilters" ],
-        "trkPOG_manystripclus53X" : [ "Flag_trkPOG_manystripclus53X" ],
-        "trkPOG_toomanystripclus53X" : [ "Flag_trkPOG_toomanystripclus53X" ],
-        "trkPOG_logErrorTooManyClusters" : [ "Flag_trkPOG_logErrorTooManyClusters" ],
+        # "ecalLaserCorrFilter" : [ "Flag_ecalLaserCorrFilter" ],
+        # "trkPOGFilters" : [ "Flag_trkPOGFilters" ],
+        # "trkPOG_manystripclus53X" : [ "Flag_trkPOG_manystripclus53X" ],
+        # "trkPOG_toomanystripclus53X" : [ "Flag_trkPOG_toomanystripclus53X" ],
+        # "trkPOG_logErrorTooManyClusters" : [ "Flag_trkPOG_logErrorTooManyClusters" ],
         "METFilters" : [ "Flag_METFilters" ],
     }
     )

@@ -86,6 +86,8 @@ class JetReCalibrator:
         emf = ( jet.physObj.neutralEmEnergy() + jet.physObj.chargedEmEnergy() )/p4.E()
         if emf > self.type1METParams['skipEMfractionThreshold']:
             return None
+        '''The idea to solve the disambiguations with lepton, see:
+        https://github.com/cms-sw/cmssw/blob/CMSSW_7_4_X/JetMETCorrections/Type1MET/interface/PFJetMETcorrInputProducerT.h#L173-L184'''
         if self.type1METParams['skipMuons']:
             for idau in xrange(jet.numberOfDaughters()):
                 pfcand = jet.daughter(idau)
@@ -163,8 +165,11 @@ class JetReCalibrator:
 
 class Type1METCorrector:
     def __init__(self, old74XMiniAODs):
-        """Object to apply type1 corrections computed by the JetReCalibrator to the MET.
-           old74XMiniAODs should be True if using inputs produced with CMSSW_7_4_11 or earlier."""
+        """latest recommendations, see
+        https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETRun2Corrections
+        Object to apply type1 corrections computed by the JetReCalibrator to the MET.
+        old74XMiniAODs should be True if using inputs produced with CMSSW_7_4_11 or earlier."""
+
         self.oldMC = old74XMiniAODs
     def correct(self,met,type1METCorrections):
         oldpx, oldpy = met.px(), met.py()

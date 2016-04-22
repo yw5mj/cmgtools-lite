@@ -36,7 +36,6 @@ leptonicVAna.selectVBoson = (lambda x: x.mass()>50.0 and x.mass()<180.0)
 multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>50.0 and x.leg1.mass()<180.0)
 
 jetAna.smearJets=True
-metAna.applyJetSmearing=True
 
 #-------- SEQUENCE
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
@@ -52,6 +51,7 @@ coreSequence = [
     metAna,
     leptonicVAna,
     multiStateAna,
+    eventFlagsAna,
     triggerFlagsAna,
 ]
     
@@ -65,8 +65,9 @@ test = 1
 if test==1:
     # test a single component, using a single thread.
     #selectedComponents = dataSamples
-    selectedComponents = [BulkGravToZZToZlepZinv_narrow_3500]
-    selectedComponents = mcSamples
+    #selectedComponents = mcSamples
+    selectedComponents = backgroundSamples 
+    #selectedComponents = [BulkGravToZZToZlepZinv_narrow_3500]
     #selectedComponents = signalSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
