@@ -28,14 +28,15 @@ class XZZLeptonEffTree( Analyzer ):
     def process(self, event):
         self.readCollections( event.input )
         event.llpair=[]
-        if self.genfilter and self.cfg_comp.isMC:
-            event.selectedElectrons=[i for i in event.selectedElectrons if self.checkgen(i)]
-            event.selectedMuons=[i for i in event.selectedMuons if self.checkgen(i)]
         if len(event.selectedElectrons)>2 and (event.selectedElectrons[0].pdgId()==-event.selectedElectrons[1].pdgId() or self.eithercharge):
             event.llpair.append(Pair(event.selectedElectrons[0],event.selectedElectrons[1],23))
         if len(event.selectedMuons)>2 and (event.selectedMuons[0].pdgId()==-event.selectedMuons[1].pdgId() or self.eithercharge):
             event.llpair.append(Pair(event.selectedMuons[0],event.selectedMuons[1],23))
         if not event.llpair: return False
+        if self.genfilter and self.cfg_comp.isMC:
+            for i in event.llpair:
+                i.leg1.xdaughter=self.checkgen(i.leg1)
+                i.leg2.xdaughter=self.checkgen(i.leg2)
         return True
 
 

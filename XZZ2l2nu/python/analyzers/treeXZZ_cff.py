@@ -76,8 +76,8 @@ vvTreeProducer = cfg.Analyzer(
      }
 )
 
-leptonEffTreeProducer = cfg.Analyzer(
-     AutoFillTreeProducer, name='leptonEffTreeProducer',
+lepeffTreeProducer = cfg.Analyzer(
+     AutoFillTreeProducer, name='lepeffTreeProducer',
      vectorTree = True,
      saveTLorentzVectors = False,  # can set to True to get also the TLorentzVectors, but trees will be bigger
      defaultFloatType = 'F', # use Float_t for floating point
