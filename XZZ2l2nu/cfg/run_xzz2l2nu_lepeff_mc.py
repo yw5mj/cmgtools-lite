@@ -39,10 +39,11 @@ leptonType.variables.extend([
 ]) 
 sequence = [
     jsonAna,
+    pileUpAna,
     vertexAna,
     lepAna,
     lepeffAna,
-    leptonEffTreeProducer
+    lepeffTreeProducer
 ]
     
 
@@ -50,7 +51,7 @@ sequence = [
 test = 1
 if test==1:
     # test a single component, using a single thread.
-    selectedComponents = [DYJetsToLL_M50,ZZTo2L2Nu]
+    selectedComponents = [DYJetsToLL_M50,ZZTo2L2Nu,DYJetsToLL_M50_Ext]
     #selectedComponents = mcSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
