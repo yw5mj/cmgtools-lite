@@ -45,9 +45,10 @@ int main(int argc, char** argv) {
   TBranch *b_SumEvents=tree_out->Branch("SumEvents",&SumEvents,"SumEvents/D");
   TBranch *b_SumWeights=tree_out->Branch("SumWeights",&SumWeights,"SumWeights/D");
 
-  b_SumEvents->Fill();
-  b_SumWeights->Fill();
-
+  for (int i=0; i<(int)tree_out->GetEntries(); i++){ 
+    b_SumEvents->Fill();
+    b_SumWeights->Fill();
+  }
   tree_out->Write();
   foutput->Close();
   finput->Close();
