@@ -69,15 +69,13 @@ vvTreeProducer = cfg.Analyzer(
          "genLeptons" : NTupleCollection("genLep", genParticleType, 10, help="Generated leptons (e/mu) from W/Z decays"),
          "genZBosons" : NTupleCollection("genZ", genParticleType, 10, help="Generated V bosons"),
          "LLNuNu"     : NTupleCollection("llnunu",LLNuNuType ,5, help="VV candidate with di-lepton and MET"),
-         "genLeptons" : NTupleCollection("genLep", genParticleType, 10, help="Generated leptons (e/mu) from W/Z decays"),
-         "genZBosons" : NTupleCollection("genZ", genParticleType, 10, help="Generated V bosons"),
          "jets"       : NTupleCollection("jet_corr",corrJetType,15, help="all jets with new JEC for 76X applied (JER corrected if isMC)"),
          "jets_raw"   : NTupleCollection("jet",JetType,15, help="all jets from miniAOD"),
      }
 )
 
-leptonEffTreeProducer = cfg.Analyzer(
-     AutoFillTreeProducer, name='leptonEffTreeProducer',
+lepeffTreeProducer = cfg.Analyzer(
+     AutoFillTreeProducer, name='lepeffTreeProducer',
      vectorTree = True,
      saveTLorentzVectors = False,  # can set to True to get also the TLorentzVectors, but trees will be bigger
      defaultFloatType = 'F', # use Float_t for floating point

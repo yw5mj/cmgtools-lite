@@ -1,3 +1,6 @@
+
+Method 1:
+
 selections.cxx:
 
 - make sure the ntuples with loose cuts stored in /76X/ which is in the same parent as selections.cxx:
@@ -8,3 +11,15 @@ selections.cxx:
 
 - reduced root files stored:
   ./AnalysisRegion/
+
+
+Method 2:
+
+- define your cuts in skimming.sh in the string "selection"
+
+- simply run ./skimming.sh
+
+- reduced root files stored in 
+  ./AnalysisRegion
+
+

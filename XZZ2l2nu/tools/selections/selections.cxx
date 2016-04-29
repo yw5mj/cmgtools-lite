@@ -25,8 +25,11 @@ void Selections::skimming()
 
   TBranch *b_SumWeights=t2->Branch("SumWeights",&SumWeights,"SumWeights/D");
   TBranch *b_SumEvents=t2->Branch("SumEvents",&SumEvents,"SumEvents/D");
-  b_SumWeights->Fill();
-  b_SumEvents->Fill();
+
+  for (int ii=0; ii<(int)t2->GetEntries(); ii++){
+    b_SumWeights->Fill();
+    b_SumEvents->Fill();
+  }
   
   t2->Write();
   outfile->ls();
