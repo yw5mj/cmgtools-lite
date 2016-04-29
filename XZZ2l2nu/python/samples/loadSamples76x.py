@@ -22,10 +22,10 @@ jercRefdt=[JERCRef_data]
 
 # backgrounds
 backgroundSamples = [
-DYJetsToLL_M50_HT100to200,
-DYJetsToLL_M50_HT200to400,
-DYJetsToLL_M50_HT400to600,
-DYJetsToLL_M50_HT600toInf,
+# DYJetsToLL_M50_HT100to200,
+# DYJetsToLL_M50_HT200to400,
+# DYJetsToLL_M50_HT400to600,
+# DYJetsToLL_M50_HT600toInf,
 WW,
 WZ,
 ZZ,
@@ -101,7 +101,7 @@ for s in SinglePhoton:
     s.trigers = triggers_photon_unbias
 
 
-dataSamples=SingleMuon+SingleElectron+jercRefdt
+dataSamples=SingleMuon+SingleElectron #+jercRefdt
 
 # JSON
 # https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2015Analysis#ReReco_at_25_ns
