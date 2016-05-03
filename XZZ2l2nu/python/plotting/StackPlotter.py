@@ -104,6 +104,12 @@ class StackPlotter(object):
         self.labels.append(label)
         self.names.append(name)
 
+    def rmPlotter(self, plotter, name="",label = "label", typeP = "background"):
+        self.plotters.remove(plotter)
+        self.types.remove(typeP)
+        self.labels.remove(label)
+        self.names.remove(name)
+
     def doRatio(self,doRatio):
         self.doRatioPlot = doRatio
 
@@ -327,20 +333,21 @@ class StackPlotter(object):
             p1.cd()
             hmask_data.Draw("HIST,SAME")
 
-            hmask_ratio = hratio.Clone(output+'_'+"hmask_ratio")
-            for ibb in range(hmask_ratio.GetNbinsX()+1):
-                if hmask_ratio.GetBinCenter(ibb)<=blindingCut:
-                    hmask_ratio.SetBinContent(ibb,-100)
-                    hmask_ratio.SetBinError(ibb,0)
-                else:
-                    hmask_ratio.SetBinContent(ibb,1e100)
-                    hmask_ratio.SetBinError(ibb,0)
-            hmask_ratio.SetFillStyle(3003)
-            hmask_ratio.SetFillColor(36)
-            hmask_ratio.SetLineStyle(6)
-            hmask_ratio.SetLineColor(16)
-            p2.cd()
-            hmask_ratio.Draw("HIST,SAME")
+            if self.doRatioPlot:
+                hmask_ratio = hratio.Clone(output+'_'+"hmask_ratio")
+                for ibb in range(hmask_ratio.GetNbinsX()+1):
+                    if hmask_ratio.GetBinCenter(ibb)<=blindingCut:
+                        hmask_ratio.SetBinContent(ibb,-100)
+                        hmask_ratio.SetBinError(ibb,0)
+                    else:
+                        hmask_ratio.SetBinContent(ibb,1e100)
+                        hmask_ratio.SetBinError(ibb,0)
+                hmask_ratio.SetFillStyle(3003)
+                hmask_ratio.SetFillColor(36)
+                hmask_ratio.SetLineStyle(6)
+                hmask_ratio.SetLineColor(16)
+                p2.cd()
+                hmask_ratio.Draw("HIST,SAME")
 
         plot={'canvas':c1,'stack':stack,'legend':legend,'data':dataH,'dataG':dataG,'latex1':pt}
         if separateSignal and len(signalHs)>0:
@@ -357,13 +364,13 @@ class StackPlotter(object):
         fout.cd()
         c1.Write() 
         stack.Write()
-        dataH.Write()
-        dataG.Write()
+        if dataH: dataH.Write()
+        if dataG: dataG.Write()
         pt.Write()
         legend.Write()
         p1.Write()
         p2.Write()
-        hratio.Write()
+        if self.doRatioPlot:   hratio.Write()
         frame.Write()
         for hist in hists: hist.Write()  
         fout.Close()

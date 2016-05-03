@@ -6,8 +6,8 @@ from CMGTools.XZZ2l2nu.plotting.TreePlotter import TreePlotter
 from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
-#cutChain='loosecut'
-cutChain='loosecutMETfilter'
+cutChain='loosecut'
+#cutChain='loosecutMETfilter'
 #cutChain='tightzpt100'
 #cutChain='tightzpt100met100'
 #cutChain='tightzpt100met100dphi'
@@ -24,7 +24,7 @@ sepSig=True
 LogY=True
 DrawLeptons=True
 doRatio=True
-test=False
+test=True
 Blind=False
 FakeData=False
 
