@@ -24,10 +24,11 @@ class XZZGenAnalyzer( Analyzer ):
         self.count = self.counters.counter('XZZGenReport')
         self.count.register('XZZ2l2nu Events')
         self.count.register('XZZ2l2j Events')
+        self.count.register('emu2nu Events')
         self.count.register('pass events')
+        
 
-
-    def makeMCInfo(self, event):
+    def makeMCInfo(self, event, bosonID = 23):
         verbose = getattr(self.cfg_ana, 'verbose', False)
         rawGenParticles = self.mchandles['genParticles'].product() 
 
@@ -39,8 +40,8 @@ class XZZGenAnalyzer( Analyzer ):
         event.genNeutrinos = []
         event.genJets = []
 
-        event.genZBosons = [ p for p in rawGenParticles if (p.pdgId() == 23) and p.numberOfDaughters() > 0 and abs(p.daughter(0).pdgId()) != 23 ]
-
+        event.genZBosons = [ p for p in rawGenParticles if (abs(p.pdgId()) == bosonID) and p.numberOfDaughters() > 0 and abs(p.daughter(0).pdgId()) != 23 ]
+        
         for zboson in event.genZBosons:
             selectedGenParticles.append(zboson)
             for i in xrange( zboson.numberOfDaughters() ):
@@ -68,7 +69,14 @@ class XZZGenAnalyzer( Analyzer ):
             event.genIsXZZ2l2j = True
         else:
             event.genIsXZZ2l2j = False
+            
+        if len(event.genZBosons)>=2 and len(event.genElectrons)>=1 and len(event.genMuons)>=1 and len(event.genNeutrinos)>=2:
+            event.genIsXZZemu2nu = True
+        else:
+            event.genIsXZZemu2nu = False
 
+        if event.genIsXZZemu2nu:
+            self.count.inc('emu2nu Events')
 
         if event.genIsXZZ2l2nu:
             self.count.inc('XZZ2l2nu Events') 
@@ -92,6 +100,7 @@ class XZZGenAnalyzer( Analyzer ):
         
         # no gen filter
         if self.filter == "None":
+            self.count.inc('pass events')
             return True
         # filter
         if self.filter=="ZZ2mu":

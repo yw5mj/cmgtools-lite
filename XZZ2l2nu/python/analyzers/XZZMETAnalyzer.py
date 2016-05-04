@@ -17,7 +17,7 @@ class XZZMETAnalyzer( Analyzer ):
         super(XZZMETAnalyzer,self).__init__(cfg_ana,cfg_comp,looperName)
         self.recalibrateMET   = cfg_ana.recalibrate
         self.doMetShiftFromJEC= cfg_ana.recalibrate and cfg_ana.doMetShiftFromJEC
-        self.applyJetSmearing = cfg_comp.isMC and cfg_ana.applyJetSmearing
+        self.applyJetSmearing = cfg_ana.applyJetSmearing
         self.old74XMiniAODs         = cfg_ana.old74XMiniAODs
         self.jetAnalyzerPostFix = getattr(cfg_ana, 'jetAnalyzerPostFix', '')
         if self.recalibrateMET in [ "type1", True ]:
@@ -210,10 +210,13 @@ class XZZMETAnalyzer( Analyzer ):
         #     self.met_JECJER = copy.deepcopy(self.met)
         #     setattr(event,"met_JECJER"+self.cfg_ana.collectionPostFix, self.met_JECJER)
         # else:
-            deltaMetSmear = getattr(event, 'deltaMetFromJetSmearing'+self.jetAnalyzerPostFix)
-            self.met_JECJER = copy.deepcopy(self.met)
-            self.applyDeltaMet(self.met_JECJER, deltaMetSmear)
-            setattr(event,"met_JECJER"+self.cfg_ana.collectionPostFix, self.met_JECJER)
+            if self.cfg_comp.isMC:
+                deltaMetSmear = getattr(event, 'deltaMetFromJetSmearing'+self.jetAnalyzerPostFix)
+                self.met_JECJER = copy.deepcopy(self.met)
+                self.applyDeltaMet(self.met_JECJER, deltaMetSmear)
+                setattr(event,"met_JECJER"+self.cfg_ana.collectionPostFix, self.met_JECJER)
+            else:
+                setattr(event,"met_JECJER"+self.cfg_ana.collectionPostFix, self.met)
 
         #Shifted METs: to be re-enabled after updates to MiniAOD pass 2
         #Uncertainties defined in https://github.com/cms-sw/cmssw/blob/CMSSW_7_2_X/DataFormats/PatCandidates/interface/MET.h#L168
