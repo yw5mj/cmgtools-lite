@@ -12,6 +12,11 @@ def latex_float(f):
 
 #total xsec:
 # https://github.com/acarvalh/Cross_sections_CMS/blob/master/WED/bulk_KKgrav_LHC13.txt
+#if you want the cross section (CX) using a ktilda' you do
+#CX(ktilda',pb) = CX(ktilda=0.1,pb) * (ktilda' / 0.1)^2
+
+ktilda=0.5
+
 masses = [600,800,1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
 BulkGXsec = {200:5.649417401247585,
 260:1.9429371431011526,
@@ -71,6 +76,11 @@ BulkGXsec = {200:5.649417401247585,
 4400:4.33E-08,
 4500:3.34E-08,
 }
+
+# apply ktilda scale
+#CX(ktilda',pb) = CX(ktilda=0.1,pb) * (ktilda' / 0.1)^2
+for mass,value in BulkGXsec.iteritems():
+    BulkGXsec[mass] = BulkGXsec[mass]*(ktilda/0.1)**2
 
 # BulkGrav to ZZ branch ratio:
 # https://github.com/acarvalh/Cross_sections_CMS/blob/master/WED/bulk_KKgrav_decay.txt
@@ -151,7 +161,7 @@ print
 #print latex table
 print "BulkG->ZZ->2l2nu Xsec Latex table:"
 print '\\begin{table}[htdp]'
-print '\\caption{BulkGrav$\\rightarrow$ZZ$\\rightarrow ll\\nu\\nu$ cross-sections.}'
+print '\\caption{BulkGrav$\\rightarrow$ZZ$\\rightarrow ll\\nu\\nu$ cross-sections with $\\tilde{k}='+str(ktilda)+'$.}'
 print '\\begin{center}'
 print '\\begin{tabular}{c c}'
 print '\\hline'
@@ -192,7 +202,7 @@ print
 # print BulkG->ZZ Xsec Latex table:
 print "BulkG->ZZ Xsec Latex table:"
 print '\\begin{table}[htdp]'
-print '\\caption{BulkGrav$\\rightarrow$ZZ cross-sections.}'
+print '\\caption{BulkGrav$\\rightarrow$ZZ cross-sections with $\\tilde{k}='+str(ktilda)+'$.}'
 print '\\begin{center}'
 print '\\begin{tabular}{c c}'
 print '\\hline'
