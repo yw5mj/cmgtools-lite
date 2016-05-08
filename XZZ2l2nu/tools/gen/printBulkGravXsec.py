@@ -158,6 +158,15 @@ for mass in masses:
 print "}"
 print
 
+# another version of print codes
+print "BulkG->ZZ->2l2nu Xsec Dictionary codes, another version:"
+print "BulkGZZ2l2nuXsec = {"
+for mass in masses:
+    if mass in BulkGZZ2l2nuXsec.keys():
+        print '\'m'+str(mass)+'\''+":{:.5e}".format(BulkGZZ2l2nuXsec[mass])+","
+print "}"
+print
+
 #print latex table
 print "BulkG->ZZ->2l2nu Xsec Latex table:"
 print '\\begin{table}[htdp]'
@@ -198,6 +207,16 @@ for mass in masses:
         print str(mass)+":{:.5e}".format(BulkGZZXsec[mass])+","
 print "}"
 print
+
+# another version, print BulkG->ZZ Xsec dictionary codes
+print "BulkG->ZZ Xsec Dictionary codes, another version:"
+print "BulkGZZXsec = {"
+for mass in masses:
+    if mass in BulkGZZXsec.keys():
+        print '\'m'+str(mass)+'\''+":{:.5e}".format(BulkGZZXsec[mass])+","
+print "}"
+print
+
 
 # print BulkG->ZZ Xsec Latex table:
 print "BulkG->ZZ Xsec Latex table:"
