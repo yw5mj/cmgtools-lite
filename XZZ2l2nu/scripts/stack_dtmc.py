@@ -7,7 +7,10 @@ from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 #cutChain='loosecut'
+<<<<<<< HEAD
 #cutChain='loosecutMETfilter'
+=======
+>>>>>>> xzz2l2nu_76x
 cutChain='tightzpt100'
 #cutChain='tightzpt100met100'
 #cutChain='tightzpt100met100dphi'
@@ -18,15 +21,19 @@ cutChain='tightzpt100'
 channel='both' # can be el or mu or both
 
 outdir='plots'
-indir="/afs/cern.ch/work/m/mewu/public/76X_new"
+#indir="/afs/cern.ch/work/m/mewu/public/76X_new"
+indir="/data/mewu/76X_new"
 lumi=2.169126704526
 sepSig=True
 LogY=True
-DrawLeptons=True
+DrawLeptons=False
 doRatio=True
 test=False
 Blind=True
 FakeData=False
+UseMETFilter=True
+SignalAll1pb=False
+k=1 # signal scale
 
 elChannel='(abs(llnunu_l1_l1_pdgId)==11)'
 muChannel='(abs(llnunu_l1_l1_pdgId)==13)'
@@ -34,9 +41,17 @@ muChannel='(abs(llnunu_l1_l1_pdgId)==13)'
 if not os.path.exists(outdir): os.system('mkdir '+outdir)
 
 tag = cutChain+'_'
+
+if UseMETFilter: tag = tag+'metfilter_'
+
 tag = tag+channel+'_'
 if LogY: tag = tag+'log_'
+if SignalAll1pb:
+    tag += '1pb_'
+else:
+    tag += 'scale'+str(k)+'_'
 
+metfilter='(Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_HBHENoiseFilter&&Flag_CSCTightHalo2015Filter&&Flag_eeBadScFilter)'
 
 cuts_loose='(nllnunu)'
 cuts_loose_METfilter='(Flag_eeBadScFilter==1 && Flag_goodVertices==1 && Flag_EcalDeadCellTriggerPrimitiveFilter==1 && Flag_CSCTightHalo2015Filter==1 && Flag_HBHENoiseIsoFilter==1 && Flag_HBHENoiseFilter==1 )'
@@ -62,6 +77,8 @@ if cutChain!='loosecutMETfilter': cuts = cuts+'&&' + cuts_loose_METfilter
 if channel=='el': cuts = cuts+'&&'+elChannel
 elif channel=='mu': cuts = cuts+'&&'+muChannel
 
+if UseMETFilter:
+    cuts = '('+cuts+'&&'+metfilter+')'
 
 ROOT.gROOT.ProcessLine('.x tdrstyle.C') 
 
@@ -74,8 +91,13 @@ for sample in wwSamples:
     wwPlotters[-1].addCorrectionFactor('xsec','tree')
     wwPlotters[-1].addCorrectionFactor('genWeight','tree')
     wwPlotters[-1].addCorrectionFactor('puWeight','tree')
+<<<<<<< HEAD
     wwPlotters[-1].addCorrectionFactor('triggersf','tree')
     wwPlotters[-1].addCorrectionFactor('llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf','tree')
+=======
+    wwPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
+    wwPlotters[-1].addCorrectionFactor('triggersf','tree')
+>>>>>>> xzz2l2nu_76x
 
 WW = MergedPlotter(wwPlotters)
 WW.setFillProperties(1001,ROOT.kOrange)
@@ -92,8 +114,13 @@ for sample in vvSamples:
     vvPlotters[-1].addCorrectionFactor('xsec','tree')
     vvPlotters[-1].addCorrectionFactor('genWeight','tree')
     vvPlotters[-1].addCorrectionFactor('puWeight','tree')
+<<<<<<< HEAD
     vvPlotters[-1].addCorrectionFactor('triggersf','tree')
     vvPlotters[-1].addCorrectionFactor('llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf','tree')
+=======
+    vvPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
+    vvPlotters[-1].addCorrectionFactor('triggersf','tree')
+>>>>>>> xzz2l2nu_76x
 
 VV = MergedPlotter(vvPlotters)
 VV.setFillProperties(1001,ROOT.kMagenta)
@@ -107,9 +134,14 @@ for sample in wjetsSamples:
     wjetsPlotters[-1].addCorrectionFactor('xsec','tree')
     wjetsPlotters[-1].addCorrectionFactor('genWeight','tree')
     wjetsPlotters[-1].addCorrectionFactor('puWeight','tree')
+<<<<<<< HEAD
     wjetsPlotters[-1].addCorrectionFactor('triggersf','tree')
     wjetsPlotters[-1].addCorrectionFactor('llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf','tree')
 
+=======
+    wjetsPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
+    wjetsPlotters[-1].addCorrectionFactor('triggersf','tree')
+>>>>>>> xzz2l2nu_76x
 
 WJets = MergedPlotter(wjetsPlotters)
 WJets.setFillProperties(1001,ROOT.kBlue-6)
@@ -128,8 +160,13 @@ for sample in zjetsSamples:
     zjetsPlotters[-1].addCorrectionFactor('xsec','tree')
     zjetsPlotters[-1].addCorrectionFactor('genWeight','tree')
     zjetsPlotters[-1].addCorrectionFactor('puWeight','tree')
+<<<<<<< HEAD
     zjetsPlotters[-1].addCorrectionFactor('triggersf','tree')
     zjetsPlotters[-1].addCorrectionFactor('llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf','tree')
+=======
+    zjetsPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
+    zjetsPlotters[-1].addCorrectionFactor('triggersf','tree')
+>>>>>>> xzz2l2nu_76x
 
 ZJets = MergedPlotter(zjetsPlotters)
 ZJets.setFillProperties(1001,ROOT.kGreen+2)
@@ -143,8 +180,13 @@ for sample in ttSamples:
     ttPlotters[-1].addCorrectionFactor('xsec','tree')
     ttPlotters[-1].addCorrectionFactor('genWeight','tree')
     ttPlotters[-1].addCorrectionFactor('puWeight','tree')
+<<<<<<< HEAD
     ttPlotters[-1].addCorrectionFactor('triggersf','tree')
     ttPlotters[-1].addCorrectionFactor('llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf','tree')
+=======
+    ttPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
+    ttPlotters[-1].addCorrectionFactor('triggersf','tree')
+>>>>>>> xzz2l2nu_76x
 
 TT = MergedPlotter(ttPlotters)
 TT.setFillProperties(1001,ROOT.kAzure-9)
@@ -155,9 +197,9 @@ sigSamples = [
 'BulkGravToZZToZlepZinv_narrow_800',
 'BulkGravToZZToZlepZinv_narrow_1000',
 'BulkGravToZZToZlepZinv_narrow_1200',
-'BulkGravToZZToZlepZinv_narrow_1400',
-'BulkGravToZZToZlepZinv_narrow_1600', 
-'BulkGravToZZToZlepZinv_narrow_1800', 
+#'BulkGravToZZToZlepZinv_narrow_1400',
+#'BulkGravToZZToZlepZinv_narrow_1600', 
+#'BulkGravToZZToZlepZinv_narrow_1800', 
 #'BulkGravToZZToZlepZinv_narrow_2000',
 #'BulkGravToZZToZlepZinv_narrow_2500',
 #'BulkGravToZZToZlepZinv_narrow_3000',
@@ -166,38 +208,59 @@ sigSamples = [
 #'BulkGravToZZToZlepZinv_narrow_4500', 
 ]
 
-k=1000
-sigSampleNames = [
-str(k)+' x BulkG-600',
-str(k)+' x BulkG-800',
-str(k)+' x BulkG-1000',
-str(k)+' x BulkG-1200',
-str(k)+' x BulkG-1400',
-str(k)+' x BulkG-1600',
-str(k)+' x BulkG-1800',
-str(k)+' x BulkG-2000',
-str(k)+' x BulkG-2500',
-str(k)+' x BulkG-3000',
-str(k)+' x BulkG-3500',
-str(k)+' x BulkG-4000',
-#str(k)+' x BulkG-4500',
-]
-sigXsec = {
-'BulkGravToZZToZlepZinv_narrow_600'  : 3.44631e-04*k,
-'BulkGravToZZToZlepZinv_narrow_800'  : 6.31859e-05*k,
-'BulkGravToZZToZlepZinv_narrow_1000' : 1.68661e-05*k,
-'BulkGravToZZToZlepZinv_narrow_1200' : 5.59677e-06*k,
-'BulkGravToZZToZlepZinv_narrow_1400' : 2.13168e-06*k,
-'BulkGravToZZToZlepZinv_narrow_1600' : 8.97713e-07*k,
-'BulkGravToZZToZlepZinv_narrow_1800' : 4.06090e-07*k,
-'BulkGravToZZToZlepZinv_narrow_2000' : 1.94415e-07*k,
-'BulkGravToZZToZlepZinv_narrow_2500' : 3.63496e-08*k,
-'BulkGravToZZToZlepZinv_narrow_3000' : 7.95422e-09*k,
-'BulkGravToZZToZlepZinv_narrow_3500' : 1.95002e-09*k,
-'BulkGravToZZToZlepZinv_narrow_4000' : 5.03747e-10*k,
-#'BulkGravToZZToZlepZinv_narrow_4500' : 1*k,
+
+sigSampleNames = {
+'BulkGravToZZToZlepZinv_narrow_600':str(k)+' x BulkG-600',
+'BulkGravToZZToZlepZinv_narrow_800':str(k)+' x BulkG-800',
+'BulkGravToZZToZlepZinv_narrow_1000':str(k)+' x BulkG-1000',
+'BulkGravToZZToZlepZinv_narrow_1200':str(k)+' x BulkG-1200',
+'BulkGravToZZToZlepZinv_narrow_1400':str(k)+' x BulkG-1400',
+'BulkGravToZZToZlepZinv_narrow_1600':str(k)+' x BulkG-1600',
+'BulkGravToZZToZlepZinv_narrow_1800':str(k)+' x BulkG-1800',
+'BulkGravToZZToZlepZinv_narrow_2000':str(k)+' x BulkG-2000',
+'BulkGravToZZToZlepZinv_narrow_2500':str(k)+' x BulkG-2500',
+'BulkGravToZZToZlepZinv_narrow_3000':str(k)+' x BulkG-3000',
+'BulkGravToZZToZlepZinv_narrow_3500':str(k)+' x BulkG-3500',
+'BulkGravToZZToZlepZinv_narrow_4000':str(k)+' x BulkG-4000',
+'BulkGravToZZToZlepZinv_narrow_4500':str(k)+' x BulkG-4500',
 }
 
+BulkGZZ2l2nuXsec = {
+600:8.61578e-03,
+800:1.57965e-03,
+1000:4.21651e-04,
+1200:1.39919e-04,
+1400:5.32921e-05,
+1600:2.24428e-05,
+1800:1.01523e-05,
+2000:4.86037e-06,
+2500:9.08739e-07,
+3000:1.98856e-07,
+3500:4.87505e-08,
+4000:1.25937e-08,
+4500:1.0,
+}
+
+sigXsec = {
+'BulkGravToZZToZlepZinv_narrow_600'  : BulkGZZ2l2nuXsec[600]*k,
+'BulkGravToZZToZlepZinv_narrow_800'  : BulkGZZ2l2nuXsec[800]*k,
+'BulkGravToZZToZlepZinv_narrow_1000' : BulkGZZ2l2nuXsec[1000]*k,
+'BulkGravToZZToZlepZinv_narrow_1200' : BulkGZZ2l2nuXsec[1200]*k,
+'BulkGravToZZToZlepZinv_narrow_1400' : BulkGZZ2l2nuXsec[1400]*k,
+'BulkGravToZZToZlepZinv_narrow_1600' : BulkGZZ2l2nuXsec[1600]*k,
+'BulkGravToZZToZlepZinv_narrow_1800' : BulkGZZ2l2nuXsec[1800]*k,
+'BulkGravToZZToZlepZinv_narrow_2000' : BulkGZZ2l2nuXsec[2000]*k,
+'BulkGravToZZToZlepZinv_narrow_2500' : BulkGZZ2l2nuXsec[2500]*k,
+'BulkGravToZZToZlepZinv_narrow_3000' : BulkGZZ2l2nuXsec[3000]*k,
+'BulkGravToZZToZlepZinv_narrow_3500' : BulkGZZ2l2nuXsec[3500]*k,
+'BulkGravToZZToZlepZinv_narrow_4000' : BulkGZZ2l2nuXsec[4000]*k,
+'BulkGravToZZToZlepZinv_narrow_4500' : BulkGZZ2l2nuXsec[4500]*k,
+}
+
+if SignalAll1pb:
+    for sig in sigSamples:
+        sigXsec[sig] = 1.0
+        sigSampleNames[sig] = string.replace(sigSampleNames[sig], str(k)+' x', '1 pb')
 
 for sample in sigSamples:
     sigPlotters.append(TreePlotter(indir+'/'+sample+'/vvTreeProducer/tree.root','tree'))
@@ -205,8 +268,13 @@ for sample in sigSamples:
     sigPlotters[-1].addCorrectionFactor(str(sigXsec[sample]),'tree')
     sigPlotters[-1].addCorrectionFactor('genWeight','tree')
     sigPlotters[-1].addCorrectionFactor('puWeight','tree')
+<<<<<<< HEAD
     sigPlotters[-1].addCorrectionFactor('triggersf','tree')
     sigPlotters[-1].addCorrectionFactor('llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf','tree')
+=======
+    sigPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
+    sigPlotters[-1].addCorrectionFactor('triggersf','tree')
+>>>>>>> xzz2l2nu_76x
     sigPlotters[-1].setFillProperties(0,ROOT.kWhite)
 
 
@@ -232,7 +300,7 @@ Stack.addPlotter(ZJets, "ZJets","Z+Jets", "background")
 
 for i in range(len(sigSamples)):
   sigPlotters[i].setLineProperties(2,ROOT.kRed+i,2)
-  Stack.addPlotter(sigPlotters[i],sigSamples[i],sigSampleNames[i],'signal')  
+  Stack.addPlotter(sigPlotters[i],sigSamples[i],sigSampleNames[sigSamples[i]],'signal')  
 
  
 Stack.setLog(LogY)
@@ -240,10 +308,19 @@ Stack.doRatio(doRatio)
 
 
 Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 60, 0.0, 1200.0, titlex = "M_{T}", units = "GeV",output=tag+'mt',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
+<<<<<<< HEAD
 Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 150, 0.0, 3000.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_high',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
 Stack.drawStack('met_pt', cuts, str(lumi*1000), 100, 0, 1000, titlex = "MET", units = "GeV",output=tag+'met',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
 Stack.drawStack('met_pt', cuts, str(lumi*1000), 50, 0, 500, titlex = "MET", units = "GeV",output=tag+'met_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
 Stack.drawStack('met_pt', cuts, str(lumi*1000), 150, 0, 1500, titlex = "MET", units = "GeV",output=tag+'met_high',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
+=======
+#Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 150, 0.0, 3000.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_high',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
+Stack.drawStack('met_pt', cuts, str(lumi*1000), 100, 0, 1000, titlex = "MET", units = "GeV",output=tag+'met',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
+Stack.drawStack('met_pt', cuts, str(lumi*1000), 50, 0, 500, titlex = "MET", units = "GeV",output=tag+'met_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
+#Stack.drawStack('met_pt', cuts, str(lumi*1000), 150, 0, 1500, titlex = "MET", units = "GeV",output=tag+'met_high',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
+#Stack.drawStack('met_JECJER_pt', cuts, str(lumi*1000), 50, 0, 500, titlex = "MET", units = "GeV",output=tag+'met_jecjer_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
+
+>>>>>>> xzz2l2nu_76x
 
 
 if not test :

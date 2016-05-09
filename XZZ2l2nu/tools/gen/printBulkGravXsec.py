@@ -1,7 +1,22 @@
 #!/bin/env python
 
+
+def latex_float(f):
+    float_str = "{0:.3e}".format(f)
+    if "e" in float_str:
+        base, exponent = float_str.split("e")
+        return r"${0} \times 10^{{{1}}}$".format(base, int(exponent))
+    else:
+        return float_str
+
+
 #total xsec:
 # https://github.com/acarvalh/Cross_sections_CMS/blob/master/WED/bulk_KKgrav_LHC13.txt
+#if you want the cross section (CX) using a ktilda' you do
+#CX(ktilda',pb) = CX(ktilda=0.1,pb) * (ktilda' / 0.1)^2
+
+ktilda=0.5
+
 masses = [600,800,1000,1200,1400,1600,1800,2000,2500,3000,3500,4000,4500]
 BulkGXsec = {200:5.649417401247585,
 260:1.9429371431011526,
@@ -62,6 +77,11 @@ BulkGXsec = {200:5.649417401247585,
 4500:3.34E-08,
 }
 
+# apply ktilda scale
+#CX(ktilda',pb) = CX(ktilda=0.1,pb) * (ktilda' / 0.1)^2
+for mass,value in BulkGXsec.iteritems():
+    BulkGXsec[mass] = BulkGXsec[mass]*(ktilda/0.1)**2
+
 # BulkGrav to ZZ branch ratio:
 # https://github.com/acarvalh/Cross_sections_CMS/blob/master/WED/bulk_KKgrav_decay.txt
 ZZBr = {200:0.316483,
@@ -107,34 +127,110 @@ ZZBr = {200:0.316483,
 BrZll = (3.363+3.366+3.370)*0.01 # PDG value
 BrZinv = 0.200 #PDG value
 
+#calculate BulkG->ZZ->2l2nu Xsec
+BulkGZZ2l2nuXsec = {}
 for mass in masses:
     if mass in BulkGXsec.keys() and mass in ZZBr.keys():
-        print mass,"{:.5e}".format(BulkGXsec[mass]*ZZBr[mass]*BrZll*BrZinv*2.0)
+        BulkGZZ2l2nuXsec[mass] = BulkGXsec[mass]*ZZBr[mass]*BrZll*BrZinv*2.0
+
+
+#calculate BulkG->ZZ Xsec
+BulkGZZXsec = {}
+for mass in masses:
+    if mass in BulkGXsec.keys() and mass in ZZBr.keys():
+        BulkGZZXsec[mass] = BulkGXsec[mass]*ZZBr[mass]
+
+# print BulkG->ZZ->2l2nu Xsec
+print "BulkG->ZZ->2l2nu Xsec:"
+for mass in masses:
+    if mass in BulkGZZ2l2nuXsec.keys():
+        print mass,"{:.5e}".format(BulkGZZ2l2nuXsec[mass])
     else:
         print mass,"--"
+print 
+
+# print BulkG->ZZ->2l2nu Xsec dictionary codes
+print "BulkG->ZZ->2l2nu Xsec Dictionary codes:"
+print "BulkGZZ2l2nuXsec = {"
+for mass in masses:
+    if mass in BulkGZZ2l2nuXsec.keys():
+        print str(mass)+":{:.5e}".format(BulkGZZ2l2nuXsec[mass])+","
+print "}"
+print
+
+# another version of print codes
+print "BulkG->ZZ->2l2nu Xsec Dictionary codes, another version:"
+print "BulkGZZ2l2nuXsec = {"
+for mass in masses:
+    if mass in BulkGZZ2l2nuXsec.keys():
+        print '\'m'+str(mass)+'\''+":{:.5e}".format(BulkGZZ2l2nuXsec[mass])+","
+print "}"
+print
 
 #print latex table
-
-def latex_float(f):
-    float_str = "{0:.3e}".format(f)
-    if "e" in float_str:
-        base, exponent = float_str.split("e")
-        return r"${0} \times 10^{{{1}}}$".format(base, int(exponent))
-    else:
-        return float_str
-
-
+print "BulkG->ZZ->2l2nu Xsec Latex table:"
 print '\\begin{table}[htdp]'
-print '\\caption{BulkGrav$\\rightarrow$ZZ$\\rightarrow ll\\nu\\nu$ cross-sections.}'
+print '\\caption{BulkGrav$\\rightarrow$ZZ$\\rightarrow ll\\nu\\nu$ cross-sections with $\\tilde{k}='+str(ktilda)+'$.}'
 print '\\begin{center}'
 print '\\begin{tabular}{c c}'
 print '\\hline'
-print 'mass points (GeV) & cross-section (pb$^{-1}$) \\\\'
+print 'mass points (GeV) & cross-section (pb) \\\\'
 print '\\hline'
 
 for mass in masses:
-    if mass in BulkGXsec.keys() and mass in ZZBr.keys() :
-        print str(mass)+" & "+latex_float(BulkGXsec[mass]*ZZBr[mass]*BrZll*BrZinv*2.0)+" \\\\"
+    if mass in BulkGZZ2l2nuXsec.keys() :
+        print str(mass)+" & "+latex_float(BulkGZZ2l2nuXsec[mass])+" \\\\"
+    else:
+        print str(mass)+" & "+" --- "+" \\\\"
+
+print '\\hline'
+print '\\end{tabular}'
+print '\\end{center}'
+print '\\label{default}'
+print '\\end{table}'
+print 
+
+# print BulkG->ZZ Xsec
+print "BulkG->ZZ Xsec:"
+for mass in masses:
+    if mass in BulkGZZXsec.keys():
+        print mass,"{:.5e}".format(BulkGZZXsec[mass])
+    else:
+        print mass,"--"
+print
+
+# print BulkG->ZZ Xsec dictionary codes
+print "BulkG->ZZ Xsec Dictionary codes:"
+print "BulkGZZXsec = {"
+for mass in masses:
+    if mass in BulkGZZXsec.keys():
+        print str(mass)+":{:.5e}".format(BulkGZZXsec[mass])+","
+print "}"
+print
+
+# another version, print BulkG->ZZ Xsec dictionary codes
+print "BulkG->ZZ Xsec Dictionary codes, another version:"
+print "BulkGZZXsec = {"
+for mass in masses:
+    if mass in BulkGZZXsec.keys():
+        print '\'m'+str(mass)+'\''+":{:.5e}".format(BulkGZZXsec[mass])+","
+print "}"
+print
+
+
+# print BulkG->ZZ Xsec Latex table:
+print "BulkG->ZZ Xsec Latex table:"
+print '\\begin{table}[htdp]'
+print '\\caption{BulkGrav$\\rightarrow$ZZ cross-sections with $\\tilde{k}='+str(ktilda)+'$.}'
+print '\\begin{center}'
+print '\\begin{tabular}{c c}'
+print '\\hline'
+print 'mass points (GeV) & cross-section (pb) \\\\'
+print '\\hline'
+
+for mass in masses:
+    if mass in BulkGZZXsec.keys() :
+        print str(mass)+" & "+latex_float(BulkGZZXsec[mass])+" \\\\"
     else:
         print str(mass)+" & "+" --- "+" \\\\"
 

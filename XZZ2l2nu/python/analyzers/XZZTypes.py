@@ -1,5 +1,5 @@
 from CMGTools.XZZ2l2nu.analyzers.AutoFillTreeProducer  import * 
-
+import math
 
 
 LLType = NTupleObjectType("LLType", baseObjectTypes=[fourVectorType], variables = [
@@ -17,7 +17,7 @@ VVType = NTupleObjectType("VVType", baseObjectTypes=[], variables = [
   NTupleVariable("mt",   lambda x : x['pair'].mt(), float),       
   NTupleVariable("mta",   lambda x : x['pair'].mta(), float),       
   NTupleVariable("mtb",   lambda x : x['pair'].mtb(), float),       
-  NTupleVariable("mtc",   lambda x : x['pair'].mtc(), float),       
+  NTupleVariable("mtc",   lambda x : x['pair'].mtc(), float),   
 ])
 
 
@@ -26,6 +26,14 @@ LLNuNuType = NTupleObjectType("LLNuNuType", baseObjectTypes=[VVType], variables 
     NTupleSubObject("l1_l1",  lambda x : x['pair'].leg1.leg1,leptonTypeExtra),
     NTupleSubObject("l1_l2",  lambda x : x['pair'].leg1.leg2,leptonTypeExtra),
     NTupleSubObject("l2",  lambda x : x['pair'].leg2,metType),
+    NTupleVariable("CosdphiZMet",   lambda x : math.cos(x['pair'].deltaPhi()), float), 
+    NTupleVariable("CosZdeltaPhi",   lambda x : math.cos(x['pair'].leg1.deltaPhi()), float), 
+    NTupleVariable("dPTPara",   lambda x : math.fabs(x['pair'].leg1.pt() + x['pair'].leg2.pt() * math.cos(x['pair'].deltaPhi())), float), 
+    NTupleVariable("dPTParaRel",   lambda x : math.fabs(x['pair'].leg1.pt() + x['pair'].leg2.pt() * math.cos(x['pair'].deltaPhi()))/(x['pair'].leg1.pt()), float), 
+    NTupleVariable("dPTPerp",   lambda x : math.fabs(x['pair'].leg2.pt() * math.sin(x['pair'].deltaPhi())), float), 
+    NTupleVariable("dPTPerpRel",   lambda x : math.fabs(x['pair'].leg2.pt() * math.sin(x['pair'].deltaPhi()))/(x['pair'].leg1.pt()), float), 
+    NTupleVariable("metOvSqSET",   lambda x : (x['pair'].leg2.pt())/math.sqrt(x['pair'].leg2.sumEt()), float), 
+      
 ])
 
 llpairType = NTupleObjectType("llpairType", baseObjectTypes=[], variables = [
