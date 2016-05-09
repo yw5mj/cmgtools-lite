@@ -2,7 +2,8 @@ import random
 import math
 from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
-from PhysicsTools.Heppy.physicsutils.JetReCalibrator import JetReCalibrator
+from CMGTools.XZZ2l2nu.analyzers.JetReCalibrator import JetReCalibrator
+from CMGTools.XZZ2l2nu.analyzers.JetResolution import JetResolution
 from PhysicsTools.HeppyCore.utils.deltar import *
 import PhysicsTools.HeppyCore.framework.config as cfg
 #from CMGTools.XZZ2l2nu.tools.PyJetToolbox import *
