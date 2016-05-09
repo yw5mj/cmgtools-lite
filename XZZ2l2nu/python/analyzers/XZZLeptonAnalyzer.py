@@ -2,7 +2,7 @@ from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
 from PhysicsTools.Heppy.physicsobjects.Electron import Electron
 from PhysicsTools.Heppy.physicsobjects.Muon import Muon
-
+from PhysicsTools.HeppyCore.utils.deltar import deltaR
 import PhysicsTools.HeppyCore.framework.config as cfg
 from PhysicsTools.HeppyCore.utils.deltar import * 
 from PhysicsTools.Heppy.physicsutils.genutils import *
@@ -16,7 +16,6 @@ class XZZLeptonAnalyzer( Analyzer ):
     
     def __init__(self, cfg_ana, cfg_comp, looperName ):
         super(XZZLeptonAnalyzer,self).__init__(cfg_ana,cfg_comp,looperName)
-
     #----------------------------------------
     # DECLARATION OF HANDLES OF LEPTONS STUFF   
     #----------------------------------------
@@ -114,6 +113,11 @@ class XZZLeptonAnalyzer( Analyzer ):
         for mu in allmuons:
             if (mu.highPtID or mu.trackerHighPtID ) or not self.applyID:
                 self.n_mu_passId += 1
+                minc=[i for i in allmuons if i != mu and (i.highPtID or i.trackerHighPtID ) and deltaR(mu.eta(),mu.phi(),i.eta(),i.phi())<0.3]
+                mu.nminc=len(minc)
+                for i in minc: 
+                    if i.physObj.innerTrack().isNonnull():mu.trackerIso-=i.physObj.innerTrack().pt()
+                mu.trackerIso/=mu.pt()
 #                if mu.miniRelIso<0.2 or not self.applyIso:
                 if mu.trackerIso<0.1 or not self.applyIso:
                     event.selectedLeptons.append(mu)
@@ -135,7 +139,8 @@ class XZZLeptonAnalyzer( Analyzer ):
         event.selectedLeptons.sort(key = lambda l : l.pt(), reverse = True)
         event.selectedMuons.sort(key = lambda l : l.pt(), reverse = True)
         event.selectedElectrons.sort(key = lambda l : l.pt(), reverse = True)
-
+        if self.cfg_comp.isMC:
+            for i in event.selectedLeptons: i.hasgen=i.physObj.genParticle().__nonzero__()
 
     def makeAllMuons(self, event):
         """
@@ -163,8 +168,8 @@ class XZZLeptonAnalyzer( Analyzer ):
         # calculate miniIso
         for mu in allmuons:
             self.attachMiniIsolation(mu)
-            mu.trackerIso=mu.physObj.isolationR03().sumPt/mu.pt()
-
+            mu.trackerIso=mu.physObj.isolationR03().sumPt
+            
         # Attach the vertex to them, for dxy/dz calculation
         for mu in allmuons:
             mu.associatedVertex = event.goodVertices[0] if hasattr(event,"goodVertices") and len(event.goodVertices)>0 else event.vertices[0]
@@ -253,7 +258,10 @@ class XZZLeptonAnalyzer( Analyzer ):
         if self.cfg_comp.isMC:
             for ele in allelectrons:
                 ele.lepsf=self.esfh2.GetBinContent(self.esfh2.GetXaxis().FindBin(abs(ele.superCluster().eta())),self.esfh2.GetYaxis().FindBin(ele.pt()))
+                ele.lepsfE=self.esfh2.GetBinError(self.esfh2.GetXaxis().FindBin(abs(ele.superCluster().eta())),self.esfh2.GetYaxis().FindBin(ele.pt()))
                 ele.lepsf=ele.lepsf if ele.lepsf else 1
+                ele.lepsfUp=ele.lepsf+ele.lepsfE
+                ele.lepsfLo=ele.lepsf-ele.lepsfE
         return allelectrons 
 
 
