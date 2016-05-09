@@ -7,17 +7,42 @@ from array import array
 class XZZMultiFinalState( XZZEventInterpretationBase ):
     def __init__(self, cfg_ana, cfg_comp, looperName):
         super(XZZMultiFinalState,self).__init__(cfg_ana, cfg_comp, looperName)
-        eeff=ROOT.TF1('trigeff', '50*[0]*(1+TMath::Erf((x-[1])/(sqrt(2)*[2])))*(1. + TMath::Erf((x-[3])/(sqrt(2)*[4])))')
-        ep1=array('d',[4.88895e-01,1.20166e+02,1.17300e+01,1.52207e+02,3.01742e+01])
-        ep2=array('d',[4.91171e-01,1.15409e+02,1.03195e+01,1.50434e+02,2.85255e+01])
-        self.etrgsf=lambda x:eeff.EvalPar(array('d',[x]),ep1)/eeff.EvalPar(array('d',[x]),ep2) if eeff.EvalPar(array('d',[x]),ep2) else 1
+        self.eeff=ROOT.TF1('trigeff', '50*[0]*(1+TMath::Erf((x-[1])/(sqrt(2)*[2])))*(1. + TMath::Erf((x-[3])/(sqrt(2)*[4])))')
+        self.ep1=array('d',[4.88895e-01,1.20166e+02,1.17300e+01,1.52207e+02,3.01742e+01])
+        self.ep2=array('d',[4.91171e-01,1.15409e+02,1.03195e+01,1.50434e+02,2.85255e+01])
+        self.ep1e=array('d',[1.41647e-03,2.48648,1.55638,9.45006e-01,1.69037])
+        self.ep2e=array('d',[6.27821e-04,8.85865e-01,6.79409e-01,3.08905e-01,5.33998e-01])
+        self.etrgsf=lambda x:self.eeff.EvalPar(array('d',[x]),self.ep1)/self.eeff.EvalPar(array('d',[x]),self.ep2) if self.eeff.EvalPar(array('d',[x]),self.ep2) else 1
         #msff=ROOT.gROOT.GetFunction("pol5")
         #mp=array('d',[0.98395,-4.05067e-05,1.74509e-06,-1.1423e-08,2.67736e-11,-2.00434e-14])
-        self.mtrgsf=lambda x:0.985759
+        self.mtrgsf=lambda x:0.983879
+        self.mtrgsfe=lambda x:0.00068
 
     def gettrigersf(self,zpt,pdgid):
         if abs(pdgid)==11:return self.etrgsf(zpt)
         if abs(pdgid)==13:return self.mtrgsf(zpt)
+
+    def gettrigersfUpper(self,zpt,pdgid):
+        if abs(pdgid)==11:
+            ep1=array('d',[self.ep1[0]+self.ep1e[0],self.ep1[1]-self.ep1e[1],self.ep1[2]-self.ep1e[2],self.ep1[3]-self.ep1e[3],self.ep1[4]-self.ep1e[4]])
+            ep2=array('d',[self.ep2[0]-self.ep2e[0],self.ep2[1]+self.ep2e[1],self.ep2[2]+self.ep2e[2],self.ep2[3]+self.ep2e[3],self.ep2[4]+self.ep2e[4]])
+            if zpt<self.ep1[1]:ep1[2]=self.ep1[2]+self.ep1e[2]
+            if zpt<self.ep1[3]:ep1[4]=self.ep1[4]+self.ep1e[4]
+            if zpt<self.ep2[1]:ep2[2]=self.ep2[2]-self.ep2e[2]
+            if zpt<self.ep2[3]:ep2[4]=self.ep2[4]-self.ep2e[4]
+            return self.eeff.EvalPar(array('d',[zpt]),ep1)/self.eeff.EvalPar(array('d',[zpt]),ep2) if self.eeff.EvalPar(array('d',[zpt]),ep2) else 1
+        if abs(pdgid)==13:return self.mtrgsf(zpt)+self.mtrgsfe(zpt)
+
+    def gettrigersfLower(self,zpt,pdgid):
+        if abs(pdgid)==11:
+            ep1=array('d',[self.ep1[0]-self.ep1e[0],self.ep1[1]+self.ep1e[1],self.ep1[2]+self.ep1e[2],self.ep1[3]+self.ep1e[3],self.ep1[4]+self.ep1e[4]])
+            ep2=array('d',[self.ep2[0]+self.ep2e[0],self.ep2[1]-self.ep2e[1],self.ep2[2]-self.ep2e[2],self.ep2[3]-self.ep2e[3],self.ep2[4]-self.ep2e[4]])
+            if zpt<self.ep1[1]:ep1[2]=self.ep1[2]-self.ep1e[2]
+            if zpt<self.ep1[3]:ep1[4]=self.ep1[4]-self.ep1e[4]
+            if zpt<self.ep2[1]:ep2[2]=self.ep2[2]+self.ep2e[2]
+            if zpt<self.ep2[3]:ep2[4]=self.ep2[4]+self.ep2e[4]
+            return self.eeff.EvalPar(array('d',[zpt]),ep1)/self.eeff.EvalPar(array('d',[zpt]),ep2) if self.eeff.EvalPar(array('d',[zpt]),ep2) else 1
+        if abs(pdgid)==13:return self.mtrgsf(zpt)-self.mtrgsfe(zpt)
 
     def process(self, event):
         super(XZZMultiFinalState,self).process(event)
@@ -35,6 +60,8 @@ class XZZMultiFinalState( XZZEventInterpretationBase ):
                 LLNuNu.append(selected)
                 if self.cfg_comp.isMC:
                     event.trgsf = self.gettrigersf(bestZ.pt(),bestZ.leg1.pdgId())
+                    event.trgsfUp = self.gettrigersfUpper(bestZ.pt(),bestZ.leg1.pdgId())
+                    event.trgsfLo = self.gettrigersfLower(bestZ.pt(),bestZ.leg1.pdgId())
 
         if len(LLNuNu)>0: 
              self.counters.counter('events').inc('pass events')

@@ -35,6 +35,8 @@ leptonicVAna.selectElElPair =(lambda x: x.leg1.pt()>50.0 or x.leg2.pt()>50.0 )
 leptonicVAna.selectVBoson = (lambda x: x.mass()>50.0 and x.mass()<180.0)
 multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>50.0 and x.leg1.mass()<180.0)
 
+jetAna.smearJets=True
+
 #-------- SEQUENCE
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
 trgEffAna = cfg.Analyzer(
@@ -51,9 +53,11 @@ coreSequence = [
     pileUpAna,
     vertexAna,
     lepAna,
+    jetAna,
     metAna,
     leptonicVAna,
     multiStateAna,
+    eventFlagsAna,
     triggerFlagsAna,
 ]
 
@@ -68,7 +72,7 @@ test = 1
 if test==1:
     # test a single component, using a single thread.
     #selectedComponents = [JetHT_Run2015C_25ns_16Dec,JetHT_Run2015D_16Dec]
-    selectedComponents = dataSamples
+    selectedComponents = SingleMuon+SingleElectron
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]

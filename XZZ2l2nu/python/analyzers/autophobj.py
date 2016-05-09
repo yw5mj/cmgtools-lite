@@ -47,6 +47,7 @@ weightsInfoType = NTupleObjectType("WeightsInfo", mcOnly=True, variables = [
 ### BASIC VERSION WITH ONLY MAIN LEPTON ID CRITERIA
 leptonType = NTupleObjectType("lepton", baseObjectTypes = [ particleType ], variables = [
     NTupleVariable("charge",   lambda x : x.charge(), int),
+    NTupleVariable("hasgen",  lambda x : getattr(x,"hasgen",-1), help="has gen particle"),
     # Impact parameter
     NTupleVariable("dxy",   lambda x : x.dxy(), help="d_{xy} with respect to PV, in cm (with sign)"),
     NTupleVariable("dz",    lambda x : x.dz() , help="d_{z} with respect to PV, in cm (with sign)"),
@@ -55,6 +56,7 @@ leptonType = NTupleObjectType("lepton", baseObjectTypes = [ particleType ], vari
     NTupleVariable("ip3d",  lambda x : x.ip3D() , help="d_{3d} with respect to PV, in cm (absolute value)"),
     # Conversion rejection
     NTupleVariable("miniRelIso",  lambda x : x.miniRelIso if hasattr(x,'miniRelIso') else  -999, help="PF Rel miniRel, pile-up corrected"),
+    NTupleVariable("muonincore03",  lambda x : getattr(x,"nminc",-999), help="number of other muons in core0.3 "),
     NTupleVariable("trackerIso",  lambda x : getattr(x,"trackerIso",-999), help="muon tracker isolation"),
     # id and iso
     NTupleVariable("heepV60_noISO",  lambda x : x.heepV60_noISO if hasattr(x,'heepV60_noISO') else  -999, help="heepV60_noISO"),
@@ -68,6 +70,8 @@ leptonType = NTupleObjectType("lepton", baseObjectTypes = [ particleType ], vari
     NTupleVariable("looseisoelectron",   lambda x : x.looseiso if abs(x.pdgId())==11 else -999, int, help="electron POG Loose id default iso"),
     NTupleVariable("electronrelIsoea03",   lambda x : x.relIsoea03 if abs(x.pdgId())==11 else -999, float, help="electron relisoea03"),
     NTupleVariable("lepsf",  lambda x : getattr(x,'lepsf',1), help="lepton sf"),
+    NTupleVariable("lepsfUp",  lambda x : getattr(x,'lepsfUp',1), help="lepton sf upper"),
+    NTupleVariable("lepsfLo",  lambda x : getattr(x,'lepsfLo',1), help="lepton sf lower"),
 ])
 
 ### EXTENDED VERSION WITH INDIVIUAL DISCRIMINATING VARIABLES
