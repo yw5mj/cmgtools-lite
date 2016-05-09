@@ -60,7 +60,7 @@ vvTreeProducer = cfg.Analyzer(
          "met_JEC" : NTupleObject("met_JEC", metType, help="PF E_{T}^{miss}, after type 1 corrections with new 76X JEC added"),
          "met_JECUp" : NTupleObject("met_JECUp", metType, help="PF E_{T}^{miss}, after type 1 corrections with new 76X JEC up"),
          "met_JECDown" : NTupleObject("met_JECDown", metType, help="PF E_{T}^{miss}, after type 1 corrections with new 76X JEC down"),
-         "met_JECJER" : NTupleObject("met_JECJER", metType, mcOnly=True, help="PF E_{T}^{miss}, after type 1 corrections with JEC+JER jets"),
+         #"met_JECJER" : NTupleObject("met_JECJER", metType, mcOnly=True, help="PF E_{T}^{miss}, after type 1 corrections with JEC+JER jets"),
      },
 
      collections = {

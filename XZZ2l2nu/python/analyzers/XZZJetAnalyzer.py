@@ -128,7 +128,10 @@ class JetAnalyzer( Analyzer ):
             if self.debug: print "[Debug] check input for jetReCalibrator: tell me if it is MC -- %r; tell me the doResidual is %r\n" % (self.cfg_comp.isMC, doResidual)
             
             self.jetReCalibrator = JetReCalibrator(GT, cfg_ana.recalibrationType, doResidual, cfg_ana.jecPath, **kwargs)
-        self.jetResolution = JetResolution(GT_jer, cfg_ana.recalibrationType, cfg_ana.jerPath)
+
+        self.smearJets = getattr(self.cfg_ana, 'smearJets', False)
+        if self.smearJets:  
+            self.jetResolution = JetResolution(GT_jer, cfg_ana.recalibrationType, cfg_ana.jerPath)
         self.doPuId = getattr(self.cfg_ana, 'doPuId', True)
         self.jetLepDR = getattr(self.cfg_ana, 'jetLepDR', 0.4)
         self.jetLepArbitration = getattr(self.cfg_ana, 'jetLepArbitration', lambda jet,lepton: lepton) 
@@ -210,8 +213,12 @@ class JetAnalyzer( Analyzer ):
         # ==> following matching example from PhysicsTools/Heppy/python/analyzers/examples/JetAnalyzer.py
         if self.cfg_comp.isMC:
             for jet in allJets:
-                jet.resolution = self.jetResolution.getResolution(jet,rho_jer)
-                jet.jerfactor = self.jetResolution.getScaleFactor(jet)
+                if self.smearJets:
+                    jet.resolution = self.jetResolution.getResolution(jet,rho_jer)
+                    jet.jerfactor = self.jetResolution.getScaleFactor(jet)
+                else:
+                    jet.resolution = 1.0
+                    jet.jerfactor = 1.0
 
                 if self.genJets:
                     # Use DeltaR = 0.2 matching jet and genJet from 
@@ -223,7 +230,7 @@ class JetAnalyzer( Analyzer ):
                         jet.matchedGenJet = pairs[jet] 
                 else: pass
                 if self.debug: print '[Debug] I am event = ', event.input.eventAuxiliary().id().event()
-                if getattr(self.cfg_ana, 'smearJets', False):
+                if self.smearJets:
                     self.jerCorrection(jet, rho_jer)
 
 	##Sort Jets by pT 
@@ -537,7 +544,7 @@ setattr(JetAnalyzer,"defaultConfig", cfg.Analyzer(
     recalibrationType = "AK4PFchs",
     shiftJEC = 0, # set to +1 or -1 to apply +/-1 sigma shift to the nominal jet energies
     addJECShifts = False, # if true, add  "corr", "corrJECUp", and "corrJECDown" for each jet (requires uncertainties to be available!)
-    smearJets = True,
+    smearJets =False,
     shiftJER = 0, # set to +1 or -1 to get +/-1 sigma shifts    
     jecPath = "",
     jerPath = "",

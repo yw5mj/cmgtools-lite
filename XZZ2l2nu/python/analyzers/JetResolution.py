@@ -26,6 +26,7 @@ class JetResolution:
         # Step1 : Construct a FactorizedJetResObject object
         self.JetResObject = ROOT.JME.JetResolutionObject("%s/%s_PtResolution_%s.txt" % (path,globalTag,jetFlavour))
         self.JetSFObject = ROOT.JME.JetResolutionObject("%s/%s_SF_%s.txt" % (path,globalTag,jetFlavour))
+
         if self.debug : 
             self.JetResObject.dump() 
             self.JetSFObject.dump()
