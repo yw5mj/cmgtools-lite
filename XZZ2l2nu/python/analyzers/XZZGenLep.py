@@ -2,7 +2,7 @@ from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
 from PhysicsTools.Heppy.physicsobjects.Electron import Electron
 from PhysicsTools.Heppy.physicsobjects.Muon import Muon
-
+from PhysicsTools.HeppyCore.utils.deltar import deltaR
 import PhysicsTools.HeppyCore.framework.config as cfg
 from PhysicsTools.HeppyCore.utils.deltar import * 
 from PhysicsTools.Heppy.physicsutils.genutils import *
@@ -94,6 +94,13 @@ class XZZGenLep( Analyzer ):
                          and abs(mu.physObj.muonBestTrack().dz(mu.associatedVertex.position()))<0.5 \
                          and mu.physObj.innerTrack().hitPattern().numberOfValidPixelHits()>0 \
                          and mu.physObj.track().hitPattern().trackerLayersWithMeasurement()>5 
+        for mu in allmuons:
+            mu.trackerIso=mu.physObj.isolationR03().sumPt
+            minc=[i for i in allmuons if i != mu and (i.highPtID or i.trackerHighPtID ) and deltaR(mu.eta(),mu.phi(),i.eta(),i.phi())<0.3]
+            mu.nminc=len(minc)
+            for i in minc:
+                if i.physObj.innerTrack().isNonnull():mu.trackerIso-=i.physObj.innerTrack().pt()
+            mu.trackerIso/=mu.pt()
         return allmuons
 
 

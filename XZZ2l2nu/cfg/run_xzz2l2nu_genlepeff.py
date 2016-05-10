@@ -41,6 +41,8 @@ leptonType = NTupleObjectType("lepton", baseObjectTypes = [ particleType ], vari
     NTupleVariable("ip3d",  lambda x : x.ip3D() , help="d_{3d} with respect to PV, in cm (absolute value)"),
     # Conversion rejection
     NTupleVariable("miniRelIso",  lambda x : x.miniRelIso if hasattr(x,'miniRelIso') else  -999, help="PF Rel miniRel, pile-up corrected"),
+    NTupleVariable("muonincore03",  lambda x : getattr(x,"nminc",-999), help="number of other muons in core0.3 "),
+    NTupleVariable("trackerIso",  lambda x : getattr(x,"trackerIso",-999), help="muon tracker isolation"),
     # id and iso
     NTupleVariable("heepV60_noISO",  lambda x : x.heepV60_noISO if hasattr(x,'heepV60_noISO') else  -999, help="heepV60_noISO"),
     NTupleVariable("highPtID",  lambda x : x.highPtID if hasattr(x,'highPtID') else  -999, help="highPtID"),
@@ -94,7 +96,8 @@ sequence = [
 test = 1
 if test==1:
     # test a single component, using a single thread.
-    selectedComponents = [BulkGravToZZToZlepZhad_narrow_1600]
+    #selectedComponents = [BulkGravToZZToZlepZhad_narrow_1600]
+    selectedComponents = signalSamples
     #selectedComponents = BulkGravToZZToZlepZhad
     #selectedComponents = [JetHT_Run2015D_Promptv4,JetHT_Run2015D_05Oct]
     #selectedComponents = [SingleMuon_Run2015D_05Oct]
