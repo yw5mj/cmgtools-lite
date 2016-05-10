@@ -166,5 +166,4 @@ SinglePhoton_Run2015D_16Dec   = kreator.makeDataComponent("SinglePhoton_Run2015D
 DoubleEG_Run2015D_16Dec       = kreator.makeDataComponent("DoubleEG_Run2015D_16Dec"      , "/DoubleEG/Run2015D-16Dec2015-v2/MINIAOD"      , "CMS", ".*root", json)
 MuonEG_Run2015D_16Dec         = kreator.makeDataComponent("MuonEG_Run2015D_16Dec"        , "/MuonEG/Run2015D-16Dec2015-v1/MINIAOD"        , "CMS", ".*root", json)
 DoubleMuon_Run2015D_16Dec     = kreator.makeDataComponent("DoubleMuon_Run2015D_16Dec"    , "/DoubleMuon/Run2015D-16Dec2015-v1/MINIAOD"    , "CMS", ".*root", json)
-
-
+ZeroBias_Run2015D_16Dec       = kreator.makeDataComponent("ZeroBias_Run2015D_16Dec"       , "/ZeroBias/Run2015D-16Dec2015-v1/MINIAOD"     , "CMS", ".*root", json)
