@@ -156,6 +156,13 @@ Instructions for package development.
 
 Instruction to run jobs 
 ---------------------------------
+0. grid proxy init:
+   
+  Please always initialize your grid proxy for both locally run single job or on LSF for batch jobs in order to access reomote input datasets through AAA (xrootd) service:
+
+  ```
+  voms-proxy-init --voms cms --hours 172 --valid 172:00
+  ```
 
 1. run single job interactively
 
