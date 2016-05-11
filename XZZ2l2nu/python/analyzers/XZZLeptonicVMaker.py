@@ -1,7 +1,7 @@
 import ROOT
 import random
 import math
-from  itertools import combinations
+from  itertools import combinations, product
 from PhysicsTools.Heppy.analyzers.core.Analyzer import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle import AutoHandle
 from PhysicsTools.HeppyCore.utils.deltar import *
@@ -16,6 +16,10 @@ class XZZLeptonicVMaker( Analyzer ):
         self.selectElElPair = cfg_ana.selectElElPair
         self.selectVBoson = cfg_ana.selectVBoson
 
+        self.doElMu = cfg_ana.doElMu if hasattr(cfg_ana, 'doElMu') else False
+        self.selectElMuPair = cfg_ana.selectElMuPair if self.doElMu else None
+        self.selectFakeBoson = cfg_ana.selectFakeBoson if self.doElMu else None
+
     def declareHandles(self):
         super(XZZLeptonicVMaker, self).declareHandles()
 
@@ -28,6 +32,7 @@ class XZZLeptonicVMaker( Analyzer ):
         count.register('pass events')
         count.register('pass el events')
         count.register('pass mu events')
+        count.register('pass el-mu events')
 
         
     def process(self, event):
@@ -36,8 +41,23 @@ class XZZLeptonicVMaker( Analyzer ):
 
         self.n_pass_el = 0
         self.n_pass_mu = 0
+        self.n_pass_emu = 0
 
         LL = []
+        ElMu = []
+
+        # electron muon pair
+        if self.doElMu:
+            comb=[event.selectedElectrons, event.selectedMuons]
+            for e, mu in list(product(*comb)):
+                print '[Debug] I am doElMu'
+                pair = Pair(e,mu,-23) #-23 for the ElMu pair
+                #-- To check your ElMu pair as the requirement is set in order of leg1=el, leg2=mu:
+                if abs(pair.leg1.pdgId()) != 11 and abs(pair.leg2.pdgId()) != 13: raise RuntimeError, 'Check your the order of your ElMu pair'
+                if self.selectElMuPair(pair):
+                    ElMu.append(pair)
+                    self.n_pass_emu += 1
+                else: print '[Debug] Fail to match: el (pt, eta) = (%.2f, %.2f), mu (id, pt, eta) = (%r, %.2f, %.2f)' % (pair.leg1.pt(), pair.leg1.eta(), pair.leg2.highPtID, pair.leg2.pt(), pair.leg2.eta())
 
         # electron pair
         for l1,l2 in combinations(event.selectedElectrons,2):
@@ -63,12 +83,24 @@ class XZZLeptonicVMaker( Analyzer ):
             self.counters.counter('events').inc('pass el events')       
         if self.n_pass_mu>0.1: 
             self.counters.counter('events').inc('pass mu events')       
- 
-        if len(event.LL)<=0:
-            return False
+            
+        if self.doElMu:
+            event.ElMu = [pair for pair in ElMu if self.selectFakeBoson(pair)]
+            if self.n_pass_emu>0.1:
+                self.counters.counter('events').inc('pass el-mu events')
 
-        self.counters.counter('events').inc('pass events') 
-        return True
+            if len(event.LL)<=0 and len(event.ElMu)<=0:
+                return False
+
+            self.counters.counter('events').inc('pass events')
+            return True
+
+        else:
+            if len(event.LL)<=0:
+                return False
+
+            self.counters.counter('events').inc('pass events') 
+            return True
 
 
 

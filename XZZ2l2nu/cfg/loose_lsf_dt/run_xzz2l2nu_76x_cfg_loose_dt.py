@@ -49,6 +49,7 @@ coreSequence = [
     metAna,
     leptonicVAna,
     multiStateAna,
+    eventFlagsAna,
     triggerFlagsAna,
 ]
     

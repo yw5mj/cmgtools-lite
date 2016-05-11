@@ -71,6 +71,7 @@ lepAna = cfg.Analyzer(
     rhoElectronPfIso = 'fixedGridRhoFastjetAll',
     applyIso = True,
     applyID = True,
+    do_filter=False,
     electronIDVersion = 'looseID', # can be looseID or HEEPv6
     electronIsoVersion = 'pfISO', # can be pfISO or miniISO
     mu_isoCorr = "rhoArea" ,
@@ -137,7 +138,7 @@ metAna = cfg.Analyzer(
     doMetNoPhoton = False,
     recalibrate = "type1", # or "type1", or True, or False
     doMetShiftFromJEC = True, # only works with recalibrate on
-    applyJetSmearing =False, # not change the final met used in leptonicVAna and multiStateAna, only works for MC, does nothing unless the jet smearing turned on in jetAna
+    applyJetSmearing = False, # not change the final met used in multiStateAna, does nothing unless the jet smearing turned on in jetAna for MC, copy self.met for data
     old74XMiniAODs = False, # set to True to get the correct Raw MET when running on old 74X MiniAODs
     jetAnalyzerPostFix = "",
     candidates='packedPFCandidates',
@@ -152,7 +153,10 @@ leptonicVAna = cfg.Analyzer(
     name='leptonicVMaker',
     selectMuMuPair = (lambda x: (x.leg1.highPtID or x.leg2.highPtID) and ((x.leg1.pt()>50.0 and abs(x.leg1.eta())<2.1) or (x.leg2.pt()>50.0 and abs(x.leg2.eta())<2.1))),
     selectElElPair = (lambda x: x.leg1.pt()>115.0 or x.leg2.pt()>115.0 ),
-    selectVBoson = (lambda x: x.pt()>50.0 and x.mass()>60.0 and x.mass()<120.0) 
+    selectVBoson = (lambda x: x.pt()>50.0 and x.mass()>60.0 and x.mass()<120.0),
+    doElMu = True, # it would save events with ElMu final states + LL final stats
+    selectElMuPair = (lambda x: (x.leg1.pt()>115.0) or (x.leg2.highPtID and x.leg2.pt()>50.0 and abs(x.leg2.eta())<2.1)), # be sure to have leg1=e, leg2=mu
+    selectFakeBoson = (lambda x: x.pt()>50.0 and x.mass()>40.0 and x.mass()<200.0),
     )
 
 packedAna = cfg.Analyzer(
