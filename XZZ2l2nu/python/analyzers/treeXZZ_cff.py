@@ -84,6 +84,12 @@ lepeffTreeProducer = cfg.Analyzer(
      vectorTree = True,
      saveTLorentzVectors = False,  # can set to True to get also the TLorentzVectors, but trees will be bigger
      defaultFloatType = 'F', # use Float_t for floating point
+     globalVariables = [
+         NTupleVariable("nVert",  lambda ev: len(ev.goodVertices), int, help="Number of good vertices"),
+     ],
+     globalObjects =  {
+         "met" : NTupleObject("met", metType, help="PF E_{T}^{miss}, after type 1 corrections"),
+     },
      collections = {
          "llpair"  : NTupleCollection("llpair",llpairType ,5, help="lepton eff study"),
      }
