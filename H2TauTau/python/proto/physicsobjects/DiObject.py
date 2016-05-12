@@ -16,13 +16,24 @@ class DiObject(object):
         self.leg2Gen = None
         self.leg1DeltaR = -1
         self.leg2DeltaR = -1
-
+        # JAN: this doesn't work with electrons - put into the derived classes
+        # self.diobject.setP4(self.p4())
+        
     def leg1(self):
         return self.daughter(0)
 
     def leg2(self):
         return self.daughter(1)
 
+    def mass(self):
+        return self.p4().mass()
+
+    def pt(self):
+        return self.p4().pt()
+
+    def p4(self):
+        return self.leg1().p4() + self.leg2().p4()
+    
     def sumPt(self):
         '''pt_leg1 + pt_leg2. used for finding the best DiTau.'''
         return self.leg1().pt() + self.leg2().pt()
@@ -53,22 +64,22 @@ class DiTau(DiObject):
         return self.userFloat('mass')
 
     def svfitTransverseMass(self):
-        return self.userFloat('transverseMass')
+        return self.userFloat('transverseMass') if self.hasUserFloat('transverseMass') else -999.
 
     def svfitMassError(self):
-        return self.userFloat('massUncert')
+        return self.userFloat('massUncert') if self.hasUserFloat('massUncert') else -999.
 
     def svfitPt(self):
-        return self.userFloat('pt')
+        return self.userFloat('pt') if self.hasUserFloat('pt') else -999.
 
     def svfitPtError(self):
-        return self.userFloat('ptUncert')
+        return self.userFloat('ptUncert') if self.hasUserFloat('ptUncert') else -999.
 
     def svfitEta(self):
-        return self.userFloat('fittedEta')
+        return self.userFloat('fittedEta') if self.hasUserFloat('fittedEta') else -999.
 
     def svfitPhi(self):
-        return self.userFloat('fittedPhi')
+        return self.userFloat('fittedPhi') if self.hasUserFloat('fittedPhi') else -999.
 
     def pZeta(self):
         if not hasattr(self, 'pZetaVis_'):
@@ -117,6 +128,10 @@ class DiTau(DiObject):
     # This is the default transverse mass by convention
     def mt(self):
         return self.mTLeg2()
+
+    def mtTotal(self):
+        mt2 = self.mTLeg1()**2 + self.mTLeg2()**2 + self.calcMT(self.leg1(), self.leg2())**2
+        return math.sqrt(mt2)
 
     # Calculate the transverse mass with the same algorithm
     # as previously in the C++ DiObject class
@@ -227,6 +242,7 @@ class DiMuon(DiTau):
         super(DiMuon, self).__init__(diobject)
         self.mu1 = Muon(super(DiMuon, self).leg1())
         self.mu2 = Muon(super(DiMuon, self).leg2())
+        self.diobject.setP4(self.p4())
 
     def leg2(self):
         return self.mu2
@@ -247,6 +263,7 @@ class TauMuon(DiTau):
         super(TauMuon, self).__init__(diobject)
         self.tau = Tau(super(TauMuon, self).leg1())
         self.mu = Muon(super(TauMuon, self).leg2())
+        self.diobject.setP4(self.p4())
 
     def leg2(self):
         return self.tau
@@ -261,7 +278,7 @@ class TauElectron(DiTau):
         super(TauElectron, self).__init__(diobject)
         self.tau = Tau(super(TauElectron, self).leg1())
         self.ele = Electron(super(TauElectron, self).leg2())
-#         self.ele = HTauTauElectron( super(TauElectron, self).leg2() )
+        self.diobject.setP4(self.p4())
 
     def leg2(self):
         return self.tau
@@ -276,7 +293,7 @@ class MuonElectron(DiTau):
         super(MuonElectron, self).__init__(diobject)
         self.mu = Muon(super(MuonElectron, self).leg1())
         self.ele = Electron(super(MuonElectron, self).leg2())
-#         self.ele = HTauTauElectron( super(MuonElectron, self).leg2() )
+        self.diobject.setP4(self.p4())
 
     def leg2(self):
         return self.mu
@@ -287,10 +304,16 @@ class MuonElectron(DiTau):
 
 class TauTau(DiTau):
 
-    def __init__(self, diobject):
+    def __init__(self, diobject, iso='byIsolationMVArun2v1DBoldDMwLTraw'):
         super(TauTau, self).__init__(diobject)
-        self.tau = Tau(super(TauTau, self).leg1())
-        self.tau2 = Tau(super(TauTau, self).leg2())
+        if super(TauTau, self).leg1().tauID(iso) > super(TauTau, self).leg2().tauID(iso):
+            self.tau = Tau(super(TauTau, self).leg1())
+            self.tau2 = Tau(super(TauTau, self).leg2())
+        else:
+            self.tau = Tau(super(TauTau, self).leg2())
+            self.tau2 = Tau(super(TauTau, self).leg1())
+        self.iso = iso
+        self.diobject.setP4(self.p4())
 
     def leg1(self):
         return self.tau
