@@ -7,7 +7,7 @@ from CMGTools.H2TauTau.objects.cmgDiTauCor_cfi import cmgDiTauCor
 from CMGTools.H2TauTau.objects.diTauSVFit_cfi  import diTauSVFit 
 from CMGTools.H2TauTau.objects.tauCuts_cff     import tauPreSelection
 
-from RecoMET.METPUSubtraction.mvaPFMET_cff     import pfMVAMEt
+from CMGTools.H2TauTau.skims.skim_cff import diTauFullSelSkimSequence, diTauFullSelCount
 
 # tau pre-selection
 tauPreSelectionDiTau = tauPreSelection.clone(
@@ -16,20 +16,6 @@ tauPreSelectionDiTau = tauPreSelection.clone(
 
 # 2012 preselection:
 # cut = 'leg1().pt()>40. && leg2().pt()>40. && leg1().tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits") < 10. &&  leg2().tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits") < 10.',
-
-# mva MET
-
-mvaMETDiTau = cms.EDProducer('PFMETProducerMVATauTau', 
-                             **pfMVAMEt.parameters_())
-
-mvaMETDiTau.srcPFCandidates = cms.InputTag("packedPFCandidates")
-mvaMETDiTau.srcVertices = cms.InputTag("offlineSlimmedPrimaryVertices")
-mvaMETDiTau.srcLeptons = cms.VInputTag(
-  cms.InputTag("tauPreSelectionDiTau", "", ""),
-  cms.InputTag("tauPreSelectionDiTau", "", ""),
-  )
-mvaMETDiTau.permuteLeptons = cms.bool(True)
-
  
 # correct TauES (after MVA MET according to current baseline)
 cmgDiTauCor = cmgDiTauCor.clone()
@@ -38,15 +24,7 @@ cmgDiTauCor = cmgDiTauCor.clone()
 cmgDiTauTauPtSel = cms.EDFilter(
   "PATCompositeCandidateSelector",
   src = cms.InputTag("cmgDiTauCor"),
-  cut = cms.string("daughter(0).pt()>45. && daughter(1).pt()>45.")
-  )
-
-# recoil correction ----------------------------------------------------
-# JAN: We don't know yet if we need this in 2015; re-include if necessary
-
-# sequence -------------------------------------------------------------
-diTauMVAMetSequence = cms.Sequence(
-  mvaMETDiTau
+  cut = cms.string("daughter(0).pt()>40. && daughter(1).pt()>40.")
   )
 
 # SVFit ----------------------------------------------------------------
@@ -54,12 +32,24 @@ cmgDiTauCorSVFitPreSel = diTauSVFit.clone()
 
 cmgDiTauCorSVFitFullSel = cmgDiTauSel.clone() 
 
+diTauTauCounter = cms.EDFilter(
+    "CandViewCountFilter",
+    src = cms.InputTag("tauPreSelectionDiTau"),
+    minNumber = cms.uint32(2),
+    )
+
 diTauSequence = cms.Sequence(   
   tauPreSelectionDiTau    +   
-  diTauMVAMetSequence     +
+  diTauTauCounter +
   cmgDiTau                +
   cmgDiTauCor             +
   cmgDiTauTauPtSel        +
   cmgDiTauCorSVFitPreSel  +
   cmgDiTauCorSVFitFullSel
   )
+
+diTauPath = cms.Path(
+    # metRegressionSequence + 
+    diTauSequence *
+    diTauFullSelSkimSequence
+)

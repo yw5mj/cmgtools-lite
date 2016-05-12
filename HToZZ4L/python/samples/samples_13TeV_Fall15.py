@@ -71,15 +71,14 @@ H4L = [ GGHZZ4L, QQHZZ4L, WpHZZ4L, WmHZZ4L, ZHZZ4LF ]
 ZZTo4L = kreator.makeMCComponent("ZZTo4L","/ZZTo4L_13TeV_powheg_pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", "CMS", ".*root", 1.256)
 ZZTo4L_aMC = kreator.makeMCComponent("ZZTo4L_aMC","/ZZTo4L_13TeV-amcatnloFXFX-pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", "CMS", ".*root", 1.256)
 
-#GGZZTo2e2mu = kreator.makeMCComponent("GGZZTo2e2mu", "/GluGluToZZTo2e2mu_BackgroundOnly_13TeV_MCFM/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", "CMS", ".*root", 0.00319364)
-#GGZZTo2e2tau = kreator.makeMCComponent("GGZZTo2e2tau", "/GluGluToZZTo2e2tau_BackgroundOnly_13TeV_MCFM/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", "CMS", ".*root", 0.00319364)
-#GGZZTo2mu2tau = kreator.makeMCComponent("GGZZTo2mu2tau", "/GluGluToZZTo2mu2tau_BackgroundOnly_13TeV_MCFM/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", "CMS", ".*root", 0.00319364)
-#GGZZTo4e = kreator.makeMCComponent("GGZZTo4e", "/GluGluToZZTo4e_BackgroundOnly_13TeV_MCFM/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", "CMS", ".*root", 0.00158582)
-#GGZZTo4mu = kreator.makeMCComponent("GGZZTo4mu", "/GluGluToZZTo4mu_BackgroundOnly_13TeV_MCFM/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", "CMS", ".*root", 0.00158582)
-#GGZZTo4tau = kreator.makeMCComponent("GGZZTo4tau", "/GluGluToZZTo4tau_BackgroundOnly_13TeV_MCFM/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", "CMS", ".*root", 0.00158582)
+GGZZTo2e2mu = kreator.makeMCComponent("GGZZTo2e2mu", "/GluGluToZZTo2e2mu_BackgroundOnly_13TeV_MCFM/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", "CMS", ".*root", 0.00319364)
+GGZZTo2e2tau = kreator.makeMCComponent("GGZZTo2e2tau", "/GluGluToZZTo2e2tau_BackgroundOnly_13TeV_MCFM/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", "CMS", ".*root", 0.00319364)
+GGZZTo2mu2tau = kreator.makeMCComponent("GGZZTo2mu2tau", "/GluGluToZZTo2mu2tau_BackgroundOnly_13TeV_MCFM/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", "CMS", ".*root", 0.00319364)
+GGZZTo4e = kreator.makeMCComponent("GGZZTo4e", "/GluGluToZZTo4e_BackgroundOnly_13TeV_MCFM/RunIIFall15MiniAODv1-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", "CMS", ".*root", 0.00158582)
+GGZZTo4mu = kreator.makeMCComponent("GGZZTo4mu", "/GluGluToZZTo4mu_BackgroundOnly_13TeV_MCFM/RunIIFall15MiniAODv1-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", "CMS", ".*root", 0.00158582)
+GGZZTo4tau = kreator.makeMCComponent("GGZZTo4tau", "/GluGluToZZTo4tau_BackgroundOnly_13TeV_MCFM/RunIIFall15MiniAODv1-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM", "CMS", ".*root", 0.00158582)
 
-
-#GGZZTo4L = [ GGZZTo2e2mu, GGZZTo2e2tau, GGZZTo2mu2tau, GGZZTo4e, GGZZTo4mu, GGZZTo4tau ] 
+GGZZTo4L = [ GGZZTo2e2mu, GGZZTo2e2tau, GGZZTo2mu2tau, GGZZTo4e, GGZZTo4mu, GGZZTo4tau ] 
 
 
 ### Z+jets inclusive (from https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat13TeV)
@@ -181,7 +180,7 @@ MuOnia_Run2015C_16Dec2015_25ns = kreator.makeDataComponent("MuOnia_Run2015C_16De
 
 DoubleMuon_Run2015D_16Dec2015_25ns = kreator.makeDataComponent("DoubleMuon_Run2015D_16Dec2015_25ns", "/DoubleMuon/Run2015D-16Dec2015-v1/MINIAOD", "CMS", ".*root", jsonFilter=jsonFilter, json=json_25ns)
 DoubleEG_Run2015D_16Dec2015_25ns = kreator.makeDataComponent("DoubleEG_Run2015D_16Dec2015_25ns", "/DoubleEG/Run2015D-16Dec2015-v2/MINIAOD", "CMS", ".*root", jsonFilter=jsonFilter, json=json_25ns)
-MuonEG_Run2015D_16Dec2015_25ns = kreator.makeDataComponent("MuonEG_Run2015D_16Dec2015_25ns", "/MuonEG/Run2015D-16Dec2015-v2/MINIAOD", "CMS", ".*root", jsonFilter=jsonFilter, json=json_25ns)
+MuonEG_Run2015D_16Dec2015_25ns = kreator.makeDataComponent("MuonEG_Run2015D_16Dec2015_25ns", "/MuonEG/Run2015D-16Dec2015-v1/MINIAOD", "CMS", ".*root", jsonFilter=jsonFilter, json=json_25ns)
 SingleMuon_Run2015D_16Dec2015_25ns = kreator.makeDataComponent("SingleMuon_Run2015D_16Dec2015_25ns", "/SingleMuon/Run2015D-16Dec2015-v1/MINIAOD", "CMS", ".*root", jsonFilter=jsonFilter, json=json_25ns)
 SingleElectron_Run2015D_16Dec2015_25ns = kreator.makeDataComponent("SingleElectron_Run2015D_16Dec2015_25ns", "/SingleElectron/Run2015D-16Dec2015-v1/MINIAOD", "CMS", ".*root", jsonFilter=jsonFilter, json=json_25ns)
 Charmonium_Run2015D_16Dec2015_25ns = kreator.makeDataComponent("Charmonium_Run2015D_16Dec2015_25ns", "/Charmonium/Run2015D-16Dec2015-v1/MINIAOD", "CMS", ".*root", jsonFilter=jsonFilter, json=json_25ns)
@@ -214,13 +213,13 @@ for comp in mcSamples:
     comp.efficiency = eff2012
 
 for comp in dataSamples_all:
-    comp.splitFactor = max(len(comp.files)/20,1)
-    if "Single" in comp.name: comp.splitFactor = max(1,comp.splitFactor/3)
+    comp.splitFactor = max(len(comp.files)/10,1)
+    if "Single" in comp.name: comp.splitFactor = max(1,comp.splitFactor/2)
     comp.fineSplitFactor = 1
 
 DatasetsAndTriggers = []
-DatasetsAndTriggers.append( ("DoubleMuon", triggers_mumu + triggers_3mu) )
 DatasetsAndTriggers.append( ("DoubleEG",   triggers_ee + triggers_3e) )
+DatasetsAndTriggers.append( ("DoubleMuon", triggers_mumu + triggers_3mu) )
 DatasetsAndTriggers.append( ("MuonEG",     triggers_mue + triggers_2mu1e + triggers_2e1mu) )
 DatasetsAndTriggers.append( ("SingleElectron", triggers_1e) )
 DatasetsAndTriggers.append( ("SingleMuon", triggers_1mu) )
@@ -236,5 +235,5 @@ if __name__ == '__main__':
     if True:
         from CMGTools.Production.cacheChecker import CacheChecker
         checker = CacheChecker()
-        for d in [ DoubleEG_Run2015D_16Dec2015_25ns, SingleMuon_Run2015D_16Dec2015_25ns, SingleElectron_Run2015D_16Dec2015_25ns, ]:
+        for d in dataSamples_all:
                 checker.checkComp(d, verbose=True)

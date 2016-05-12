@@ -51,8 +51,8 @@ twoLeptonTreeProducerOnia = cfg.Analyzer(
      globalVariables = hzz_globalVariables, # rho, nvertices, njets
      globalObjects = hzz_globalObjects, # met
      collections = {
-         "onia"        : NTupleCollection("Onia",   ZType, 20, help="Dilepton Candidates"),    
-         "selectedLeptons" : NTupleCollection("Lep", leptonTypeHZZ, 10, help="Leptons after the preselection"),
+         "onia"        : NTupleCollection("Onia",   ZTypeLite, 20, help="Dilepton Candidates"),    
+         #"selectedLeptons" : NTupleCollection("Lep", leptonTypeHZZ, 10, help="Leptons after the preselection"),
      },
      defaultFloatType = 'F',
 )
@@ -98,7 +98,7 @@ twoLeptonTreeProducerTnP = cfg.Analyzer(
      globalVariables = hzz_globalVariables, # rho, nvertices, njets
      globalObjects = hzz_globalObjects, # met
      collections = {
-         "zTnP" : NTupleCollection("TnP",   ZType, 20, help="Dilepton Candidates"),    
+         "zTnP" : NTupleCollection("TnP",   ZTypeLite, 20, help="Dilepton Candidates"),    
      },
      defaultFloatType = 'F',
 )
