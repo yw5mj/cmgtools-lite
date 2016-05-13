@@ -52,6 +52,11 @@ genAna = cfg.Analyzer(
     filter = "None",
     )
 
+## LHEWeightsAnalyzer
+lheWeightAna = cfg.Analyzer(
+    LHEWeightAnalyzer, name="LHEWeightAnalyzer",
+)
+
 # Select a list of good primary vertices (generic)
 vertexAna = cfg.Analyzer(
     XZZVertexAnalyzer, name="VertexAnalyzer",
