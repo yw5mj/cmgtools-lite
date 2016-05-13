@@ -9,6 +9,9 @@ git clone https://github.com/kdlong/TheoreticalUncertainties.git TheoreticalUnce
 Command below will print the LHE header of a given miniAOD file.
 ./getWeightInfoFromEDMFile.py --print_header -f /store/mc/RunIISpring15MiniAODv2/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8/MINIAODSIM/74X_mcRun2_asymptotic_v2-v1/50000/0E07A173-2E7A-E511-87B0-A0369F7FC770.root
 
+- BulkG
+
+- DYLL: /store/mc/RunIIFall15MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/00000/06532BBC-05C8-E511-A60A-F46D043B3CE5.root
 
 2.) LHAPDF index:
 
@@ -67,6 +70,35 @@ https://indico.cern.ch/event/494682/contribution/2/attachments/1223578/1800218/m
 *** Pragmatic approach for current Run 2 samples: Use NNPDF30 uncertainties for whichever NNPDF30 set was used as the central value (LO/NLO, 4fs/5fs)
 
 
+5.) cross-sections:
 
+https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat13TeV
+
+https://twiki.cern.ch/twiki/bin/viewauth/CMS/HowToGenXSecAnalyzer
+
+https://twiki.cern.ch/twiki/bin/view/CMS/SummaryTable1G25ns
+
+
+6.) calculate cross-section of an existing sample:
+
+curl https://raw.githubusercontent.com/syuvivida/generator/master/cross_section/runJob/ana.py  -o ana.py
+
+cmsRun ana.py inputFiles="file:xxxx.root" maxEvents=-1
+
+
+DYJetsLL_M50:
+
+Calculate:
+
+cmsRun calc_xsec.py
+
+- final cross section = 5.941e+03 +- 1.233e+01 pb  (NLO)
+- from twiki: 2008*3=6024  (NNLO)
+
+
+DYJetsLL_M50_PtZ1000:
+
+- After filter: final cross section = 8.947e+01 +- 2.536e-01 pb
+- NLO -> NNLO :  8.947e+01 * 2008*3/5.941e+03 = 90.720
 
 
