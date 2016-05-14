@@ -49,7 +49,8 @@ vvTreeProducer = cfg.Analyzer(
      saveTLorentzVectors = False,  # can set to True to get also the TLorentzVectors, but trees will be bigger
      defaultFloatType = 'F', # use Float_t for floating point
      globalVariables = [
-         NTupleVariable("nLL",lambda ev: len(ev.LL) , int),       
+         NTupleVariable("nLL",lambda ev: len(ev.LL) , int),      
+         NTupleVariable("LHEweight_original", lambda ev: ev.LHE_originalWeight if  hasattr(ev,'LHE_originalWeight') else  0, mcOnly=True, help="original LHE weight"), 
          NTupleVariable("nElMu",lambda ev: len(ev.ElMu) , int),       
          NTupleVariable("nLLNuNu",lambda ev: len(ev.LLNuNu) , int),       
          NTupleVariable("nVert",  lambda ev: len(ev.goodVertices), int, help="Number of good vertices"), 
