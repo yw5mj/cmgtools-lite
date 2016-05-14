@@ -16,6 +16,7 @@ from CMGTools.XZZ2l2nu.analyzers.XZZVertexAnalyzer import *
 from CMGTools.XZZ2l2nu.analyzers.XZZMETAnalyzer import *
 from CMGTools.XZZ2l2nu.analyzers.XZZDumpEvtList import *
 from CMGTools.XZZ2l2nu.analyzers.XZZJetAnalyzer import *
+from CMGTools.XZZ2l2nu.analyzers.XZZLHEWeightAnalyzer import *
 
 ###########################
 # define analyzers
@@ -54,7 +55,7 @@ genAna = cfg.Analyzer(
 
 ## LHEWeightsAnalyzer
 lheWeightAna = cfg.Analyzer(
-    LHEWeightAnalyzer, name="LHEWeightAnalyzer",
+    XZZLHEWeightAnalyzer, name="LHEWeightAnalyzer",
 )
 
 # Select a list of good primary vertices (generic)

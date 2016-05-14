@@ -66,8 +66,9 @@ test = 1
 if test==1:
     # test a single component, using a single thread.
     #selectedComponents = dataSamples
-    #selectedComponents = mcSamples
-    selectedComponents = signalSamples + backgroundSamples
+    selectedComponents = mcSamples
+    #selectedComponents = [DYJetsToLL_M50, DYJetsToLL_M50_Ext]
+    #selectedComponents = signalSamples + backgroundSamples
     #selectedComponents = backgroundSamples 
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_3500]
     #selectedComponents = signalSamples
