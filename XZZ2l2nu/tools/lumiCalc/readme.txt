@@ -40,3 +40,8 @@ brilcalc lumi --normtag  /afs/cern.ch/user/l/lumipro/public/normtag_file/moriond
 
 2.3183 fb-1
 
+Then update JSON:
+brilcalc lumi --normtag  /afs/cern.ch/user/l/lumipro/public/normtag_file/moriond16_normtag.json  -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt > lumi_rereoco_2015CD25ns_20160303.txt
+
+2.318 fb-1
+
