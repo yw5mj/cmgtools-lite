@@ -27,4 +27,16 @@ brilcalc lumi --normtag /afs/cern.ch/user/c/cmsbril/public/normtag_json/OfflineN
 brilcalc lumi --normtag /afs/cern.ch/user/c/cmsbril/public/normtag_json/OfflineNormtagV1.json -i Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON.txt
 # the output is in lumi_rereoco_2015CD25ns.txt, L=2169 pb-1
 
-OfflineNormtagV2.json 
+OfflineNormtagV2.json
+
+update:
+https://twiki.cern.ch/twiki/bin/view/CMS/TWikiLUM 
+
+ 3/3/2016 new normtag for 3.8T 50 ns and 25 ns pp data, currently covering data included in the 25ns Muon JSON and 50ns Muon JSON. The uncertainty on the integrated luminosity is 2.7% if this normtag is used, i.e.:.
+
+brilcalc lumi --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/moriond16_normtag.json -i [yourjson] 
+
+brilcalc lumi --normtag  /afs/cern.ch/user/l/lumipro/public/normtag_file/moriond16_normtag.json  -i Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON.txt >lumi_rereoco_2015CD25ns_20160303.txt 
+
+2.3183 fb-1
+
