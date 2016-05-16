@@ -84,7 +84,7 @@ class TreePlotter(PlotterBase):
 
 
     def drawTH3(self,name,var,cuts,lumi,binsx,minx,maxx,binsy,miny,maxy,binsz,minz,maxz,titlex = "",unitsx = "",titley="",unitsy="", drawStyle = "COLZ"):
-        h = ROOT.TH3D(name,name,binsx,minx,maxx,binsy,miny,maxy,binsz,minz,maxz)
+        h = ROOT.TH3F(name,name,binsx,minx,maxx,binsy,miny,maxy,binsz,minz,maxz)
         h.Sumw2()
         h.SetFillStyle(self.fillstyle)
         h.SetFillColor(self.fillcolor)
