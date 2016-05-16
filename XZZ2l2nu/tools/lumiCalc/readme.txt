@@ -42,6 +42,15 @@ brilcalc lumi --normtag  /afs/cern.ch/user/l/lumipro/public/normtag_file/moriond
 
 Then update JSON:
 brilcalc lumi --normtag  /afs/cern.ch/user/l/lumipro/public/normtag_file/moriond16_normtag.json  -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt > lumi_rereoco_2015CD25ns_20160303.txt
-
+This is recommended:
+https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2015Analysis
 2.318 fb-1
+
+also try v3:
+brilcalc lumi --normtag /afs/cern.ch/user/l/lumipro/public/normtag_file/OfflineNormtagV3.json -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt 
+
+v3 gives : 2.263483265176 fb-1
+not yet understood if we can use it.
+
+
 
