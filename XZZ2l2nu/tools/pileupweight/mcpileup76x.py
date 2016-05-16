@@ -3,8 +3,8 @@
 from ROOT import *
 gROOT.ProcessLine('.x tdrstyle.C')
 
-intag='pileup_DATA_76x_800'
-outtag='pileup_MC_76x_800'
+intag='pileup_DATA_76x_760'
+outtag='pileup_MC_76x_760'
 
 lumi=2.169126704526
 #pileup pdf from:  https://github.com/cms-sw/cmssw/blob/CMSSW_7_6_3/SimGeneral/MixingModule/python/mix_2015_25ns_FallMC_matchData_PoissonOOTPU_cfi.py

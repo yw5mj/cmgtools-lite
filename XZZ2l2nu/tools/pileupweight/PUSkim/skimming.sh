@@ -15,7 +15,7 @@ inputdir=/data/XZZ/76X_Ntuple/76X_20160514
 #inputdir=/data/mewu/76X_new
 #inputdir=/afs/cern.ch/work/m/mewu/public/76X_new
 #outputdir=AnalysisRegion
-outputdir=/data/XZZ/76X_Ntuple/76X_20160514_PUSkim
+outputdir=/data/XZZ/76X_Ntuple/76X_20160514_PUSkim2
 mkdir -p ${outputdir}
 
 for infile in $inputdir/*/vvTreeProducer/tree.root ; 
