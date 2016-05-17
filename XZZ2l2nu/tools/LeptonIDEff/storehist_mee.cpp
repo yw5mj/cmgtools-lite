@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
   // only if DepVarDimension above 1, the following will be read 
   if (DepVarDimension>1) ElectronDepVar2 = steer.getBool("ElectronDepVar2");
   if (DepVarDimension>2) ElectronDepVar3 = steer.getBool("ElectronDepVar3");
-
+  std::vector<std::string> ElectronPreNames = steer.getStringArray("ElectronPreNames");  
   // ZTree name
   std::string ZTreeName = steer.getString("ZTreeName");
   // mee varaible names for each HistNames: e.g. mee
@@ -319,15 +319,15 @@ int main(int argc, char** argv) {
           char str_depvar1[100], str_depvar2[100], str_depvar3[100]; 
 
           // dimension 1
-          if (ElectronDepVar1) sprintf(str_elecdep1, "[0]");
+          if (ElectronDepVar1) sprintf(str_elecdep1, ElectronPreNames.at(0).c_str());
           else sprintf(str_elecdep1, "");
-          sprintf(str_depvar1, "%s%s>%e&&%s%s<%e", DepVarNames1.at(i).c_str(), str_elecdep1, DepVarBins1.at(j), DepVarNames1.at(i).c_str(), str_elecdep1, DepVarBins1.at(j+1));
+          sprintf(str_depvar1, "%s%s>%e&&%s%s<%e", str_elecdep1, DepVarNames1.at(i).c_str(), DepVarBins1.at(j), str_elecdep1, DepVarNames1.at(i).c_str(), DepVarBins1.at(j+1));
 
           // dimension 2
           if (DepVarDimension>1) {
-            if (ElectronDepVar2) sprintf(str_elecdep2, "[0]");
+            if (ElectronDepVar2) sprintf(str_elecdep2, ElectronPreNames.at(0).c_str());
             else sprintf(str_elecdep2, "");
-            sprintf(str_depvar2, "%s%s>%e&&%s%s<%e", DepVarNames2.at(i).c_str(), str_elecdep2, DepVarBins2.at(k), DepVarNames2.at(i).c_str(), str_elecdep2, DepVarBins2.at(k+1));
+            sprintf(str_depvar2, "%s%s>%e&&%s%s<%e", str_elecdep2,DepVarNames2.at(i).c_str(), DepVarBins2.at(k), str_elecdep2, DepVarNames2.at(i).c_str(), DepVarBins2.at(k+1));
           }
           else {
             sprintf(str_depvar2, "1");
@@ -335,9 +335,9 @@ int main(int argc, char** argv) {
           
           // dimension 3
           if (DepVarDimension>2) {
-            if (ElectronDepVar3) sprintf(str_elecdep3, "[0]");
+            if (ElectronDepVar3) sprintf(str_elecdep3, ElectronPreNames.at(0).c_str());
             else sprintf(str_elecdep3, "");
-            sprintf(str_depvar3, "%s%s>%e&&%s%s<%e", DepVarNames3.at(i).c_str(), str_elecdep3, DepVarBins3.at(l), DepVarNames3.at(i).c_str(), str_elecdep3, DepVarBins3.at(l+1));
+            sprintf(str_depvar3, "%s%s>%e&&%s%s<%e",str_elecdep3, DepVarNames3.at(i).c_str(), DepVarBins3.at(l), str_elecdep3,DepVarNames3.at(i).c_str(), DepVarBins3.at(l+1));
           }
           else {
             sprintf(str_depvar3, "1");
@@ -371,15 +371,15 @@ int main(int argc, char** argv) {
             // print binning of dependence variables
 
             // dimension 1
-            if (ElectronDepVar1) sprintf(str_elecdep1, "[1]");
+            if (ElectronDepVar1) sprintf(str_elecdep1, ElectronPreNames.at(1).c_str());
             else sprintf(str_elecdep1, "");
-            sprintf(str_depvar1, "%s%s>%e&&%s%s<%e", DepVarNames1.at(i).c_str(), str_elecdep1, DepVarBins1.at(j), DepVarNames1.at(i).c_str(), str_elecdep1, DepVarBins1.at(j+1));
+            sprintf(str_depvar1, "%s%s>%e&&%s%s<%e", str_elecdep1, DepVarNames1.at(i).c_str(), DepVarBins1.at(j), str_elecdep1, DepVarNames1.at(i).c_str(), DepVarBins1.at(j+1));
 
             // dimension 2
             if (DepVarDimension>1) {
-              if (ElectronDepVar2) sprintf(str_elecdep2, "[1]");
+              if (ElectronDepVar2) sprintf(str_elecdep2, ElectronPreNames.at(1).c_str());
               else sprintf(str_elecdep2, "");
-              sprintf(str_depvar2, "%s%s>%e&&%s%s<%e", DepVarNames2.at(i).c_str(), str_elecdep2, DepVarBins2.at(k), DepVarNames2.at(i).c_str(), str_elecdep2, DepVarBins2.at(k+1));
+              sprintf(str_depvar2, "%s%s>%e&&%s%s<%e", str_elecdep2, DepVarNames2.at(i).c_str(), DepVarBins2.at(k), str_elecdep2,DepVarNames2.at(i).c_str(), DepVarBins2.at(k+1));
             }
             else {
               sprintf(str_depvar2, "1");
@@ -387,9 +387,9 @@ int main(int argc, char** argv) {
    
             // dimension 3
             if (DepVarDimension>2) {
-              if (ElectronDepVar3) sprintf(str_elecdep3, "[1]");
+              if (ElectronDepVar3) sprintf(str_elecdep3, ElectronPreNames.at(1).c_str());
               else sprintf(str_elecdep3, "");
-              sprintf(str_depvar3, "%s%s>%e&&%s%s<%e", DepVarNames3.at(i).c_str(), str_elecdep3, DepVarBins3.at(l), DepVarNames3.at(i).c_str(), str_elecdep3, DepVarBins3.at(l+1));
+              sprintf(str_depvar3, "%s%s>%e&&%s%s<%e", str_elecdep3, DepVarNames3.at(i).c_str(), DepVarBins3.at(l), str_elecdep3, DepVarNames3.at(i).c_str(),DepVarBins3.at(l+1));
             }
             else {
               sprintf(str_depvar3, "1");

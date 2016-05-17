@@ -39,7 +39,7 @@ class XZZGenLep( Analyzer ):
     def checkgen(self,lep):
         try:
             mom=lep.physObj.genParticle()
-            while mom.pdgId()!=39:
+            while mom.pdgId()!=23:
                 mom=mom.mother()
             return True
         except:
@@ -52,7 +52,8 @@ class XZZGenLep( Analyzer ):
         self.IsolationComputer.setPackedCandidates(self.handles['packedCandidates'].product())
         event.selectedLeptons = self.makeAllMuons(event)+self.makeAllElectrons(event)
         event.selectedLeptons.sort(key = lambda l : l.pt(), reverse = True)
-
+        if self.cfg_comp.isMC:
+            for i in event.selectedLeptons: i.hasgen=i.physObj.genParticle().__nonzero__()
     def makeAllMuons(self, event):
         """
                make a list of all muons, and apply basic corrections to them
