@@ -69,12 +69,10 @@ int main(int argc, char** argv) {
   //   will be written as "set>0&&set<20" ;
   //  For elecPt these electron based variable, it should be set to true, because the binning should be written as 
   //   "elecPt[0]>0&&elecPt[0]<20".
-  bool ElectronDepVar1(false), ElectronDepVar2(false), ElectronDepVar3(false);
+  bool ElectronDepVar1(false),ElectronDepVar2(false),ElectronDepVar3(false);
   ElectronDepVar1 = steer.getBool("ElectronDepVar");
-  // only if DepVarDimension above 1, the following will be read 
-  if (DepVarDimension>1) ElectronDepVar2 = steer.getBool("ElectronDepVar2");
-  if (DepVarDimension>2) ElectronDepVar3 = steer.getBool("ElectronDepVar3");
-  std::vector<std::string> ElectronPreNames = steer.getStringArray("ElectronPreNames");  
+  ElectronDepVar2 = steer.getBool("ElectronDepVar2");
+  ElectronDepVar3 = steer.getBool("ElectronDepVar3");
   // ZTree name
   std::string ZTreeName = steer.getString("ZTreeName");
   // mee varaible names for each HistNames: e.g. mee
@@ -101,11 +99,16 @@ int main(int argc, char** argv) {
   }
   
   // efficiency dependence variable name
-  std::vector<std::string> DepVarNames1, DepVarNames2, DepVarNames3;
+  std::vector<std::string> DepVarNames1, DepVarNames2, DepVarNames3, DepVarNames1lepII, DepVarNames2lepII, DepVarNames3lepII;
   DepVarNames1 = steer.getStringArray("DepVarNames");
+  DepVarNames1lepII = steer.getStringArray("DepVarNameslepII");
   // only if DepVarDimension above 1, the following will be read 
-  if (DepVarDimension>1) DepVarNames2 = steer.getStringArray("DepVarNames2");
-  if (DepVarDimension>2) DepVarNames3 = steer.getStringArray("DepVarNames3");
+  if (DepVarDimension>1) {
+    DepVarNames2 = steer.getStringArray("DepVarNames2");
+    DepVarNames2lepII = steer.getStringArray("DepVarNames2lepII");}
+  if (DepVarDimension>2) {
+    DepVarNames3 = steer.getStringArray("DepVarNames3");
+    DepVarNames3lepII = steer.getStringArray("DepVarNames3lepII");}
 
   // dependence variable bins
   std::vector<double> DepVarBins1, DepVarBins2, DepVarBins3;
@@ -315,19 +318,14 @@ int main(int argc, char** argv) {
           } 
           
           // print binning of dependence variables
-          char str_elecdep1[100], str_elecdep2[100], str_elecdep3[100]; 
           char str_depvar1[100], str_depvar2[100], str_depvar3[100]; 
 
           // dimension 1
-          if (ElectronDepVar1) sprintf(str_elecdep1, ElectronPreNames.at(0).c_str());
-          else sprintf(str_elecdep1, "");
-          sprintf(str_depvar1, "%s%s>%e&&%s%s<%e", str_elecdep1, DepVarNames1.at(i).c_str(), DepVarBins1.at(j), str_elecdep1, DepVarNames1.at(i).c_str(), DepVarBins1.at(j+1));
+          sprintf(str_depvar1, "%s>%e&&%s<%e", DepVarNames1.at(i).c_str(), DepVarBins1.at(j), DepVarNames1.at(i).c_str(), DepVarBins1.at(j+1));
 
           // dimension 2
           if (DepVarDimension>1) {
-            if (ElectronDepVar2) sprintf(str_elecdep2, ElectronPreNames.at(0).c_str());
-            else sprintf(str_elecdep2, "");
-            sprintf(str_depvar2, "%s%s>%e&&%s%s<%e", str_elecdep2,DepVarNames2.at(i).c_str(), DepVarBins2.at(k), str_elecdep2, DepVarNames2.at(i).c_str(), DepVarBins2.at(k+1));
+            sprintf(str_depvar2, "%s>%e&&%s<%e", DepVarNames2.at(i).c_str(), DepVarBins2.at(k), DepVarNames2.at(i).c_str(), DepVarBins2.at(k+1));
           }
           else {
             sprintf(str_depvar2, "1");
@@ -335,9 +333,7 @@ int main(int argc, char** argv) {
           
           // dimension 3
           if (DepVarDimension>2) {
-            if (ElectronDepVar3) sprintf(str_elecdep3, ElectronPreNames.at(0).c_str());
-            else sprintf(str_elecdep3, "");
-            sprintf(str_depvar3, "%s%s>%e&&%s%s<%e",str_elecdep3, DepVarNames3.at(i).c_str(), DepVarBins3.at(l), str_elecdep3,DepVarNames3.at(i).c_str(), DepVarBins3.at(l+1));
+            sprintf(str_depvar3, "%s>%e&&%s<%e", DepVarNames3.at(i).c_str(), DepVarBins3.at(l), DepVarNames3.at(i).c_str(), DepVarBins3.at(l+1));
           }
           else {
             sprintf(str_depvar3, "1");
@@ -371,15 +367,14 @@ int main(int argc, char** argv) {
             // print binning of dependence variables
 
             // dimension 1
-            if (ElectronDepVar1) sprintf(str_elecdep1, ElectronPreNames.at(1).c_str());
-            else sprintf(str_elecdep1, "");
-            sprintf(str_depvar1, "%s%s>%e&&%s%s<%e", str_elecdep1, DepVarNames1.at(i).c_str(), DepVarBins1.at(j), str_elecdep1, DepVarNames1.at(i).c_str(), DepVarBins1.at(j+1));
+            if (ElectronDepVar1) sprintf(str_depvar1, "%s>%e&&%s<%e", DepVarNames1lepII.at(i).c_str(), DepVarBins1.at(j), DepVarNames1lepII.at(i).c_str(), DepVarBins1.at(j+1));
+            else sprintf(str_depvar1, "%s>%e&&%s<%e", DepVarNames1.at(i).c_str(), DepVarBins1.at(j), DepVarNames1.at(i).c_str(), DepVarBins1.at(j+1));
+
 
             // dimension 2
             if (DepVarDimension>1) {
-              if (ElectronDepVar2) sprintf(str_elecdep2, ElectronPreNames.at(1).c_str());
-              else sprintf(str_elecdep2, "");
-              sprintf(str_depvar2, "%s%s>%e&&%s%s<%e", str_elecdep2, DepVarNames2.at(i).c_str(), DepVarBins2.at(k), str_elecdep2,DepVarNames2.at(i).c_str(), DepVarBins2.at(k+1));
+              if (ElectronDepVar2) sprintf(str_depvar2, "%s>%e&&%s<%e", DepVarNames2lepII.at(i).c_str(), DepVarBins2.at(k), DepVarNames2lepII.at(i).c_str(), DepVarBins2.at(k+1));
+              else sprintf(str_depvar2, "%s>%e&&%s<%e", DepVarNames2.at(i).c_str(), DepVarBins2.at(k), DepVarNames2.at(i).c_str(), DepVarBins2.at(k+1));
             }
             else {
               sprintf(str_depvar2, "1");
@@ -387,9 +382,8 @@ int main(int argc, char** argv) {
    
             // dimension 3
             if (DepVarDimension>2) {
-              if (ElectronDepVar3) sprintf(str_elecdep3, ElectronPreNames.at(1).c_str());
-              else sprintf(str_elecdep3, "");
-              sprintf(str_depvar3, "%s%s>%e&&%s%s<%e", str_elecdep3, DepVarNames3.at(i).c_str(), DepVarBins3.at(l), str_elecdep3, DepVarNames3.at(i).c_str(),DepVarBins3.at(l+1));
+              if (ElectronDepVar3) sprintf(str_depvar3, "%s>%e&&%s<%e",DepVarNames3lepII.at(i).c_str(), DepVarBins3.at(l), DepVarNames3lepII.at(i).c_str(),DepVarBins3.at(l+1));
+              else  sprintf(str_depvar3, "%s>%e&&%s<%e",DepVarNames3.at(i).c_str(), DepVarBins3.at(l), DepVarNames3.at(i).c_str(),DepVarBins3.at(l+1));
             }
             else {
               sprintf(str_depvar3, "1");
