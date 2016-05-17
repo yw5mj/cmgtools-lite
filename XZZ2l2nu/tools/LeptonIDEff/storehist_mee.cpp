@@ -257,7 +257,7 @@ int main(int argc, char** argv) {
   for (int i=0; i<Nhists; i++){
 
     // draw and sele string
-    char draw[500], sele[2000];
+    char draw[500], sele[2000], seletemp[2000];
 
     // first draw overal reference hists
 /*
@@ -344,7 +344,8 @@ int main(int argc, char** argv) {
 
           // if use weight, times it.
           if (UseWeight) {
-            sprintf(sele, "(%s)*%s" , sele, WeightVarName.c_str());
+	    sprintf(seletemp, "(%s)*%s" , sele, WeightVarName.c_str());
+	    sprintf(sele, "%s" , seletemp);
           } 
 
           // debug
@@ -394,7 +395,8 @@ int main(int argc, char** argv) {
 
             // if use weight, times it.
             if (UseWeight) {
-              sprintf(sele, "(%s)*%s" , sele, WeightVarName.c_str());
+              sprintf(seletemp, "(%s)*%s" , sele, WeightVarName.c_str());
+              sprintf(sele, "%s" , seletemp);
             }
 
             // debug
