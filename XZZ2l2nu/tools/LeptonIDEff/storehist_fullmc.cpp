@@ -72,20 +72,23 @@ int main(int argc, char** argv) {
   //   will be written as "set>0&&set<20" ;
   //  For elecPt these electron based variable, it should be set to true, because the binning should be written as 
   //   "elecPt[0]>0&&elecPt[0]<20".
-  bool ElectronDepVar1(false), ElectronDepVar2(false), ElectronDepVar3(false);
-  ElectronDepVar1 = steer.getBool("ElectronDepVar");
-  // only if DepVarDimension above 1, the following will be read 
-  if (DepVarDimension>1) ElectronDepVar2 = steer.getBool("ElectronDepVar2");
+  bool ElectronDepVar(false);
+  ElectronDepVar = steer.getBool("ElectronDepVar");
   // Tree name
   std::string TreeName = steer.getString("TreeName");
   // histogram names : e.g. hnum hdeno or htrk0, htrk1, htrk2
   std::vector<std::string> HistNames = steer.getStringArray("HistNames");
   // efficiency dependence variable name
-  std::vector<std::string> DepVarNames1, DepVarNames2, DepVarNames3;
+  std::vector<std::string> DepVarNames1, DepVarNames2, DepVarNames3, DepVarNames1lepII, DepVarNames2lepII, DepVarNames3lepII;
   DepVarNames1 = steer.getStringArray("DepVarNames");
+  DepVarNames1lepII = steer.getStringArray("DepVarNameslepII");
   // only if DepVarDimension above 1, the following will be read 
-  if (DepVarDimension>1) DepVarNames2 = steer.getStringArray("DepVarNames2");
-  if (DepVarDimension>2) DepVarNames3 = steer.getStringArray("DepVarNames3");
+  if (DepVarDimension>1) {
+    DepVarNames2 = steer.getStringArray("DepVarNames2");
+    DepVarNames2lepII = steer.getStringArray("DepVarNames2lepII");}
+  if (DepVarDimension>2) {
+    DepVarNames3 = steer.getStringArray("DepVarNames3");
+    DepVarNames3lepII = steer.getStringArray("DepVarNames3lepII");}
   // dependence variable bins
   std::vector<double> DepVarBins1, DepVarBins2, DepVarBins3;
   DepVarBins1 = steer.getDoubleArray("DepVarBins");
@@ -160,25 +163,15 @@ int main(int argc, char** argv) {
   for (int i=0; i<Nhists; i++){
     char draw[1000], sele[2000];
     
-    // if variables are of electrons
-    char str_elecdep1[5], str_elecdep2[5], str_elecdep3[5];
-    sprintf(str_elecdep1, "");
-    sprintf(str_elecdep2, "");
-    sprintf(str_elecdep3, "");
-
-    if (ElectronDepVar1) sprintf(str_elecdep1, "[0]");
-    if (DepVarDimension>1 && ElectronDepVar2) sprintf(str_elecdep2, "[0]");
-    if (DepVarDimension>2 && ElectronDepVar3) sprintf(str_elecdep2, "[0]");
-
     // print draw string
     if (DepVarDimension==1) {
-      sprintf(draw, "%s%s>>%s", DepVarNames1.at(i).c_str(), str_elecdep1, HistNames.at(i).c_str());
+      sprintf(draw, "%s>>%s", DepVarNames1.at(i).c_str(), HistNames.at(i).c_str());
     }
     else if (DepVarDimension==2) {
-      sprintf(draw, "%s%s:%s%s>>%s", DepVarNames2.at(i).c_str(), str_elecdep2, DepVarNames1.at(i).c_str(), str_elecdep1, HistNames.at(i).c_str());
+      sprintf(draw, "%s:%s>>%s", DepVarNames2.at(i).c_str(), DepVarNames1.at(i).c_str(), HistNames.at(i).c_str());
     }
     else if (DepVarDimension==3) {
-      sprintf(draw, "%s%s:%s%s:%s%s>>%s", DepVarNames3.at(i).c_str(), str_elecdep3, DepVarNames2.at(i).c_str(), str_elecdep2, DepVarNames1.at(i).c_str(), str_elecdep1, HistNames.at(i).c_str());
+      sprintf(draw, "%s:%s:%s>>%s", DepVarNames3.at(i).c_str(), DepVarNames2.at(i).c_str(), DepVarNames1.at(i).c_str(), HistNames.at(i).c_str());
     }
     else {
       std::cout << " Error::  DepVarDimension can be 1 to 3, no more. Modify me if needed!" << std::endl;
@@ -201,24 +194,21 @@ int main(int argc, char** argv) {
 
     // if electron basis, draw for the 2nd electron
     if (ElectronBasis) {
-
-      // if variables are of electrons
-      sprintf(str_elecdep1, "");
-      sprintf(str_elecdep2, "");
-      sprintf(str_elecdep3, "");
-      if (ElectronDepVar1) sprintf(str_elecdep1, "[1]");
-      if (DepVarDimension>1 && ElectronDepVar2) sprintf(str_elecdep2, "[1]");
-      if (DepVarDimension>2 && ElectronDepVar3) sprintf(str_elecdep2, "[1]");
-
       // print draw string
       if (DepVarDimension==1) {
-        sprintf(draw, "%s%s>>+%s", DepVarNames1.at(i).c_str(), str_elecdep1, HistNames.at(i).c_str());
-      }
+	if (ElectronDepVar)
+	  sprintf(draw, "%s>>+%s", DepVarNames1lepII.at(i).c_str(), HistNames.at(i).c_str());
+	else sprintf(draw, "%s>>+%s", DepVarNames1.at(i).c_str(), HistNames.at(i).c_str());
+           }
       else if (DepVarDimension==2) {
-        sprintf(draw, "%s%s:%s%s>>+%s", DepVarNames2.at(i).c_str(), str_elecdep2, DepVarNames1.at(i).c_str(), str_elecdep1, HistNames.at(i).c_str());
+	if (ElectronDepVar)
+	  sprintf(draw, "%s:%s>>+%s", DepVarNames2lepII.at(i).c_str(), DepVarNames1lepII.at(i).c_str(), HistNames.at(i).c_str());
+	else sprintf(draw, "%s:%s>>+%s", DepVarNames2.at(i).c_str(), DepVarNames1.at(i).c_str(), HistNames.at(i).c_str());
       }
       else if (DepVarDimension==3) {
-        sprintf(draw, "%s%s:%s%s:%s%s>>+%s", DepVarNames3.at(i).c_str(), str_elecdep3, DepVarNames2.at(i).c_str(), str_elecdep2, DepVarNames1.at(i).c_str(), str_elecdep1, HistNames.at(i).c_str());
+	if (ElectronDepVar)
+	  sprintf(draw, "%s:%s:%s>>+%s", DepVarNames3lepII.at(i).c_str(), DepVarNames2lepII.at(i).c_str(), DepVarNames1lepII.at(i).c_str(), HistNames.at(i).c_str());
+	else sprintf(draw, "%s:%s:%s>>+%s", DepVarNames3.at(i).c_str(), DepVarNames2.at(i).c_str(), DepVarNames1.at(i).c_str(), HistNames.at(i).c_str());
       }
       else {
         std::cout << " Error::  DepVarDimension can be 1 to 3, no more. Modify me if needed!" << std::endl;

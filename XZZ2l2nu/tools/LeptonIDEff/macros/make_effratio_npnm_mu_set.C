@@ -3,7 +3,8 @@
   //gROOT->ProcessLine(".x tdrstyle.C");
 
   TFile* fdt = new TFile("rootfiles/fiteff_npnm_data_mu_set.root");
-  TFile* fmc = new TFile("rootfiles/effhists_npnm_fullmc_mu_set.root");
+  TFile* fmc = new TFile("rootfiles/fiteff_npnm_mc_mu_set.root");
+  //TFile* fmc = new TFile("rootfiles/effhists_pt_npnm_fullmc_mu_set.root");
   //TFile* fmc = new TFile("rootfiles/fiteff_npnm_full_mu_set.root");
   TFile* fout = new TFile("rootfiles/effratio_npnm_mu_set.root", "recreate");
   
