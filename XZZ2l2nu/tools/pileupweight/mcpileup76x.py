@@ -3,6 +3,9 @@
 from ROOT import *
 gROOT.ProcessLine('.x tdrstyle.C')
 
+intag='pileup_DATA_76x_760'
+outtag='pileup_MC_76x_760'
+
 lumi=2.169126704526
 #pileup pdf from:  https://github.com/cms-sw/cmssw/blob/CMSSW_7_6_3/SimGeneral/MixingModule/python/mix_2015_25ns_FallMC_matchData_PoissonOOTPU_cfi.py
 pdf = [0.000108643,
@@ -57,10 +60,10 @@ pdf = [0.000108643,
                 1.433e-08, 
                 0.0, 0.0, 0.0]
 
-fdt=TFile('pileup_DATA_76x.root')
+fdt=TFile(intag+'.root')
 pileup_dt = fdt.Get('pileup')
 pileup_dt.Scale(1.0/pileup_dt.Integral())
-fmc=TFile('pileup_MC_76x.root','recreate')
+fmc=TFile(outtag+'.root','recreate')
 pileup_mc=TH1F('pileup','pileup',52,0,52)
 pileup_mc.Sumw2()
 for i in range(52):    pileup_mc.SetBinContent(i+1,pdf[i])
@@ -105,8 +108,8 @@ pileup_dt.Draw()
 pileup_mc.Draw("HIST,SAME")
 lg.Draw("same")
 pt.Draw()
-c1.SaveAs("pileup76x.eps")
-c1.SaveAs("pileup76x.pdf")
+c1.SaveAs(outtag+"_pileup76x.eps")
+c1.SaveAs(outtag+"_pileup76x.pdf")
 
 
 # ratio
@@ -122,8 +125,8 @@ c2.SetBottomMargin(0.15)
 puweight.Draw()
 lg1.Draw()
 pt.Draw()
-c2.SaveAs("puweight76x.eps")
-c2.SaveAs("puweight76x.pdf")
+c2.SaveAs(outtag+"_puweight76x.eps")
+c2.SaveAs(outtag+"_puweight76x.pdf")
 
 # print ratio 
 puwts = [puweight.GetBinContent(i+1) for i in range(52)]

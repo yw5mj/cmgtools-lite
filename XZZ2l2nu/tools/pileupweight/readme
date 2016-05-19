@@ -1,5 +1,30 @@
 Method to get pileup input file:
 
+##########
+Update 76X 2016-05-16
+
+rereco Data 2015 C+D 25ns Golden Json v2
+https://hypernews.cern.ch/HyperNews/CMS/get/physics-validation/2611.html
+All CMS Json summarized here:
+https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2015Analysis
+
+mb69k
+pileupCalc.py -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt --inputLumiJSON  /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/pileup_JSON_11-19-2015.txt --calcMode true --minBiasXsec 69000 --maxPileupBin 52 --numPileupBins 52  pileup_DATA_76x.root
+
+mb69.4k
+pileupCalc.py -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt --inputLumiJSON  /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/pileup_JSON_11-19-2015.txt --calcMode true --minBiasXsec 69400 --maxPileupBin 52 --numPileupBins 52  pileup_DATA_76x_694.root
+
+mb69.8k
+pileupCalc.py -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt --inputLumiJSON  /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/pileup_JSON_11-19-2015.txt --calcMode true --minBiasXsec 69800 --maxPileupBin 52 --numPileupBins 52  pileup_DATA_76x_698.root
+
+mb70.2k
+pileupCalc.py -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt --inputLumiJSON  /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/pileup_JSON_11-19-2015.txt --calcMode true --minBiasXsec 70200 --maxPileupBin 52 --numPileupBins 52  pileup_DATA_76x_702.root
+
+mb80k
+
+pileupCalc.py -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt --inputLumiJSON  /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/pileup_JSON_11-19-2015.txt --calcMode true --minBiasXsec 80000 --maxPileupBin 52 --numPileupBins 52  pileup_DATA_76x_800.root
+##########
+
 for data, run this command in CMSSW:
 pileupCalc.py -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt --inputLumiJSON  /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/pileup_JSON_11-19-2015.txt --calcMode true --minBiasXsec 69400 --maxPileupBin 52 --numPileupBins 52  MyDataPileupHistogram.root
 
