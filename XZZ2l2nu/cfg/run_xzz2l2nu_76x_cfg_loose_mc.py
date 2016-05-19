@@ -42,6 +42,7 @@ jetAna.smearJets=False
 coreSequence = [
     skimAnalyzer,
     genAna,
+    lheWeightAna,
     jsonAna,
     triggerAna,
     pileUpAna,
