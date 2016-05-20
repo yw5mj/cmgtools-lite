@@ -6,7 +6,7 @@ from Setup import *
 
 
 #options = '-M Asymptotic --run blind '
-options = '-M Asymptotic --run blind --rMax 100000'
+options = '-M Asymptotic --run blind --rMax 1000'
 
 #parser = optparse.OptionParser()
 #parser.add_option("-m","--masses",dest="masses",default='limitPlot',help="Limit plot")
@@ -20,17 +20,17 @@ outdir = 'results'
 
 
 masses = [
-#         600,
-#         800,
+         600,
+         800,
           1000,
-#         1200,
-#         1400,
-#         1600,1800,
+         1200,
+         1400,
+         1600,1800,
           2000,
-#         2500,
-#          3000,
-#         3500,
-#         4000,
+         2500,
+          3000,
+         3500,
+         4000,
 #         4500
          ]
 
