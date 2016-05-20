@@ -8,14 +8,15 @@ from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 #cutChain='loosecut'
 #cutChain='tightzpt100'
-cutChain='tightzpt100met50'
+#cutChain='tightzpt100met50'
 #cutChain='tightzpt100met100'
+cutChain='tightzpt100met200'
 #cutChain='tightzpt100met100dphi'
 #cutChain='tightmet250dphi'
 #cutChain='zjetscut'
 #cutChain='zjetscutmet50'
 
-channel='both' # can be el or mu or both
+channel='mu' # can be el or mu or both
 
 outdir='plots'
 indir='/data/XZZ/76X_Ntuple/76X_20160514_PUSkim2'
