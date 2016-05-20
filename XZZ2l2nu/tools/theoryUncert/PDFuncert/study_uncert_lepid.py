@@ -317,32 +317,46 @@ Stack.doRatio(doRatio)
 # Trigger uncertainty
 
 
-fout = ROOT.TFile("uncert_trig_"+channel+".root", "recreate")
+fout = ROOT.TFile("uncert_lepid_"+channel+".root", "recreate")
+
+# lep id up/dn/mean variations for two leptons
+lepIDvars = ['llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf',
+             'llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsfUp',
+             'llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsfLo',
+             'llnunu_l1_l1_lepsfUp*llnunu_l1_l2_lepsf',
+             'llnunu_l1_l1_lepsfUp*llnunu_l1_l2_lepsfUp',
+             'llnunu_l1_l1_lepsfUp*llnunu_l1_l2_lepsfLo',
+             'llnunu_l1_l1_lepsfLo*llnunu_l1_l2_lepsf',
+             'llnunu_l1_l1_lepsfLo*llnunu_l1_l2_lepsfUp',
+             'llnunu_l1_l1_lepsfLo*llnunu_l1_l2_lepsfLo',
+            ]
 
 sample='ZZTo2L2Nu'
 
 
-hunc_trig = {}
-all_var_trig = {}
-all_unc_trig = {}
+hunc_lepid = {}
+all_var_lepid = {}
+all_unc_lepid = {}
 
-for sample in allPlotters.keys():
-#for sample in [sample]: 
-    print 'TrigEff for '+sample
-    hunc_trig[sample] = ROOT.TH1F(sample+'_hunc_trig', sample+'_hunc_trig', 200,0,2)
+#for sample in allPlotters.keys():
+for sample in [sample]: 
+    print 'LepID for '+sample
+    hunc_lepid[sample] = ROOT.TH1F(sample+'_hunc_lepid', sample+'_hunc_lepid', 200,0,2)
  
-    h = allPlotters[sample].drawTH1(sample+'_mh_trig_wt_0','llnunu_mta',cuts,str(lumi*1000),50,0,5000,titlex = "M_{T}",units = "GeV",drawStyle = "HIST")
+    h = allPlotters[sample].drawTH1(sample+'_mh_lepid_wt_0','llnunu_mta',cuts,str(lumi*1000),50,0,5000,titlex = "M_{T}",units = "GeV",drawStyle = "HIST")
     n0 = h.Integral()
     print ' n0 = '+str(n0)
     # if no event, no uncertainty
     if n0<=0.0 : 
         print ' Sample '+sample+' has Zero entry in singal region'
         continue 
-    all_var_trig[sample] = []
+    all_var_lepid[sample] = []
 
-    print ' - TrigEff up/dn '
+    print ' - LepID up/dn '
+    for wgt in lepIDvars:
+## Not finished...
 
-    allPlotters[sample].changeCorrectionFactor('(triggersfUp)','trigeff')
+    allPlotters[sample].changeCorrectionFactor('(llnunu_l1_l1_lepsfUp*llnunu_l1_l1_lepsfUp)','lepeff')
     h = allPlotters[sample].drawTH1(sample+'_mh_trigUp','llnunu_mta',cuts,str(lumi*1000),50,0,5000,titlex = "M_{T}",units = "GeV",drawStyle = "HIST") 
     n1 = h.Integral()
     print '  n1 = '+str(n1)+', n1/n0 = '+str(n1/n0)
