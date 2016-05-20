@@ -314,54 +314,83 @@ Stack.doRatio(doRatio)
 
 ############
 
-# QCD uncertainty
+# PDF uncertainty
 
-# qcd weights id
-wtIds_qcd = [1,2,3,4,6,8] 
+# pdf weights id for bkg: 9-108,  as up/down 109,110
+wtIds_pdf_bkg = range(9,109) 
+#wtIds_pdf_bkg = range(9,15) 
+wtIds_as_bkg = [109,110]
 
-fout = ROOT.TFile("uncert_qcd_"+channel+".root", "recreate")
+# pdf weights id for sig: 110-211, no as up/down
+wtIds_pdf_sig = range(110,212)
+#wtIds_pdf_sig = range(110,116)
+
+
+fout = ROOT.TFile("uncert_pdf_"+channel+".root", "recreate")
 
 sample='ZZTo2L2Nu'
 
 
-hunc_qcd = {}
-all_var_qcd = {}
-all_unc_qcd = {}
+hunc_pdf = {}
+all_unc_pdf = {}
+all_unc_as = {}
+all_unc_pdf_as = {}
 
-#for sample in allPlotters.keys():
-for sample in [sample]: 
-    print 'QCD for '+sample
-    hunc_qcd[sample] = ROOT.TH1F(sample+'_hunc_qcd', sample+'_hunc_qcd', 200,0,2)
+for sample in allPlotters.keys():
+#for sample in [sample]: 
+    print 'PDF for '+sample
+    wtIds_pdf = wtIds_pdf_bkg
+    if 'BulkGrav' in sample:
+        wtIds_pdf = wtIds_pdf_sig
+    hunc_pdf[sample] = ROOT.TH1F(sample+'_hunc_pdf', sample+'_hunc_pdf', 200,0,2)
  
-    h = allPlotters[sample].drawTH1(sample+'_mh_qcd_wt_0','llnunu_mta',cuts,str(lumi*1000),50,0,5000,titlex = "M_{T}",units = "GeV",drawStyle = "HIST")
+    h = allPlotters[sample].drawTH1(sample+'_mh_pdf_wt_0','llnunu_mta',cuts,str(lumi*1000),50,0,5000,titlex = "M_{T}",units = "GeV",drawStyle = "HIST")
     n0 = h.Integral()
     print ' n0 = '+str(n0)
     # if no event, no uncertainty
     if n0<=0.0 : 
         print ' Sample '+sample+' has Zero entry in singal region'
         continue 
-    all_var_qcd[sample] = []
-    for idx in wtIds_qcd:
-        print ' - QCD '+str(idx)
+    for idx in wtIds_pdf:
+        print ' - PDF '+str(idx)
         allPlotters[sample].changeCorrectionFactor('(genWeight*LHEweight_wgt['+str(idx)+']/LHEweight_wgt[0])','genWeight')
         #print ' - factors: ',allPlotters[sample].corrFactors
-        h = allPlotters[sample].drawTH1(sample+'_mh_qcd_wt_'+str(idx),'llnunu_mta',cuts,str(lumi*1000),50,0,5000,titlex = "M_{T}",units = "GeV",drawStyle = "HIST") 
+        h = allPlotters[sample].drawTH1(sample+'_mh_pdf_wt_'+str(idx),'llnunu_mta',cuts,str(lumi*1000),50,0,5000,titlex = "M_{T}",units = "GeV",drawStyle = "HIST") 
         n = h.Integral()
         print '  n = '+str(n)+', n/n0 = '+str(n/n0)
-        hunc_qcd[sample].Fill(n/n0)
-        all_var_qcd[sample].append(n/n0)
+        hunc_pdf[sample].Fill(n/n0)
 
-    qcd_up = max(all_var_qcd[sample])
-    qcd_dn = max(all_var_qcd[sample])
-    qcd_unc = abs(qcd_up-qcd_dn)/2.0
-    print '  qcd_unc = '+str(qcd_unc)
-    hunc_qcd[sample].Write()
+    pdf_unc = hunc_pdf[sample].GetRMS()
+    print '  pdf_unc = '+str(pdf_unc)
+    hunc_pdf[sample].Write()
 
-    all_unc_qcd[sample] = qcd_unc
+    all_unc_pdf[sample] = pdf_unc
 
+    #
+    pdf_as_unc = pdf_unc
 
-print '- all_unc_qcd: ',all_unc_qcd
-print '- all_var_qcd: ',all_var_qcd
+    if not ('BulkGrav' in sample):
+        print ' - Alpha_s '
+        allPlotters[sample].changeCorrectionFactor('(genWeight*LHEweight_wgt['+str(wtIds_as_bkg[0])+']/LHEweight_wgt[0])','genWeight')
+        h = allPlotters[sample].drawTH1(sample+'_mh_pdf_wt_'+str(wtIds_as_bkg[0]),'llnunu_mta',cuts,str(lumi*1000),50,0,5000,titlex = "M_{T}",units = "GeV",drawStyle = "HIST") 
+        n1 = h.Integral()
+        print '  n1 = '+str(n1)+', n1/n0 = '+str(n1/n0)
+        allPlotters[sample].changeCorrectionFactor('(genWeight*LHEweight_wgt['+str(wtIds_as_bkg[1])+']/LHEweight_wgt[0])','genWeight')
+        h = allPlotters[sample].drawTH1(sample+'_mh_pdf_wt_'+str(wtIds_as_bkg[1]),'llnunu_mta',cuts,str(lumi*1000),50,0,5000,titlex = "M_{T}",units = "GeV",drawStyle = "HIST")
+        n2 = h.Integral()
+        print '  n2 = '+str(n2)+', n2/n0 = '+str(n2/n0)
+        as_unc = abs(n1/n0-n2/n0)/2.0*1.5  # scale by 1.5
+        print '  as_unc = '+str(as_unc)
+        pdf_as_unc = math.sqrt(pdf_unc**2+as_unc**2)
+        all_unc_as[sample] = as_unc
+
+    all_unc_pdf_as[sample] = pdf_as_unc
+
+    print ' pdf_as_unc = '+str(pdf_as_unc)
+
+print '- all_unc_pdf: ',all_unc_pdf
+print '- all_unc_as: ',all_unc_as
+print '- all_unc_pdf_as: ',all_unc_pdf_as
 
 
 fout.Close()
