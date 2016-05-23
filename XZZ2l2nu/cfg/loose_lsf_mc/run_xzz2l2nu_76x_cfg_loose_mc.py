@@ -66,9 +66,9 @@ if test==1:
     # test a single component, using a single thread.
     #selectedComponents = dataSamples
     #selectedComponents = mcSamples
-    selectedComponents = backgroundSamples 
+    #selectedComponents = backgroundSamples 
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_3500]
-    #selectedComponents = signalSamples
+    selectedComponents = signalSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
