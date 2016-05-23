@@ -16,7 +16,7 @@ cutChain='tightzpt100met200'
 #cutChain='zjetscut'
 #cutChain='zjetscutmet50'
 
-channel='el' # can be el or mu or both
+channel='both' # can be el or mu or both
 
 outdir='plots'
 indir='/data/XZZ/76X_Ntuple/76X_20160514_PUSkim2'
@@ -321,15 +321,16 @@ wtIds_qcd = [1,2,3,4,6,8]
 
 fout = ROOT.TFile("uncert_qcd_"+channel+".root", "recreate")
 
-sample='ZZTo2L2Nu'
 
+sample='ZZTo2L2Nu'
+#sample='DYJetsToLL_M50_BIG'
 
 hunc_qcd = {}
 all_var_qcd = {}
 all_unc_qcd = {}
 
-#for sample in allPlotters.keys():
-for sample in [sample]: 
+for sample in allPlotters.keys():
+#for sample in [sample]: 
     print 'QCD for '+sample
     hunc_qcd[sample] = ROOT.TH1F(sample+'_hunc_qcd', sample+'_hunc_qcd', 200,0,2)
  
@@ -352,7 +353,7 @@ for sample in [sample]:
         all_var_qcd[sample].append(n/n0)
 
     qcd_up = max(all_var_qcd[sample])
-    qcd_dn = max(all_var_qcd[sample])
+    qcd_dn = min(all_var_qcd[sample])
     qcd_unc = abs(qcd_up-qcd_dn)/2.0
     print '  qcd_unc = '+str(qcd_unc)
     hunc_qcd[sample].Write()
