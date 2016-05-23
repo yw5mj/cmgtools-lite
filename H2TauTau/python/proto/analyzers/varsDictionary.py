@@ -25,6 +25,7 @@ vars['weight_vertex'] = {'std': 'weight_vertex', 'sync': 'puweight'}
 
 # PileUp
 vars['geninfo_nup'] = {'geninfo_nup': 'NUP', 'sync': 'NUP'}
+vars['geninfo_invmass'] = {'geninfo_invmass': 'geninvmass', 'sync': 'geninvmass'}
 vars['n_vertices'] = {'std': 'n_vertices', 'sync': 'npv'}
 vars['npu'] = {'std': 'npu', 'sync': 'npu'}
 vars['nPU'] = {'std': 'nPU', 'sync': 'npu'}
@@ -44,7 +45,7 @@ vars['l1_mass'] = {'std': 'l1_mass', 'sync': 'm_1'}
 vars['l1_charge'] = {'std': 'l1_charge', 'sync': 'q_1'}
 vars['l1_dxy'] = {'std': 'l1_dxy', 'sync': 'd0_1'}
 vars['l1_dz'] = {'std': 'l1_dz', 'sync': 'dZ_1'}
-vars['mt_leg1'] = {'std': 'mt_leg1', 'sync': 'mt_1'}
+vars['mt'] = {'std': 'mt', 'sync': 'mt_1'}
 vars['puppimet_mt1'] = {'std': 'puppimet_mt1', 'sync': 'puppimt_1'}
 vars['l1_reliso05'] = {'std': 'l1_reliso05', 'sync': 'iso_1'}
 vars['l1_muonid_loose'] = {'std': 'l1_muonid_loose', 'sync': 'id_m_loose_1'}
@@ -124,6 +125,7 @@ vars['l2_gen_match'] = {'std': 'l2_gen_match', 'sync': 'gen_match_2'}
 # di-tau pair
 vars['pthiggs'] = {'std': 'pthiggs', 'sync': 'pt_tt'}
 vars['visMass'] = {'std': 'visMass', 'sync': 'm_vis'}
+vars['mvis'] = {'std': 'mvis', 'sync': 'm_vis'}
 vars['svfit_mass'] = {'std': 'svfit_mass', 'sync': 'm_sv'}
 vars['svfit_transverse_mass'] = {'std':'svfit_transverse_mass', 'sync':'mt_sv'}
 vars['svfit_pt'] = {'std': 'svfit_pt', 'sync': 'pt_sv'}

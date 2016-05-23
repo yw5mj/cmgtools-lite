@@ -42,6 +42,7 @@ jetAna.smearJets=False
 coreSequence = [
     skimAnalyzer,
     genAna,
+    lheWeightAna,
     jsonAna,
     triggerAna,
     pileUpAna,
@@ -65,10 +66,12 @@ test = 1
 if test==1:
     # test a single component, using a single thread.
     #selectedComponents = dataSamples
-    #selectedComponents = mcSamples
+    selectedComponents = mcSamples
+    #selectedComponents = [DYJetsToLL_M50, DYJetsToLL_M50_Ext]
+    #selectedComponents = signalSamples + backgroundSamples
     #selectedComponents = backgroundSamples 
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_3500]
-    selectedComponents = signalSamples
+    #selectedComponents = signalSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
@@ -77,7 +80,7 @@ if test==1:
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_3500]
     for c in selectedComponents:
         #c.files = c.files[0]
-        c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
+        c.splitFactor = (len(c.files)/20 if len(c.files)>20 else 1)
         #c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso

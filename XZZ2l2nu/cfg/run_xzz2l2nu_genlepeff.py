@@ -33,6 +33,7 @@ genLep=cfg.Analyzer(
 
 leptonType = NTupleObjectType("lepton", baseObjectTypes = [ particleType ], variables = [
     NTupleVariable("charge",   lambda x : x.charge(), int),
+    NTupleVariable("hasgen",  lambda x : getattr(x,"hasgen",-1), help="has gen particle"),
     # Impact parameter
     NTupleVariable("dxy",   lambda x : x.dxy(), help="d_{xy} with respect to PV, in cm (with sign)"),
     NTupleVariable("dz",    lambda x : x.dz() , help="d_{z} with respect to PV, in cm (with sign)"),
@@ -97,7 +98,8 @@ test = 1
 if test==1:
     # test a single component, using a single thread.
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_1600]
-    selectedComponents = signalSamples
+    selectedComponents = [DYJetsToLL_M50]
+   # selectedComponents = signalSamples
     #selectedComponents = BulkGravToZZToZlepZhad
     #selectedComponents = [JetHT_Run2015D_Promptv4,JetHT_Run2015D_05Oct]
     #selectedComponents = [SingleMuon_Run2015D_05Oct]

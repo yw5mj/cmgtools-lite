@@ -193,6 +193,8 @@ class DiLeptonAnalyzer(Analyzer):
             if fillCounter:
                 self.counters.counter('DiLepton').inc('exactly 1 di-lepton')
 
+        event.selDiLeptons = selDiLeptons
+
         event.diLepton = self.bestDiLepton(selDiLeptons)
         event.leg1 = event.diLepton.leg1()
         event.leg2 = event.diLepton.leg2()
@@ -289,15 +291,19 @@ class DiLeptonAnalyzer(Analyzer):
         '''Returns the best diLepton (the one with highest pt1 + pt2).'''
         return max(diLeptons, key=operator.methodcaller('sumPt'))
 
-    def trigMatched(self, event, diL, requireAllMatched=False, ptMin=None,  etaMax=None, relaxIds=[11, 15]):
+    def trigMatched(self, event, diL, requireAllMatched=False, ptMin=None,  etaMax=None, relaxIds=[11, 15], onlyLeg1=False, checkBothLegs=False):
         '''Check that at least one trigger object per pgdId from a given trigger 
         has a matched leg with the same pdg ID. If requireAllMatched is True, 
-        requires that each single trigger object has a match.'''
+        requires that each single trigger object name given in the sample
+        cfg has a match.'''
         matched = False
         legs = [diL.leg1(), diL.leg2()]
         diL.matchedPaths = set()
 
         sameFlavour = (abs(legs[0].pdgId()) == abs(legs[1].pdgId()))
+
+        if onlyLeg1:
+            legs = legs[:1]
 
         if hasattr(self.cfg_ana, 'filtersToMatch'):
             filtersToMatch = self.cfg_ana.filtersToMatch[0]
@@ -322,35 +328,47 @@ class DiLeptonAnalyzer(Analyzer):
                 continue
 
             matchedIds = []
-            allMatched = True
+            matchedLegs = []
             
-            for to in info.objects:
+            for to, to_names in zip(info.objects, info.object_names):
                 if ptMin and to.pt() < ptMin:
                     continue
                 if etaMax and abs(to.eta()) > etaMax:
                     continue
-                if self.trigObjMatched(to, legs, relaxIds=relaxIds):
-                    matchedIds.append(abs(to.pdgId()))
+                toMatched, objMatchedLegs = self.trigObjMatched(to, legs, names=to_names, relaxIds=relaxIds)
+                if requireAllMatched:
+                    objMatchedLegs = [mleg for mleg in objMatchedLegs if set(self.cfg_comp.triggerobjects) == mleg.triggernames]
+
                 else:
-                    allMatched = False
+                    matchedLegs += objMatchedLegs
+                if toMatched:
+                    matchedIds.append(abs(to.pdgId()))
+
+            
+
 
             if set(matchedIds) == info.objIds and \
                len(matchedIds) >= len(legs) * sameFlavour:
-                if requireAllMatched and not allMatched:
-                    matched = False
+                if checkBothLegs:
+                    if all(l in matchedLegs for l in legs):
+                        matched = True
+                        diL.matchedPaths.add(info.name)
+                    else:
+                        matched = False
                 else:
                     matched = True
                     diL.matchedPaths.add(info.name)
         
         return matched
 
-    def trigObjMatched(self, to, legs, dR2Max=0.25, relaxIds=[11, 15]):  # dR2Max=0.089999
+    def trigObjMatched(self, to, legs, names=None, dR2Max=0.25, relaxIds=[11, 15]):  # dR2Max=0.089999
         '''Returns true if the trigger object is matched to one of the given
         legs'''
         eta = to.eta()
         phi = to.phi()
         pdgId = abs(to.pdgId())
         to.matched = False
+        matchedLegs = []
         for leg in legs:
             # JAN - Single-ele trigger filter has pdg ID 0, to be understood
             # RIC - same seems to happen with di-tau
@@ -361,10 +379,17 @@ class DiLeptonAnalyzer(Analyzer):
                (pdgId == 0 and abs(leg.pdgId()) in relaxIds):
                 if deltaR2(eta, phi, leg.eta(), leg.phi()) < dR2Max:
                     to.matched = True
+                    matchedLegs.append(leg)
                     if hasattr(leg, 'triggerobjects'):
                         if to not in leg.triggerobjects:
                             leg.triggerobjects.append(to)
                     else:
                         leg.triggerobjects = [to]
 
-        return to.matched
+                    if names:
+                        if hasattr(leg, 'triggernames'):
+                            leg.triggernames.update(names)
+                        else:
+                            leg.triggernames = set(names)
+
+        return to.matched, matchedLegs

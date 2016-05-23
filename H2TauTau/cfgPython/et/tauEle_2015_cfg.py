@@ -22,7 +22,7 @@ shift = None
 computeSVfit = False
 production = False  # production = True run on batch, production = False run locally
 syncntuple = True
-cmssw = False
+cmssw = True
 
 
 dyJetsFakeAna.channel = 'et'
@@ -46,6 +46,9 @@ tauEleAna = cfg.Analyzer(
     from_single_objects=True,
     verbose=False
 )
+
+if cmssw:
+    tauEleAna.from_single_objects = False
 
 dyLLReweighterTauEle = cfg.Analyzer(
     DYLLReweighterTauEle,
@@ -81,8 +84,8 @@ eleWeighter = cfg.Analyzer(
     LeptonWeighter,
     name='LeptonWeighter_ele',
     scaleFactorFiles={
-        'trigger':'$CMSSW_BASE/src/CMGTools/H2TauTau/data/Electron_SingleEle_eff.root',
-        'idiso':'$CMSSW_BASE/src/CMGTools/H2TauTau/data/Electron_IdIso0p10_eff.root',
+        'trigger':'$CMSSW_BASE/src/CMGTools/H2TauTau/data/Electron_Ele23_fall15.root',
+        'idiso':'$CMSSW_BASE/src/CMGTools/H2TauTau/data/Electron_IdIso0p1_fall15.root',
     },
     lepton='leg1',
     disable=False
@@ -201,7 +204,7 @@ if not production:
     # comp = my_connect.mc_dict['HiggsGGH125']
     comp = sync_list[0]
     selectedComponents = [comp]
-    comp.splitFactor = 1
+    comp.splitFactor = 5
     comp.fineSplitFactor = 1
 #    comp.files = comp.files[:1]
 
@@ -221,7 +224,3 @@ config = cfg.Config(components=selectedComponents,
                     )
 
 printComps(config.components, True)
-
-
-def modCfgForPlot(config):
-    config.components = []

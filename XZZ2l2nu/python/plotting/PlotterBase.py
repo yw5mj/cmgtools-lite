@@ -16,6 +16,14 @@ class PlotterBase(object):
         corr['model']=model
         self.corrFactors.append(corr)
 
+    def changeCorrectionFactor(self,value,model):
+        corr=dict()
+        corr['value']=value
+        corr['model']=model
+        for i,item in enumerate(self.corrFactors):
+            if item['model']==model:
+                self.corrFactors[i]=corr
+
     def setLineProperties(self,linestyle,linecolor,linewidth):
         self.linestyle=linestyle
         self.linecolor=linecolor

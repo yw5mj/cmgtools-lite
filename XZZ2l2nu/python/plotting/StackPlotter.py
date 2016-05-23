@@ -38,6 +38,57 @@ def convertToPoisson(h,blinding=False,blindingCut=100):
 
     return graph    
 
+def GetEffHist(h1):
+    effhist = h1.Clone('eff_'+h1.GetName())
+    nbinsX = h1.GetNbinsX()
+    error1=ROOT.Double(0.0)
+    error2=ROOT.Double(0.0)
+    for ibin in range(1,nbinsX+1):
+        n_pass = h1.IntegralAndError(ibin, nbinsX,error1)
+        n_fail = h1.IntegralAndError(0, ibin-1,error2)
+        eff = n_pass/(n_pass+n_fail)
+        eff_err = math.sqrt((n_fail**2*error1**2+n_pass**2*error2**2)/(n_pass+n_fail)**4)
+        effhist.SetBinContent(ibin, eff)
+        effhist.SetBinError(ibin,eff_err)
+    return effhist
+
+def GetSignifHist(Hsig,Hbkg,Nsig,Nbkg):
+
+    Hsignif = Hsig.Clone('signif_'+Hsig.GetName())
+    Hsignif.SetTitle("Significance vs. cuts")
+
+    for i in range(0,Hsignif.GetNbinsX()+1):
+        i_nsig = Nsig*Hsig.GetBinContent(i)
+        i_nbkg = Nbkg*Hbkg.GetBinContent(i)
+        #print "i_nsig = "+str(i_nsig)+"; i_nbkg = "+str(i_nbkg)
+        sb = i_nsig+i_nbkg
+        #if i_nsig<=0 or i_nbkg<=0 : print "i_nsig = "+str(i_nsig)+"; i_nbkg = "+str(i_nbkg) 
+        i_signif = i_nsig/math.sqrt(sb) if i_nsig>0.0 else 0.0
+        Hsignif.SetBinContent(i, i_signif)
+
+    return Hsignif
+
+
+def GetROCGraph(Hsig,Hbkg):
+
+    graph = ROOT.TGraph()
+    ig=0
+    for i in range(1,Hsig.GetNbinsX()+1):
+        i_sig = Hsig.GetBinContent(i)
+        i_bkg = Hbkg.GetBinContent(i)
+        graph.SetPoint(ig,i_sig,1.0-i_bkg)
+        ig += 1
+
+    hist = ROOT.TH1F('roc_'+Hsig.GetName(),'roc_'+Hsig.GetName(),500,0,1)
+    for i in range(1, 500):
+        hist.SetBinContent(i, graph.Eval(hist.GetBinCenter(i)))
+
+    graph.Delete()
+
+    return hist
+
+
+
 def GetRatioHist(h1, hstack,blinding=False,blindingCut=100):
     hratio = h1.Clone("hRatio")
     h2 = hstack.GetHistogram()
@@ -450,4 +501,541 @@ class StackPlotter(object):
 
         
         
+    def drawCutEff(self,var,cut,lumi,bins,mini,maxi,titlex = "", units = "", output = 'out', outDir='.'):
 
+        fout = ROOT.TFile(outDir+'/'+output+'.root', 'recreate')
+
+        c1 = ROOT.TCanvas(output+'_'+"c1", "c1", 600, 600); c1.Draw()
+        c1.SetWindowSize(600 + (600 - c1.GetWw()), (600 + (600 - c1.GetWh())))
+        c1.SetBottomMargin(0.15)
+        c1.SetLeftMargin(0.15)
+        c1.SetFillStyle(0)
+
+        ROOT.gStyle.SetOptStat(0)
+        ROOT.gStyle.SetOptTitle(0)
+        
+        hists=[]
+        stack = ROOT.THStack(output+'_'+"stack","")
+        
+        signal=0
+        background=0
+        backgroundErr=0
+        
+        signals = []       
+        signalHs = [] 
+        signalLabels = []
+
+        backgroundHs = []
+
+        dataH=None
+        error=ROOT.Double(0.0)
+
+        cutL="("+self.defaultCut+")*("+cut+")"
+
+        # fill histgrams 
+        for (plotter,typeP,label,name) in zip(self.plotters,self.types,self.labels,self.names):
+            if typeP == "background" :
+                hist = plotter.drawTH1(output+'_'+name,var,cutL,lumi,bins,mini,maxi,titlex,units)
+                stack.Add(hist)
+                hists.append(hist)
+                backgroundHs.append(hist)
+                print label+" : %f\n" % hist.Integral()
+                background+=hist.IntegralAndError(1,hist.GetNbinsX(),error)
+                backgroundErr+=error*error
+
+            if typeP == "signal" :
+                hist = plotter.drawTH1(output+'_'+name,var,cutL,lumi,bins,mini,maxi,titlex,units)
+                hists.append(hist)
+                signalHs.append(hist)
+                signals.append(hist.Integral())
+                signalLabels.append(label)
+                print label+" : %f\n" % hist.Integral()
+
+            if typeP == "data":
+                hist = plotter.drawTH1(output+'_'+typeP,var,cutL,"1",bins,mini,maxi,titlex,units)
+                hists.append(hist)
+                hist.SetMarkerStyle(20)
+                hist.SetLineWidth(1)
+                hist.SetLineColor(1)
+                hist.SetMarkerSize(1.)
+                hist.SetMarkerColor(ROOT.kBlack)
+                hist.SetBinErrorOption(1)
+                dataH=hist
+                print label+" : %f\n" % hist.Integral()
+                
+        # sum background hist
+        backgroundH = 0
+        for idx,bkg in enumerate(backgroundHs):
+            if idx==0: 
+                backgroundH = backgroundHs[0].Clone(output+'_AllBkg')
+            else:
+                backgroundH.Add(backgroundHs[idx])
+ 
+        # get efficiency hists
+        SigEffHists = []
+        BkgEffHists = []
+        # loop over all hists
+        # signal hists
+        for hist in signalHs:
+            effhist = GetEffHist(hist)
+            SigEffHists.append(effhist)
+            
+        # sum of all background
+        BkgEffHistAll = GetEffHist(backgroundH)
+        BkgEffHistAll.SetLineColor(1)
+        BkgEffHistAll.SetLineWidth(2)
+        BkgEffHistAll.SetLineStyle(2)
+        BkgEffHistAll.SetFillStyle(0)
+        BkgEffHists.append(BkgEffHistAll)
+
+        # background hists
+        for hist in backgroundHs:
+            effhist = GetEffHist(hist)
+            effhist.SetLineColor(effhist.GetFillColor())
+            effhist.SetFillStyle(0)
+            BkgEffHists.append(effhist)
+
+        # data hist
+        DataEffHist = GetEffHist(dataH)
+        DataEffHist.SetLineColor(1)
+        DataEffHist.SetMarkerColor(1)
+        DataEffHist.SetMarkerStyle(20)
+        DataEffHist.SetFillStyle(0)
+        DataEffHist.SetFillColor(0)
+
+        frame = c1.DrawFrame(mini,0.0,maxi,1.3)
+
+        if not self.log:
+            frame = c1.DrawFrame(mini,0.0,maxi,1.3)
+        else:
+            frame = c1.DrawFrame(mini,0.0001,maxi,30)
+
+        frame.SetName(output+'_'+'frame')
+        frame.GetXaxis().SetLabelFont(42)
+        frame.GetXaxis().SetLabelOffset(0.007)
+        frame.GetXaxis().SetLabelSize(0.03)
+        frame.GetXaxis().SetTitleSize(0.05)
+        frame.GetXaxis().SetTitleOffset(1.15)
+        frame.GetXaxis().SetTitleFont(42)
+        frame.GetYaxis().SetLabelFont(42)
+        frame.GetYaxis().SetLabelOffset(0.007)
+        frame.GetYaxis().SetLabelSize(0.045)
+        frame.GetYaxis().SetTitleSize(0.05)
+        frame.GetYaxis().SetTitleOffset(1.4)
+        frame.GetYaxis().SetTitleFont(42)
+        frame.GetZaxis().SetLabelFont(42)
+        frame.GetZaxis().SetLabelOffset(0.007)
+        frame.GetZaxis().SetLabelSize(0.045)
+        frame.GetZaxis().SetTitleSize(0.05)
+        frame.GetZaxis().SetTitleFont(42)
+
+
+        if len(units)>0:
+            frame.GetXaxis().SetTitle(titlex + " (" +units+")")
+            frame.GetYaxis().SetTitle("Efficiency")
+        else:    
+            frame.GetXaxis().SetTitle(titlex)
+            frame.GetYaxis().SetTitle("Efficiency")
+
+
+        frame.Draw()
+        for hist in reversed(SigEffHists):
+            hist.Draw("A,HIST,SAME")
+        for hist in reversed(BkgEffHists):
+            hist.Draw("A,HIST,SAME")
+        DataEffHist.Draw("A,SAME")
+
+        legend = ROOT.TLegend(0.62,0.6,0.92,0.90,"","brNDC")
+        legend.SetName(output+'_'+'legend')
+	legend.SetBorderSize(0)
+	legend.SetLineColor(1)
+	legend.SetLineStyle(1)
+	legend.SetLineWidth(1)
+	legend.SetFillColor(0)
+	legend.SetFillStyle(0)
+	legend.SetTextFont(42)
+
+        legend.SetFillColor(ROOT.kWhite)
+        legend.AddEntry(BkgEffHistAll, "All Background", "l")
+
+        for (histo,label,typeP) in reversed(zip(hists,self.labels,self.types)):
+            if typeP != "data" and typeP !='signal':
+                legend.AddEntry(histo,label,"f")
+            elif typeP == 'data':
+                legend.AddEntry(histo,label,"pl")
+
+        for (histo,label,typeP) in reversed(zip(hists,self.labels,self.types)):
+            if typeP == "signal":
+                legend.AddEntry(histo,label,"f")
+
+
+
+        legend.Draw()
+        if self.log:
+            c1.SetLogy()
+        c1.Update()
+
+	pt =ROOT.TPaveText(0.1577181,0.9562937,0.9580537,0.9947552,"brNDC")
+        pt.SetName(output+'_'+'pavetext')
+	pt.SetBorderSize(0)
+	pt.SetTextAlign(12)
+	pt.SetFillStyle(0)
+	pt.SetTextFont(42)
+	pt.SetTextSize(0.03)
+	text = pt.AddText(0.15,0.3,"CMS Work in progress")
+	text = pt.AddText(0.55,0.3,"#sqrt{s} = 13 TeV, L = "+"{:.3}".format(float(lumi)/1000)+" fb^{-1}")
+	pt.Draw()   
+
+        plot={'canvas':c1,'SigEffHists':SigEffHists,'BkgEffHists':BkgEffHists,'DataEffHist':DataEffHist,'legend':legend,'data':dataH, 'latex1':pt}
+
+        c1.Update()
+        c1.Print(outDir+'/'+output+'.eps')
+        os.system('epstopdf '+outDir+'/'+output+'.eps')
+       
+        fout.cd()
+        c1.Write()
+        pt.Write()
+        legend.Write()
+        frame.Write()
+        for hist in hists: hist.Write() 
+        for hist in SigEffHists: hist.Write() 
+        for hist in BkgEffHists: hist.Write() 
+        DataEffHist.Write()
+        fout.Close()
+
+        return plot
+
+
+    def drawCutSignif(self,var,cut,lumi,bins,mini,maxi,titlex = "", units = "", output = 'out', outDir='.'):
+
+        fout = ROOT.TFile(outDir+'/'+output+'.root', 'recreate')
+
+        c1 = ROOT.TCanvas(output+'_'+"c1", "c1", 600, 600); c1.Draw()
+        c1.SetWindowSize(600 + (600 - c1.GetWw()), (600 + (600 - c1.GetWh())))
+        c1.SetBottomMargin(0.15)
+        c1.SetLeftMargin(0.15)
+        c1.SetFillStyle(0)
+
+        ROOT.gStyle.SetOptStat(0)
+        ROOT.gStyle.SetOptTitle(0)
+        
+        hists=[]
+        stack = ROOT.THStack(output+'_'+"stack","")
+        
+        signal=0
+        background=0
+        backgroundErr=0
+        
+        signals = []       
+        signalHs = [] 
+        signalLabels = []
+
+        backgroundHs = []
+
+        dataH=None
+        error=ROOT.Double(0.0)
+
+        cutL="("+self.defaultCut+")*("+cut+")"
+
+        # fill histgrams 
+        for (plotter,typeP,label,name) in zip(self.plotters,self.types,self.labels,self.names):
+            if typeP == "background" :
+                hist = plotter.drawTH1(output+'_'+name,var,cutL,lumi,bins,mini,maxi,titlex,units)
+                # remove negative bin
+                for ibin in range(1, hist.GetNbinsX()+1):
+                    if hist.GetBinContent(ibin)<=0.0 : hist.SetBinContent(ibin, 0.0)
+                stack.Add(hist)
+                hists.append(hist)
+                backgroundHs.append(hist)
+                print label+" : %f\n" % hist.Integral()
+                background+=hist.IntegralAndError(1,hist.GetNbinsX(),error)
+                backgroundErr+=error*error
+
+            if typeP == "signal" :
+                hist = plotter.drawTH1(output+'_'+name,var,cutL,lumi,bins,mini,maxi,titlex,units)
+                # remove negative bin
+                for ibin in range(1, hist.GetNbinsX()+1):
+                    if hist.GetBinContent(ibin)<=0.0 : hist.SetBinContent(ibin, 0.0)
+                hists.append(hist)
+                signalHs.append(hist)
+                signals.append(hist.Integral())
+                signalLabels.append(label)
+                print label+" : %f\n" % hist.Integral()
+                
+        # sum background hist
+        backgroundH = 0
+        for idx,bkg in enumerate(backgroundHs):
+            if idx==0: 
+                backgroundH = backgroundHs[0].Clone(output+'_AllBkg')
+            else:
+                backgroundH.Add(backgroundHs[idx])
+ 
+        # get efficiency hists
+        SigEffHists = []
+        # loop over all hists
+        # signal hists
+        for hist in signalHs:
+            effhist = GetEffHist(hist)
+            SigEffHists.append(effhist)
+            
+        # sum of all background
+        BkgEffHistAll = GetEffHist(backgroundH)
+        BkgEffHistAll.SetLineColor(1)
+        BkgEffHistAll.SetLineWidth(2)
+        BkgEffHistAll.SetLineStyle(2)
+        BkgEffHistAll.SetFillStyle(0)
+
+
+        # get signal significance hists
+        SigSignifHists = []
+        nbkgAll = backgroundH.Integral()
+        for idx,hist in enumerate(SigEffHists):
+            nsig = signalHs[idx].Integral()
+            sighist = GetSignifHist(hist,BkgEffHistAll,nsig, nbkgAll) 
+            sighist.SetLineStyle(1)
+            SigSignifHists.append(sighist)
+
+        if not self.log:
+            frame = c1.DrawFrame(mini,0.0,maxi,max( hist.GetMaximum() for hist in SigSignifHists )*1.3)
+        else: 
+            frame = c1.DrawFrame(mini,min( hist.GetMaximum() for hist in SigSignifHists )*0.01,maxi,max( hist.GetMaximum() for hist in SigSignifHists )*100)
+
+        frame.SetName(output+'_'+'frame')
+        frame.GetXaxis().SetLabelFont(42)
+        frame.GetXaxis().SetLabelOffset(0.007)
+        frame.GetXaxis().SetLabelSize(0.03)
+        frame.GetXaxis().SetTitleSize(0.05)
+        frame.GetXaxis().SetTitleOffset(1.15)
+        frame.GetXaxis().SetTitleFont(42)
+        frame.GetYaxis().SetLabelFont(42)
+        frame.GetYaxis().SetLabelOffset(0.007)
+        frame.GetYaxis().SetLabelSize(0.045)
+        frame.GetYaxis().SetTitleSize(0.05)
+        frame.GetYaxis().SetTitleOffset(1.4)
+        frame.GetYaxis().SetTitleFont(42)
+        frame.GetZaxis().SetLabelFont(42)
+        frame.GetZaxis().SetLabelOffset(0.007)
+        frame.GetZaxis().SetLabelSize(0.045)
+        frame.GetZaxis().SetTitleSize(0.05)
+        frame.GetZaxis().SetTitleFont(42)
+
+
+        if len(units)>0:
+            frame.GetXaxis().SetTitle(titlex + " (" +units+")")
+            frame.GetYaxis().SetTitle("S/#sqrt{S+B}")
+        else:    
+            frame.GetXaxis().SetTitle(titlex)
+            frame.GetYaxis().SetTitle("S/#sqrt{S+B}")
+
+
+        frame.Draw()
+        for hist in reversed(SigSignifHists):
+            hist.Draw("A,HIST,SAME")
+
+        legend = ROOT.TLegend(0.62,0.6,0.92,0.90,"","brNDC")
+        legend.SetName(output+'_'+'legend')
+	legend.SetBorderSize(0)
+	legend.SetLineColor(1)
+	legend.SetLineStyle(1)
+	legend.SetLineWidth(1)
+	legend.SetFillColor(0)
+	legend.SetFillStyle(0)
+	legend.SetTextFont(42)
+
+        legend.SetFillColor(ROOT.kWhite)
+        for (histo,label) in reversed(zip(signalHs,signalLabels)):
+            legend.AddEntry(histo,label,"f")
+
+        legend.Draw()
+        if self.log:
+            c1.SetLogy()
+        c1.Update()
+
+	pt =ROOT.TPaveText(0.1577181,0.9562937,0.9580537,0.9947552,"brNDC")
+        pt.SetName(output+'_'+'pavetext')
+	pt.SetBorderSize(0)
+	pt.SetTextAlign(12)
+	pt.SetFillStyle(0)
+	pt.SetTextFont(42)
+	pt.SetTextSize(0.03)
+	text = pt.AddText(0.15,0.3,"CMS Work in progress")
+	text = pt.AddText(0.55,0.3,"#sqrt{s} = 13 TeV, L = "+"{:.3}".format(float(lumi)/1000)+" fb^{-1}")
+	pt.Draw()   
+
+        plot={'canvas':c1,'SigEffHists':SigEffHists,'BkgEffHistAll':BkgEffHistAll,'SigSignifHists':SigSignifHists,'legend':legend,'data':dataH, 'latex1':pt}
+
+        c1.Update()
+        c1.Print(outDir+'/'+output+'.eps')
+        os.system('epstopdf '+outDir+'/'+output+'.eps')
+       
+        fout.cd()
+        c1.Write()
+        pt.Write()
+        legend.Write()
+        frame.Write()
+        for hist in hists: hist.Write() 
+        for hist in SigEffHists: hist.Write() 
+        for hist in SigSignifHists: hist.Write() 
+        fout.Close()
+
+        return plot
+
+    def drawCutROC(self,var,cut,lumi,bins,mini,maxi, titlex="", units="", output = 'out', outDir='.'):
+
+        fout = ROOT.TFile(outDir+'/'+output+'.root', 'recreate')
+
+        c1 = ROOT.TCanvas(output+'_'+"c1", "c1", 600, 600); c1.Draw()
+        c1.SetWindowSize(600 + (600 - c1.GetWw()), (600 + (600 - c1.GetWh())))
+        c1.SetBottomMargin(0.15)
+        c1.SetLeftMargin(0.15)
+        c1.SetFillStyle(0)
+
+        ROOT.gStyle.SetOptStat(0)
+        ROOT.gStyle.SetOptTitle(0)
+        
+        hists=[]
+        stack = ROOT.THStack(output+'_'+"stack","")
+        
+        signal=0
+        background=0
+        backgroundErr=0
+        
+        signals = []       
+        signalHs = [] 
+        signalLabels = []
+
+        backgroundHs = []
+
+        dataH=None
+        error=ROOT.Double(0.0)
+
+        cutL="("+self.defaultCut+")*("+cut+")"
+
+        # fill histgrams 
+        for (plotter,typeP,label,name) in zip(self.plotters,self.types,self.labels,self.names):
+            if typeP == "background" :
+                hist = plotter.drawTH1(output+'_'+name,var,cutL,lumi,bins,mini,maxi,titlex,units)
+                stack.Add(hist)
+                hists.append(hist)
+                backgroundHs.append(hist)
+                print label+" : %f\n" % hist.Integral()
+                background+=hist.IntegralAndError(1,hist.GetNbinsX(),error)
+                backgroundErr+=error*error
+
+            if typeP == "signal" :
+                hist = plotter.drawTH1(output+'_'+name,var,cutL,lumi,bins,mini,maxi,titlex,units)
+                hists.append(hist)
+                signalHs.append(hist)
+                signals.append(hist.Integral())
+                signalLabels.append(label)
+                print label+" : %f\n" % hist.Integral()
+                
+        # sum background hist
+        backgroundH = 0
+        for idx,bkg in enumerate(backgroundHs):
+            if idx==0: 
+                backgroundH = backgroundHs[0].Clone(output+'_AllBkg')
+            else:
+                backgroundH.Add(backgroundHs[idx])
+ 
+        # get efficiency hists
+        SigEffHists = []
+        # loop over all hists
+        # signal hists
+        for hist in signalHs:
+            effhist = GetEffHist(hist)
+            SigEffHists.append(effhist)
+            
+        # sum of all background
+        BkgEffHistAll = GetEffHist(backgroundH)
+        BkgEffHistAll.SetLineColor(1)
+        BkgEffHistAll.SetLineWidth(2)
+        BkgEffHistAll.SetLineStyle(2)
+        BkgEffHistAll.SetFillStyle(0)
+
+
+        # get signal significance hists
+        ROCGraphs = []
+        for hist in SigEffHists:
+            roc = GetROCGraph(hist,BkgEffHistAll) 
+            roc.SetLineStyle(1)
+            roc.SetLineWidth(2)
+            roc.SetLineColor(hist.GetLineColor())
+            roc.SetMarkerColor(hist.GetLineColor())
+            ROCGraphs.append(roc)
+
+        frame = c1.DrawFrame(0.95,0.95,1.01,1.01)
+
+        frame.SetName(output+'_'+'frame')
+        frame.GetXaxis().SetLabelFont(42)
+        frame.GetXaxis().SetLabelOffset(0.007)
+        frame.GetXaxis().SetLabelSize(0.03)
+        frame.GetXaxis().SetTitleSize(0.05)
+        frame.GetXaxis().SetTitleOffset(1.15)
+        frame.GetXaxis().SetTitleFont(42)
+        frame.GetYaxis().SetLabelFont(42)
+        frame.GetYaxis().SetLabelOffset(0.007)
+        frame.GetYaxis().SetLabelSize(0.045)
+        frame.GetYaxis().SetTitleSize(0.05)
+        frame.GetYaxis().SetTitleOffset(1.4)
+        frame.GetYaxis().SetTitleFont(42)
+        frame.GetZaxis().SetLabelFont(42)
+        frame.GetZaxis().SetLabelOffset(0.007)
+        frame.GetZaxis().SetLabelSize(0.045)
+        frame.GetZaxis().SetTitleSize(0.05)
+        frame.GetZaxis().SetTitleFont(42)
+
+
+        frame.GetXaxis().SetTitle(var+" Sig. Eff.")
+        frame.GetYaxis().SetTitle(var+" Bkg. Rej.")
+
+        frame.Draw()
+        for roc in reversed(ROCGraphs):
+            roc.Draw("A,HIST,SAME")
+
+        legend = ROOT.TLegend(0.62,0.6,0.92,0.90,"","brNDC")
+        legend.SetName(output+'_'+'legend')
+	legend.SetBorderSize(0)
+	legend.SetLineColor(1)
+	legend.SetLineStyle(1)
+	legend.SetLineWidth(1)
+	legend.SetFillColor(0)
+	legend.SetFillStyle(0)
+	legend.SetTextFont(42)
+
+        legend.SetFillColor(ROOT.kWhite)
+        for (histo,label,typeP) in reversed(zip(hists,self.labels,self.types)):
+            if typeP == "signal":
+                legend.AddEntry(histo,label,"f")
+
+        legend.Draw()
+        c1.Update()
+
+	pt =ROOT.TPaveText(0.1577181,0.9562937,0.9580537,0.9947552,"brNDC")
+        pt.SetName(output+'_'+'pavetext')
+	pt.SetBorderSize(0)
+	pt.SetTextAlign(12)
+	pt.SetFillStyle(0)
+	pt.SetTextFont(42)
+	pt.SetTextSize(0.03)
+	text = pt.AddText(0.15,0.3,"CMS Work in progress")
+	text = pt.AddText(0.55,0.3,"#sqrt{s} = 13 TeV, L = "+"{:.3}".format(float(lumi)/1000)+" fb^{-1}")
+	pt.Draw()   
+
+        plot={'canvas':c1,'SigEffHists':SigEffHists,'BkgEffHistAll':BkgEffHistAll,'ROCGraphs':ROCGraphs,'legend':legend,'data':dataH, 'latex1':pt}
+
+        c1.Update()
+        c1.Print(outDir+'/'+output+'.eps')
+        os.system('epstopdf '+outDir+'/'+output+'.eps')
+       
+        fout.cd()
+        c1.Write()
+        pt.Write()
+        legend.Write()
+        frame.Write()
+        for hist in hists: hist.Write() 
+        for hist in SigEffHists: hist.Write() 
+        for roc in ROCGraphs: roc.Write() 
+        fout.Close()
+
+        return plot
