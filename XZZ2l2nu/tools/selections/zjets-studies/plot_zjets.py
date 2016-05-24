@@ -6,7 +6,7 @@ from math import *
 from python.TreePlotter import TreePlotter
 from python.MergedPlotter import MergedPlotter
 from python.StackPlotter import StackPlotter
-import python.SetCuts
+from python.SetCuts import SetCuts
 
 Channel=raw_input("Please choose a channel (el or mu): \n")
 tag0='ZJstudy'
@@ -25,8 +25,9 @@ outTag=outdir+'/'+tag
 # ------- dPhi(Z,MET) = 2.5
 #  B | D
 # dR(ll)=0.8 / 1.0
-tex_dic=python.SetCuts.Tex_dic
-cuts=python.SetCuts.Cuts(Channel)
+mycuts=SetCuts()
+tex_dic=mycuts.Tex_dic
+cuts=mycuts.abcdCuts(Channel)
 print cuts
 
 ### ----- Initialize (samples):
