@@ -1,7 +1,7 @@
 import os
 import PhysicsTools.HeppyCore.framework.config as cfg
-from PhysicsTools.Heppy.analyzers.core.all import *
-from PhysicsTools.Heppy.analyzers.objects.all import *
+from PhysicsTools.Heppy.analyzers.core.all import * # SkimAnalyzerCount
+from PhysicsTools.Heppy.analyzers.objects.all import *  
 from PhysicsTools.Heppy.analyzers.gen.all import *
 from PhysicsTools.HeppyCore.utils.deltar import *
 from CMGTools.XZZ2l2nu.analyzers.Skimmer import *
@@ -159,10 +159,10 @@ leptonicVAna = cfg.Analyzer(
     name='leptonicVMaker',
     selectMuMuPair = (lambda x: (x.leg1.highPtID or x.leg2.highPtID) and ((x.leg1.pt()>50.0 and abs(x.leg1.eta())<2.1) or (x.leg2.pt()>50.0 and abs(x.leg2.eta())<2.1))),
     selectElElPair = (lambda x: x.leg1.pt()>115.0 or x.leg2.pt()>115.0 ),
-    selectVBoson = (lambda x: x.pt()>50.0 and x.mass()>60.0 and x.mass()<120.0),
+    selectVBoson = (lambda x: x.pt()>100.0 and x.mass()>60.0 and x.mass()<120.0),
     doElMu = True, # it would save events with ElMu final states + LL final stats
     selectElMuPair = (lambda x: (x.leg1.pt()>115.0) or (x.leg2.highPtID and x.leg2.pt()>50.0 and abs(x.leg2.eta())<2.1)), # be sure to have leg1=e, leg2=mu
-    selectFakeBoson = (lambda x: x.pt()>50.0 and x.mass()>40.0 and x.mass()<200.0),
+    selectFakeBoson = (lambda x: x.pt()>100.0 and x.mass()>30.0 and x.mass()<150.0),
     )
 
 packedAna = cfg.Analyzer(
@@ -174,7 +174,8 @@ packedAna = cfg.Analyzer(
 multiStateAna = cfg.Analyzer(
     XZZMultiFinalState,
     name='MultiFinalStateMaker',
-    selectPairLLNuNu = (lambda x: x.leg1.pt()>50.0 and x.leg1.mass()>60.0 and x.leg1.mass()<120.0 and x.leg2.pt()>50.0),
+    selectPairLLNuNu = (lambda x: x.leg1.pt()>100.0 and x.leg1.mass()>60.0 and x.leg1.mass()<120.0 and x.leg2.pt()>50.0),
+    selectPairElMuNuNu = (lambda x: x.leg1.pt()>100.0 and x.leg1.mass()>30.0 and x.leg1.mass()<150.0 and x.leg2.pt()>50.0),
     suffix = '',
     )
 

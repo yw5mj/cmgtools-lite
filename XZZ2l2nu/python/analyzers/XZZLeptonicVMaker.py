@@ -86,6 +86,9 @@ class XZZLeptonicVMaker( Analyzer ):
             
         if self.doElMu:
             event.ElMu = [pair for pair in ElMu if self.selectFakeBoson(pair)]
+            for iemu in ElMu:
+                print "[Debug] ElMu (pt, mass) = %.4f, %.4f" % (iemu.pt(), iemu.m())
+
             if self.n_pass_emu>0.1:
                 self.counters.counter('events').inc('pass el-mu events')
 

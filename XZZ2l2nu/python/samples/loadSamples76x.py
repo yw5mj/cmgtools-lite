@@ -22,18 +22,10 @@ jercRefdt=[JERCRef_data]
 
 # backgrounds
 backgroundSamples = [
-# DYJetsToLL_M50_HT100to200,
-# DYJetsToLL_M50_HT200to400,
-# DYJetsToLL_M50_HT400to600,
-# DYJetsToLL_M50_HT600toInf,
-WW,
-WZ,
-ZZ,
 DYJetsToLL_M50,
 DYJetsToLL_M50_Ext,
 DYJetsToLL_M50_PtZ100,
 WJetsToLNu,
-TT,
 TTTo2L2Nu,
 ZZTo2L2Nu,
 ZZTo4L,
@@ -47,6 +39,16 @@ TTZToLLNuNu,
 TTWJetsToLNu,
 ]
 
+extraBackgroundMC = [
+# DYJetsToLL_M50_HT100to200,
+# DYJetsToLL_M50_HT200to400,
+# DYJetsToLL_M50_HT400to600,
+# DYJetsToLL_M50_HT600toInf,
+WW,
+WZ,
+ZZ,
+TT,
+]
 
 # signals
 signalSamples = [
@@ -80,17 +82,17 @@ BulkGravToZZToZlepZhad_narrow_3500,
 BulkGravToZZToZlepZhad_narrow_4000,
 BulkGravToZZToZlepZhad_narrow_4500,
 ]
-# mc samples
-otherMcSamples=BulkGravToZZToZlepZhad  
-mcSamples = signalSamples + backgroundSamples + jercRefMC
+
+# MC samples
+otherMcSamples = BulkGravToZZToZlepZhad  
+mcSamples = signalSamples + backgroundSamples + jercRefMC + extraBackgroundMC
 #mcSamples = backgroundSamples
-
-
 
 # data
 SingleMuon=[SingleMuon_Run2015C_25ns_16Dec,SingleMuon_Run2015D_16Dec]
 SingleElectron=[SingleElectron_Run2015C_25ns_16Dec,SingleElectron_Run2015D_16Dec]
 SinglePhoton=[SinglePhoton_Run2015C_25ns_16Dec,SinglePhoton_Run2015D_16Dec]
+MuEG=[MuonEG_Run2015C_25ns_16Dec,MuonEG_Run2015D_16Dec]
 
 for s in SingleMuon:
     s.triggers = triggers_1mu_noniso
