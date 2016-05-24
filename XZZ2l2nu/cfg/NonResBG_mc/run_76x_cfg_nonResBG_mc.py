@@ -71,7 +71,7 @@ if test==1:
     #selectedComponents = [SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
     #selectedComponents = [WWTo2L2Nu] #DYJetsToLL_M50
-    selectedComponents = signalSamples + backgroundSamples
+    selectedComponents = backgroundSamples # signalSamples
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1400, BulkGravToZZToZlepZinv_narrow_1600]
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_800]
     #selectedComponents = [WWToLNuQQ, WZTo1L1Nu2Q, WZTo2L2Q, ZZTo2L2Nu]
@@ -80,7 +80,7 @@ if test==1:
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
         #c.files = c.files[0]
-        c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
+        c.splitFactor = (len(c.files)/20 if len(c.files)>20 else 1)
         #c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso
