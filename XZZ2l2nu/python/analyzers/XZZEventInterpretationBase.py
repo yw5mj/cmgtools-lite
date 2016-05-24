@@ -15,6 +15,7 @@ class XZZEventInterpretationBase( Analyzer ):
     def __init__(self, cfg_ana, cfg_comp, looperName):
         super(XZZEventInterpretationBase,self).__init__(cfg_ana, cfg_comp, looperName)
         self.selectPairLLNuNu = self.cfg_ana.selectPairLLNuNu
+        self.selectPairElMuNuNu = self.cfg_ana.selectPairElMuNuNu
             
             
     def declareHandles(self):
@@ -26,7 +27,8 @@ class XZZEventInterpretationBase( Analyzer ):
         self.counters.addCounter('events')
         count = self.counters.counter('events')
         count.register('all events')
-        count.register('pass events')
+        count.register('pass llNuNu events')
+        count.register('pass elmuNuNu events')
 
 
     def process(self, event):

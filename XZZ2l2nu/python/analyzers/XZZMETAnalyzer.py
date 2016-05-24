@@ -288,7 +288,7 @@ class XZZMETAnalyzer( Analyzer ):
         if getattr(self.cfg_ana,"doTkGenMet",self.cfg_ana.doTkMet) and self.cfg_comp.isMC and hasattr(event, 'genParticles'):
             self.makeGenTkMet(event)
 
-        print self.met.pt(), self.met.shiftedPt(2)
+        #print self.met.pt(), self.met.shiftedPt(2)
 
         return True
 
