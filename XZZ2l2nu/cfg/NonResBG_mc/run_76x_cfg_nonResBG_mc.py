@@ -68,10 +68,10 @@ if test==1:
     #selectedComponents = dataSamples
     #selectedComponents = mcSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
-    #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
+    #selectedComponents = [SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
     #selectedComponents = [WWTo2L2Nu] #DYJetsToLL_M50
-    #selectedComponents = signalSamples
+    selectedComponents = signalSamples + backgroundSamples
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1400, BulkGravToZZToZlepZinv_narrow_1600]
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_800]
     #selectedComponents = [WWToLNuQQ, WZTo1L1Nu2Q, WZTo2L2Q, ZZTo2L2Nu]
