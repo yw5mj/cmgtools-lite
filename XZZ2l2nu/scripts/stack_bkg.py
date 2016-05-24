@@ -9,7 +9,7 @@ vvPlotters=[]
 vvSamples = ['WW','WZ','ZZ']
 tag='bkg_'
 cuts='(nllnunu)'
-lumi=2.1
+lumi=2.318278305
 
 for sample in vvSamples:
     vvPlotters.append(TreePlotter(sample+'.root','tree'))
