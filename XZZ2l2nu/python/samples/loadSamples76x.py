@@ -85,7 +85,7 @@ BulkGravToZZToZlepZhad_narrow_4500,
 
 # MC samples
 otherMcSamples = BulkGravToZZToZlepZhad  
-mcSamples = signalSamples + backgroundSamples + jercRefMC
+mcSamples = signalSamples + backgroundSamples + jercRefMC + extraBackgroundMC
 #mcSamples = backgroundSamples
 
 # data
