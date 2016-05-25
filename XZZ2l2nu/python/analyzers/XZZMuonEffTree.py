@@ -52,6 +52,7 @@ class XZZMuonEffTree( Analyzer ):
             for i in self.handles['pfcandidate'].product():
                 if i.pt()>20 and abs(i.pdgId())==211 and abs(i.eta())<2.4:event.selectedMuons.append(i)
             event.selectedMuons.sort(key = lambda l : l.pt(), reverse = True)
+            if len(event.selectedMuons)>2: event.selectedMuons=event.selectedMuons[:2]
         else:
             event.selectedMuons=[i for i in event.selectedMuons if i.track().isNonnull()]
         if len(event.selectedMuons)<2: return False
