@@ -30,16 +30,19 @@ triggerFlagsAna.triggerBits ={
 #-------- Analyzer
 from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
 
-leptonicVAna.selectMuMuPair = (lambda x: ((x.leg1.pt()>35 or x.leg2.pt()>35)))
-leptonicVAna.selectElElPair =(lambda x: x.leg1.pt()>50.0 or x.leg2.pt()>50.0 )
-leptonicVAna.selectVBoson = (lambda x: x.mass()>50.0 and x.mass()<180.0)
-multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>50.0 and x.leg1.mass()<180.0)
+# make VV selection loosened as ElMu selection
+leptonicVAna.selectVBoson = (lambda x: x.pt()>100.0 and x.mass()>30.0 and x.mass()<150.0)
+multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.pt()>100.0 and x.leg1.mass()>30.0 and x.leg1.mass()<150.0 and x.leg2.pt()>50.0)
+
+jetAna.smearJets=False
+
 #-------- SEQUENCE
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
 
 coreSequence = [
     skimAnalyzer,
     genAna,
+    lheWeightAna,
     jsonAna,
     triggerAna,
     pileUpAna,
@@ -53,7 +56,7 @@ coreSequence = [
     triggerFlagsAna,
 ]
     
-#sequence = cfg.Sequence(coreSequence)
+#sequence = cfg.Sequence(coreSequence+[vvTreeProducer])
 sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
 
  
@@ -65,16 +68,20 @@ if test==1:
     #selectedComponents = dataSamples
     #selectedComponents = mcSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
-    #selectedComponents = [SingleMuon_Run2015C_25ns_16Dec]
-    selectedComponents = MuEG
+    #selectedComponents = [SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
-    #selectedComponents = [DYJetsToLL_M50]
+    #selectedComponents = [WWTo2L2Nu] #DYJetsToLL_M50
+    selectedComponents = backgroundSamples # signalSamples
+    #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1400, BulkGravToZZToZlepZinv_narrow_1600]
+    #selectedComponents = [BulkGravToZZToZlepZinv_narrow_800]
+    #selectedComponents = [WWToLNuQQ, WZTo1L1Nu2Q, WZTo2L2Q, ZZTo2L2Nu]
+    #selectedComponents = [ZZTo2L2Nu,DYJetsToLL_M50]
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        c.files = c.files[0]
-        #c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
-        c.splitFactor = 1
+        #c.files = c.files[0]
+        c.splitFactor = (len(c.files)/20 if len(c.files)>20 else 1)
+        #c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso
 

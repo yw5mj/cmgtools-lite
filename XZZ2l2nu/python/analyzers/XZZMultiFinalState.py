@@ -49,11 +49,12 @@ class XZZMultiFinalState( XZZEventInterpretationBase ):
         self.counters.counter('events').inc('all events')
 
         LLNuNu=[]
+        ElMuNuNu=[]
 
         # do LL+MET combination
         if len(event.LL)>0:
-            #take the Z->ll  nearest to the Z mass and the highest pt jets
-            bestZ = min(event.LL,key = lambda x: abs(x.M()-91.118))
+            # Take the Z->ll nearest to the Z mass and the highest pt jets
+            bestZ = min(event.LL,key = lambda x: abs(x.M()-91.1876))
             VV=Pair(bestZ,event.met)
             if self.selectPairLLNuNu(VV):
                 selected = {'pair':VV}
@@ -64,7 +65,23 @@ class XZZMultiFinalState( XZZEventInterpretationBase ):
                     event.trgsfLo = self.gettrigersfLower(bestZ.pt(),bestZ.leg1.pdgId())
 
         if len(LLNuNu)>0: 
-             self.counters.counter('events').inc('pass events')
+            self.counters.counter('events').inc('pass llNuNu events')
 
         setattr(event,'LLNuNu'+self.cfg_ana.suffix,LLNuNu)
 
+        # do ElMu+MET combination
+        if len(event.ElMu)>0:
+            # Take the elmu nearest to the Z mass and the highest pt
+            bestPair = min(event.ElMu,key = lambda x: abs(x.M()-91.1876))
+            fakeVV=Pair(bestPair,event.met)
+            if self.selectPairElMuNuNu(fakeVV):
+                selected = {'pair':fakeVV}
+                ElMuNuNu.append(selected)
+                # if self.cfg_comp.isMC:
+                #     event.trgsf = self.gettrigersf(bestPair.pt(),bestPair.leg1.pdgId())
+                #     event.trgsfUp = self.gettrigersfUpper(bestPair.pt(),bestPair.leg1.pdgId())
+                #     event.trgsfLo = self.gettrigersfLower(bestPair.pt(),bestPair.leg1.pdgId())
+        if len(ElMuNuNu)>0:
+            self.counters.counter('events').inc('pass elmuNuNu events')
+
+        setattr(event,'ElMuNuNu'+self.cfg_ana.suffix,ElMuNuNu)
