@@ -17,11 +17,11 @@ cutChain='tightzpt100met200'
 #cutChain='zjetscutmet50'
 
 channel='both' # can be el or mu or both
-
 # samples tag
 #stag='bkg'
 #stag='zjets'
-stag='sig'
+#stag='sig'
+stag='all'
 
 
 outdir='plots'
@@ -35,10 +35,10 @@ LogY=True
 DrawLeptons=False
 doRatio=True
 test=True
-Blind=True
+Blind=False
 FakeData=False
 UseMETFilter=True
-SignalAll1pb=True
+SignalAll1pb=False
 puWeight='puWeight'
 k=1 # signal scale
 
@@ -304,9 +304,9 @@ Data = MergedPlotter(dataPlotters)
 Stack = StackPlotter()
 Stack.addPlotter(Data, "data_obs", "Data", "data")
 #Stack.addPlotter(WJets, "WJets","W+Jets", "background")
-Stack.addPlotter(WW, "WW","WW, WZ non-reson.", "background")
+Stack.addPlotter(WW, "VVNonReso","WW, WZ non-reson.", "background")
 Stack.addPlotter(TT, "TT","TT", "background")
-Stack.addPlotter(VV, "ZZ","ZZ, WZ reson.", "background")
+Stack.addPlotter(VV, "VVZReso","ZZ, WZ reson.", "background")
 Stack.addPlotter(ZJets, "ZJets","Z+Jets", "background")
 
 
@@ -318,91 +318,133 @@ for i in range(len(sigSamples)):
 Stack.setLog(LogY)
 Stack.doRatio(doRatio)
 
-############
 
-# tag
-#stag='bkg'
-#stag='zjets'
-#stag='sig'
+###
+fout = ROOT.TFile(tag+'.root', 'recreate')
+
+
+for (plotter,typeP,label,name) in zip(Stack.plotters,Stack.types,Stack.labels,Stack.names):
+
+    lumi_str = str(lumi*1000)
+    if typeP=='data': lumi_str = '(1)'
+        
+    h1 = plotter.drawTH1('h_'+name+'_el', 'llnunu_mta',cuts+'&&'+elChannel,lumi_str,500,0,5000,titlex = "M_{T}",units= "GeV", drawStyle = "HIST")
+    h1.Write()
+
+    h2 = plotter.drawTH1('h_'+name+'_mu', 'llnunu_mta',cuts+'&&'+muChannel,lumi_str,500,0,5000,titlex = "M_{T}",units= "GeV", drawStyle = "HIST")
+    h2.Write()
+    
+'''
+# electron
+h_Data_el = Data.drawTH1('h_data_obs_el','llnunu_mta',cuts+'&&'+elChannel,'(1)',500,0,5000,titlex = "M_{T}",units= "GeV", drawStyle = "HIST")
+h_Data_el.Write()
+
+h_VVNonReso_el = WW.drawTH1('h_VVNonReso_el','llnunu_mta',cuts+'&&'+elChannel,str(lumi*1000),250,0,2500,300,0,3000,500,0,5000,titlex = "M_{T}",unitsx = "GeV",drawStyle = "HIST")
+h_VVNonReso_el.Write()
+
+h_VVZReso_el = VV.drawTH3('h3d_VVZReso_el','llnunu_mta:met_pt:llnunu_l1_pt',cuts+'&&'+elChannel,str(lumi*1000),250,0,2500,300,0,3000,500,0,5000,titlex = "P_{T}(Z)",unitsx = "GeV",titley = "MET",unitsy = "GeV",drawStyle = "COLZ")
+h_VVZReso_el.Write()
+
+h_ZJets_el = ZJets.drawTH3('h3d_ZJets_el','llnunu_mta:met_pt:llnunu_l1_pt',cuts+'&&'+elChannel,str(lumi*1000),250,0,2500,300,0,3000,500,0,5000,titlex = "P_{T}(Z)",unitsx = "GeV",titley = "MET",unitsy = "GeV",drawStyle = "COLZ")
+h_ZJets_el.Write()
+
+h_TT_el = TT.drawTH3('h3d_TT_el','llnunu_mta:met_pt:llnunu_l1_pt',cuts+'&&'+elChannel,str(lumi*1000),250,0,2500,300,0,3000,500,0,5000,titlex = "P_{T}(Z)",unitsx = "GeV",titley = "MET",unitsy = "GeV",drawStyle = "COLZ")
+h_TT_el.Write()
+
+# muon
+h_Data_mu = Data.drawTH3('h3d_data_obs_mu','llnunu_mta:met_pt:llnunu_l1_pt',cuts+'&&'+muChannel,'(1)',250,0,2500,300,0,3000,500,0,5000,titlex = "P_{T}(Z)",unitsx = "GeV",titley = "MET",unitsy = "GeV",drawStyle = "COLZ")
+h_Data_mu.Write()
+
+h_VVNonReso_mu = WW.drawTH3('h3d_VVNonReso_mu','llnunu_mta:met_pt:llnunu_l1_pt',cuts+'&&'+muChannel,str(lumi*1000),250,0,2500,300,0,3000,500,0,5000,titlex = "P_{T}(Z)",unitsx = "GeV",titley = "MET",unitsy = "GeV",drawStyle = "COLZ")
+h_VVNonReso_mu.Write()
+
+h_VVZReso_mu = VV.drawTH3('h3d_VVZReso_mu','llnunu_mta:met_pt:llnunu_l1_pt',cuts+'&&'+muChannel,str(lumi*1000),250,0,2500,300,0,3000,500,0,5000,titlex = "P_{T}(Z)",unitsx = "GeV",titley = "MET",unitsy = "GeV",drawStyle = "COLZ")
+h_VVZReso_mu.Write()
+
+h_ZJets_mu = ZJets.drawTH3('h3d_ZJets_mu','llnunu_mta:met_pt:llnunu_l1_pt',cuts+'&&'+muChannel,str(lumi*1000),250,0,2500,300,0,3000,500,0,5000,titlex = "P_{T}(Z)",unitsx = "GeV",titley = "MET",unitsy = "GeV",drawStyle = "COLZ")
+h_ZJets_mu.Write()
+
+h_TT_mu = TT.drawTH3('h3d_TT_mu','llnunu_mta:met_pt:llnunu_l1_pt',cuts+'&&'+muChannel,str(lumi*1000),250,0,2500,300,0,3000,500,0,5000,titlex = "P_{T}(Z)",unitsx = "GeV",titley = "MET",unitsy = "GeV",drawStyle = "COLZ")
+h_TT_mu.Write()
+
+for i in range(len(sigSamples)):
+
+    h_Sig_el = sigPlotters[i].drawTH3('h3d_'+sigSamples[i]+'_el','llnunu_mta:met_pt:llnunu_l1_pt',cuts+'&&'+elChannel,str(lumi*1000),250,0,2500,300,0,3000,500,0,5000,titlex = "P_{T}(Z)",unitsx = "GeV",titley = "MET",unitsy = "GeV",drawStyle = "COLZ")
+    h_Sig_el.Write()
+
+    h_Sig_mu = sigPlotters[i].drawTH3('h3d_'+sigSamples[i]+'_mu','llnunu_mta:met_pt:llnunu_l1_pt',cuts+'&&'+muChannel,str(lumi*1000),250,0,2500,300,0,3000,500,0,5000,titlex = "P_{T}(Z)",unitsx = "GeV",titley = "MET",unitsy = "GeV",drawStyle = "COLZ")
+    h_Sig_mu.Write()
+'''
+fout.Close()
+
+
+
+############
+'''
+# QCD uncertainty
 
 # samples
 #samples = wwSamples+vvSamples+zjetsSamples+ttSamples+sigSamples
-
+ 
 if stag=='bkg': samples = wwSamples+vvSamples+ttSamples
 elif stag=='zjets': samples = zjetsSamples
 elif stag=='sig': samples = sigSamples
 else: samples = wwSamples+vvSamples+zjetsSamples+ttSamples+sigSamples
-
+ 
 #samples=['ZZTo2L2Nu']
-
+ 
 # LHE weights input dir
 lhedir='LHEWeights'
 
-# PDF uncertainty
 
-# pdf weights id for bkg: 9-108,  as up/down 109,110
-wtIds_pdf_bkg = range(9,109) 
-wtIds_as_bkg = [109,110]
+# qcd weights id
+wtIds_qcd = [1,2,3,4,6,8] 
 
-# pdf weights id for sig: 110-211, no as up/down
-wtIds_pdf_sig = range(110,212)
-
-
-# pdf weights id for bkg: 2001-2100,  as up/down 2101,2102
-#wtIds_pdf_bkg = range(2001,2101)
-#wtIds_as_bkg = [2101,2102]
-
-# pdf weights id for sig: 111-210, no as up/down
-#wtIds_pdf_sig = range(111,211)
-
-
-fout = ROOT.TFile("uncert_acc_pdf_"+stag+"_"+channel+".root", "recreate")
+fout = ROOT.TFile("uncert_acc_qcd_"+stag+"_"+channel+".root", "recreate")
 
 
 
-hunc_pdf = {}
-all_unc_pdf = {}
-all_unc_as = {}
-all_unc_pdf_as = {}
-
+hunc_qcd = {}
+all_var_qcd = {}
+all_unc_qcd = {}
 #for sample in allPlotters.keys():
 #for sample in [sample]: 
-for sample in samples:
-    print 'PDF for '+sample
+for sample in samples: 
+
+    print 'QCD for '+sample
 
     # open pickle file
     lhepkl= open(lhedir+'/'+sample+'/LHEWeightAnalyzer/LHEWeightReport.pck')
 
     data = pickle.load(lhepkl)
 
-    # weight ids
-    wtIds_pdf = wtIds_pdf_bkg
-    lheId0 = 1001
-    if 'BulkGrav' in sample:
-        wtIds_pdf = wtIds_pdf_sig
-        lheId0 = 1
-    hunc_pdf[sample] = ROOT.TH1F(sample+'_hunc_pdf', sample+'_hunc_pdf', 1000,0,2)
+    hunc_qcd[sample] = ROOT.TH1F(sample+'_hunc_qcd', sample+'_hunc_qcd', 200,0,2)
  
-    # get n0(pass)
-    h = allPlotters[sample].drawTH1(sample+'_mh_pdf_wt_0','llnunu_mta',cuts,str(lumi*1000),50,0,5000,titlex = "M_{T}",units = "GeV",drawStyle = "HIST")
+    h = allPlotters[sample].drawTH1(sample+'_mh_qcd_wt_0','llnunu_mta',cuts,str(lumi*1000),50,0,5000,titlex = "M_{T}",units = "GeV",drawStyle = "HIST")
     n0 = h.Integral()
     print ' n0(pass) = '+str(n0)
+
     # if no event, no uncertainty
     if n0<=0.0 : 
         print ' Sample '+sample+' has Zero entry in singal region'
-        continue
+        continue 
+    all_var_qcd[sample] = []
 
-    for idx in wtIds_pdf:
-        print ' - PDF '+str(idx)
+    for idx in wtIds_qcd:
+        print ' - QCD '+str(idx)
+
         # lhe idx
-        lheidx = idx+1992 # for background
+        lheidx = idx+1001 # for background
+        lheId0 = 1001
         if 'BulkGrav' in sample:
             lheidx = idx+1 # for signal
-        # modify weight
+            lheId0 = 1
+        # modify weight 
         allPlotters[sample].changeCorrectionFactor('(genWeight*LHEweight_wgt['+str(idx)+']/LHEweight_wgt[0])','genWeight')
         # get n = ni(pass)
-        h = allPlotters[sample].drawTH1(sample+'_mh_pdf_wt_'+str(idx),'llnunu_mta',cuts,str(lumi*1000),50,0,5000,titlex = "M_{T}",units = "GeV",drawStyle = "HIST") 
+        h = allPlotters[sample].drawTH1(sample+'_mh_qcd_wt_'+str(idx),'llnunu_mta',cuts,str(lumi*1000),50,0,5000,titlex = "M_{T}",units = "GeV",drawStyle = "HIST") 
         n = h.Integral()
+
         # frac = ni(pass) / n0(pass)
         frac = n/n0
         # get tfrac = ni(total) / n0(total)
@@ -414,90 +456,45 @@ for sample in samples:
         unc = frac/tfrac
         print '  ni(pass) = {nip}, ni(pass)/n0(pass) = {frac}, ni(total)/n0(total) = {tfrac}, unc = {unc}'.format(nip=n,frac=frac,tfrac=tfrac,unc=unc)
 
-        hunc_pdf[sample].Fill(unc)
 
-    pdf_unc = hunc_pdf[sample].GetRMS()
-    print '  pdf_unc = '+str(pdf_unc)
-    hunc_pdf[sample].Write()
+        hunc_qcd[sample].Fill(unc)
+        all_var_qcd[sample].append(unc)
 
-    all_unc_pdf[sample] = pdf_unc
+    qcd_up = max(all_var_qcd[sample])
+    qcd_dn = min(all_var_qcd[sample])
+    qcd_unc = abs(qcd_up-qcd_dn)/2.0
+    print '  qcd_unc = '+str(qcd_unc)
+    hunc_qcd[sample].Write()
 
-    #
-    pdf_as_unc = pdf_unc
-
-    if not ('BulkGrav' in sample):
-        print ' - Alpha_s up'
-        allPlotters[sample].changeCorrectionFactor('(genWeight*LHEweight_wgt['+str(wtIds_as_bkg[0])+']/LHEweight_wgt[0])','genWeight')
-        h = allPlotters[sample].drawTH1(sample+'_mh_pdf_wt_'+str(wtIds_as_bkg[0]),'llnunu_mta',cuts,str(lumi*1000),50,0,5000,titlex = "M_{T}",units = "GeV",drawStyle = "HIST") 
-        # get n1 = n1(pass)
-        n1 = h.Integral()
-        # frac1 = n1(pass) / n0(pass)
-        frac1 = n1/n0
-        # get tfrac1 = n1(total) / n0(total)
-        tfrac1 = float(data[str(wtIds_as_bkg[0]+1992)][1])/float(data[str(lheId0)][1])
-
-        # unc = [ni(pass)/ni(total)] / [n0(pass)/n0(total)] 
-        #     = [ni(pass)/n0(pass)] / [ni(total)/n0(total)]
-        #     = frac / tfrac
-        unc1 = frac1/tfrac1
-        print '  n1(pass) = {nip}, n1(pass)/n0(pass) = {frac}, n1(total)/n0(total) = {tfrac}, unc1 = {unc}'.format(nip=n1,frac=frac1,tfrac=tfrac1,unc=unc1)
-
-        print ' - Alpha_s dn'
-        allPlotters[sample].changeCorrectionFactor('(genWeight*LHEweight_wgt['+str(wtIds_as_bkg[1])+']/LHEweight_wgt[0])','genWeight')
-        h = allPlotters[sample].drawTH1(sample+'_mh_pdf_wt_'+str(wtIds_as_bkg[1]),'llnunu_mta',cuts,str(lumi*1000),50,0,5000,titlex = "M_{T}",units = "GeV",drawStyle = "HIST")
-        # get n2 = n2(pass)
-        n2 = h.Integral()
-        # frac2 = n2(pass) / n0(pass)
-        frac2 = n2/n0
-        # get tfrac2 = n2(total) / n0(total)
-        tfrac2 = float(data[str(wtIds_as_bkg[1]+1992)][1])/float(data[str(lheId0)][1])
-
-        # unc = [ni(pass)/ni(total)] / [n0(pass)/n0(total)] 
-        #     = [ni(pass)/n0(pass)] / [ni(total)/n0(total)]
-        #     = frac / tfrac
-        unc2 = frac2/tfrac2
-        print '  n2(pass) = {nip}, n2(pass)/n0(pass) = {frac}, n2(total)/n0(total) = {tfrac}, unc2 = {unc}'.format(nip=n2,frac=frac2,tfrac=tfrac2,unc=unc2)
+    all_unc_qcd[sample] = qcd_unc
 
 
-        # alpha_s 
-        as_unc = abs(unc1-unc2)/2.0*1.5  # scale by 1.5
-        print '  as_unc = '+str(as_unc)
-        pdf_as_unc = math.sqrt(pdf_unc**2+as_unc**2)
-        all_unc_as[sample] = as_unc
-
-    all_unc_pdf_as[sample] = pdf_as_unc
-
-    print ' pdf_as_unc = '+str(pdf_as_unc)
-
-print 'unc_pdf = ',all_unc_pdf
-print 'unc_as = ',all_unc_as
-print 'unc_pdf_as = ',all_unc_pdf_as
+print 'unc_qcd =',all_unc_qcd
+print 'var_qcd =',all_var_qcd
 
 
 fout.Close()
 
 # print table
 print '\\begin{table}[htdp]'
-print '\\caption{PDF uncertainties on acceptance for background.}'
+print '\\caption{QCD uncertainties on acceptance for background.}'
 print '\\begin{center}'
 print '\\begin{footnotesize}'
-print '\\begin{tabular}{c c c c }'
+print '\\begin{tabular}{c c  }'
 print '\\hline'
-print ' MC sample & PDF & $\\alpha_{s}$  &  PDF+$\\alpha_{s}$  \\\\'
+print ' MC sample & unc.   \\\\'
 print '\\hline'
 for bkg in samples:
-    if not (bkg in all_unc_pdf.keys()):
-        all_unc_pdf[bkg] = 0.0
-    if not 'BulkGrav' in bkg:
-        print '{bkg} & {bpdf:.3f} & {bas:.3f} & {bpdfas:.3f} \\\\'.format(bkg=bkg,bpdf=all_unc_pdf[bkg],bas=all_unc_as[bkg],bpdfas=all_unc_pdf_as[bkg])
-    else: 
-        print '{bkg} & {bpdf:.3f} \\\\'.format(bkg=bkg,bpdf=all_unc_pdf[bkg])
+    if not (bkg in all_unc_qcd.keys()):
+        all_unc_qcd[bkg] = 0.0
+    print '{bkg} & {bpdf:.3f} \\\\'.format(bkg=bkg,bpdf=all_unc_qcd[bkg])
 print '\\hline'
 print '\\end{tabular}'
 print '\\end{footnotesize}'
 print '\\end{center}'
 print '\\label{default}'
 print '\\end{table}'
+'''
 
 
 
