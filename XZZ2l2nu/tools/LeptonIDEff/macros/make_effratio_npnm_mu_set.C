@@ -1,24 +1,28 @@
-
+void make_effratio_npnm_mu_set(TString dir="")
 {
   //gROOT->ProcessLine(".x tdrstyle.C");
-
-  TFile* fdt = new TFile("rootfiles/fiteff_npnm_data_mu_set.root");
-  TFile* fmc = new TFile("rootfiles/effhists_npnm_fullmc_mu_set.root");
-  //TFile* fmc = new TFile("rootfiles/fiteff_npnm_full_mu_set.root");
-  TFile* fout = new TFile("rootfiles/effratio_npnm_mu_set.root", "recreate");
+  TFile* fdt = new TFile("rootfiles/"+dir+"/fiteff_npnm_data_mu_set.root");
+  TFile* fmc = new TFile("rootfiles/"+dir+"/fiteff_npnm_mc_mu_set.root");
+  TFile* fmcgen = new TFile("rootfiles/effhists_pt_npnm_fullmc_mu_set.root");
+  TFile* fout = new TFile("rootfiles/"+dir+"/effratio_npnm_mu_set.root", "recreate");
   
-  TString plotout("plots/effratio_npnm_mu_set.pdf");
+  TString plotout("plots/"+dir+"/effratio_npnm_mu_set.pdf");
 
   TH1D* hmc_np = (TH1D*)fmc->Get("hnp");
   TH1D* hmc_nm = (TH1D*)fmc->Get("hnm");
+
+  TH1D* hmcgen_np = (TH1D*)fmcgen->Get("hnp");
+  TH1D* hmcgen_nm = (TH1D*)fmcgen->Get("hnm");
 
   TH1D* hdt_np = (TH1D*)fdt->Get("hnp");
   TH1D* hdt_nm = (TH1D*)fdt->Get("hnm");
   
   TH1D* hmc_eff = (TH1D*)hmc_np->Clone("hmc_eff");
   TH1D* hdt_eff = (TH1D*)hdt_np->Clone("hdt_eff");
+  TH1D* hmcgen_eff = (TH1D*)hmcgen_np->Clone("hmcgen_eff");
 
   hmc_eff->Reset();
+  hmcgen_eff->Reset();
   hdt_eff->Reset();
 
   int nbins = hmc_eff->GetNbinsX();
@@ -37,6 +41,17 @@
     else eff_err = 0.;
     hmc_eff->SetBinContent(i, eff);
     hmc_eff->SetBinError(i, eff_err);
+    // mc gen
+    np = hmcgen_np->GetBinContent(i);
+    np_err = hmcgen_np->GetBinError(i);
+    nm = hmcgen_nm->GetBinContent(i);
+    nm_err = hmcgen_nm->GetBinError(i);
+    if (np+nm!=0) eff = np/(np+nm);
+    else eff = 0.;
+    if (np+nm!=0) eff_err = sqrt( pow(np_err,2.)*pow(nm,2.)/pow((np+nm), 4.) + pow(nm_err,2.)*pow(np,2.)/pow((np+nm), 4.) );
+    else eff_err = 0.;
+    hmcgen_eff->SetBinContent(i, eff);
+    hmcgen_eff->SetBinError(i, eff_err);
     // dt
     np = hdt_np->GetBinContent(i);
     np_err = hdt_np->GetBinError(i);
@@ -60,6 +75,9 @@
   hmc_eff->SetMarkerStyle(20);
   hmc_eff->SetLineColor(4);
   hmc_eff->SetMarkerColor(4);
+  hmcgen_eff->SetMarkerStyle(20);
+  hmcgen_eff->SetLineColor(3);
+  hmcgen_eff->SetMarkerColor(3);
   hdt_eff->SetMarkerStyle(20);
   hdt_eff->SetLineColor(2);
   hdt_eff->SetMarkerColor(2);
@@ -79,6 +97,9 @@
   
   fout->cd();
   hratio_dt_mc->Write();
+  hmc_eff->Write();
+  hmcgen_eff->Write();
+  hdt_eff->Write();
 
   c0->SaveAs(plotout);
 

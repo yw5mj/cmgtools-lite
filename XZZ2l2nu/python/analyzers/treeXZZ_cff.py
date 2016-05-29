@@ -6,7 +6,7 @@ import PhysicsTools.HeppyCore.framework.config as cfg
 vvSkimmer = cfg.Analyzer(
     Skimmer,
     name='vvSkimmer',
-    required = ['LLNuNu', 'ElMu']
+    required = ['LLNuNu', 'ElMuNuNu']
 )
 
 leptonSkimmer = cfg.Analyzer(
@@ -76,6 +76,7 @@ vvTreeProducer = cfg.Analyzer(
          "LLNuNu"     : NTupleCollection("llnunu",LLNuNuType ,5, help="VV candidate with di-lepton and MET"),
          "genXZZ" : NTupleCollection("genX", VVType, 10, mcOnly=True, help="Generated X->ZZ"),
          #"LHE_weights"    : NTupleCollection("LHEweight",  weightsInfoType, 1000, help="LHE weight info"),
+         #"ElMuNuNu"     : NTupleCollection("elmununu",LLNuNuType ,5, help="Fake VV candidate with el-mu and MET"),
          #"jets"       : NTupleCollection("jet_corr",corrJetType,15, help="all jets with new JEC for 76X applied (JER corrected if isMC)"),
          #"jets_raw"   : NTupleCollection("jet",JetType,15, help="all jets from miniAOD"),
      }
@@ -86,12 +87,6 @@ lepeffTreeProducer = cfg.Analyzer(
      vectorTree = True,
      saveTLorentzVectors = False,  # can set to True to get also the TLorentzVectors, but trees will be bigger
      defaultFloatType = 'F', # use Float_t for floating point
-     globalVariables = [
-         NTupleVariable("nVert",  lambda ev: len(ev.goodVertices), int, help="Number of good vertices"),
-     ],
-     globalObjects =  {
-         "met" : NTupleObject("met", metType, help="PF E_{T}^{miss}, after type 1 corrections"),
-     },
      collections = {
          "llpair"  : NTupleCollection("llpair",llpairType ,5, help="lepton eff study"),
      }
