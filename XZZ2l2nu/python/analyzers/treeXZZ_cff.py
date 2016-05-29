@@ -6,7 +6,8 @@ import PhysicsTools.HeppyCore.framework.config as cfg
 vvSkimmer = cfg.Analyzer(
     Skimmer,
     name='vvSkimmer',
-    required = ['LLNuNu', 'ElMuNuNu']
+    #required = ['LLNuNu', 'ElMuNuNu']
+    required = ['LLNuNu']
 )
 
 leptonSkimmer = cfg.Analyzer(
