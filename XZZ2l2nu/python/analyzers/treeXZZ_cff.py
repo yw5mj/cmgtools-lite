@@ -51,8 +51,8 @@ vvTreeProducer = cfg.Analyzer(
      defaultFloatType = 'F', # use Float_t for floating point
      globalVariables = [
          NTupleVariable("nLL",lambda ev: len(ev.LL) , int),      
-         NTupleVariable("LHEweight_original", lambda ev: ev.LHE_originalWeight if  hasattr(ev,'LHE_originalWeight') else  0, mcOnly=True, help="original LHE weight"), 
-         NTupleVariable("nElMu",lambda ev: len(ev.ElMu) , int),       
+         #NTupleVariable("LHEweight_original", lambda ev: ev.LHE_originalWeight if  hasattr(ev,'LHE_originalWeight') else  0, mcOnly=True, help="original LHE weight"), 
+         #NTupleVariable("nElMu",lambda ev: len(ev.ElMu) , int),       
          NTupleVariable("nLLNuNu",lambda ev: len(ev.LLNuNu) , int),       
          NTupleVariable("nVert",  lambda ev: len(ev.goodVertices), int, help="Number of good vertices"), 
          NTupleVariable("triggersf",  lambda x : getattr(x,'trgsf',1), help="singleelectron/muon trigger sf"),
