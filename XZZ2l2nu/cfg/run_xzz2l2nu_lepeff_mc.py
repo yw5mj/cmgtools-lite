@@ -10,7 +10,7 @@ from PhysicsTools.HeppyCore.framework.heppy_loop import getHeppyOption
 
 #Load all common analyzers
 from CMGTools.XZZ2l2nu.analyzers.coreXZZ_cff import *
-from CMGTools.XZZ2l2nu.analyzers.XZZLeptonEffTree import *
+from CMGTools.XZZ2l2nu.analyzers.XZZMuonEffTree import *
 
 #-------- SAMPLES AND TRIGGERS -----------
 from CMGTools.XZZ2l2nu.samples.loadSamples76x import *
@@ -20,11 +20,14 @@ from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
 
 #-------- SEQUENCE
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
-lepeffAna = cfg.Analyzer(
-    XZZLeptonEffTree,
-    name='leptonEffTree',
+meffAna = cfg.Analyzer(
+    XZZMuonEffTree,
+    name='mEffTree',
     genfilter=True,
+    pfbkg=False,
     eithercharge=False,
+    checktag=True,
+    muHLT="HLT_IsoMu20_v"
     )
 
 lepAna.applyIso=False
@@ -34,15 +37,15 @@ leptonType.variables.extend([
     # Extra muon ID working points
     NTupleVariable("softMuonId", lambda x : x.muonID("POG_ID_Soft") if abs(x.pdgId())==13 else -100, int, help="Muon POG Soft id"),
     NTupleVariable("pfMuonId",   lambda x : x.muonID("POG_ID_Loose") if abs(x.pdgId())==13 else -100, int, help="Muon POG Loose id"),
-    # Extra electron ID working points
-    NTupleVariable("eleCutId2012_full5x5",     lambda x : (1*x.electronID("POG_Cuts_ID_2012_full5x5_Veto") + 1*x.electronID("POG_Cuts_ID_2012_full5x5_Loose") + 1*x.electronID("POG_Cuts_ID_2012_full5x5_Medium") + 1*x.electronID("POG_Cuts_ID_2012_full5x5_Tight")) if abs(x.pdgId()) == 11 else -1, int, help="Electron cut-based id (POG 2012, full5x5 shapes): 0=none, 1=veto, 2=loose, 3=medium, 4=tight"),
+    NTupleVariable("tightMuonId",   lambda x : x.muonID("POG_ID_Tight") if abs(x.pdgId())==13 else -100, int, help="Muon POG Tight id"),
+    NTupleVariable("isTag",   lambda x : x.istag if abs(x.pdgId())==13 else -100, int, help="Muon POG Tight id"),
 ]) 
 sequence = [
     jsonAna,
     pileUpAna,
     vertexAna,
     lepAna,
-    lepeffAna,
+    meffAna,
     lepeffTreeProducer
 ]
     
@@ -51,7 +54,7 @@ sequence = [
 test = 1
 if test==1:
     # test a single component, using a single thread.
-    selectedComponents = [DYJetsToLL_M50,ZZTo2L2Nu,DYJetsToLL_M50_Ext]
+    selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = mcSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
@@ -60,7 +63,7 @@ if test==1:
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        #c.files = c.files[0]
+        #c.files = c.files[:1]
         c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
         #c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso

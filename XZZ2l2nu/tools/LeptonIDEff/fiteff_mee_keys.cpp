@@ -305,7 +305,7 @@ int main(int argc, char** argv) {
 
           // par[1] : signal fraction initial value 0.5
           fall->SetParameter(1, 0.99);
-
+	  fall->SetParLimits(1,0,1);
           // par[2] to par[2+5+3*nbin-1] : sig_par[0] to sig_par[5+3*nbin-1], i.e. sigal pars except normalization
           for ( int ik=2; ik<2+5+3*nbin; ik++ ){
             fall->FixParameter(ik, fsig->GetParameter(ik-2));
@@ -630,7 +630,7 @@ void PrintPlotsFillSignalHists(TCanvas* plots, std::string OutPlotFile, int sigh
   hdt->SetMarkerSize(0.6);
   hbk->SetMarkerSize(0.6);
 
-  hdt->GetXaxis()->SetTitle("M(ee), GeV");
+  hdt->GetXaxis()->SetTitle("M(ll), GeV");
   hdt->GetXaxis()->SetTitleSize(0.04);
 
   fsig->SetLineColor(kMagenta);
