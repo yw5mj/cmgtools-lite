@@ -66,15 +66,15 @@ if test==1:
     #selectedComponents = mcSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #selectedComponents = [SingleMuon_Run2015C_25ns_16Dec]
-    selectedComponents = MuEG
+    selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
     #selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        c.files = c.files[0]
+        c.files = c.files[0:9]
         #c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
-        c.splitFactor = 1
+        c.splitFactor = 10
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso
 

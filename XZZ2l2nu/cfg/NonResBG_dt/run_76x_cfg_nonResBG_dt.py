@@ -31,7 +31,7 @@ triggerFlagsAna.triggerBits ={
 from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
 
 # make VV selection loosened as ElMu selection
-leptonicVAna.selectVBoson = (lambda x: x.pt()>100.0 and x.mass()>30.0 and x.mass()<150.0)
+leptonicVAna.selectVBoson = (lambda x: x.pt()>100.0 and x.mass()>30.0 and x.mass()<150.0 and x.leg2.pt()>50.0)
 multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.pt()>100.0 and x.leg1.mass()>30.0 and x.leg1.mass()<150.0 and x.leg2.pt()>50.0)
 
 #-------- SEQUENCE
@@ -62,7 +62,7 @@ sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
 test = 1
 if test==1:
     # test a single component, using a single thread.
-    selectedComponents = dataSamples+MuEG
+    selectedComponents = MuEG #+dataSamples
     #selectedComponents = mcSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
@@ -72,7 +72,7 @@ if test==1:
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
         #c.files = c.files[0]
-        c.splitFactor = (len(c.files)/20 if len(c.files)>20 else 1)
+        c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
         #c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso
