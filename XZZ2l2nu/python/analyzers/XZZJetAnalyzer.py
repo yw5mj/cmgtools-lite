@@ -182,6 +182,8 @@ class JetAnalyzer( Analyzer ):
         self.type1METCorr    = [0.,0.,0.]
         self.type1METCorrUp  = [0.,0.,0.]
         self.type1METCorrDown = [0.,0.,0.]
+        self.sumRawJetsforT1 = [0.,0.,0.]
+
 #        print "before. rho",self.rho,self.cfg_ana.collectionPostFix,'allJets len ',len(allJets),'pt', [j.pt() for j in allJets]
 
         if self.doJEC:
@@ -190,10 +192,11 @@ class JetAnalyzer( Analyzer ):
             #print '[Debug] I am event = ', event.input.eventAuxiliary().id().event()
                 
             self.jetReCalibrator.correctAll(allJets, rho, delta=self.shiftJEC, 
-                                                addCorr=True, addShifts=self.addJECShifts,
-                                                metShift=self.deltaMetFromJEC, type1METCorr=self.type1METCorr,
-                                                type1METCorrUp=self.type1METCorrUp, type1METCorrDown=self.type1METCorrDown)
-
+                                            addCorr=True, addShifts=self.addJECShifts,
+                                            metShift=self.deltaMetFromJEC, type1METCorr=self.type1METCorr,
+                                            type1METCorrUp=self.type1METCorrUp, type1METCorrDown=self.type1METCorrDown,
+                                            sumRawJetsforT1=self.sumRawJetsforT1)
+            
             if not self.recalibrateJets: 
                 jetsAfter = [ (j.pt(),j.eta(),j.phi(),j.rawFactor()) for j in allJets ]
                 if len(jetsBefore) != len(jetsAfter): 
@@ -205,6 +208,10 @@ class JetAnalyzer( Analyzer ):
                         elif abs(told[0]-tnew[0])/(told[0]+tnew[0]) > 0.5e-3 or abs(told[3]-tnew[3]) > 0.5e-3:
                             print "ERROR: I had to recompute jet corrections, and one jet pt or corr changed: old = %s, new = %s\n" % (told, tnew)
         self.allJetsUsedForMET = allJets
+        self.sumJetsInT1 = {"rawP4forT1": self.sumRawJetsforT1,
+                            "type1METCorr":self.type1METCorr, 
+                            "corrP4forT1":[x + y for x,y in zip(self.sumRawJetsforT1,self.type1METCorr)]}
+
 #        print "after. rho",self.rho,self.cfg_ana.collectionPostFix,'allJets len ',len(allJets),'pt', [j.pt() for j in allJets]
 
         if self.cfg_comp.isMC:
@@ -397,7 +404,8 @@ class JetAnalyzer( Analyzer ):
         setattr(event,"deltaMetFromJEC"        +self.cfg_ana.collectionPostFix, self.deltaMetFromJEC        ) 
         setattr(event,"type1METCorr"           +self.cfg_ana.collectionPostFix, self.type1METCorr           ) 
         setattr(event,"type1METCorrUp"         +self.cfg_ana.collectionPostFix, self.type1METCorrUp         ) 
-        setattr(event,"type1METCorrDown"       +self.cfg_ana.collectionPostFix, self.type1METCorrDown       ) 
+        setattr(event,"type1METCorrDown"       +self.cfg_ana.collectionPostFix, self.type1METCorrDown       )
+        setattr(event,"sumJetsInT1"            +self.cfg_ana.collectionPostFix, self.sumJetsInT1            )
         setattr(event,"allJetsUsedForMET"      +self.cfg_ana.collectionPostFix, self.allJetsUsedForMET      ) 
         setattr(event,"jets_raw"               +self.cfg_ana.collectionPostFix, self.jets_raw               )
         setattr(event,"jets"                   +self.cfg_ana.collectionPostFix, self.jets                   ) 

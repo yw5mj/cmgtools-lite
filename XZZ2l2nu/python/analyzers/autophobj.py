@@ -215,6 +215,7 @@ metType = NTupleObjectType("met", baseObjectTypes = [ fourVectorType ], variable
     NTupleVariable("genPhi", lambda x : x.genMET().phi() if x.genMET() else 0, mcOnly=True ),
     NTupleVariable("genEta", lambda x : x.genMET().eta() if x.genMET() else 0, mcOnly=True ),
     NTupleVariable("metSig", lambda x : x.metSignificance() ),
+    #NTupleSubObject("metNoJet",  lambda x : x.metNoJet, fourVectorType),
 ])
 
 ##------------------------------------------  

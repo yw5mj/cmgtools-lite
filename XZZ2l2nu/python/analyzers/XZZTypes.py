@@ -41,10 +41,16 @@ llpairType = NTupleObjectType("llpairType", baseObjectTypes=[], variables = [
     NTupleSubObject("l2",  lambda x : x.leg2,leptonType),
 ])
 
-Jet4type1METCorrType = NTupleObjectType("JetType_dev0", baseObjectTypes=[], variables = [
+metCompType = NTupleObjectType("metCompType", baseObjectTypes=[], variables = [
     NTupleVariable("Px",  lambda x : x[0]),
     NTupleVariable("Py",  lambda x : x[1]),
     NTupleVariable("Et",  lambda x : x[2]),
+])
+
+jet4metType = NTupleObjectType("jet4metType", baseObjectTypes=[], variables = [
+    NTupleSubObject("rawP4forT1",  lambda x : x["rawP4forT1"], metCompType),
+    NTupleSubObject("type1METCorr",  lambda x : x["type1METCorr"], metCompType),
+    NTupleSubObject("corrP4forT1",  lambda x : x["corrP4forT1"], metCompType),
 ])
 
 JetType = NTupleObjectType("xzzJetType", baseObjectTypes=[jetType], variables = [

@@ -28,21 +28,22 @@ fullTreeProducer = cfg.Analyzer(
          NTupleVariable("triggersf",  lambda x : getattr(x,'trgsf',1), help="singleelectron/muon trigger sf"),
      ],
      globalObjects =  {
-         "met" : NTupleObject("met", metType, help="PF E_{T}^{miss}, after type 1 corrections"),
-         "met_miniAod" : NTupleObject("met_raw", metType, help="PF E_{T}^{miss}, after type 1 corrections in miniAOD"),
+         "met" : NTupleObject("met", metType, help="PF E_{T}^{miss}, with 76X type 1 corrections"),
+         "met_miniAod" : NTupleObject("met_74x", metType, help="PF E_{T}^{miss}, with 74X type 1 corrections stored in miniAOD"),
+         "metNoJet" : NTupleObject("metNoJet", fourVectorType, help="PF E_{T}^{miss}, with out jet"),
          #"met_JEC" : NTupleObject("met_JEC", metType, help="PF E_{T}^{miss}, after type 1 corrections with new 76X JEC added"),
-         "met_JECUp" : NTupleObject("met_JECUp", metType, help="PF E_{T}^{miss}, after type 1 corrections with new 76X JEC up"),
-         "met_JECDown" : NTupleObject("met_JECDown", metType, help="PF E_{T}^{miss}, after type 1 corrections with new 76X JEC down"),
-         "met_JECJER" : NTupleObject("met_JECJER", metType, mcOnly=True, help="PF E_{T}^{miss}, after type 1 corrections with JEC+JER jets"),
-         "type1METCorr": NTupleObject("jet_type1METCorr", Jet4type1METCorrType, help="sum (px, py, et) of jets used for type1METCorr"),
+         #"met_JECUp" : NTupleObject("met_JECUp", metType, help="PF E_{T}^{miss}, after type 1 corrections with new 76X JEC up"),
+         #"met_JECDown" : NTupleObject("met_JECDown", metType, help="PF E_{T}^{miss}, after type 1 corrections with new 76X JEC down"),
+         #"met_JECJER" : NTupleObject("met_JECJER", metType, mcOnly=True, help="PF E_{T}^{miss}, after type 1 corrections with JEC+JER jets"),
+         "sumJetsInT1": NTupleObject("sumJetsInT1", jet4metType, help="sum of Delta(px, py, et) of jets used for type1METCorr"),
      },
      collections = {
          #"LL"  : NTupleCollection("Zll",LLType,5, help="Z to ll"),
-         "ElMu"  : NTupleCollection("elmu",LLType,5, help="electron - muon pair for non-resonant bkg"),
+         "ElMu" : NTupleCollection("elmu",LLType,5, help="electron - muon pair for non-resonant bkg"),
          "selectedLeptons" : NTupleCollection("lep",leptonType,10, help="selected leptons"),
          "genLeptons" : NTupleCollection("genLep", genParticleType, 10, help="Generated leptons (e/mu) from W/Z decays"),
          "LLNuNu"     : NTupleCollection("llnunu",LLNuNuType ,5, help="VV candidate with di-lepton and MET"),
-         "ElMuNuNu"     : NTupleCollection("elmununu",LLNuNuType ,5, help="Fake VV candidate with el-mu and MET"),
+         "ElMuNuNu"   : NTupleCollection("elmununu",LLNuNuType ,5, help="Fake VV candidate with el-mu and MET"),
          "jets"       : NTupleCollection("jet_corr",JetType,15, help="all jets with new JEC for 76X applied"),
          #"jets_raw"   : NTupleCollection("jet",jetType,15, help="all jets from miniAOD"),
      }
@@ -63,6 +64,7 @@ vvTreeProducer = cfg.Analyzer(
          NTupleVariable("triggersfUp",  lambda x : getattr(x,'trgsfUp',1), help="singleelectron/muon trigger sf upper"),
          NTupleVariable("triggersfLo",  lambda x : getattr(x,'trgsfLo',1), help="singleelectron/muon trigger sf lower"),
      ],
+
      globalObjects =  {
          "met" : NTupleObject("met", metType, help="PF E_{T}^{miss}, after type 1 corrections"),
          #"met_miniAod" : NTupleObject("met_raw", metType, help="PF E_{T}^{miss}, after type 1 corrections in miniAOD"),

@@ -47,7 +47,7 @@ jetAna.smearJets=False
 coreSequence = [
     skimAnalyzer,
     genAna,
-    lheWeightAna,
+    #lheWeightAna,
     jsonAna,
     triggerAna,
     pileUpAna,
@@ -58,12 +58,12 @@ coreSequence = [
     leptonicVAna,
     multiStateAna,
     eventFlagsAna,
-    triggerFlagsAna,
+#    triggerFlagsAna,
 ]
     
 #sequence = cfg.Sequence(coreSequence+[vvTreeProducer])
-sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
-
+#sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
+sequence = cfg.Sequence(coreSequence+[vvSkimmer,fullTreeProducer])
  
 
 #-------- HOW TO RUN
