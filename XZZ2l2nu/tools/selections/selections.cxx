@@ -57,8 +57,9 @@ void Selections::readCut(string config)
       is >> cut;
       if (cutChain.IsNull())  cutChain=cut;
       else{
-	if (cut.Contains("pdgId")) cutChain.Append("||"+cut);
-	else cutChain.Append("&&"+cut);
+	//if (cut.Contains("pdgId")) cutChain.Append("||"+cut);
+	//else
+	cutChain.Append("&&"+cut);
       }
     }
   }
