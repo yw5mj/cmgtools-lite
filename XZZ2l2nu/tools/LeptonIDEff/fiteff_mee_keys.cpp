@@ -301,7 +301,7 @@ int main(int argc, char** argv) {
           //fall->FixParameter(0, Ndata_fit);
           // release total
           fall->SetParameter(0, Ndata_fit);
-          fall->SetParLimits(0, Ndata_fit*0.9, Ndata_fit*1.1);
+          fall->SetParLimits(0, Ndata_fit*0.99, Ndata_fit*1.01);
 
           // par[1] : signal fraction initial value 0.5
           fall->SetParameter(1, 0.99);
@@ -321,14 +321,14 @@ int main(int argc, char** argv) {
           //   release frac
           fall->ReleaseParameter(1);
           //   release shift
-          fall->ReleaseParameter(3+2);
+	  //-fall->ReleaseParameter(3+2);
           //   release sigma
           fall->ReleaseParameter(4+2);
 
 
           // set par limits
           fall->SetParLimits(1, 0., 1.);
-          fall->SetParLimits(3+2, -2, 2);
+	  //-fall->SetParLimits(3+2, -1, 1);
           fall->SetParLimits(4+2, 0, 2);
 
           // fix frac to be 1: for FullMC fit because no background actually
@@ -350,7 +350,7 @@ int main(int argc, char** argv) {
           std::cout << " -- Fit to Data :: Done" << std::endl;
 
           // if sigma (par 4+2) hit limits, shift err (par 3+2) set to 10 GeV (a big number)
-          if (fall->GetParameter(4+2)>=3) fall->SetParError(3+2, 10);
+	  //-if (fall->GetParameter(4+2)>=3) fall->SetParError(3+2, 10);
 
           // comment: should not fit 2nd time with shift and sigma fixed, because that error should be considered.
           // fix shift and sigma; 
@@ -542,8 +542,8 @@ void PrintPlotsFillSignalHists(TCanvas* plots, std::string OutPlotFile, int sigh
   double frac_err = fall->GetParError(1);
 
   // Shift : par[3-1+2]
-  double shift = fall->GetParameter(3+2);
-  double shift_err = fall->GetParError(3+2);
+  //-double shift = fall->GetParameter(3+2);
+  //-double shift_err = fall->GetParError(3+2);
 
   // Sigma : par[4-1+2]
   double sigma = fall->GetParameter(4+2);
@@ -575,8 +575,8 @@ void PrintPlotsFillSignalHists(TCanvas* plots, std::string OutPlotFile, int sigh
   // set back fitted normalizations and shift to fsig and fbkg
   fsig->SetParameter(0, Nsig*fsig->GetParameter(0));
   fsig->SetParError(0, Nsig_err*fsig->GetParameter(0));
-  fsig->SetParameter(3, shift);
-  fsig->SetParError(3, shift_err);
+  //-fsig->SetParameter(3, shift);
+  //-fsig->SetParError(3, shift_err);
   fsig->SetParameter(4, sigma);
   fsig->SetParError(4, sigma_err);
 
@@ -648,7 +648,7 @@ void PrintPlotsFillSignalHists(TCanvas* plots, std::string OutPlotFile, int sigh
   char txt_eff_n[100], txt_eff_b[100];
   sprintf(txt_dt, "Data: %d", (int)Nraw_data);
   sprintf(txt_frac, "Frac: %f+-%f", frac, frac_err);
-  sprintf(txt_shift, "Shift: %f+-%f", shift, shift_err);
+  //-  sprintf(txt_shift, "Shift: %f+-%f", shift, shift_err);
   sprintf(txt_sigma, "Sigma: %f+-%f", sigma, sigma_err);
   sprintf(txt_sg, "S_fit: %d+-%d", (int)Nsig, (int)Nsig_err);
   sprintf(txt_bk, "B_fit: %d+-%d", (int)Nbkg, (int)Nbkg_err);
@@ -668,7 +668,7 @@ void PrintPlotsFillSignalHists(TCanvas* plots, std::string OutPlotFile, int sigh
   lg->AddEntry(fbkg, "Fit to Bkg", "l"); 
   lg->AddEntry(hdt, txt_dt, "");
   lg->AddEntry(hdt, txt_frac, "");
-  lg->AddEntry(hdt, txt_shift, "");
+  //-  lg->AddEntry(hdt, txt_shift, "");
   lg->AddEntry(hdt, txt_sigma, "");
   lg->AddEntry(hdt, txt_sg, "");
   lg->AddEntry(hdt, txt_bk, "");
