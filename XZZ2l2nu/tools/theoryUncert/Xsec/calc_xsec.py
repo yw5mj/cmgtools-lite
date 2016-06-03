@@ -41,7 +41,10 @@ process.source = cms.Source(
     "PoolSource",
     #fileNames  = cms.untracked.vstring(options.inputFiles),
     #fileNames  = inputDYJets,
-    fileNames  = inputDYJetsPtZ100,
+    #fileNames  = inputDYJetsPtZ100,
+    #fileNames  = inputGGZZ2e2nu,
+    fileNames  = inputGGZZ2mu2nu,
+
     duplicateCheckMode = cms.untracked.string('noDuplicateCheck')
 )
 

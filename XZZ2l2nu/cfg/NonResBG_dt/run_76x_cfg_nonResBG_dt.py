@@ -31,14 +31,29 @@ triggerFlagsAna.triggerBits ={
 from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
 
 # make VV selection loosened as ElMu selection
-#leptonicVAna.selectVBoson = (lambda x: x.pt()>100.0 and x.mass()>30.0 and x.mass()<150.0 and x.leg2.pt()>50.0)
-#multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.pt()>100.0 and x.leg1.mass()>30.0 and x.leg1.mass()<150.0 and x.leg2.pt()>50.0)
-
 leptonicVAna.selectVBoson = (lambda x: x.mass()>30.0 and x.mass()<180.0)
 leptonicVAna.selectFakeBoson = (lambda x: x.mass()>30.0 and x.mass()<180.0)
 multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>30.0 and x.leg1.mass()<180.0)
 multiStateAna.selectPairElMuNuNu = (lambda x: x.leg1.mass()>30.0 and x.leg1.mass()<180.0)
 
+vvSkimmer.required = ['LLNuNu', 'ElMuNuNu']
+leptonicVAna.doElMu = True
+
+vvTreeProducer.globalVariables = [
+         NTupleVariable("nLL",lambda ev: len(ev.LL) , int),
+         NTupleVariable("nElMu",lambda ev: len(ev.ElMu) , int),       
+         NTupleVariable("nLLNuNu",lambda ev: len(ev.LLNuNu) , int),
+         NTupleVariable("nVert",  lambda ev: len(ev.goodVertices), int, help="Number of good vertices"),
+         NTupleVariable("triggersf",  lambda x : getattr(x,'trgsf',1), help="singleelectron/muon trigger sf"),
+         NTupleVariable("triggersfUp",  lambda x : getattr(x,'trgsfUp',1), help="singleelectron/muon trigger sf upper"),
+         NTupleVariable("triggersfLo",  lambda x : getattr(x,'trgsfLo',1), help="singleelectron/muon trigger sf lower"),
+     ]
+
+vvTreeProducer.collections = {
+         "genLeptons" : NTupleCollection("genLep", genParticleType, 10, help="Generated leptons (e/mu) from W/Z decays"),
+         "LLNuNu"     : NTupleCollection("llnunu",LLNuNuType ,5, help="VV candidate with di-lepton and MET"),
+         "ElMuNuNu"     : NTupleCollection("elmununu",LLNuNuType ,5, help="Fake VV candidate with el-mu and MET"),
+     }
 #-------- SEQUENCE
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
 

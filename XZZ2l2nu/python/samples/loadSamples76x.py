@@ -37,6 +37,8 @@ WZTo2L2Q,
 WZTo3LNu,
 TTZToLLNuNu,
 TTWJetsToLNu,
+ggZZTo2e2nu,
+ggZZTo2mu2nu,
 ]
 
 extraBackgroundMC = [
