@@ -50,7 +50,7 @@ coreSequence = [
     leptonicVAna,
     multiStateAna,
     eventFlagsAna,
-    triggerFlagsAna,
+#    triggerFlagsAna,
 ]
     
 #sequence = cfg.Sequence(coreSequence)
