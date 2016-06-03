@@ -66,14 +66,14 @@ sequence = cfg.Sequence(coreSequence+[vvSkimmer,fullTreeProducer])
 test = 1
 if test==1:
     # test a single component, using a single thread.
-    selectedComponents = MuEG
-    #selectedComponents = dataSamples
+    #selectedComponents = MuEG
+    selectedComponents = dataSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #selectedComponents = [SingleMuon_Run2015C_25ns_16Dec] 
     for c in selectedComponents:
         #c.files = c.files[0]
-        c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
-        #c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
+        #c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
+        c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
         #c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso

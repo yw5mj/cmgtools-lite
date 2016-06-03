@@ -234,7 +234,7 @@ coreSequence = [
 #    packedAna,
     multiStateAna,
     eventFlagsAna,
-    triggerFlagsAna
+#    triggerFlagsAna
 ]
 
 ###################

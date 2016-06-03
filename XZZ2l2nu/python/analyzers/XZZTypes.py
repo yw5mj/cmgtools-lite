@@ -33,7 +33,6 @@ LLNuNuType = NTupleObjectType("LLNuNuType", baseObjectTypes=[VVType], variables 
     NTupleVariable("dPTPerp",   lambda x : math.fabs(x['pair'].leg2.pt() * math.sin(x['pair'].deltaPhi())), float), 
     NTupleVariable("dPTPerpRel",   lambda x : math.fabs(x['pair'].leg2.pt() * math.sin(x['pair'].deltaPhi()))/(x['pair'].leg1.pt()), float), 
     NTupleVariable("metOvSqSET",   lambda x : (x['pair'].leg2.pt())/math.sqrt(x['pair'].leg2.sumEt()), float), 
-      
 ])
 
 llpairType = NTupleObjectType("llpairType", baseObjectTypes=[], variables = [
@@ -42,29 +41,40 @@ llpairType = NTupleObjectType("llpairType", baseObjectTypes=[], variables = [
     NTupleSubObject("l2",  lambda x : x.leg2,leptonType),
 ])
 
+metCompType = NTupleObjectType("metCompType", baseObjectTypes=[], variables = [
+    NTupleVariable("Px",  lambda x : x[0]),
+    NTupleVariable("Py",  lambda x : x[1]),
+    NTupleVariable("Et",  lambda x : x[2]),
+])
 
-JetType = NTupleObjectType("JetType", baseObjectTypes=[fourVectorType], variables = [
-    NTupleVariable("area",   lambda x : x.jetArea(), float),
-    NTupleVariable("rawFactor",   lambda x : x.rawFactor(), float),
+jet4metType = NTupleObjectType("jet4metType", baseObjectTypes=[], variables = [
+    NTupleSubObject("rawP4forT1",  lambda x : x["rawP4forT1"], metCompType),
+    NTupleSubObject("type1METCorr",  lambda x : x["type1METCorr"], metCompType),
+    NTupleSubObject("corrP4forT1",  lambda x : x["corrP4forT1"], metCompType),
+])
+
+JetType = NTupleObjectType("xzzJetType", baseObjectTypes=[jetType], variables = [
+    NTupleVariable("area",   lambda x : x.jetArea(), help="Catchment area of jet"),
+    NTupleVariable("rawFactor",   lambda x : x.rawFactor(), float, help="pt/rawfactor will give you the raw pt"),
+    NTupleVariable("corr_jer",  lambda x : getattr(x, 'corrJER', -99), float, mcOnly=True, help="JER corr factor"),
 #    NTupleVariable("btag",   lambda x : x.bTag(), float),
 #    NTupleVariable("nConstituents",   lambda x : len(x.constituents), int),
     # NTupleVariable("looseID",   lambda x : x.looseID, int),
     # NTupleVariable("tightID",   lambda x : x.tightID, int),
-    # NTupleVariable("chargedHadronEnergyFraction",   lambda x : x.chargedHadronEnergyFraction(), float),
-    # NTupleVariable("neutralHadronEnergyFraction",   lambda x : x.neutralHadronEnergyFraction(), float),
-    # NTupleVariable("photonEnergyFraction",   lambda x : x.photonEnergyFraction(), float),
-    # NTupleVariable("HFHadronEnergyFraction",   lambda x : x.HFHadronEnergyFraction(), float),
-    # NTupleVariable("HFEMEnergyFraction",   lambda x : x.HFEMEnergyFraction(), float),
-    # NTupleVariable("muonEnergyFraction",   lambda x : x.muonEnergyFraction(), float),
-    # NTupleVariable("electronEnergyFraction",   lambda x : x.electronEnergyFraction(), float),
-    # NTupleVariable("leptonEnergyFraction",   lambda x : x.leptonEnergyFraction(), float),
-
+    NTupleVariable("chargedHadronEnergyFraction",   lambda x : x.chargedHadronEnergyFraction(), float,  help="for Jet ID"),
+    NTupleVariable("neutralHadronEnergyFraction",   lambda x : x.neutralHadronEnergyFraction(), float, help="for Jet ID"),
+    NTupleVariable("neutralEmEnergyFraction",   lambda x : x.neutralEmEnergyFraction(), float, help="for Jet ID"),
+    NTupleVariable("muonEnergyFraction",   lambda x : x.muonEnergyFraction(), float, help="for Jet ID"),
+    NTupleVariable("chargedEmEnergyFraction",   lambda x : x.chargedEmEnergyFraction(), float, help="for Jet ID"),
+    NTupleVariable("chargedHadronMultiplicity",   lambda x : x.chargedHadronMultiplicity(), float, help="for Jet ID"),
+    NTupleVariable("chargedMultiplicity",   lambda x : x.chargedMultiplicity(), float, help="for Jet ID"),
+    NTupleVariable("neutralMultiplicity",   lambda x : x.neutralMultiplicity(), float, help="for Jet ID"),
 ])
 
-corrJetType = NTupleObjectType("corrJetType", baseObjectTypes=[JetType], variables = [
-    NTupleVariable("jec_corr",   lambda x : x.corr, float), # JEC correction factor 
-    NTupleVariable("jec_corrUp",   lambda x : x.corrJECUp if hasattr(x,"corrJECUp") else  1.0 ,float), 
-    NTupleVariable("jec_corrDown",   lambda x : x.corrJECDown if hasattr(x,"corrJECDown") else  1.0 ,float), 
-    NTupleVariable("jer_corr",   lambda x : x.corrJER if hasattr(x,"corrJER") else  1.0 ,float), # JER correction factor
+JetTypeExtra = NTupleObjectType("xzzJetTypeExtra", baseObjectTypes=[JetType], variables = [
+    NTupleVariable("photonEnergyFraction",   lambda x : x.photonEnergyFraction(), float,),
+    NTupleVariable("HFHadronEnergyFraction",   lambda x : x.HFHadronEnergyFraction(), float,),
+    NTupleVariable("HFEMEnergyFraction",   lambda x : x.HFEMEnergyFraction(), float),
+    NTupleVariable("electronEnergyFraction",   lambda x : x.electronEnergyFraction(), float),
 ])
 
