@@ -8,7 +8,7 @@ kreator = ComponentCreator()
 
 
 # Hengne:
-json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-273730_13TeV_PromptReco_Collisions16_JSON.txt
+json='/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-273730_13TeV_PromptReco_Collisions16_JSON.txt'
 
 ### ----------------------------- Zero Tesla run  ----------------------------------------
 
