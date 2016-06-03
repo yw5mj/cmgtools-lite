@@ -28,10 +28,10 @@ LLNuNuType = NTupleObjectType("LLNuNuType", baseObjectTypes=[VVType], variables 
     NTupleSubObject("l2",  lambda x : x['pair'].leg2,metType),
     NTupleVariable("CosdphiZMet",   lambda x : math.cos(x['pair'].deltaPhi()), float), 
     NTupleVariable("CosZdeltaPhi",   lambda x : math.cos(x['pair'].leg1.deltaPhi()), float), 
-    NTupleVariable("dPTPara",   lambda x : math.fabs(x['pair'].leg1.pt() + x['pair'].leg2.pt() * math.cos(x['pair'].deltaPhi())), float), 
-    NTupleVariable("dPTParaRel",   lambda x : math.fabs(x['pair'].leg1.pt() + x['pair'].leg2.pt() * math.cos(x['pair'].deltaPhi()))/(x['pair'].leg1.pt()), float), 
-    NTupleVariable("dPTPerp",   lambda x : math.fabs(x['pair'].leg2.pt() * math.sin(x['pair'].deltaPhi())), float), 
-    NTupleVariable("dPTPerpRel",   lambda x : math.fabs(x['pair'].leg2.pt() * math.sin(x['pair'].deltaPhi()))/(x['pair'].leg1.pt()), float), 
+    NTupleVariable("dPTPara",   lambda x : (x['pair'].leg1.pt() + x['pair'].leg2.pt() * math.cos(x['pair'].deltaPhi())), float), 
+    NTupleVariable("dPTParaRel",   lambda x : (x['pair'].leg1.pt() + x['pair'].leg2.pt() * math.cos(x['pair'].deltaPhi()))/(x['pair'].leg1.pt()), float), 
+    NTupleVariable("dPTPerp",   lambda x : (x['pair'].leg2.pt() * math.sin(x['pair'].deltaPhi())), float), 
+    NTupleVariable("dPTPerpRel",   lambda x : (x['pair'].leg2.pt() * math.sin(x['pair'].deltaPhi()))/(x['pair'].leg1.pt()), float), 
     NTupleVariable("metOvSqSET",   lambda x : (x['pair'].leg2.pt())/math.sqrt(x['pair'].leg2.sumEt()), float), 
 ])
 

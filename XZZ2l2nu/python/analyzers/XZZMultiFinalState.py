@@ -70,7 +70,7 @@ class XZZMultiFinalState( XZZEventInterpretationBase ):
         setattr(event,'LLNuNu'+self.cfg_ana.suffix,LLNuNu)
 
         # do ElMu+MET combination
-        if len(event.ElMu)>0:
+        if hasattr(event, 'ElMu') and len(event.ElMu)>0:
             # Take the elmu nearest to the Z mass and the highest pt
             bestPair = min(event.ElMu,key = lambda x: abs(x.M()-91.1876))
             fakeVV=Pair(bestPair,event.met)

@@ -71,11 +71,18 @@ class Pair(object):
     def phi(self):
         return self.LV.phi()
 
-    def deltaPhi(self):
+    def AbsdeltaPhi(self):
         return abs(deltaPhi(self.leg1.phi(),self.leg2.phi()))
 
-    def deltaR(self):
+    def AbsdeltaR(self):
         return abs(deltaR(self.leg1.eta(),self.leg1.phi(),self.leg2.eta(),self.leg2.phi()))
+
+    def deltaPhi(self):
+        return deltaPhi(self.leg1.phi(),self.leg2.phi())
+
+    def deltaR(self):
+        return deltaR(self.leg1.eta(),self.leg1.phi(),self.leg2.eta(),self.leg2.phi())
+
 
     def __getattr__(self, name):
         return getattr(self.LV,name)

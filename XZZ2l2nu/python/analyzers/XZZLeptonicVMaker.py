@@ -48,7 +48,6 @@ class XZZLeptonicVMaker( Analyzer ):
 
         # electron muon pair
         if self.doElMu:
-            #comb=[event.selectedElectrons, event.selectedMuons]
             for e, mu in product(event.selectedElectrons, event.selectedMuons):
                 #print '[Debug] I am doElMu'
                 pair = Pair(e,mu,-23) #-23 for the ElMu pair
