@@ -31,8 +31,11 @@ triggerFlagsAna.triggerBits ={
 from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
 
 # make VV selection loosened as ElMu selection
-leptonicVAna.selectVBoson = (lambda x: x.pt()>100.0 and x.mass()>30.0 and x.mass()<150.0)
-multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.pt()>100.0 and x.leg1.mass()>30.0 and x.leg1.mass()<150.0 and x.leg2.pt()>50.0)
+leptonicVAna.selectVBoson = (lambda x: x.mass()>30.0 and x.mass()<180.0)
+leptonicVAna.selectFakeBoson = (lambda x: x.mass()>30.0 and x.mass()<180.0)
+multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>30.0 and x.leg1.mass()<180.0)
+multiStateAna.selectPairElMuNuNu = (lambda x: x.leg1.mass()>30.0 and x.leg1.mass()<180.0)
+
 vvSkimmer.required = ['LLNuNu', 'ElMuNuNu']
 leptonicVAna.doElMu = True
 
@@ -67,29 +70,25 @@ coreSequence = [
     leptonicVAna,
     multiStateAna,
     eventFlagsAna,
-    triggerFlagsAna,
+#    triggerFlagsAna,
 ]
     
 #sequence = cfg.Sequence(coreSequence)
-sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
-
- 
+#sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
+sequence = cfg.Sequence(coreSequence+[vvSkimmer,fullTreeProducer])
 
 #-------- HOW TO RUN
 test = 1
 if test==1:
     # test a single component, using a single thread.
-    selectedComponents = dataSamples+MuEG
-    #selectedComponents = mcSamples
+    selectedComponents = MuEG
+    #selectedComponents = dataSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
-    #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
-    #selectedComponents = [RSGravToZZToZZinv_narrow_800]
-    #selectedComponents = [DYJetsToLL_M50]
-    #selectedComponents = [BulkGravToZZ_narrow_800]
-    #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
+    #selectedComponents = [SingleMuon_Run2015C_25ns_16Dec] 
     for c in selectedComponents:
         #c.files = c.files[0]
-        c.splitFactor = (len(c.files)/20 if len(c.files)>20 else 1)
+        c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
+        #c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
         #c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso

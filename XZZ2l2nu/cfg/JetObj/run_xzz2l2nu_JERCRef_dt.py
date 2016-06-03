@@ -68,7 +68,7 @@ if test==1:
         for i in c.files:
             if ROOT.TString(i).Contains("000913F7-E9A7-E511-A286-003048FFD79C.root"):
                 c.files=i
-                print c.files
+        print c.files
         #c.files = c.files[0]
         #c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
         c.splitFactor = 1

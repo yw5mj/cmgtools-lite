@@ -187,10 +187,11 @@ jetType = NTupleObjectType("jet",  baseObjectTypes = [ fourVectorType ], variabl
     NTupleVariable("mcFlavour", lambda x : x.partonFlavour(), int,     mcOnly=True, help="parton flavour (physics definition, i.e. including b's from shower)"),
     NTupleVariable("hadronFlavour", lambda x : x.hadronFlavour(), int,     mcOnly=True, help="hadron flavour (ghost matching to B/C hadrons)"),
     NTupleVariable("mcMatchId",  lambda x : getattr(x, 'mcMatchId', -99), int, mcOnly=True, help="Match to source from hard scatter (pdgId of heaviest particle in chain, 25 for H, 6 for t, 23/24 for W/Z), zero if non-prompt or fake"),
-    NTupleVariable("corr_JECUp",  lambda x : getattr(x, 'corrJECUp', -99), float, mcOnly=True, help=""),
-    NTupleVariable("corr_JECDown",  lambda x : getattr(x, 'corrJECDown', -99), float, mcOnly=True, help=""),
-    NTupleVariable("corr",  lambda x : getattr(x, 'corr', -99), float, mcOnly=True, help=""),
+    NTupleVariable("corr_JECUp",  lambda x : getattr(x, 'corrJECUp', -99), float, mcOnly=True, help="JEC correction factor up"),
+    NTupleVariable("corr_JECDown",  lambda x : getattr(x, 'corrJECDown', -99), float, mcOnly=True, help="JEC correction factor down"),
+    NTupleVariable("corr",  lambda x : getattr(x, 'corr', -99), float, mcOnly=True, help="JEC correction factor"),
 ])
+
 jetTypeExtra = NTupleObjectType("jetExtra",  baseObjectTypes = [ jetType ], variables = [
     NTupleVariable("area",   lambda x : x.jetArea(), help="Catchment area of jet"),
     # QG variables:
@@ -217,6 +218,7 @@ metType = NTupleObjectType("met", baseObjectTypes = [ fourVectorType ], variable
     NTupleVariable("genPhi", lambda x : x.genMET().phi() if x.genMET() else 0, mcOnly=True ),
     NTupleVariable("genEta", lambda x : x.genMET().eta() if x.genMET() else 0, mcOnly=True ),
     NTupleVariable("metSig", lambda x : x.metSignificance() ),
+    #NTupleSubObject("metNoJet",  lambda x : x.metNoJet, fourVectorType),
 ])
 
 ##------------------------------------------  

@@ -31,7 +31,7 @@ class XZZTriggerBitFilter( Analyzer ):
         self.counters.addCounter('TriggerReport')
         self.count = self.counters.counter('TriggerReport')
         self.count.register('All Events')
-        self.count.register('Pass Triger Events')
+        self.count.register('Pass Trigger Events')
 
     def process(self, event):
         if self.autoAccept: return True
@@ -43,7 +43,7 @@ class XZZTriggerBitFilter( Analyzer ):
         if self.vetoFilter != None and self.vetoFilter.check(event.input.object(), self.handles['TriggerResults'].product()):
             return False
        
-        self.count.inc('Pass Triger Events')
+        self.count.inc('Pass Trigger Events')
  
         return True
 

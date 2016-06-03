@@ -95,7 +95,7 @@ class JetReCalibrator:
                     p4 -= pfcand.p4()
         return p4
 
-    def FillType1METCorr(self, jet, rho, raw, corr, metShift, type1METCorr):
+    def FillType1METCorr(self, jet, rho, raw, corr, metShift, type1METCorr, sumRawJetsforT1):
         newpt = jet.pt()*raw*corr
         if newpt > self.type1METParams['jetPtThreshold']:
             rawP4forT1 = self.rawP4forType1MET_(jet)
@@ -104,16 +104,21 @@ class JetReCalibrator:
                 metShift[1] -= rawP4forT1.Py() * (corr - 1.0/raw)
                 if self.calculateType1METCorr:
                     l1corr = self.getCorrection(jet,rho,delta=0,corrector=self.separateJetCorrectors["L1"]) # FIXME: to check with MET POG, why L1 corrector can not be varied
-                    #print "\tfor jet with raw pt %.5g, eta %.5g, dpx = %.5g, dpy = %.5g" % (
-                    #            jet.pt()*raw, jet.eta(), 
-                    #            rawP4forT1.Px()*(corr - l1corr), 
-                    #            rawP4forT1.Py()*(corr - l1corr))
+                    # print "\tfor jet with raw pt %.5g, eta %.5g, dpx = %.5g, dpy = %.5g, corr=%.3f, l1corr=%.3f" % (
+                    #             jet.pt()*raw, jet.eta(), 
+                    #             rawP4forT1.Px()*(corr - l1corr), 
+                    #             rawP4forT1.Py()*(corr - l1corr),
+                    #             corr, l1corr)
                     type1METCorr[0] -= rawP4forT1.Px() * (corr - l1corr) 
                     type1METCorr[1] -= rawP4forT1.Py() * (corr - l1corr) 
                     type1METCorr[2] += rawP4forT1.Et() * (corr - l1corr) 
-                    
 
-    def correct(self,jet,rho,delta=0,addCorr=False,addShifts=False, metShift=[0,0],type1METCorr=[0,0,0], type1METCorrUp=[0,0,0], type1METCorrDown=[0,0,0]):
+                    sumRawJetsforT1[0] -= rawP4forT1.Px() 
+                    sumRawJetsforT1[1] -= rawP4forT1.Py() 
+                    sumRawJetsforT1[2] += rawP4forT1.Et() 
+
+    def correct(self,jet,rho,delta=0,addCorr=False,addShifts=False, 
+                metShift=[0,0],type1METCorr=[0,0,0], type1METCorrUp=[0,0,0], type1METCorrDown=[0,0,0], sumRawJetsforT1=[0,0,0]):
         """Corrects a jet energy (optionally shifting it also by delta times the JEC uncertainty)
 
            If addCorr, set jet.corr to the correction.
@@ -141,21 +146,24 @@ class JetReCalibrator:
         if corr <= 0:
             return False
 
-        self.FillType1METCorr(jet, rho, raw, corr, metShift, type1METCorr)
-        self.FillType1METCorr(jet, rho, raw, jet.corrJECUp, [0.,0.], type1METCorrUp)
-        self.FillType1METCorr(jet, rho, raw, jet.corrJECDown, [0.,0.], type1METCorrDown)
+        self.FillType1METCorr(jet, rho, raw, corr, metShift, type1METCorr, sumRawJetsforT1)
+        self.FillType1METCorr(jet, rho, raw, jet.corrJECUp, [0.,0.], type1METCorrUp, [0.,0.,0.])
+        self.FillType1METCorr(jet, rho, raw, jet.corrJECDown, [0.,0.], type1METCorrDown, [0.,0.,0.])
 
         jet.setCorrP4(jet.p4() * (corr * raw))
         return True
 
-    def correctAll(self,jets,rho,delta=0, addCorr=False, addShifts=False, metShift=[0.,0.], type1METCorr=[0.,0.,0.], type1METCorrUp=[0.,0.,0.], type1METCorrDown=[0.,0.,0.]):
+    def correctAll(self,jets,rho,delta=0, addCorr=False, addShifts=False, 
+                   metShift=[0.,0.], type1METCorr=[0.,0.,0.], type1METCorrUp=[0.,0.,0.], type1METCorrDown=[0.,0.,0.], sumRawJetsforT1=[0.,0.,0.]):
         """Applies 'correct' to all the jets, discard the ones that have bad corrections (corrected pt <= 0)"""
         badJets = []
-        if metShift     != [0.,0.   ]: raise RuntimeError, "input metShift tuple is not initialized to zeros"
-        if type1METCorr != [0.,0.,0.]: raise RuntimeError, "input type1METCorr tuple is not initialized to zeros"
+        if metShift     != [0.,0.   ]: raise RuntimeError, "input metShift list is not initialized to zeros"
+        if type1METCorr != [0.,0.,0.]: raise RuntimeError, "input type1METCorr list is not initialized to zeros"
+        if sumRawJetsforT1 != [0.,0.,0.]: raise RuntimeError, "input sumRawJetsforT1 list is not initialized to zeros"
+
         for j in jets:
             ok = self.correct(j,rho,delta,addCorr=addCorr,addShifts=addShifts,metShift=metShift,
-                              type1METCorr=type1METCorr, type1METCorrUp=type1METCorrUp, type1METCorrDown=type1METCorrDown)
+                              type1METCorr=type1METCorr, type1METCorrUp=type1METCorrUp, type1METCorrDown=type1METCorrDown, sumRawJetsforT1=sumRawJetsforT1)
             if not ok: badJets.append(j)
 
         if len(badJets) > 0:

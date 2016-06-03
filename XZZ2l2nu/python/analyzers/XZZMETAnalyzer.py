@@ -173,6 +173,16 @@ class XZZMETAnalyzer( Analyzer ):
           self.metNoPhotonNoPU.setP4(ROOT.reco.Particle.LorentzVector(px,py, 0, hypot(px,py)))
           setattr(event, "metNoPhotonNoPU"+self.cfg_ana.collectionPostFix, self.metNoPhotonNoPU)
 
+    def makeMETNoJet(self, event):
+        # get sum jet momentum
+        deltaJets = getattr(event, 'sumJetsInT1'+self.jetAnalyzerPostFix)
+        jetpx, jetpy = deltaJets["rawP4forT1"][0], deltaJets["rawP4forT1"][1]
+
+        #subtract jet momentum and construct met
+        px, py = self.met_raw.px() + jetpx, self.met_raw.py() + jetpy
+        self.metNoJet=ROOT.reco.Particle.LorentzVector(px, py, 0, hypot(px,py))
+        #self.met.metNoJet = self.metNoJet
+        setattr(event, "metNoJet", self.metNoJet)
 
     def makeMETs(self, event):
         import ROOT
@@ -185,7 +195,7 @@ class XZZMETAnalyzer( Analyzer ):
 
         self.met_miniAod = copy.deepcopy(self.met)
         setattr(event,"met_miniAod"+self.cfg_ana.collectionPostFix, self.met_miniAod)
-
+        
         if self.recalibrateMET == "type1":
           type1METCorr = getattr(event, 'type1METCorr'+self.jetAnalyzerPostFix)
           self.type1METCorrector.correct(self.met, type1METCorr)
@@ -236,8 +246,6 @@ class XZZMETAnalyzer( Analyzer ):
         self.met_sumet = self.met.sumEt()
 
         #print '[Debug] I am event = ', event.input.eventAuxiliary().id().event()
-        
-        
         if self.old74XMiniAODs and self.recalibrateMET != "type1":
            oldraw = self.met.shiftedP2_74x(12,0);
            setFakeRawMETOnOldMiniAODs( self.met, oldraw.px, oldraw.py, self.met.shiftedSumEt_74x(12,0) )
@@ -245,6 +253,7 @@ class XZZMETAnalyzer( Analyzer ):
         else:
            px, py = self.met.uncorPx(), self.met.uncorPy()
         self.met_raw = ROOT.reco.Particle.LorentzVector(px,py,0,hypot(px,py))
+        self.makeMETNoJet(event)
 
         if hasattr(event,'zll_p4'):
             self.adduParaPerp(self.met,event.zll_p4,"_zll")
@@ -288,7 +297,7 @@ class XZZMETAnalyzer( Analyzer ):
         if getattr(self.cfg_ana,"doTkGenMet",self.cfg_ana.doTkMet) and self.cfg_comp.isMC and hasattr(event, 'genParticles'):
             self.makeGenTkMet(event)
 
-        #print self.met.pt(), self.met.shiftedPt(2)
+        #print self.met.pt(), self.met.shiftedPt(2) #used for 80X met uncertainties
 
         return True
 
