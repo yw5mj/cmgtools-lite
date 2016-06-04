@@ -70,8 +70,8 @@ vvTreeProducer = cfg.Analyzer(
          #"met" : NTupleObject("met", metType, help="PF E_{T}^{miss}, after type 1 corrections"),
          #"met_miniAod" : NTupleObject("met_raw", metType, help="PF E_{T}^{miss}, after type 1 corrections in miniAOD"),
          #"met_JEC" : NTupleObject("met_JEC", metType, help="PF E_{T}^{miss}, after type 1 corrections with new 76X JEC added"),
-         "met_JECUp" : NTupleObject("met_JECUp", metType, help="PF E_{T}^{miss}, after type 1 corrections with new 76X JEC up"),
-         "met_JECDown" : NTupleObject("met_JECDown", metType, help="PF E_{T}^{miss}, after type 1 corrections with new 76X JEC down"),
+         #"met_JECUp" : NTupleObject("met_JECUp", metType, help="PF E_{T}^{miss}, after type 1 corrections with new 76X JEC up"),
+         #"met_JECDown" : NTupleObject("met_JECDown", metType, help="PF E_{T}^{miss}, after type 1 corrections with new 76X JEC down"),
          #"met_JECJER" : NTupleObject("met_JECJER", metType, mcOnly=True, help="PF E_{T}^{miss}, after type 1 corrections with JEC+JER jets"),
      },
 
@@ -84,7 +84,7 @@ vvTreeProducer = cfg.Analyzer(
          "LLNuNu"     : NTupleCollection("llnunu",LLNuNuType ,5, help="VV candidate with di-lepton and MET"),
          "genXZZ" : NTupleCollection("genX", VVType, 10, mcOnly=True, help="Generated X->ZZ"),
          #"LHE_weights"    : NTupleCollection("LHEweight",  weightsInfoType, 1000, help="LHE weight info"),
-         "jets"       : NTupleCollection("jet_corr",jetType,15, help="all jets with new JEC for 76X applied"),
+         #"jets"       : NTupleCollection("jet_corr",jetType,15, help="all jets with new JEC for 76X applied"),
          #"jets_raw"   : NTupleCollection("jet",JetType,15, help="all jets from miniAOD"),
      }
 )

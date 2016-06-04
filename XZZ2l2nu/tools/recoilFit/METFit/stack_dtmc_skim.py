@@ -6,7 +6,9 @@ from CMGTools.XZZ2l2nu.plotting.TreePlotter import TreePlotter
 from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
-tag="newXs_TrueZPt_Recoil_"
+#tag='New80X675_'
+tag='New80X675_TrueZPt_'
+#tag="newXs_TrueZPt_Recoil_"
 #tag="newXs_"
 #tag="newXs_Recoil_"
 #tag="newXs_ZPt_"
@@ -29,21 +31,24 @@ channel='both' # can be el or mu or both
 
 
 outdir='plots'
-indir='/data/XZZ/76X_Ntuple/76X_20160514_RecoilSkim'
+indir='/data/XZZ/80X_Ntuple/80X_20160603_Skim'
+#indir='/data/XZZ/76X_Ntuple/76X_20160514_RecoilSkim'
 #indir='/data/XZZ/76X_Ntuple/76X_20160514_PUSkim2'
 #indir="/afs/cern.ch/work/m/mewu/public/76X_new"
 #indir="/data/mewu/76X_new"
 #lumi=2.169126704526
-lumi=2.318278305
+#lumi=2.318278305
+lumi=0.5893
 sepSig=True
 LogY=True
 DrawLeptons=False
 doRatio=True
 test=False
-Blind=False
+Blind=True
 FakeData=False
 UseMETFilter=True
 SignalAll1pb=False
+#puWeight='puWeight698'
 puWeight='puWeight'
 k=1 # signal scale
 
@@ -154,8 +159,8 @@ for sample in vvSamples:
     vvPlotters[-1].addCorrectionFactor('xsec','tree')
     vvPlotters[-1].addCorrectionFactor('genWeight','genWeight')
     vvPlotters[-1].addCorrectionFactor(puWeight,'tree')
-    vvPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
-    vvPlotters[-1].addCorrectionFactor('triggersf','tree')
+#    vvPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
+#    vvPlotters[-1].addCorrectionFactor('triggersf','tree')
     allPlotters[sample] = vvPlotters[-1]
 
 VV = MergedPlotter(vvPlotters)
@@ -170,8 +175,8 @@ for sample in wjetsSamples:
     wjetsPlotters[-1].addCorrectionFactor('xsec','tree')
     wjetsPlotters[-1].addCorrectionFactor('genWeight','genWeight')
     wjetsPlotters[-1].addCorrectionFactor(puWeight,'tree')
-    wjetsPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
-    wjetsPlotters[-1].addCorrectionFactor('triggersf','tree')
+    #wjetsPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
+    #wjetsPlotters[-1].addCorrectionFactor('triggersf','tree')
 
 WJets = MergedPlotter(wjetsPlotters)
 WJets.setFillProperties(1001,ROOT.kBlue-6)
@@ -179,12 +184,14 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 zjetsPlotters=[]
 #zjetsSamples = ['DYJetsToLL_M50_HT100to200','DYJetsToLL_M50_HT200to400','DYJetsToLL_M50_HT400to600','DYJetsToLL_M50_HT600toInf']
+#zjetsSamples = ['DYJetsToLL_M50']
+zjetsSamples = ['DYJetsToLL_M50_ZPT']
 #zjetsSamples = ['DYJetsToLL_M50','DYJetsToLL_M50_Ext']
 #zjetsSamples = ['DYJetsToLL_M50_BIG'] # M50_BIG = M50 + M50_Ext
 #zjetsSamples = ['DYJetsToLL_M50_BIG_ZPt'] # Only ZPtWeight no Recoil  M50_BIG = M50 + M50_Ext
 #zjetsSamples = ['DYJetsToLL_M50_BIG_ZPtPhiStar'] # ZPtWeight and PhiStarWeight no Recoil  M50_BIG = M50 + M50_Ext
 #zjetsSamples = ['DYJetsToLL_M50_BIG_ZPtPhiStarRecoil'] # ZPtWeight and PhiStarWeight and Recoil  M50_BIG = M50 + M50_Ext
-zjetsSamples = ['DYJetsToLL_M50_BIG_TrueZPtPhiStarRecoil'] # True ZPtWeight and PhiStarWeight and Recoil  M50_BIG = M50 + M50_Ext
+#zjetsSamples = ['DYJetsToLL_M50_BIG_TrueZPtPhiStarRecoil'] # True ZPtWeight and PhiStarWeight and Recoil  M50_BIG = M50 + M50_Ext
 #zjetsSamples = ['DYJetsToLL_M50'] # M50_BIG = M50 + M50_Ext
 
 
@@ -198,9 +205,10 @@ for sample in zjetsSamples:
     #zjetsPlotters[-1].addCorrectionFactor('(1907.0*3)','xsec') # FEWZ NNLO.results_z_m50_nnlo_fsrOn_lowstat_inclusive_NNPDF30_nlo_as_0118
     #zjetsPlotters[-1].addCorrectionFactor('(1870.0*3)','xsec') # FEWZ NNLO.results_z_m50_nnlo_inclusive_NNPDF30_nlo_as_0118
     zjetsPlotters[-1].addCorrectionFactor('genWeight','genWeight')
-    zjetsPlotters[-1].addCorrectionFactor(puWeight,'tree')
-    zjetsPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
-    zjetsPlotters[-1].addCorrectionFactor('triggersf','tree')
+    #zjetsPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
+    zjetsPlotters[-1].addCorrectionFactor("puWeight675",'puWeight')
+    #zjetsPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
+    #zjetsPlotters[-1].addCorrectionFactor('triggersf','tree')
     allPlotters[sample] = zjetsPlotters[-1]
 
 ZJets = MergedPlotter(zjetsPlotters)
@@ -214,9 +222,9 @@ for sample in ttSamples:
     ttPlotters[-1].addCorrectionFactor('1./SumWeights','tree')
     ttPlotters[-1].addCorrectionFactor('xsec','tree')
     ttPlotters[-1].addCorrectionFactor('genWeight','genWeight')
-    ttPlotters[-1].addCorrectionFactor(puWeight,'tree')
-    ttPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
-    ttPlotters[-1].addCorrectionFactor('triggersf','tree')
+    ttPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
+    #ttPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
+   # ttPlotters[-1].addCorrectionFactor('triggersf','tree')
     allPlotters[sample] = ttPlotters[-1]
 
 TT = MergedPlotter(ttPlotters)
@@ -299,16 +307,17 @@ for sample in sigSamples:
     sigPlotters[-1].addCorrectionFactor(str(sigXsec[sample]),'tree')
     sigPlotters[-1].addCorrectionFactor('genWeight','genWeight')
     sigPlotters[-1].addCorrectionFactor(puWeight,'tree')
-    sigPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
-    sigPlotters[-1].addCorrectionFactor('triggersf','tree')
+ #   sigPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
+ #   sigPlotters[-1].addCorrectionFactor('triggersf','tree')
     sigPlotters[-1].setFillProperties(0,ROOT.kWhite)
     allPlotters[sample] = sigPlotters[-1]
 
 dataPlotters=[]
-dataSamples = ['SingleElectron_Run2015C_25ns_16Dec',
-'SingleElectron_Run2015D_16Dec',
-'SingleMuon_Run2015C_25ns_16Dec',
-'SingleMuon_Run2015D_16Dec']
+#dataSamples = ['SingleElectron_Run2015C_25ns_16Dec',
+#'SingleElectron_Run2015D_16Dec',
+#'SingleMuon_Run2015C_25ns_16Dec',
+#'SingleMuon_Run2015D_16Dec']
+dataSamples = ['SingleMuon_Run2016B_PromptReco_v2', 'SingleElectron_Run2016B_PromptReco_v2']
 for sample in dataSamples:
     dataPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree'))
 

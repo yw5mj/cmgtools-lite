@@ -253,7 +253,7 @@ class XZZMETAnalyzer( Analyzer ):
         else:
            px, py = self.met.uncorPx(), self.met.uncorPy()
         self.met_raw = ROOT.reco.Particle.LorentzVector(px,py,0,hypot(px,py))
-        self.makeMETNoJet(event)
+        #self.makeMETNoJet(event)
 
         if hasattr(event,'zll_p4'):
             self.adduParaPerp(self.met,event.zll_p4,"_zll")

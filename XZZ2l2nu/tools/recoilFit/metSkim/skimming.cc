@@ -45,8 +45,8 @@ int main(int argc, char** argv) {
   // out_tree
   TTree* tree_out = tree->CloneTree(0);
 
-  TBranch *b_SumEvents=tree_out->Branch("SumEvents",&SumEvents,"SumEvents/D");
-  TBranch *b_SumWeights=tree_out->Branch("SumWeights",&SumWeights,"SumWeights/D");
+//  TBranch *b_SumEvents=tree_out->Branch("SumEvents",&SumEvents,"SumEvents/D");
+//  TBranch *b_SumWeights=tree_out->Branch("SumWeights",&SumWeights,"SumWeights/D");
 
 
   // ZPT PhiStar reweight model
@@ -79,7 +79,7 @@ root [7] hratio->Divid(hdt);
   TBranch *b_PhiStarWeight=tree_out->Branch("PhiStarWeight",&PhiStarWeight,"PhiStarWeight/D");
 
   // metskim
-  
+/*  
   TFile* fpar = new TFile("fit_recoil_par.root");
   TH1D* h_peak_upara = (TH1D*)fpar->Get("h_peak_upara");
   TH1D* h_shift_upara = (TH1D*)fpar->Get("h_shift_upara");
@@ -108,7 +108,7 @@ root [7] hratio->Divid(hdt);
   g_peak_uperp->SetName("g_peak_uperp");
   g_shift_uperp->SetName("g_shift_uperp");
   g_sigma_uperp->SetName("g_sigma_uperp");
-
+*/
 /*
  llnunu_l2_pt    = 31.7863
  llnunu_l2_phi   = 1.49733

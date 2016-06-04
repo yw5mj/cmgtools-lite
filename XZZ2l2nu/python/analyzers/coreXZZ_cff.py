@@ -116,7 +116,7 @@ jetAna = cfg.Analyzer(
     jecPath = "${CMSSW_BASE}/src/CMGTools/XZZ2l2nu/data/jec/", #${CMSSW_BASE}/src/CMGTools/RootTools/data/jec/
     jerPath = "${CMSSW_BASE}/src/CMGTools/XZZ2l2nu/data/jer/", #${CMSSW_BASE}/src/CMGTools/RootTools/data/jec/
     shiftJEC = 0, # set to +1 or -1 to apply +/-1 sigma shift to the nominal jet energies
-    addJECShifts = True, # if true, add  "corr", "corrJECUp", and "corrJECDown" for each jet (requires uncertainties to be available!)
+    addJECShifts = False, # if true, add  "corr", "corrJECUp", and "corrJECDown" for each jet (requires uncertainties to be available!)
     smearJets = False,
     shiftJER = 0, # set to +1 or -1 to get +/-1 sigma shifts  
     alwaysCleanPhotons = False,
@@ -138,12 +138,12 @@ metAna = cfg.Analyzer(
     noPUMetCollection = "slimmedMETs",
     copyMETsByValue = False,
     doTkMet = False,
-    doMetNoPU = True,
+    doMetNoPU = False,
     doMetNoMu = False,
     doMetNoEle = False,
     doMetNoPhoton = False,
-    recalibrate = "type1", # or "type1", or True, or False
-    doMetShiftFromJEC = True, # only works with recalibrate on
+    recalibrate = False, # or "type1", or True, or False
+    doMetShiftFromJEC = False, # only works with recalibrate on
     applyJetSmearing = False, # not change the final met used in multiStateAna, does nothing unless the jet smearing turned on in jetAna for MC, copy self.met for data
     old74XMiniAODs = False, # set to True to get the correct Raw MET when running on old 74X MiniAODs
     jetAnalyzerPostFix = "",
@@ -228,7 +228,7 @@ coreSequence = [
     pileUpAna,
     vertexAna,
     lepAna,
-    jetAna,
+#    jetAna,
     metAna,
     leptonicVAna,
 #    packedAna,
