@@ -64,6 +64,7 @@ class XZZMultiFinalState( XZZEventInterpretationBase ):
                     event.trgsfUp = self.gettrigersfUpper(bestZ.pt(),bestZ.leg1.pdgId())
                     event.trgsfLo = self.gettrigersfLower(bestZ.pt(),bestZ.leg1.pdgId())
 
+
         if len(LLNuNu)>0: 
             self.counters.counter('events').inc('pass llNuNu events')
 
@@ -83,5 +84,6 @@ class XZZMultiFinalState( XZZEventInterpretationBase ):
                 #     event.trgsfLo = self.gettrigersfLower(bestPair.pt(),bestPair.leg1.pdgId())
         if len(ElMuNuNu)>0:
             self.counters.counter('events').inc('pass elmuNuNu events')
+            setattr(event,'ElMuNuNu'+self.cfg_ana.suffix,ElMuNuNu)
 
-        setattr(event,'ElMuNuNu'+self.cfg_ana.suffix,ElMuNuNu)
+        #

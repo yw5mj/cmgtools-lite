@@ -6,8 +6,11 @@ from CMGTools.XZZ2l2nu.plotting.TreePlotter import TreePlotter
 from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
+
+putag='700'
 #tag='New80X675_'
-tag='New80X675_TrueZPt_'
+#tag='New80X500_TrueZPt_'
+tag='New80X'+putag+'_TrueZPt_'
 #tag="newXs_TrueZPt_Recoil_"
 #tag="newXs_"
 #tag="newXs_Recoil_"
@@ -40,10 +43,10 @@ indir='/data/XZZ/80X_Ntuple/80X_20160603_Skim'
 #lumi=2.318278305
 lumi=0.5893
 sepSig=True
-LogY=True
+LogY=False
 DrawLeptons=False
 doRatio=True
-test=False
+test=True
 Blind=True
 FakeData=False
 UseMETFilter=True
@@ -185,7 +188,7 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 zjetsPlotters=[]
 #zjetsSamples = ['DYJetsToLL_M50_HT100to200','DYJetsToLL_M50_HT200to400','DYJetsToLL_M50_HT400to600','DYJetsToLL_M50_HT600toInf']
 #zjetsSamples = ['DYJetsToLL_M50']
-zjetsSamples = ['DYJetsToLL_M50_ZPT']
+zjetsSamples = ['DYJetsToLL_M50_PUScanZPT']
 #zjetsSamples = ['DYJetsToLL_M50','DYJetsToLL_M50_Ext']
 #zjetsSamples = ['DYJetsToLL_M50_BIG'] # M50_BIG = M50 + M50_Ext
 #zjetsSamples = ['DYJetsToLL_M50_BIG_ZPt'] # Only ZPtWeight no Recoil  M50_BIG = M50 + M50_Ext
@@ -206,7 +209,8 @@ for sample in zjetsSamples:
     #zjetsPlotters[-1].addCorrectionFactor('(1870.0*3)','xsec') # FEWZ NNLO.results_z_m50_nnlo_inclusive_NNPDF30_nlo_as_0118
     zjetsPlotters[-1].addCorrectionFactor('genWeight','genWeight')
     #zjetsPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
-    zjetsPlotters[-1].addCorrectionFactor("puWeight675",'puWeight')
+    #zjetsPlotters[-1].addCorrectionFactor("puWeight691",'puWeight')
+    zjetsPlotters[-1].addCorrectionFactor("puWeight"+putag,'puWeight')
     #zjetsPlotters[-1].addCorrectionFactor('(llnunu_l1_l1_lepsf*llnunu_l1_l2_lepsf)','tree')
     #zjetsPlotters[-1].addCorrectionFactor('triggersf','tree')
     allPlotters[sample] = zjetsPlotters[-1]
@@ -346,7 +350,8 @@ Stack.doRatio(doRatio)
 
 
 
-
+Stack.drawStack('nVert', cuts, str(lumi*1000), 50, 0.0, 50.0, titlex = "N vertices", units = "",output=tag+'nVert',outDir=outdir,separateSignal=sepSig)
+'''
 Stack.drawStack('llnunu_mta', cuts, str(lumi*1000), 500, 0.0, 5000.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_high5',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
 Stack.drawStack('llnunu_mta', cuts, str(lumi*1000), 60, 0.0, 1200.0, titlex = "M_{T}", units = "GeV",output=tag+'mt',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
 Stack.drawStack('llnunu_mta', cuts, str(lumi*1000), 100, 0.0, 300.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_low2',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
@@ -359,7 +364,7 @@ Stack.drawStack('llnunu_l1_mass', cuts, str(lumi*1000), 50, 50, 150, titlex = "M
 Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 75, 0.0, 1500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt',outDir=outdir,separateSignal=sepSig)
 Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 100, 0.0, 500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt_low',outDir=outdir,separateSignal=sepSig)
 Stack.drawStack('TMath::Tan((TMath::Pi()-TMath::Abs(llnunu_l1_deltaPhi))/2.0)*TMath::Sin(TMath::ACos(TMath::TanH((llnunu_l1_l1_eta-llnunu_l1_l2_eta)/2.0)))', cuts, str(lumi*1000), 100, 0.0, 10, titlex = "#phi_{#eta}*", units = "",output=tag+'PhiStar',outDir=outdir,separateSignal=sepSig)
-
+'''
 if not test :
     Stack.drawStack('llnunu_l2_pt/sqrt(llnunu_l2_sumEt)', cuts, str(lumi*1000), 100, 0.0, 20.0, titlex = "MET/#sqrt{sumE_{T}}", units = "",output=tag+'metOvSqSET',outDir=outdir,separateSignal=sepSig)
 
