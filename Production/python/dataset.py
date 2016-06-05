@@ -16,9 +16,13 @@ class IntegrityCheckError(Exception):
     def __str__(self):
         return repr(self.value)
 
-def _dasPopen(dbs):
-    if 'LSB_JOBID' in os.environ:
-        raise RuntimeError, "Trying to do a DAS query while in a LXBatch job (env variable LSB_JOBID defined)\nquery was: %s" % dbs
+def _dasPopen(dbs):    
+    #if 'LSB_JOBID' in os.environ:
+    #    raise RuntimeError, "Trying to do a DAS query while in a LXBatch job (env variable LSB_JOBID defined)\nquery was: %s" % dbs
+    # Above two lines commented out by Hengne. 
+    # As far as X509_USER_PROXY env is setup in the job, and pointing to proxy accessible by the job, 
+    # nothing prevent us to use it. 
+
     #--- this below fails also locally, so it's off for the moment; to be improved ---
     #if 'GLOBUS_GRAM_JOB_CONTACT':
     #    raise RuntimeError, "Trying to do a DAS query while in a Grid job (env variable GLOBUS_GRAM_JOB_CONTACT defined)\nquery was: %s" % dbs
