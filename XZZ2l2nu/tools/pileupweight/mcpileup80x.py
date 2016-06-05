@@ -121,8 +121,8 @@ def makePURatio(tag='680'):
     pileup_mc.Draw("HIST,SAME")
     lg.Draw("same")
     pt.Draw()
-    c1.SaveAs(outtag+"_pileup76x.eps")
-    c1.SaveAs(outtag+"_pileup76x.pdf")
+    c1.SaveAs(outtag+"_pileup80x.eps")
+    c1.SaveAs(outtag+"_pileup80x.pdf")
 
 
     # ratio

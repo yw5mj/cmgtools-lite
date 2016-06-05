@@ -111,28 +111,34 @@ for pu in pu_list:
 
 gr_pvalue_pu = TGraph()
 for i in range(len(pu_list)):
-  gr_pvalue_pu.SetPoint(i,pu_list[i],pvalue_pu[i])
+  gr_pvalue_pu.SetPoint(i,pu_list[i]*0.1,pvalue_pu[i])
 gr_pvalue_pu.SetName('gr_pvalue_pu')
 gr_pvalue_pu.SetTitle('Pileup Data/MC matching p-value vs. MB xsec')
 gr_pvalue_pu.SetMarkerStyle(20)
-gr_pvalue_pu.GetXaxis().SetTitle('MB xsec (ub)')
+gr_pvalue_pu.GetXaxis().SetTitle('MB xsec (mb)')
 gr_pvalue_pu.GetYaxis().SetTitle('p-value')
-gr_pvalue_pu.GetXaxis().SetRangeUser(min(pu_list)*0.9,max(pu_list)*1.1)
+gr_pvalue_pu.GetXaxis().SetRangeUser(min(pu_list)*0.1*0.9,max(pu_list)*0.1*1.1)
 gr_pvalue_pu.GetYaxis().SetRangeUser(min(pvalue_pu)*0.9,max(pvalue_pu)*1.1)
 gr_pvalue_pu.Sort()
 
 
 gr_chi2ndf_pu = TGraph()
 for i in range(len(pu_list)):
-  gr_chi2ndf_pu.SetPoint(i,pu_list[i]*100,chi2ndf_pu[i])
+  gr_chi2ndf_pu.SetPoint(i,pu_list[i]*0.1,chi2ndf_pu[i])
 gr_chi2ndf_pu.SetName('gr_chi2ndf_pu')
 gr_chi2ndf_pu.SetTitle('Pileup Data/MC matching Chi2/Ndf vs. MB xsec')
 gr_chi2ndf_pu.SetMarkerStyle(20)
-gr_chi2ndf_pu.GetXaxis().SetTitle('MB xsec (ub)')
+gr_chi2ndf_pu.GetXaxis().SetTitle('MB xsec (mb)')
 gr_chi2ndf_pu.GetYaxis().SetTitle('Chi2/Ndf')
-gr_chi2ndf_pu.GetXaxis().SetRangeUser(min(pu_list)*100*0.9,max(pu_list)*100*1.1)
+gr_chi2ndf_pu.GetXaxis().SetRangeUser(min(pu_list)*0.1*0.9,max(pu_list)*0.1*1.1)
 gr_chi2ndf_pu.GetYaxis().SetRangeUser(min(chi2ndf_pu)*0.9,max(chi2ndf_pu)*1.1)
 gr_chi2ndf_pu.Sort()
+
+fc_chi2ndf_pu = TF1("fc_chi2ndf_pu", "pol2", min(pu_list)*0.1*0.9, max(pu_list)*0.1*1.1)
+gr_chi2ndf_pu.Fit(fc_chi2ndf_pu)
+x_minchi2ndf=fc_chi2ndf_pu.GetMinimumX()
+gr_chi2ndf_pu.SetTitle('Pileup Data/MC matching Chi2/Ndf vs. MB xsec, mini at {xm:.3f}'.format(xm=x_minchi2ndf))
+
 
 plots.Clear()
 plots.Divide(1,2)
