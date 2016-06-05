@@ -8,7 +8,7 @@ import os
 # Load backgrounds
 from CMGTools.XZZ2l2nu.samples.samples_13TeV_RunIISpring16MiniAODv2 import *
 # Load signals
-from CMGTools.XZZ2l2nu.samples.samples_13TeV_signal76X import *
+from CMGTools.XZZ2l2nu.samples.samples_13TeV_signal80X import *
 # Load Data 
 from CMGTools.XZZ2l2nu.samples.samples_13TeV_DATA2016 import *
 # Load triggers
