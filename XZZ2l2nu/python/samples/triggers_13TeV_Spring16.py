@@ -35,7 +35,7 @@ triggers_1mu_iso_r  = [ 'HLT_IsoMu24_eta2p1_v*', 'HLT_IsoTkMu24_eta2p1_v*'  ]
 triggers_1mu_iso_w  = [ 'HLT_IsoMu18_v*', 'HLT_IsoMu20_v*', 'HLT_IsoTkMu20_v*', 'HLT_IsoMu27_v*', 'HLT_IsoTkMu27_v*'  ]
 triggers_1mu_iso_r_50ns = [ 'HLT_IsoMu17_eta2p1_v*', 'HLT_IsoTkMu17_eta2p1_v*'  ]
 triggers_1mu_iso_w_50ns = [ 'HLT_IsoMu20_v*', 'HLT_IsoTkMu20_v*'  ]
-#triggers_1mu_noniso = [ 'HLT_Mu45_eta2p1_v*', 'HLT_Mu50_v*' ]
+triggers_1mu_noniso_v2 = [ 'HLT_Mu45_eta2p1_v*', 'HLT_Mu50_v*' ]
 triggers_1mu_noniso = [ 'HLT_Mu45_eta2p1_v*' ]
 triggers_1mu_iso_50ns = triggers_1mu_iso_r_50ns + triggers_1mu_iso_w_50ns
 triggers_1mu_iso      = triggers_1mu_iso_r + triggers_1mu_iso_w
@@ -44,6 +44,7 @@ triggers_1mu_iso      = triggers_1mu_iso_r + triggers_1mu_iso_w
 triggers_1e_50ns = [ "HLT_Ele27_eta2p1_WP75_Gsf_v*", "HLT_Ele27_eta2p1_WPLoose_Gsf_v*", "HLT_Ele27_eta2p1_WPTight_Gsf_v*" ]
 triggers_1e      = [ "HLT_Ele23_WPLoose_Gsf_v*", "HLT_Ele27_WPLoose_Gsf_v*", "HLT_Ele27_eta2p1_WPLoose_Gsf_v*", "HLT_Ele32_eta2p1_WPLoose_Gsf_v*", "HLT_Ele27_WP85_Gsf_v*", "HLT_Ele27_eta2p1_WP75_Gsf_v*", "HLT_Ele32_eta2p1_WP75_Gsf_v*" ]
 triggers_1e_noniso      = [ "HLT_Ele105_CaloIdVT_GsfTrkIdT_v*"]
+triggers_1e_noniso_v2      = [ "HLT_Ele105_CaloIdVT_GsfTrkIdT_v*","HLT_Ele115_CaloIdVT_GsfTrkIdT_v*"]
 
 # Lepton fake rate triggers (prescaled)
 triggers_FR_1mu_iso = [ "HLT_Mu%d_TrkIsoVVL_v*" % pt for pt in (8,17) ]

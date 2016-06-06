@@ -102,11 +102,14 @@ SinglePhoton=[SinglePhoton_Run2016B_PromptReco_v2]
 MuEG=[MuonEG_Run2016B_PromptReco_v2]
 
 for s in SingleMuon:
-    s.triggers = triggers_1mu_noniso
+    #s.triggers = triggers_1mu_noniso
+    s.triggers = [] 
     s.vetoTriggers = []
 for s in SingleElectron:
-    s.triggers = triggers_1e_noniso
-    s.vetoTriggers = triggers_1mu_noniso
+    #s.triggers = triggers_1e_noniso
+    s.triggers = [] 
+    #s.vetoTriggers = triggers_1mu_noniso
+    s.vetoTriggers = []
 for s in SinglePhoton:
     s.trigers = triggers_photon_unbias
 
@@ -131,7 +134,8 @@ for comp in mcSamples+otherMcSamples:
     comp.puFileData=dataDir+"/pileup_DATA_80x_65456.root"
     comp.eSFinput=dataDir+"/CutBasedID_LooseWP_76X_18Feb.txt_SF2D.root"
     comp.efficiency = eff2012
-    comp.triggers=triggers_1mu_noniso+triggers_1e_noniso
+    #comp.triggers=triggers_1mu_noniso+triggers_1e_noniso
+    comp.triggers= []
     comp.globalTag = "Summer15_25nsV6_MC"
 
 for comp in dataSamples:
