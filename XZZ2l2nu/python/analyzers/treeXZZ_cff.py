@@ -61,9 +61,13 @@ vvTreeProducer = cfg.Analyzer(
          #NTupleVariable("nElMu",lambda ev: len(ev.ElMu) , int),       
          NTupleVariable("nLLNuNu",lambda ev: len(ev.LLNuNu) , int),       
          NTupleVariable("nVert",  lambda ev: len(ev.goodVertices), int, help="Number of good vertices"), 
+         NTupleVariable("vtx_x",  lambda ev: ev.goodVertices[0].x(), float, help="primary vertex x"), 
+         NTupleVariable("vtx_y",  lambda ev: ev.goodVertices[0].y(), float, help="primary vertex y"), 
+         NTupleVariable("vtx_z",  lambda ev: ev.goodVertices[0].z(), float, help="primary vertex z"), 
          NTupleVariable("triggersf",  lambda x : getattr(x,'trgsf',1), help="singleelectron/muon trigger sf"),
          NTupleVariable("triggersfUp",  lambda x : getattr(x,'trgsfUp',1), help="singleelectron/muon trigger sf upper"),
          NTupleVariable("triggersfLo",  lambda x : getattr(x,'trgsfLo',1), help="singleelectron/muon trigger sf lower"),
+
      ],
 
      globalObjects =  {
