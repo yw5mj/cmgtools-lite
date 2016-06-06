@@ -21,9 +21,9 @@ Instructions for package development.
 2. Setup Environment
 
   ```
-  release=CMSSW_7_6_3_patch2
+  release=CMSSW_8_0_10
   tag=""
-  export SCRAM_ARCH=slc6_amd64_gcc493
+  export SCRAM_ARCH=slc6_amd64_gcc530
   alias cmsenv='eval `scramv1 runtime -sh`'
   alias cmsrel='scramv1 project CMSSW'
 
@@ -48,9 +48,9 @@ Instructions for package development.
 5. Configure the sparse checkout (to only checkout needed packages), and check out only the Heppy framework
 
   ```
-  curl -O https://raw.githubusercontent.com/mmhy/cmgtools-lite/xzz2l2nu_76x/XZZ2l2nu/tools/sparse-checkout
+  curl -O https://raw.githubusercontent.com/mmhy/cmgtools-lite/xzz2l2nu_80x/XZZ2l2nu/tools/sparse-checkout
   mv sparse-checkout .git/info/sparse-checkout
-  git checkout -b xzz2l2nu_heppy_76X mmhy/xzz2l2nu_heppy_76X
+  git checkout -b xzz2l2nu_heppy_80X mmhy/xzz2l2nu_heppy_80X
   ```
 
   [the rest in this section is not need for everyday life.]
@@ -59,33 +59,33 @@ Instructions for package development.
 
   ```
   git remote add origin https://github.com/<your own github name>/cmg-cmssw.git
-  git push origin xzz2l2nu_heppy_76X 
+  git push origin xzz2l2nu_heppy_80X 
   ```
   Don't for get to replace "<your own github name>" with your own github user name.
 
   Create a developement branch:
 
   ```
-  git checkout -b xzz2l2nu_heppy_76X_dev
+  git checkout -b xzz2l2nu_heppy_80X_dev
   ```
 
   Do modifications, commit changes, and push to your own repository:
 
   ```
   git commit -m 'message of the change' -a
-  git push origin xzz2l2nu_heppy_76X_dev
+  git push origin xzz2l2nu_heppy_80X_dev
   ```
 
   To update the mmhy repository with your own Heppy framework developement, similar way is required as described in section 12 below. 
 
   **If ever possible, please don't change the Heppy framework.**
 
-6. Checkout the CMGTools/XZZ2l2nu package, currently the main branch is xzz2l2nu_76x.
+6. Checkout the CMGTools/XZZ2l2nu package, currently the main branch is xzz2l2nu_80x.
 
-  From 76x, the CMGTools is made as a standalone package. So we need to add repository separately:
+  The CMGTools is made as a standalone package. So we need to add repository separately:
 
   ```
-  git clone -o mmhy https://github.com/mmhy/cmgtools-lite.git -b xzz2l2nu_76x CMGTools
+  git clone -o mmhy https://github.com/mmhy/cmgtools-lite.git -b xzz2l2nu_80x CMGTools
   ```
 
 7. Compile the package together with Heppy Framework:
@@ -103,15 +103,15 @@ Instructions for package development.
   ```
   cd CMGTools
   git remote add origin https://github.com/<your own github name>/cmgtools-lite.git
-  git push origin xzz2l2nu_76x
+  git push origin xzz2l2nu_80x
   ```
 
 
-9. Make a copy of branch xzz2l2nu_76x for your own developement, you can choose a branch name as you want, such as xzz2l2nu_76x_dev
+9. Make a copy of branch xzz2l2nu_80x for your own developement, you can choose a branch name as you want, such as xzz2l2nu_80x_dev
 
   Note, do this in your CMSSWxxx/src/CMSTools/ directory, not the CMSSWxxx/src.
   ```
-  git checkout -b xzz2l2nu_76x_dev
+  git checkout -b xzz2l2nu_80x_dev
   ```
 
 10. Please frequently commit your changes and push your development branch to your own repository
@@ -119,36 +119,36 @@ Instructions for package development.
   Note, do this in your CMSSWxxx/src/CMSTools/ directory, not the CMSSWxxx/src.
   ```
   git commit -m 'describe your change here.' -a
-  git push origin xzz2l2nu_76x_dev
+  git push origin xzz2l2nu_80x_dev
   ```
 
 
-11. Once your developement is done, you can update the central branch xzz2l2nu_76x with a Pull Request. Steps below:
+11. Once your developement is done, you can update the central branch xzz2l2nu_80x with a Pull Request. Steps below:
 
   Note, do all following in your CMSSWxxx/src/CMSTools/ directory, not the CMSSWxxx/src.
 
-  * Update the branch xzz2l2nu_76x in your local repository with others developements on mmhy
+  * Update the branch xzz2l2nu_80x in your local repository with others developements on mmhy
     ```
-    git checkout xzz2l2nu_76x
+    git checkout xzz2l2nu_80x
     git fetch mmhy 
     ```
 
-  * Rebased your development branch to the head of xzz2l2nu_76x, and update it in your own repository
+  * Rebased your development branch to the head of xzz2l2nu_80x, and update it in your own repository
     ```
-    git checkout xzz2l2nu_76x_dev
-    git merge xzz2l2nu_76x
-    git push origin xzz2l2nu_76x_dev
+    git checkout xzz2l2nu_80x_dev
+    git merge xzz2l2nu_80x
+    git push origin xzz2l2nu_80x_dev
     ```
 
-12. Make a PR from branch xzz2l2nu_76x_dev in your own respository to branch xzz2l2nu_76x in MMHY respository to let others cross-check your changes. Once looks good, merge it.
+12. Make a PR from branch xzz2l2nu_80x_dev in your own respository to branch xzz2l2nu_80x in MMHY respository to let others cross-check your changes. Once looks good, merge it.
 
   The PR can be created on the webpage of your own repository:
 
-      https://github.com/<your own github name>/cmgtools-lite/tree/xzz2l2nu_76x_dev
+      https://github.com/<your own github name>/cmgtools-lite/tree/xzz2l2nu_80x_dev
 
-  E.g. A PR from hengne's xzz2l2nu_76x_dev branch to MMHY's xzz2l2nu_76x will look like this in the following link:
+  E.g. A PR from hengne's xzz2l2nu_80x_dev branch to MMHY's xzz2l2nu_80x will look like this in the following link:
 
-      https://github.com/mmhy/cmgtools-lite/compare/xzz2l2nu_76x...hengne:xzz2l2nu_76x_dev  
+      https://github.com/mmhy/cmgtools-lite/compare/xzz2l2nu_80x...hengne:xzz2l2nu_80x_dev  
 
 
 **Let's make it a rule here: Please always let other collabrators to view and sign your PR before merging it, even if you have the permission to do it all by yourself.**
@@ -169,15 +169,15 @@ Instruction to run jobs
  Example configuration files are in cfg/ folder, e.g.
   
   ```
-  heppy mc_test run_xzz2l2nu_76x_cfg_loose_mc.py
+  heppy mc_test run_xzz2l2nu_80x_cfg_loose_mc.py
   ```
- this will run config file run_xzz2l2nu_76x_cfg_loose_mc.py and output to directory mc_test
+ this will run config file run_xzz2l2nu_80x_cfg_loose_mc.py and output to directory mc_test
 
  N.B. 
   There are many options to pass to the main function of Heppy,
   one useful example is to run few (e.g. 100) events test:
   ```
-  heppy mc_test run_xzz2l2nu_76x_cfg_loose_mc.py -N 100
+  heppy mc_test run_xzz2l2nu_80x_cfg_loose_mc.py -N 100
   ```
   you will have the first 100 events processed only.
 
@@ -185,8 +185,8 @@ Instruction to run jobs
 
   Example scripts to submit lsf batch jobs are:
   ```
-    cfg/loose_lsf_dt/sub_xzz2l2nu_76x_cfg_loose_dt.sh 
-    cfg/loose_lsf_mc/sub_xzz2l2nu_76x_cfg_loose_mc.sh 
+    cfg/loose_lsf_dt/sub_xzz2l2nu_80x_cfg_loose_dt.sh 
+    cfg/loose_lsf_mc/sub_xzz2l2nu_80x_cfg_loose_mc.sh 
   ```
   for data and mc respectively.
 
@@ -233,7 +233,7 @@ Instruction to draw plots
   ```
   This will read the root trees I have put at:
   ```
-   /afs/cern.ch/work/h/heli/public/XZZ/76X/
+   /afs/cern.ch/work/h/heli/public/XZZ/80X/
   ```
   and draw all the plots, which will then store in sub-directory "plots/".
 
