@@ -27,10 +27,11 @@ stag='all'
 
 outdir='plots'
 indir='/data/XZZ/76X_Ntuple/76X_20160514_PUSkim2'
+#indir='/home/heli/work/XZZ/80X_Ntuple/80X_20160606_NoHLT_Skim'
 #indir="/afs/cern.ch/work/m/mewu/public/76X_new"
 #indir="/data/mewu/76X_new"
-#lumi=2.169126704526
-lumi=2.318278305
+lumi=2.32
+#lumi=0.5893
 sepSig=True
 LogY=True
 DrawLeptons=False
