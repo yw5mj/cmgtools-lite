@@ -60,7 +60,7 @@ void setTDRStyle()
 	tdrStyle->SetMarkerStyle(20);
 
 	//For the fit/function:
-	tdrStyle->SetOptFit(0);
+	tdrStyle->SetOptFit(1);
 	tdrStyle->SetFitFormat("5.4g");
 	tdrStyle->SetFuncColor(2);
 	tdrStyle->SetFuncStyle(1);
@@ -73,7 +73,7 @@ void setTDRStyle()
 
 	// For the statistics box:
 	tdrStyle->SetOptFile(0);
-	tdrStyle->SetOptStat(0); // To display the mean and RMS:   SetOptStat("mr");
+	tdrStyle->SetOptStat(1); // To display the mean and RMS:   SetOptStat("mr");
 	tdrStyle->SetStatColor(kWhite);
 	tdrStyle->SetStatFont(42);
 	tdrStyle->SetStatFontSize(0.025);

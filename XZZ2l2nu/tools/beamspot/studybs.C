@@ -10,6 +10,7 @@ TFile* fout = new TFile(name, "recreate");
 
 gROOT->ProcessLine(".x tdrstyle.C");
 
+gStyle->SetNdivisions(505);
 
 TTree* tdt = (TTree*)fdt->Get("tree");
 TTree* tmc = (TTree*)fmc->Get("tree");
@@ -60,6 +61,12 @@ hmc_corr_z->SetMarkerColor(4);
 hdt_x->SetMarkerStyle(20);
 hdt_y->SetMarkerStyle(20);
 hdt_z->SetMarkerStyle(20);
+hmc_x->SetMarkerStyle(20);
+hmc_y->SetMarkerStyle(20);
+hmc_z->SetMarkerStyle(20);
+hmc_corr_x->SetMarkerStyle(20);
+hmc_corr_y->SetMarkerStyle(20);
+hmc_corr_z->SetMarkerStyle(20);
 
 hdt_x->GetXaxis()->SetTitle("vertex x (cm)");
 hdt_y->GetXaxis()->SetTitle("vertex y (cm)");
@@ -78,25 +85,32 @@ TF1* fc_mc_x = new TF1("fc_mc_x", "gaus", -15,15);
 TF1* fc_mc_y = new TF1("fc_mc_y", "gaus", -15,15);
 TF1* fc_mc_z = new TF1("fc_mc_z", "gaus", -15,15);
 
+fc_dt_x->SetLineWidth(3);
+fc_dt_y->SetLineWidth(3);
+fc_dt_z->SetLineWidth(3);
+fc_mc_x->SetLineWidth(3);
+fc_mc_y->SetLineWidth(3);
+fc_mc_z->SetLineWidth(3);
+
 TCanvas* plots = new TCanvas("plots", "plots", 600,600);
 
-sprintf(name, "%s_plots.ps", output.c_str());
+sprintf(name, "%s_plots.ps[", output.c_str());
 plots->Print(name);
 
 // data
 tdt->Draw("vtx_x>>hdt_x");
-tdt->Draw("vtx_x>>hdt_y");
-tdt->Draw("vtx_x>>hdt_z");
+tdt->Draw("vtx_y>>hdt_y");
+tdt->Draw("vtx_z>>hdt_z");
 // mc
 tmc->Draw("vtx_x>>hmc_x");
-tmc->Draw("vtx_x>>hmc_y");
-tmc->Draw("vtx_x>>hmc_z");
+tmc->Draw("vtx_y>>hmc_y");
+tmc->Draw("vtx_z>>hmc_z");
 
 // fit data 
-hdt_x->Fit(fc_dt_x, "R", "", 0.062, 0.067);
+hdt_x->Fit(fc_dt_x, "R", "", 0.061, 0.067);
 hdt_y->Fit(fc_dt_y, "R", "", 0.092, 0.098);
 hdt_z->Fit(fc_dt_z, "R", "", -10, 10);
-hmc_x->Fit(fc_mc_x, "R", "", 0.1, 0.11);
+hmc_x->Fit(fc_mc_x, "R", "", 0.101, 0.109);
 hmc_y->Fit(fc_mc_y, "R", "", 0.165, 0.172);
 hmc_z->Fit(fc_mc_z, "R", "", -10, 10);
 
@@ -137,9 +151,9 @@ hmc_corr_y->Scale(hdt_y->Integral()/hmc_corr_y->Integral());
 hmc_corr_z->Scale(hdt_z->Integral()/hmc_corr_z->Integral());
 
 // plotting
-TLegend* lg_x = new TLegend(0.6,0.7,0.8,0.9);
-TLegend* lg_y = new TLegend(0.6,0.7,0.8,0.9);
-TLegend* lg_z = new TLegend(0.6,0.7,0.8,0.9);
+TLegend* lg_x = new TLegend(0.55,0.6,0.85,0.85);
+TLegend* lg_y = new TLegend(0.2,0.6,0.5,0.85);
+TLegend* lg_z = new TLegend(0.15,0.6,0.45,0.85);
 lg_x->SetName("lg_x");
 lg_y->SetName("lg_y");
 lg_z->SetName("lg_z");
@@ -159,19 +173,60 @@ plots->Print(name);
 plots->Clear();
 // mc x
 plots->Clear();
-hmc_x->Draw("HIST");
+hmc_x->Draw();
 sprintf(name, "%s_plots.ps", output.c_str());
 plots->Print(name);
 plots->Clear();
 // corr x
 plots->Clear();
 hdt_x->Draw();
-hmc_corr_x->Draw("hist");
+hmc_corr_x->Draw("same");
 lg_x->Draw();
 sprintf(name, "%s_plots.ps", output.c_str());
 plots->Print(name);
 plots->Clear();
 
+// dt y
+plots->Clear();
+hdt_y->Draw();
+sprintf(name, "%s_plots.ps", output.c_str());
+plots->Print(name);
+plots->Clear();
+// mc y
+plots->Clear();
+hmc_y->Draw();
+sprintf(name, "%s_plots.ps", output.c_str());
+plots->Print(name);
+plots->Clear();
+// corr y
+plots->Clear();
+hdt_y->Draw();
+hmc_corr_y->Draw("same");
+lg_y->Draw();
+sprintf(name, "%s_plots.ps", output.c_str());
+plots->Print(name);
+plots->Clear();
+
+// dt z
+plots->Clear();
+hdt_z->Draw();
+sprintf(name, "%s_plots.ps", output.c_str());
+plots->Print(name);
+plots->Clear();
+// mc z
+plots->Clear();
+hmc_z->Draw();
+sprintf(name, "%s_plots.ps", output.c_str());
+plots->Print(name);
+plots->Clear();
+// corr z
+plots->Clear();
+hdt_z->Draw();
+hmc_corr_z->Draw("same");
+lg_z->Draw();
+sprintf(name, "%s_plots.ps", output.c_str());
+plots->Print(name);
+plots->Clear();
 
 // close
 sprintf(name, "%s_plots.ps]", output.c_str());
@@ -204,6 +259,14 @@ lg_z->Write();
 
 fout->Close();
 
+// print parameters
+
+sprintf(name, "(%f+(vtx_x-%f)*%f/%f)", dt_vtx_x_mean, mc_vtx_x_mean, dt_vtx_x_sigma, mc_vtx_x_sigma);
+std::cout << "corr_vtx_x = " << name << std::endl; 
+sprintf(name, "(%f+(vtx_y-%f)*%f/%f)", dt_vtx_y_mean, mc_vtx_y_mean, dt_vtx_y_sigma, mc_vtx_y_sigma);
+std::cout << "corr_vtx_y = " << name << std::endl; 
+sprintf(name, "(%f+(vtx_z-%f)*%f/%f)", dt_vtx_z_mean, mc_vtx_z_mean, dt_vtx_z_sigma, mc_vtx_z_sigma);
+std::cout << "corr_vtx_z = " << name << std::endl; 
 
 
 }
