@@ -1,5 +1,20 @@
 Method to get pileup input file:
 
+#######
+update 2016-06-09
+
+https://twiki.cern.ch/twiki/bin/view/CMS/PileupJSONFileforData
+
+need to add:
+
+git cms-addpkg RecoLuminosity/LumiDB
+
+for doing lumiCalc below:
+
+lumiCalc2.py lumibylsXing --xingMinLum 0.1 -b stable -i json_DCSONLY.txt -o lumi_DCSONLY.csv
+
+lumiCalc2.py lumibylsXing --xingMinLum 0.1 -b stable -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/DCSOnly/json_DCSONLY.txt -o lumi_DCSONLY.csv
+
 
 ########
 Update 80x 2016-06-03
@@ -35,7 +50,7 @@ pileupCalc.py -i Cert_271036-273730_13TeV_PromptReco_Collisions16_JSON.txt --inp
 
 ##########
 Update 76X 2016-05-16
-
+gg
 rereco Data 2015 C+D 25ns Golden Json v2
 https://hypernews.cern.ch/HyperNews/CMS/get/physics-validation/2611.html
 All CMS Json summarized here:
