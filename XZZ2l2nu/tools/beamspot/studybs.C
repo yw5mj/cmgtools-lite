@@ -18,11 +18,11 @@ TTree* tmc = (TTree*)fmc->Get("tree");
 
 TH1D* hdt_x = new TH1D("hdt_x", "Data Vertex X",100,0.056,0.075);
 TH1D* hdt_y = new TH1D("hdt_y", "Data Vertex Y",100,0.08,0.105);
-TH1D* hdt_z = new TH1D("hdt_z", "Data Vertex Z",100,-15,15);
+TH1D* hdt_z = new TH1D("hdt_z", "Data Vertex Z",100,-25,25);
 
 TH1D* hmc_x = new TH1D("hmc_x", "MC Vertex X",100,0.08,0.12);
 TH1D* hmc_y = new TH1D("hmc_y", "MC Vertex Y",100,0.155,0.18);
-TH1D* hmc_z = new TH1D("hmc_z", "MC Vertex Z",100,-15,15);
+TH1D* hmc_z = new TH1D("hmc_z", "MC Vertex Z",100,-25,25);
 
 TH1D* hmc_corr_x = new TH1D("hmc_corr_x", "Corrected MC Vertex X",100,0.056,0.075);
 TH1D* hmc_corr_y = new TH1D("hmc_corr_y", "Corrected MC Vertex Y",100,0.08,0.105);
@@ -228,6 +228,54 @@ sprintf(name, "%s_plots.ps", output.c_str());
 plots->Print(name);
 plots->Clear();
 
+
+// 2d plots
+
+TH2D* hdt_xy = new TH2D("hdt_xy", "Vertex X-Y Data", 100, 0,0.15, 100,0, 0.20);
+TH2D* hmc_xy = new TH2D("hmc_xy", "Vertex X-Y MC", 100, 0,0.15, 100,0, 0.20);
+TH2D* hdtmc_xy = new TH2D("hdtmc_xy", "Vertex X-Y Data and MC", 100, 0,0.15, 100,0, 0.20);
+hdt_xy->Sumw2();
+hmc_xy->Sumw2();
+hdtmc_xy->Sumw2();
+
+tdt->Draw("vtx_y:vtx_x>>hdt_xy");
+tmc->Draw("vtx_y:vtx_x>>hmc_xy");
+
+hdt_xy->GetXaxis()->SetTitle("Vertex X (cm)");
+hdt_xy->GetYaxis()->SetTitle("Vertex Y (cm)");
+hmc_xy->GetXaxis()->SetTitle("Vertex X (cm)");
+hmc_xy->GetYaxis()->SetTitle("Vertex Y (cm)");
+hdtmc_xy->GetXaxis()->SetTitle("Vertex X (cm)");
+hdtmc_xy->GetYaxis()->SetTitle("Vertex Y (cm)");
+
+hdtmc_xy->Add(hmc_xy);
+hdtmc_xy->Scale(hdt_xy->Integral()/hmc_xy->Integral());
+hdtmc_xy->Add(hdt_xy);
+
+// dt xy
+plots->Clear();
+hdt_xy->Draw("colz");
+sprintf(name, "%s_plots.ps", output.c_str());
+plots->Print(name);
+plots->Clear();
+
+// mc xy
+plots->Clear();
+hmc_xy->Draw("colz");
+sprintf(name, "%s_plots.ps", output.c_str());
+plots->Print(name);
+plots->Clear();
+
+// dt+mc xy
+plots->Clear();
+hdtmc_xy->Draw("colz");
+sprintf(name, "%s_plots.ps", output.c_str());
+plots->Print(name);
+plots->Clear();
+
+
+
+
 // close
 sprintf(name, "%s_plots.ps]", output.c_str());
 plots->Print(name);
@@ -256,6 +304,9 @@ lg_x->Write();
 lg_y->Write();
 lg_z->Write();
 
+hdt_xy->Write();
+hmc_xy->Write();
+hdtmc_xy->Write();
 
 fout->Close();
 
@@ -268,5 +319,13 @@ std::cout << "corr_vtx_y = " << name << std::endl;
 sprintf(name, "(%f+(vtx_z-%f)*%f/%f)", dt_vtx_z_mean, mc_vtx_z_mean, dt_vtx_z_sigma, mc_vtx_z_sigma);
 std::cout << "corr_vtx_z = " << name << std::endl; 
 
+std::cout << std::endl;
+TVector3 vec_dt_bs(dt_vtx_x_mean, dt_vtx_y_mean, dt_vtx_z_mean);
+TVector3 vec_mc_bs(mc_vtx_x_mean, mc_vtx_y_mean, mc_vtx_z_mean);
+
+std::cout << "data beam spot (x,y,z) = (" << dt_vtx_x_mean << "," << dt_vtx_y_mean << "," << dt_vtx_z_mean << ")" << std::endl;
+std::cout << "MC   beam spot (x,y,z) = (" << mc_vtx_x_mean << "," << mc_vtx_y_mean << "," << mc_vtx_z_mean << ")" << std::endl;
+std::cout << "data beam spot (Rxy, phi,theta,eta) = (" << vec_dt_bs.Perp() << "," << vec_dt_bs.Phi() << "," << vec_dt_bs.Theta() << "," << vec_dt_bs.Eta() << ")" << std::endl;
+std::cout << "MC   beam spot (Rxy, phi,theta,eta) = (" << vec_mc_bs.Perp() << "," << vec_mc_bs.Phi() << "," << vec_mc_bs.Theta() << "," << vec_mc_bs.Eta() << ")" << std::endl;
 
 }
