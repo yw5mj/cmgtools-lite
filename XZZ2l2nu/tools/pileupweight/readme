@@ -15,6 +15,15 @@ lumiCalc2.py lumibylsXing --xingMinLum 0.1 -b stable -i json_DCSONLY.txt -o lumi
 
 lumiCalc2.py lumibylsXing --xingMinLum 0.1 -b stable -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/DCSOnly/json_DCSONLY.txt -o lumi_DCSONLY.csv
 
+above doesn't work.
+
+Lumi POG:
+ /afs/cern.ch/user/l/lumipro/public
+/afs/cern.ch/user/l/lumipro/public/estimatePileup_makeJSON_2015.py
+
+
+
+
 
 ########
 Update 80x 2016-06-03
