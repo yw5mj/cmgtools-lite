@@ -51,7 +51,7 @@ coreSequence = [
     pileUpAna,
     vertexAna,
     lepAna,
-    #jetAna,
+    jetAna,
     metAna,
     leptonicVAna,
     multiStateAna,
@@ -72,8 +72,9 @@ if test==1:
     #selectedComponents = mcSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #selectedComponents = [SingleMuon_Run2015C_25ns_16Dec]
-    #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2] 
-    selectedComponents = [SingleMuon_Run2016B_PromptReco_v2,SingleElectron_Run2016B_PromptReco_v2] 
+    selectedComponents = [SingleMuon_Run2016B_PromptReco_v2] 
+    #selectedComponents = SingleMuon+SingleElectron
+    #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2,SingleElectron_Run2016B_PromptReco_v2] 
     #selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
     #selectedComponents = [DYJetsToLL_M50]
@@ -84,7 +85,7 @@ if test==1:
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        c.files = c.files[0]
+        c.files = c.files[0-3]
         #c.splitFactor = (len(c.files)/2 if len(c.files)>2 else 1)
         c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso

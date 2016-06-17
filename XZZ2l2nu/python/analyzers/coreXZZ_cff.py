@@ -97,7 +97,7 @@ jetAna = cfg.Analyzer(
     copyJetsByValue = True,      #Whether or not to copy the input jets or to work with references (should be 'True' if JetAnalyzer is run more than once)
     genJetCol = 'slimmedGenJets',
     rho = ('fixedGridRhoFastjetAll','',''), # it was ('fixedGridRhoFastjetAll','','') 
-    jetPt = 10., # default used to be 25.
+    jetPt = 5., # default used to be 25.
     jetEta = 4.7,
     jetEtaCentral = 2.4,
     jetLepDR = 0.4,
@@ -106,8 +106,8 @@ jetAna = cfg.Analyzer(
     minLepPt = 10,
     relaxJetId = False,
     doPuId = False, # Not commissioned in 7.0.X
-    recalibrateJets = True, #'MC', # True, False, 'MC', 'Data'
-    applyL2L3Residual = True, # Switch to 'Data' when they will become available for Data
+    recalibrateJets = False, #'MC', # True, False, 'MC', 'Data'
+    applyL2L3Residual = False, # Switch to 'Data' when they will become available for Data
     recalibrationType = "AK4PFchs",
     mcGT     = "Fall15_25nsV2_MC", # txt file pattern used in 74X: 'Summer15_25nsV6_MC'
     dataGT   = "Fall15_25nsV2_DATA", #Summer15_25nsV6_DATA
@@ -127,8 +127,8 @@ jetAna = cfg.Analyzer(
     doQG = False,
     do_mc_match = False,
     collectionPostFix = "",
-    calculateSeparateCorrections = True, # should be True if recalibrateJets is True, otherwise L1s will be inconsistent
-    calculateType1METCorrection  = True,
+    calculateSeparateCorrections = False, # should be True if recalibrateJets is True, otherwise L1s will be inconsistent
+    calculateType1METCorrection  = False,
     type1METParams = { 'jetPtThreshold':15., 'skipEMfractionThreshold':0.9, 'skipMuons':True }, # numbers for AK4CHS jets
     )
 
@@ -202,6 +202,7 @@ eventFlagsAna = cfg.Analyzer(
         # "trkPOG_manystripclus53X" : [ "Flag_trkPOG_manystripclus53X" ],
         # "trkPOG_toomanystripclus53X" : [ "Flag_trkPOG_toomanystripclus53X" ],
         # "trkPOG_logErrorTooManyClusters" : [ "Flag_trkPOG_logErrorTooManyClusters" ],
+        "globalTightHalo2016Filter" : [ "Flag_globalTightHalo2016Filter" ],
         "METFilters" : [ "Flag_METFilters" ],
     }
     )
