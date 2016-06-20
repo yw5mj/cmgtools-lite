@@ -51,6 +51,7 @@ weightsInfoType = NTupleObjectType("WeightsInfo", mcOnly=True, variables = [
 leptonType = NTupleObjectType("lepton", baseObjectTypes = [ particleType ], variables = [
     NTupleVariable("charge",   lambda x : x.charge(), int),
     NTupleVariable("hasgen",  lambda x : getattr(x,"hasgen",-1), help="has gen particle"),
+    NTupleVariable("ptErr",  lambda x : x.ptErr(), help="pt Error"),
     # Impact parameter
     NTupleVariable("dxy",   lambda x : x.dxy(), help="d_{xy} with respect to PV, in cm (with sign)"),
     NTupleVariable("dz",    lambda x : x.dz() , help="d_{z} with respect to PV, in cm (with sign)"),
@@ -75,6 +76,14 @@ leptonType = NTupleObjectType("lepton", baseObjectTypes = [ particleType ], vari
     NTupleVariable("lepsf",  lambda x : getattr(x,'lepsf',1), help="lepton sf"),
     NTupleVariable("lepsfUp",  lambda x : getattr(x,'lepsfUp',1), help="lepton sf upper"),
     NTupleVariable("lepsfLo",  lambda x : getattr(x,'lepsfLo',1), help="lepton sf lower"),
+    # PF candidates info
+    #NTupleVariable("npf",  lambda x : x.numberOfSourceCandidatePtrs(), help="n pfparticles"),
+    #NTupleVariable("pf0_pt",  lambda x : x.sourceCandidatePtr(0).pt() if x.numberOfSourceCandidatePtrs()>0 else -999 , help="lepton pf0 pt"),
+    #NTupleVariable("pf0_eta",  lambda x : x.sourceCandidatePtr(0).eta() if x.numberOfSourceCandidatePtrs()>0 else -999 , help="lepton pf0 eta"),
+    #NTupleVariable("pf0_phi",  lambda x : x.sourceCandidatePtr(0).phi() if x.numberOfSourceCandidatePtrs()>0 else -999 , help="lepton pf0 phi"),
+    #NTupleVariable("pf1_pt",  lambda x : x.sourceCandidatePtr(1).pt() if x.numberOfSourceCandidatePtrs()>1 else -999 , help="lepton pf1 pt"),
+    #NTupleVariable("pf1_eta",  lambda x : x.sourceCandidatePtr(1).eta() if x.numberOfSourceCandidatePtrs()>1 else -999 , help="lepton pf1 eta"),
+    #NTupleVariable("pf1_phi",  lambda x : x.sourceCandidatePtr(1).phi() if x.numberOfSourceCandidatePtrs()>1 else -999 , help="lepton pf1 phi"),
 ])
 
 ### EXTENDED VERSION WITH INDIVIUAL DISCRIMINATING VARIABLES

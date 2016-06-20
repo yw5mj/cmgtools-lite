@@ -51,7 +51,7 @@ coreSequence = [
     pileUpAna,
     vertexAna,
     lepAna,
-    #jetAna,
+    jetAna,
     metAna,
     leptonicVAna,
     multiStateAna,
@@ -80,13 +80,14 @@ if test==1:
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_600] 
     #selectedComponents = signalSamples
-    selectedComponents = signalSamples + backgroundSamples
+    #selectedComponents = signalSamples + backgroundSamples
     #selectedComponents = [TTTo2L2Nu]
+    selectedComponents = [TTWJetsToLNu]
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
         #c.files = c.files[0]
-        c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
+        c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
         #c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso

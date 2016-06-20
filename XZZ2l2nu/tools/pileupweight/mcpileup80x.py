@@ -7,7 +7,7 @@ gROOT.ProcessLine('.x tdrstyle.C')
 
 
 parser = optparse.OptionParser()
-parser.add_option("-m","--mbxsec",dest="mbxsec", default='680',help="mb xsec unit 100 ub")
+parser.add_option("-t","--tag",dest="tag", default='680',help="input file tag")
 
 (options,args) = parser.parse_args()
 
@@ -19,7 +19,7 @@ def makePURatio(tag='680'):
 
     intag='pileup_DATA_80x_'+tag
     outtag='pileup_MC_80x_'+tag
-    lumi=0.589
+    lumi=2.5969
 
     pdf = [ 	0.000829312873542,
  		0.00124276120498,
@@ -75,11 +75,17 @@ def makePURatio(tag='680'):
 
     fdt=TFile(intag+'.root')
     pileup_dt = fdt.Get('pileup')
+    nbins = pileup_dt.GetXaxis().GetNbins()
+    xmin = pileup_dt.GetXaxis().GetBinLowEdge(1)
+    xmax = pileup_dt.GetXaxis().GetBinUpEdge(nbins)
     pileup_dt.Scale(1.0/pileup_dt.Integral())
     fmc=TFile(outtag+'.root','recreate')
-    pileup_mc=TH1F('pileup','pileup',50,0,50)
+    pileup_mc=TH1F('pileup','pileup',nbins,xmin,xmax)
     pileup_mc.Sumw2()
-    for i in range(50):    pileup_mc.SetBinContent(i+1,pdf[i])
+    for i in range(nbins):
+        if i< len(pdf): pileup_mc.SetBinContent(i+1,pdf[i])
+        else: pileup_mc.SetBinContent(i+1, 0.0)
+
     pileup_mc.Scale(1.0/pileup_mc.Integral())
     gStyle.SetStatStyle(0)
     pileup_dt.SetStats(0)
@@ -150,6 +156,6 @@ def makePURatio(tag='680'):
     fmc.Close()
 
 
-makePURatio(tag=options.mbxsec)
+makePURatio(tag=options.tag)
 
 

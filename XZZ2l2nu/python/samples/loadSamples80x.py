@@ -98,8 +98,8 @@ mcSamples = signalSamples + backgroundSamples + jercRefMC + extraBackgroundMC
 # data
 SingleMuon=[SingleMuon_Run2016B_PromptReco,SingleMuon_Run2016B_PromptReco_v2]
 SingleElectron=[SingleElectron_Run2016B_PromptReco,SingleElectron_Run2016B_PromptReco_v2]
-SinglePhoton=[SinglePhoton_Run2016B_PromptReco,SinglePhoton_Run2016B_PromptReco_v2]
-MuEG=[MuonEG_Run2016B_PromptReco,MuonEG_Run2016B_PromptReco_v2]
+#SinglePhoton=[SinglePhoton_Run2016B_PromptReco,SinglePhoton_Run2016B_PromptReco_v2]
+#MuEG=[MuonEG_Run2016B_PromptReco,MuonEG_Run2016B_PromptReco_v2]
 
 for s in SingleMuon:
     #s.triggers = triggers_1mu_noniso
@@ -110,8 +110,8 @@ for s in SingleElectron:
     s.triggers = [] 
     #s.vetoTriggers = triggers_1mu_noniso
     s.vetoTriggers = []
-for s in SinglePhoton:
-    s.trigers = triggers_photon_unbias
+#for s in SinglePhoton:
+#    s.trigers = triggers_photon_unbias
 
 
 dataSamples=SingleMuon+SingleElectron #+jercRefdt
@@ -120,6 +120,7 @@ dataSamples=SingleMuon+SingleElectron #+jercRefdt
 silverJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_Silver.txt'
 #goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-273730_13TeV_PromptReco_Collisions16_JSON.txt'
 goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt'
+run_range = (271036,274443)
 
 jsonFile = goldenJson
 
@@ -144,5 +145,6 @@ for comp in dataSamples:
     comp.isMC = False
     comp.isData = True
     comp.json = jsonFile
+    comp.run_range = run_range
     comp.globalTag = "Summer15_25nsV6_DATA"
 

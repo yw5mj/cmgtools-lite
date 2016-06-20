@@ -7,19 +7,7 @@ from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
-#tag='PU66NoHLT_DataHLT_AMC_ZPt_TrgEff_'
-#tag='PU66NoHLT_DataHLT_AMC_ZPt_TrgEffv2_'
-tag='PU66NoHLT_DataPreHLT_AMC_ZPt_TrgEff_'
-#tag='PU66NoHLT_DataPreHLT_AMC_ZPt_TrgEffv2_'
-#tag='PU66NoHLT_DataPreHLT_AMC_ZPt_'
-#tag='PU66NoHLT_DataHLT_AMC_ZPt_'
-#tag='PU66NoHLT_AMC_ZPt_'
-#tag='PU66NoHLT_AMC_'
-#tag='PU66NoHLT_MLM_'
-#tag='PU66_DYAMC_'
-#tag='PU66_DYAMC_ZPt_'
-#tag='PU66_'
-#putag='655'
+tag='PU633_DtNoHLT_AMC_ZPt_'
 #tag=""
 #cutChain='loosecut'
 cutChain='tight'
@@ -38,24 +26,26 @@ Blind=True
 
 # apply ZPt correction on DYJets samples
 useZPtWeight=True
-# use HLT pre-applied Data ntuples 
-DataPreHLT=True
+DataHLT=False
+test=False
 
-TrgEff=True
+TrgEff=False
+if TrgEff: tag += "TrgEff_"
 
 outdir='plots'
-indir='/home/heli/work/XZZ/80X_Ntuple/80X_20160606_NoHLT_Skim'
+#indir='/data/XZZ/80X_Ntuple/80X_20160618_Skim'
+indir='/home/heli/work/XZZ/80X_Ntuple/80X_20160618_Skim'
 #indir='/data/XZZ/80X_Ntuple/80X_20160606_NoHLT_Skim'
-lumi=0.5893
+#lumi=0.5893
+lumi=2.596909574
 sepSig=True
 DrawLeptons=False
 doRatio=True
-test=False
 FakeData=False
 UseMETFilter=False
 SignalAll1pb=True
-#puWeight='puWeight698'
-puWeight='puWeight'
+puWeight='puWeight633'
+#puWeight='puWeight'
 k=1 # signal scale
 
 elChannel='(abs(llnunu_l1_l1_pdgId)==11)'
@@ -189,11 +179,8 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 
 zjetsPlotters=[]
-zjetsSamples = ['DYJetsToLL_M50_ZPt_Effv2']
-#zjetsSamples = ['DYJetsToLL_M50_ZPt_Eff']
-#zjetsSamples = ['DYJetsToLL_M50_ZPt']
-#zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1']
-#zjetsSamples = ['DYJetsToLL_M50']
+zjetsSamples = ['DYJetsToLL_M50_ZPt']
+#zjetsSamples = ['DYJetsToLL_M50_ZPt_TrigEff']
 
 
 for sample in zjetsSamples:
@@ -316,17 +303,18 @@ for sample in sigSamples:
     allPlotters[sample] = sigPlotters[-1]
 
 dataPlotters=[]
-dataSamples = ['SingleMuon_Run2016B_PromptReco_v2', 'SingleElectron_Run2016B_PromptReco_v2']
+dataSamples = ['SingleMuon_Run2016B_PromptReco', 'SingleMuon_Run2016B_PromptReco_v2', 
+               'SingleElectron_Run2016B_PromptReco', 'SingleElectron_Run2016B_PromptReco_v2']
 
-if DataPreHLT: 
-    dataSamples = ['SingleMuon_Run2016B_PromptReco_v2_HLT_MU', 'SingleElectron_Run2016B_PromptReco_v2_HLT_ELE']
 
 for sample in dataSamples:
     dataPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree'))
 
-if not DataPreHLT:
+if DataHLT:
     dataPlotters[0].addCorrectionFactor('(HLT_MU)','HLT')
-    dataPlotters[1].addCorrectionFactor('(HLT_ELE&&!HLT_MU)','HLT')
+    dataPlotters[1].addCorrectionFactor('(HLT_MU)','HLT')
+    dataPlotters[2].addCorrectionFactor('(HLT_ELE&&!HLT_MU)','HLT')
+    dataPlotters[3].addCorrectionFactor('(HLT_ELE&&!HLT_MU)','HLT')
 
 Data = MergedPlotter(dataPlotters)
 
@@ -353,7 +341,7 @@ Stack.doRatio(doRatio)
 
 
 
-#Stack.drawStack('nVert', cuts, str(lumi*1000), 50, 0.0, 50.0, titlex = "N vertices", units = "",output=tag+'nVert',outDir=outdir,separateSignal=sepSig)
+Stack.drawStack('nVert', cuts, str(lumi*1000), 50, 0.0, 50.0, titlex = "N vertices", units = "",output=tag+'nVert',outDir=outdir,separateSignal=sepSig)
 #'''
 Stack.drawStack('llnunu_mta', cuts, str(lumi*1000), 500, 0.0, 5000.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_high5',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
 Stack.drawStack('llnunu_mta', cuts, str(lumi*1000), 60, 0.0, 1200.0, titlex = "M_{T}", units = "GeV",output=tag+'mt',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
