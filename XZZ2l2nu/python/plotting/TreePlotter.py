@@ -7,9 +7,10 @@ from array import array
 
 class TreePlotter(PlotterBase):
 
-    def __init__(self,file,tree,weight = "1"):
+    def __init__(self,file,tree,weight = "1",name="plotter"):
         self.file = ROOT.TFile(file)
         self.tree = self.file.Get(tree)
+        self.name = name
         if tree ==0:
             print "Tree not found\n"
             sys.exit()

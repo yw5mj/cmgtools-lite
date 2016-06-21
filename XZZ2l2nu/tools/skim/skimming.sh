@@ -11,8 +11,10 @@ selection="(1)"
 g++ skimming.cc -o skimming.exe `root-config --cflags` `root-config --libs`
 
 #inputs
-inputdir=/data/XZZ/80X_Ntuple/80X_20160618
-outputdir=/home/heli/work/XZZ/80X_Ntuple/80X_20160618_Skim
+inputdir=/data/XZZ/80X_Ntuple/80X_20160621
+outputdir=/home/heli/work/XZZ/80X_Ntuple/80X_20160621_Skim
+#inputdir=/data/XZZ/80X_Ntuple/80X_20160618
+#outputdir=/home/heli/work/XZZ/80X_Ntuple/80X_20160618_Skim
 #outputdir=/data/XZZ/80X_Ntuple/80X_20160618_Skim
 #inputdir=/data/XZZ/80X_Ntuple/80X_20160606_NoHLT
 #inputdir=/afs/cern.ch/user/h/heli/work/private/cms/2tev/XZZ2l2nu_80X/CMSSW_8_0_10/src/CMGTools/XZZ2l2nu/cfg/mc80x/sub/mc1

@@ -7,7 +7,8 @@ from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
-tag='PU633_DtNoHLT_AMC_ZPt_'
+#tag='PU633_DtNoHLT_AMC_ZPt_'
+tag='PU633_DtHLT_AMC_ZPt_'
 #tag=""
 #cutChain='loosecut'
 cutChain='tight'
@@ -20,16 +21,16 @@ cutChain='tight'
 #cutChain='zjetscut'
 #cutChain='zjetscutmet50'
 
-channel='both' # can be el or mu or both
-LogY=True
+channel='mu' # can be el or mu or both
+LogY=False
 Blind=True
 
 # apply ZPt correction on DYJets samples
 useZPtWeight=True
-DataHLT=False
+DataHLT=True
 test=False
 
-TrgEff=False
+TrgEff=True
 if TrgEff: tag += "TrgEff_"
 
 outdir='plots'
@@ -131,7 +132,7 @@ wwPlotters=[]
 wwSamples = ['WWTo2L2Nu','WWToLNuQQ','WZTo1L1Nu2Q']
 
 for sample in wwSamples:
-    wwPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree'))
+    wwPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree',name=sample))
     wwPlotters[-1].addCorrectionFactor('1./SumWeights','tree')
     wwPlotters[-1].addCorrectionFactor('xsec','tree')
     wwPlotters[-1].addCorrectionFactor('genWeight','genWeight')
@@ -150,7 +151,7 @@ vvSamples = ['WZTo2L2Q','WZTo3LNu',
 'ZZTo2L2Q','ZZTo4L']
 
 for sample in vvSamples:
-    vvPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree'))
+    vvPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree',name=sample))
     vvPlotters[-1].addCorrectionFactor('1./SumWeights','tree')
     vvPlotters[-1].addCorrectionFactor('xsec','tree')
     vvPlotters[-1].addCorrectionFactor('genWeight','genWeight')
@@ -166,7 +167,7 @@ wjetsPlotters=[]
 wjetsSamples = ['WJetsToLNu']
 
 for sample in wjetsSamples:
-    wjetsPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree'))
+    wjetsPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree',name=sample))
     wjetsPlotters[-1].addCorrectionFactor('1./SumWeights','tree')
     wjetsPlotters[-1].addCorrectionFactor('xsec','tree')
     wjetsPlotters[-1].addCorrectionFactor('genWeight','genWeight')
@@ -179,12 +180,12 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 
 zjetsPlotters=[]
-zjetsSamples = ['DYJetsToLL_M50_ZPt']
-#zjetsSamples = ['DYJetsToLL_M50_ZPt_TrigEff']
+#zjetsSamples = ['DYJetsToLL_M50_ZPt']
+zjetsSamples = ['DYJetsToLL_M50_ZPt_TrigEff']
 
 
 for sample in zjetsSamples:
-    zjetsPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree'))
+    zjetsPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree',name=sample))
     zjetsPlotters[-1].addCorrectionFactor('1./SumWeights','tree')
     if useZPtWeight: 
         zjetsPlotters[-1].addCorrectionFactor('ZPtWeight','ZPtWeight')
@@ -208,7 +209,7 @@ ttPlotters=[]
 ttSamples = ['TTTo2L2Nu','TTZToLLNuNu','TTWJetsToLNu']
 
 for sample in ttSamples:
-    ttPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree'))
+    ttPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree',name=sample))
     ttPlotters[-1].addCorrectionFactor('1./SumWeights','tree')
     ttPlotters[-1].addCorrectionFactor('xsec','tree')
     ttPlotters[-1].addCorrectionFactor('genWeight','genWeight')
@@ -292,7 +293,7 @@ if SignalAll1pb:
         sigSampleNames[sig] = string.replace(sigSampleNames[sig], str(k)+' x', '1 pb')
 
 for sample in sigSamples:
-    sigPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree'))
+    sigPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree',name=sample))
     sigPlotters[-1].addCorrectionFactor('1./SumWeights','tree')
     sigPlotters[-1].addCorrectionFactor(str(sigXsec[sample]),'tree')
     sigPlotters[-1].addCorrectionFactor('genWeight','genWeight')
@@ -308,7 +309,7 @@ dataSamples = ['SingleMuon_Run2016B_PromptReco', 'SingleMuon_Run2016B_PromptReco
 
 
 for sample in dataSamples:
-    dataPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree'))
+    dataPlotters.append(TreePlotter(indir+'/'+sample+'.root','tree',name=sample))
 
 if DataHLT:
     dataPlotters[0].addCorrectionFactor('(HLT_MU)','HLT')
