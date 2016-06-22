@@ -120,9 +120,11 @@ def makePURatio(tag='680'):
     pt.SetTextFont(42)
     pt.SetTextSize(0.03)
     text = pt.AddText(0.15,0.3,"CMS Preliminary")
-    text = pt.AddText(0.55,0.3,"#sqrt{s} = 13 TeV, 2016, L = "+"{:.3}".format(float(lumi))+" fb^{-1}")
+    text = pt.AddText(0.55,0.3,"#sqrt{s} = 13 TeV, 2016B, L = "+"{:.3}".format(float(lumi))+" fb^{-1}")
 
 
+    pileup_dt.GetXaxis().SetRangeUser(0,50)
+    pileup_mc.GetXaxis().SetRangeUser(0,50)
     pileup_dt.Draw()
     pileup_mc.Draw("HIST,SAME")
     lg.Draw("same")
@@ -134,6 +136,7 @@ def makePURatio(tag='680'):
     # ratio
     puweight = pileup_dt.Clone("puweight")
     puweight.Divide(pileup_mc)
+    puweight.GetXaxis().SetRangeUser(0,50)
     puweight.GetYaxis().SetTitle("PU Weight")
     lg1 = TLegend(0.36,0.7,0.85,0.85)
     lg1.AddEntry(puweight, "Data/MC 2016B ", "pl")
@@ -151,8 +154,9 @@ def makePURatio(tag='680'):
     puwts = [puweight.GetBinContent(i+1) for i in range(50)]
     print puwts
 
-    pileup_mc.Write()
-    puweight.Write()
+    pileup_dt.Write('pileup_dt')
+    pileup_mc.Write('pileup_mc')
+    puweight.Write('puweight_dtmc')
     fmc.Close()
 
 
