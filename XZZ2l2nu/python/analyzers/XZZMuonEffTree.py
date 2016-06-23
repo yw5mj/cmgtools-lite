@@ -52,21 +52,21 @@ class XZZMuonEffTree( Analyzer ):
         self.readCollections( event.input )
         event.llpair=[]
         if self.pfbkg:
-            event.selectedMuons=[i for i in self.handles['pfcandidate'].product() if i.pt()>20 and abs(i.pdgId())==211 and abs(i.eta())<2.4]
-            event.selectedMuons.sort(key = lambda l : l.pt(), reverse = True)
-            if len(event.selectedMuons)>4 and self.npf[4]/self.npf['all']<self.pctpf[4]:
-                event.selectedMuons=event.selectedMuons[::len(event.selectedMuons)/4][:4]
+            event.selectedhadrons=[i for i in self.handles['pfcandidate'].product() if i.pt()>20 and abs(i.pdgId())==211 and abs(i.eta())<2.4]
+            event.selectedhadrons.sort(key = lambda l : l.pt(), reverse = True)
+            if len(event.selectedhadrons)>4 and self.npf[4]/self.npf['all']<self.pctpf[4]:
+                event.zllcandidates=event.selectedhadrons[::len(event.selectedhadrons)/4][:4]
                 self.npf[4]+=1.
-            elif len(event.selectedMuons)>3 and self.npf[3]/self.npf['all']<self.pctpf[3]:
-                event.selectedMuons=event.selectedMuons[::len(event.selectedMuons)/3][:3]
+            elif len(event.selectedhadrons)>3 and self.npf[3]/self.npf['all']<self.pctpf[3]:
+                event.zllcandidates=event.selectedhadrons[::len(event.selectedhadrons)/3][:3]
                 self.npf[3]+=1.
-            elif len(event.selectedMuons)>2:event.selectedMuons=event.selectedMuons[::len(event.selectedMuons)/2][:2]
+            elif len(event.selectedhadrons)>2:event.zllcandidates=event.selectedhadrons[::len(event.selectedhadrons)/2][:2]
             else: return False
             self.npf['all']+=1.
         else:
-            event.selectedMuons=[i for i in event.selectedMuons if i.track().isNonnull()]
-            if len(event.selectedMuons)<2: return False
-        for l1,l2 in combinations(event.selectedMuons,2):
+            event.zllcandidates=[i for i in event.selectedMuons if i.track().isNonnull()]
+            if len(event.zllcandidates)<2: return False
+        for l1,l2 in combinations(event.zllcandidates,2):
             if l1.pdgId() == -l2.pdgId() or self.eithercharge:
                 pair = Pair(l1,l2,23)
                 if abs(l1.dz()-l2.dz())<.4 or self.pfbkg: event.llpair.append(pair)
