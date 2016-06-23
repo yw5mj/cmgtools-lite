@@ -16,7 +16,11 @@ class XZZMuonEffTree( Analyzer ):
         self.eithercharge=getattr(self.cfg_ana,"eithercharge",False)
         self.checktag=getattr(cfg_ana,'checktag',False)
         self.pfbkg=getattr(cfg_ana,'pfbkg',False)
+        self.pctpf=getattr(cfg_ana,'pctpf',{3:0,4:0})
         self.muHLT=getattr(cfg_ana,'muHLT','')
+        self.npf={3:0,4:0,"all":.01}
+
+
 
     def declareHandles(self): 
         super(XZZMuonEffTree, self).declareHandles()
@@ -48,14 +52,20 @@ class XZZMuonEffTree( Analyzer ):
         self.readCollections( event.input )
         event.llpair=[]
         if self.pfbkg:
-            event.selectedMuons=[]
-            for i in self.handles['pfcandidate'].product():
-                if i.pt()>20 and abs(i.pdgId())==211 and abs(i.eta())<2.4:event.selectedMuons.append(i)
+            event.selectedMuons=[i for i in self.handles['pfcandidate'].product() if i.pt()>20 and abs(i.pdgId())==211 and abs(i.eta())<2.4]
             event.selectedMuons.sort(key = lambda l : l.pt(), reverse = True)
-            if len(event.selectedMuons)>2: event.selectedMuons=event.selectedMuons[:2]
+            if len(event.selectedMuons)>4 and self.npf[4]/self.npf['all']<self.pctpf[4]:
+                event.selectedMuons=event.selectedMuons[::len(event.selectedMuons)/4][:4]
+                self.npf[4]+=1.
+            elif len(event.selectedMuons)>3 and self.npf[3]/self.npf['all']<self.pctpf[3]:
+                event.selectedMuons=event.selectedMuons[::len(event.selectedMuons)/3][:3]
+                self.npf[3]+=1.
+            elif len(event.selectedMuons)>2:event.selectedMuons=event.selectedMuons[::len(event.selectedMuons)/2][:2]
+            else: return False
+            self.npf['all']+=1.
         else:
             event.selectedMuons=[i for i in event.selectedMuons if i.track().isNonnull()]
-        if len(event.selectedMuons)<2: return False
+            if len(event.selectedMuons)<2: return False
         for l1,l2 in combinations(event.selectedMuons,2):
             if l1.pdgId() == -l2.pdgId() or self.eithercharge:
                 pair = Pair(l1,l2,23)
