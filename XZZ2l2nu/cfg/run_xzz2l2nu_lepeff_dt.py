@@ -18,8 +18,6 @@ from CMGTools.XZZ2l2nu.samples.loadSamples76x import *
 #-------- Analyzer
 from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
 
-#-------- SEQUENCE
-#sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
 meffAna = cfg.Analyzer(
     XZZMuonEffTree,
     name='mEffTree',
