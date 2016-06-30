@@ -51,7 +51,8 @@ int main(int argc, char** argv) {
   //TFile* ftrig = new TFile("data/trigEff.root");
   //TH1D* htrg_z_e = (TH1D*)ftrig->Get("heff_el_zpt");
   //TH1D* htrg_z_m = (TH1D*)ftrig->Get("heff_mu_zpt");
-  TFile* ftrig = new TFile("data/trig_l1l2_80x.root");
+  //TFile* ftrig = new TFile("data/trig_l1l2_80x.root");
+  TFile* ftrig = new TFile("data/trig_l1l2_80x_2016b_2p6fbm1.root");
   TH2D* htrg_e_1 = (TH2D*)ftrig->Get("ell1pteta");
   TH2D* htrg_e_2 = (TH2D*)ftrig->Get("ell2pteta");
   TH2D* htrg_m_1 = (TH2D*)ftrig->Get("mul1pteta");
@@ -132,7 +133,8 @@ int main(int argc, char** argv) {
         eff1 = htrg_e_1->GetBinContent(l1_pt_bin, l1_eta_bin);
         eff2 = htrg_e_2->GetBinContent(l2_pt_bin, l2_eta_bin);
         eff1 /=100.0; eff2 /=100.0;
-        triggersf = eff1 + (1.0-eff1)*eff2;
+        //triggersf = eff1 + (1.0-eff1)*eff2;
+        triggersf = eff1 ; // only use eff1, becaue eff2 (2nd pass incase 1st does not pass) is shot in statistics, only 3 events out of 222521 in 2016B 2.6fb-1 has this situation, 
       }
 
     }
