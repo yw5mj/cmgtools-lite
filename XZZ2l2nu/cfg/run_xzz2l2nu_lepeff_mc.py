@@ -37,6 +37,7 @@ leptonType.variables.extend([
     # Extra muon ID working points
     NTupleVariable("softMuonId", lambda x : x.muonID("POG_ID_Soft") if abs(x.pdgId())==13 else -100, int, help="Muon POG Soft id"),
     NTupleVariable("pfMuonId",   lambda x : x.muonID("POG_ID_Loose") if abs(x.pdgId())==13 else -100, int, help="Muon POG Loose id"),
+    NTupleVariable("MediumMuonId",   lambda x : x.muonID("POG_ID_Medium") if abs(x.pdgId())==13 else -100, int, help="Muon POG Medium id"),
     NTupleVariable("tightMuonId",   lambda x : x.muonID("POG_ID_Tight") if abs(x.pdgId())==13 else -100, int, help="Muon POG Tight id"),
     NTupleVariable("isTag",   lambda x : x.istag if abs(x.pdgId())==13 else -100, int, help="Muon POG Tight id"),
 ]) 

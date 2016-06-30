@@ -13,7 +13,7 @@ from CMGTools.XZZ2l2nu.analyzers.coreXZZ_cff import *
 from CMGTools.XZZ2l2nu.analyzers.XZZMuonEffTree import *
 
 #-------- SAMPLES AND TRIGGERS -----------
-from CMGTools.XZZ2l2nu.samples.loadSamples76x import *
+from CMGTools.XZZ2l2nu.samples.loadSamples80x import *
 
 #-------- Analyzer
 from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
@@ -23,7 +23,7 @@ from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
 meffAna = cfg.Analyzer(
     XZZMuonEffTree,
     name='mEffTree',
-    genfilter=False,
+    genfilter=True,
     pfbkg=False,
     eithercharge=False,
     checktag=True,
@@ -43,6 +43,7 @@ leptonType.variables.extend([
 ]) 
 sequence = [
     jsonAna,
+    pileUpAna,
     vertexAna,
     lepAna,
     meffAna,
@@ -54,7 +55,7 @@ sequence = [
 test = 1
 if test==1:
     # test a single component, using a single thread.
-    selectedComponents = SingleMuon
+    selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = mcSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #[SingleElectron_Run2015D_Promptv4,SingleElectron_Run2015D_05Oct]
