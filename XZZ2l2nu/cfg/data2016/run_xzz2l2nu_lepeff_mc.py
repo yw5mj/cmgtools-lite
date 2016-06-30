@@ -66,9 +66,8 @@ if test==1:
     for c in selectedComponents:
         #c.files = c.files[:1]
         c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
-        #c.splitFactor = 1
-        #c.triggers=triggers_1mu_noniso
-        #c.triggers=triggers_1e_noniso
+        c.triggers=[]
+        c.vetoTriggers = []
 
 ## output histogram
 outputService=[]
