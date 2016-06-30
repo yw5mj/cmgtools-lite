@@ -13,7 +13,7 @@ from CMGTools.XZZ2l2nu.analyzers.coreXZZ_cff import *
 from CMGTools.XZZ2l2nu.analyzers.XZZMuonEffTree import *
 
 #-------- SAMPLES AND TRIGGERS -----------
-from CMGTools.XZZ2l2nu.samples.loadSamples76x import *
+from CMGTools.XZZ2l2nu.samples.loadSamples80x import *
 
 #-------- Analyzer
 from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
@@ -63,8 +63,8 @@ if test==1:
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        #c.files = c.files[:1]
-        c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
+        #c.files = c.files[:10]
+        c.splitFactor = (len(c.files)/5 if len(c.files)>=5 else len(c.files))
         #c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso
