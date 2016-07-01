@@ -5,11 +5,16 @@ from PhysicsTools.HeppyCore.utils.deltar import deltaR, deltaPhi
 class Pair(object):
     def __init__(self,leg1,leg2,pdg = 0):
         self.l1=ROOT.TLorentzVector()
+        self.useTuneP=3
         if hasattr(leg1,'TuneP_pt'):self.l1.SetPtEtaPhiM(leg1.TuneP_pt(),leg1.TuneP_eta(),leg1.TuneP_phi(),leg1.TuneP_m())
-        else: self.l1.SetPtEtaPhiM(leg1.p4().pt(),leg1.p4().eta(),leg1.p4().phi(),leg1.p4().mass())
+        else: 
+            self.l1.SetPtEtaPhiM(leg1.p4().pt(),leg1.p4().eta(),leg1.p4().phi(),leg1.p4().mass())
+            useTuneP-=1
         self.l2=ROOT.TLorentzVector()
         if hasattr(leg2,'TuneP_pt'):self.l2.SetPtEtaPhiM(leg2.TuneP_pt(),leg2.TuneP_eta(),leg2.TuneP_phi(),leg2.TuneP_m())
-        else: self.l2.SetPtEtaPhiM(leg2.p4().pt(),leg2.p4().eta(),leg2.p4().phi(),leg2.p4().mass())
+        else: 
+            self.l2.SetPtEtaPhiM(leg2.p4().pt(),leg2.p4().eta(),leg2.p4().phi(),leg2.p4().mass())
+            useTuneP-=2
         self.leg1 = leg1
         self.leg2 = leg2
         self.pdg = pdg

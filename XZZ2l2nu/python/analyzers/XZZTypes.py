@@ -3,6 +3,7 @@ import math
 
 
 LLType = NTupleObjectType("LLType", baseObjectTypes=[fourVectorType], variables = [
+    NTupleVariable("TuneP_usage",   lambda x : x.useTuneP, int),               
     NTupleVariable("TuneP_pt",   lambda x : x.TuneP_pt(), float),               
     NTupleVariable("TuneP_eta",   lambda x : x.TuneP_eta(), float),               
     NTupleVariable("TuneP_phi",   lambda x : x.TuneP_phi(), float),               
