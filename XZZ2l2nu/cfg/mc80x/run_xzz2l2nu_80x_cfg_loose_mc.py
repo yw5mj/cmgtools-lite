@@ -78,7 +78,7 @@ if test==1:
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
     #selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
-    #selectedComponents = [BulkGravToZZToZlepZinv_narrow_600] 
+    #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1600] 
     #selectedComponents = signalSamples
     selectedComponents = signalSamples+backgroundSamples
     #selectedComponents = [TTTo2L2Nu]
