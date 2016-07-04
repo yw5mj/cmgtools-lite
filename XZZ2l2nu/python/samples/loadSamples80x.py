@@ -119,8 +119,9 @@ dataSamples=SingleMuon+SingleElectron #+jercRefdt
 # JSON
 silverJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_Silver.txt'
 #goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-273730_13TeV_PromptReco_Collisions16_JSON.txt'
-goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt'
-run_range = (271036,274443)
+#goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt'
+goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt'
+run_range = (271036,275125)
 
 jsonFile = goldenJson
 
@@ -132,8 +133,8 @@ for comp in mcSamples+otherMcSamples:
     comp.isMC = True
     comp.isData = False
     comp.splitFactor = 250
-    comp.puFileMC=dataDir+"/pileup_MC_80x_65456.root"
-    comp.puFileData=dataDir+"/pileup_DATA_80x_65456.root"
+    comp.puFileMC=dataDir+"/pileup_MC_80x_2016B_Run_271036-274443_mb_69735.root"
+    comp.puFileData=dataDir+"/pileup_DATA_80x_2016B_Run_271036-274443_mb_69735.root"
     comp.eSFinput=dataDir+"/CutBasedID_LooseWP_76X_18Feb.txt_SF2D.root"
     comp.efficiency = eff2012
     #comp.triggers=triggers_1mu_noniso+triggers_1e_noniso

@@ -8,7 +8,7 @@ from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
 #tag='PU633_DtNoHLT_AMC_ZPt_'
-tag='PU633_DtHLT_AMC_ZPt_'
+tag='PU697_DtHLT_AMC_ZPt_'
 #tag=""
 #cutChain='loosecut'
 cutChain='tight'
@@ -21,7 +21,7 @@ cutChain='tight'
 #cutChain='zjetscut'
 #cutChain='zjetscutmet50'
 
-channel='mu' # can be el or mu or both
+channel='both' # can be el or mu or both
 LogY=False
 Blind=True
 
@@ -45,7 +45,7 @@ doRatio=True
 FakeData=False
 UseMETFilter=False
 SignalAll1pb=True
-puWeight='puWeight633'
+puWeight='puWeight697'
 #puWeight='puWeight'
 k=1 # signal scale
 
