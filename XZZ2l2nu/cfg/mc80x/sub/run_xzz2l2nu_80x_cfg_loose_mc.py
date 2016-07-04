@@ -76,13 +76,13 @@ if test==1:
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2,SingleElectron_Run2016B_PromptReco_v2] 
     #selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
-    #selectedComponents = [DYJetsToLL_M50]
+    selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_600] 
     #selectedComponents = signalSamples
     #selectedComponents = signalSamples + backgroundSamples
     #selectedComponents = [TTTo2L2Nu]
-    selectedComponents = [TTWJetsToLNu]
+    #selectedComponents = [TTWJetsToLNu]
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:

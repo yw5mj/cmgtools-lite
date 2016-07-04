@@ -1,5 +1,19 @@
 Method to get pileup input file:
 
+######
+update 2016-06-30
+
+ JSON files are available on lxplus in /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ :
+
+    Standard physics:
+        Golden JSON file
+        Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt
+            Luminosity: 3.99/fb 
+
+
+
+
+
 #######
 update 2016-06-19
 
