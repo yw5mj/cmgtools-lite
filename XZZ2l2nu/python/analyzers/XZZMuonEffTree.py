@@ -59,7 +59,7 @@ class XZZMuonEffTree( Analyzer ):
         for l1,l2 in combinations(event.selectedMuons,2):
             if l1.pdgId() == -l2.pdgId() or self.eithercharge:
                 pair = Pair(l1,l2,23)
-                if abs(l1.dz()-l2.dz())<.4 or self.pfbkg: event.llpair.append(pair)
+                event.llpair.append(pair)
         if not event.llpair: return False
         event.llpair=[min(event.llpair,key = lambda x: abs(x.M()-91.118))]
         if self.checktag:
