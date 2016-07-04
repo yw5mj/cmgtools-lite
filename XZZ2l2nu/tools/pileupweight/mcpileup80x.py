@@ -156,6 +156,7 @@ def makePURatio(tag='680'):
 
     pileup_dt.Write('pileup_dt')
     pileup_mc.Write('pileup_mc')
+    pileup_mc.Write('pileup')
     puweight.Write('puweight_dtmc')
     fmc.Close()
 
