@@ -23,7 +23,7 @@ class Pair(object):
         et1 = math.sqrt(leg1.mass()*leg1.mass()+leg1.pt()*leg1.pt())
         et2 = math.sqrt(leg1.mass()*leg1.mass()+leg2.pt()*leg2.pt())
         TuneP_et1 = math.sqrt(leg1.mass()*leg1.mass()+self.l1.Pt()*self.l1.Pt())
-        TuneP_et2 = math.sqrt(leg2.mass()*leg1.mass()+self.l2.Pt()*self.l2.Pt())
+        TuneP_et2 = math.sqrt(leg1.mass()*leg1.mass()+self.l2.Pt()*self.l2.Pt())
 
         self.MT  =math.sqrt(self.leg1.p4().mass()*self.leg1.p4().mass()+\
             self.leg1.p4().mass()*self.leg1.p4().mass()+2*(et1*et2-self.leg1.p4().px()*self.leg2.p4().px()-self.leg1.p4().py()*self.leg2.p4().py()))
