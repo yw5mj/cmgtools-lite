@@ -34,6 +34,12 @@ int main(int argc, char** argv) {
   TFile* foutput = new TFile(outputfile.c_str(), "recreate");
   // tree
   TTree* tree = (TTree*)finput->Get("tree");
+  if(tree->FindBranch("trgsf"))  tree->SetBranchStatus("trgsf",0);
+  if(tree->FindBranch("idsf"))  tree->SetBranchStatus("idsf",0);
+  if(tree->FindBranch("isosf"))  tree->SetBranchStatus("isosf",0);
+  if(tree->FindBranch("trgsf_err"))  tree->SetBranchStatus("trgsf_err",0);
+  if(tree->FindBranch("idsf_err"))  tree->SetBranchStatus("idsf_err",0);
+  if(tree->FindBranch("isosf_err"))  tree->SetBranchStatus("isosf_err",0);
   // out_tree
   TTree* tree_out = tree->CloneTree(0);
 
@@ -88,14 +94,14 @@ int main(int argc, char** argv) {
       errmc2a=hpetamc->GetBinError(hpetamc->FindBin(llnunu_l1_l2_eta));
       temp1=effdt1*effdt2a+effdt1a*effdt2-effdt1a*effdt2a;
       temp2=effmc1*effmc2a+effmc1a*effmc2-effmc1a*effmc2a;
-      if(temp1==0||temp2==0){
-	idsfall=1;
-	idsfallerr=0;}
-      else{
+      if(temp1&&temp2){
       idsfall=temp1/temp2;
       idsfallerr=(TMath::Power((effdt2-effdt2a)*errdt1a,2)+TMath::Power((effdt1-effdt1a)*errdt2a,2)+TMath::Power(effdt1a*errdt2,2)+TMath::Power(effdt2a*errdt1,2))/TMath::Power(temp1,2)+(TMath::Power((effmc2-effmc2a)*errmc1a,2)+TMath::Power((effmc1-effmc1a)*errmc2a,2)+TMath::Power(effmc1a*errmc2,2)+TMath::Power(effmc2a*errmc1,2))/TMath::Power(temp2,2);
       idsfallerr=TMath::Power(idsfallerr,.5)*idsfall;
       }
+      else{
+	idsfall=1;
+	idsfallerr=1;}
       effdt1=isoeta->GetBinContent(isoeta->FindBin(llnunu_l1_l1_eta));
       effdt2=isoeta->GetBinContent(isoeta->FindBin(llnunu_l1_l2_eta));
       errdt1=isoeta->GetBinError(isoeta->FindBin(llnunu_l1_l1_eta));
