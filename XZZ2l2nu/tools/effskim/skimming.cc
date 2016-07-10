@@ -117,7 +117,7 @@ int main(int argc, char** argv) {
       errdt2=isoeta->GetBinError(isoeta->FindBin(llnunu_l1_l2_eta));
       isosfall=effdt1*effdt2;
       isosfallerr=TMath::Power((TMath::Power(effdt1*errdt2,2)+TMath::Power(errdt1*effdt2,2)),.5);
-      if(isosfall==0)isosfall==1;
+
       effdt1=mul1ptetadata->GetBinContent(mul1ptetadata->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
       effdt2=mul2ptetadata->GetBinContent(mul2ptetadata->FindBin(llnunu_l1_l2_pt,abs(llnunu_l1_l2_eta)))/100;
       errdt1=mul1ptetadata->GetBinError(mul1ptetadata->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
@@ -158,7 +158,6 @@ int main(int argc, char** argv) {
       else{
 	trgsfall=1;
 	trgsfallerr=1;}
-
     }
 
     tree_out->Fill();
