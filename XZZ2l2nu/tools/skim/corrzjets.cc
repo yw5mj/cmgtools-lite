@@ -66,54 +66,8 @@ int main(int argc, char** argv) {
   TBranch *b_PhiStarWeight=tree_out->Branch("PhiStarWeight",&PhiStarWeight,"PhiStarWeight/D");
 
   // metskim
-/*  
-  TFile* fpar = new TFile("fit_recoil_par.root");
-  TH1D* h_peak_upara = (TH1D*)fpar->Get("h_peak_upara");
-  TH1D* h_shift_upara = (TH1D*)fpar->Get("h_shift_upara");
-  TH1D* h_sigma_upara = (TH1D*)fpar->Get("h_sigma_upara");
-  TH1D* h_peak_uperp = (TH1D*)fpar->Get("h_peak_uperp");
-  TH1D* h_shift_uperp = (TH1D*)fpar->Get("h_shift_uperp");
-  TH1D* h_sigma_uperp = (TH1D*)fpar->Get("h_sigma_uperp");
-
-  h_peak_upara->Smooth(1);
-  h_shift_upara->Smooth(1);
-  h_sigma_upara->Smooth(1);
-  h_peak_uperp->Smooth(1);
-  h_shift_uperp->Smooth(1);
-  h_sigma_uperp->Smooth(1);
-
-  TGraphErrors* g_peak_upara = new TGraphErrors(h_peak_upara);
-  TGraphErrors* g_shift_upara = new TGraphErrors(h_shift_upara);
-  TGraphErrors* g_sigma_upara = new TGraphErrors(h_sigma_upara);
-  TGraphErrors* g_peak_uperp = new TGraphErrors(h_peak_uperp);
-  TGraphErrors* g_shift_uperp = new TGraphErrors(h_shift_uperp);
-  TGraphErrors* g_sigma_uperp = new TGraphErrors(h_sigma_uperp);
-
-  g_peak_upara->SetName("g_peak_upara");
-  g_shift_upara->SetName("g_shift_upara");
-  g_sigma_upara->SetName("g_sigma_upara");
-  g_peak_uperp->SetName("g_peak_uperp");
-  g_shift_uperp->SetName("g_shift_uperp");
-  g_sigma_uperp->SetName("g_sigma_uperp");
-*/
-/*
- llnunu_l2_pt    = 31.7863
- llnunu_l2_phi   = 1.49733
-
- llnunu_l1_pt    = 31.9389
- llnunu_l1_phi   = 0.681347
-
- llnunu_deltaPhi = 0.81598
- llnunu_mta      = 180.101
- llnunu_CosdphiZMet = 0.685155
- llnunu_dPTPara  = 53.7175
- llnunu_dPTParaRel = 1.68188
- llnunu_dPTPerp  = 23.1531
- llnunu_dPTPerpRel = 0.724918
-
-*/
   Float_t llnunu_l1_pt, llnunu_l2_pt, llnunu_l1_phi, llnunu_l2_phi, llnunu_l1_mass;
-  Float_t llnunu_mta, llnunu_mtc,llnunu_deltaPhi, llnunu_CosdphiZMet, llnunu_dPTPara, llnunu_dPTParaRel, llnunu_dPTPerp, llnunu_dPTPerpRel;
+  Float_t llnunu_mt, llnunu_mt,llnunu_deltaPhi, llnunu_CosdphiZMet, llnunu_dPTPara, llnunu_dPTParaRel, llnunu_dPTPerp, llnunu_dPTPerpRel;
   Float_t llnunu_l1_l1_phi, llnunu_l1_l1_eta, llnunu_l1_l2_phi, llnunu_l1_l2_eta;
   Float_t llnunu_l1_deltaPhi;
   tree->SetBranchAddress("llnunu_l1_mass",&llnunu_l1_mass);
@@ -129,11 +83,6 @@ int main(int argc, char** argv) {
   tree->SetBranchAddress("llnunu_mta",&llnunu_mta);
   tree->SetBranchAddress("llnunu_mtc",&llnunu_mtc);
   tree->SetBranchAddress("llnunu_deltaPhi", &llnunu_deltaPhi);
-  //tree->SetBranchAddress("llnunu_CosdphiZMet",&llnunu_CosdphiZMet);
-  //tree->SetBranchAddress("llnunu_dPTPara",&llnunu_dPTPara);
-  //tree->SetBranchAddress("llnunu_dPTParaRel",&llnunu_dPTParaRel);
-  //tree->SetBranchAddress("llnunu_dPTPerp",&llnunu_dPTPerp);
-  //tree->SetBranchAddress("llnunu_dPTPerpRel",&llnunu_dPTPerpRel);
 
   Float_t genZ_pt[10], genLep_eta[10], genLep_phi[10]; 
   tree->SetBranchAddress("genZ_pt", genZ_pt);

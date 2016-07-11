@@ -11,11 +11,13 @@ selection="(1)"
 g++ skimming.cc -o skimming.exe `root-config --cflags` `root-config --libs`
 
 #inputs
-#inputdir=/data2/XZZ/80X_20160705
+inputdir=/data2/XZZ/80X_20160705_linkForSkim
 #inputdir=/data/XZZ/80X_Ntuple/80X_20160618
-inputdir=/data/XZZ/80X_Ntuple/80X_20160618_For20160705
+#inputdir=/data/XZZ/80X_Ntuple/80X_20160618_For20160705
 #outputdir=/data/XZZ/80X_Ntuple/80X_20160618_For20160705_Skim
-outputdir=/data2/XZZ/80X_20160618_For20160705_Skim
+#outputdir=/data2/XZZ/80X_20160618_For20160705_Skim
+#outputdir=/data2/XZZ/80X_20160705_Skim
+outputdir=/data/XZZ/80X_Ntuple/80X_20160705_Skim
 mkdir -p ${outputdir}
 
 njob="0"
