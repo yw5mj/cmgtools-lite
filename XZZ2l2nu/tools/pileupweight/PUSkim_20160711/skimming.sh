@@ -11,15 +11,24 @@ selection="(1)"
 g++ skimming.cc -o skimming.exe `root-config --cflags` `root-config --libs`
 
 #inputs
-inputdir=/dataf/heli/XZZ/80X_20160711
-outputdir=/datad/heli/XZZ/80X_20160711_Skim
+inputdir=/datab/heli/XZZ/80X_20160705_LinksForPUSkim
+outputdir=/dataf/heli/XZZ/80X_20160705_L6p26_Skim
 mkdir -p ${outputdir}
 
-for infile in $inputdir/*/vvTreeProducer/tree.root ; 
+njob="0"
+
+#for infile in $inputdir/*/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/Single*/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/Bulk*/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/DYJetsToLL_M50/vvTreeProducer/tree.root ; 
+for infile in $inputdir/*/vvTreeProducer/tree.root ;
 do
   echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"
   outfile="${outfile/\/vvTreeProducer\/tree/}"
+
+  # if do PUscan using Zjets:
+  #outfile="${outfile/\/vvTreeProducer\/tree/_PUScanV2}"
 
   inSkimFile=${infile/vvTreeProducer\/tree.root/skimAnalyzerCount\/SkimReport.txt}
 
@@ -39,8 +48,15 @@ do
   echo -- Output file: $outfile
   echo -- AllEvents: $AllEvents , SumWeights: $SumWeights
   echo -- Selection: $selection
-  
-  ./skimming.exe $infile $outfile $AllEvents $SumWeights $selection  &> ${outfile}.log &
+  echo -- Command: ./skimming.exe $infile $outfile $AllEvents $SumWeights $selection
+
+  ./skimming.exe $infile $outfile $AllEvents $SumWeights $selection &> ${outfile}.skim.log &
+
+  njob=$(( njob + 1 ))
+  if [ "$njob" -eq "30" ]; then
+    wait
+    njob="0"
+  fi
 
 done
 
