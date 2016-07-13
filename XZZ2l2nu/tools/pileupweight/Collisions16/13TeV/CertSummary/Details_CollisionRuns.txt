@@ -1,9 +1,9 @@
 Run selection  >= 271036 and <= 999999
 RRAPI: http://runregistry.web.cern.ch/runregistry/api/app with payload None
-RRAPI: Response 200 Date: Tue, 05 Jul 2016 05:01:46 GMT Server: Apache Connection: close Content-Length: 4 Content-Type: text/plain 
+RRAPI: Response 200 Date: Sun, 10 Jul 2016 05:01:54 GMT Server: Apache Connection: close Content-Length: 4 Content-Type: text/plain 
 RRAPI: app =  user
 RRAPI: http://runregistry.web.cern.ch/runregistry/api/GLOBAL/runsummary/tsv/number%2Cevents%2Cbfield%2ChltKeyDescription/none/LATEST/data with payload {"filter": {"runClassName": "Collisions16", "datasets": {"datasetName": "like %Online%", "rowClass": "org.cern.cms.dqm.runregistry.user.model.RunDatasetRowGlobal"}, "number": ">= 271036 and <= 999999"}}
-RRAPI: Response 200 Date: Tue, 05 Jul 2016 05:01:46 GMT Server: Apache Connection: close Content-Type: text/plain 
+RRAPI: Response 200 Date: Sun, 10 Jul 2016 05:01:54 GMT Server: Apache Connection: close Content-Type: text/plain 
 number	events	bfield	hltKeyDescription
 271036	1182681	0.01894479022	/cdaq/physics/firstCollisions16/v1.3/HLT/V1
 271037	3198	0.01894479022	/cdaq/physics/firstCollisions16/v1.3/HLT/V1
@@ -347,4 +347,21 @@ number	events	bfield	hltKeyDescription
 276355	316384134	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.0/HLT/V2
 276357	840951114	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.0/HLT/V2
 276361	9607869870	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.0/HLT/V2
+276363	15501218964	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.0/HLT/V2
+276384	9409526550	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.0/HLT/V2
+276437	23308624968	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.0/HLT/V2
+276453	1067482356	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.0/HLT/V10
+276454	4944237306	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.0/HLT/V10
+276455	3342745362	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.0/HLT/V12
+276456	1432447722	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.0/HLT/V12
+276457	146098428	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.0/HLT/V12
+276458	2621103162	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.0/HLT/V12
+276495	2212404984	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.0/HLT/V13
+276501	25404854334	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.0/HLT/V13
+276502	6458014110	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.0/HLT/V13
+276525	29072903376	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.1/HLT/V3
+276527	1758770262	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.1/HLT/V3
+276528	3053520870	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.1/HLT/V3
+276542	8613226284	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.1/HLT/V3
+276543	10073493192	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.1/HLT/V3
 

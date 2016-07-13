@@ -11,9 +11,8 @@ selection="(1)"
 g++ skimming.cc -o skimming.exe `root-config --cflags` `root-config --libs`
 
 #inputs
-inputdir=/afs/cern.ch/work/m/mewu/public/76X_new
-#outputdir=AnalysisRegion
-outputdir=LooseSkim
+inputdir=/dataf/heli/XZZ/80X_20160711
+outputdir=/datad/heli/XZZ/80X_20160711_Skim
 mkdir -p ${outputdir}
 
 for infile in $inputdir/*/vvTreeProducer/tree.root ; 
@@ -41,7 +40,7 @@ do
   echo -- AllEvents: $AllEvents , SumWeights: $SumWeights
   echo -- Selection: $selection
   
-  ./skimming.exe $infile $outfile $AllEvents $SumWeights $selection
+  ./skimming.exe $infile $outfile $AllEvents $SumWeights $selection  &> ${outfile}.log &
 
 done
 
