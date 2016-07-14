@@ -4,6 +4,7 @@
 #include "TH1D.h"
 #include "TH1F.h"
 #include "TH2D.h"
+#include "TH2F.h"
 #include "TMath.h"
 #include "TVector2.h"
 #include "TGraphErrors.h"
@@ -54,6 +55,9 @@ int main(int argc, char** argv) {
   TH2D* mul1pteta=(TH2D*)ftrg->Get("mul1pteta");
   TH2D* mul2pteta=(TH2D*)ftrg->Get("mul2pteta");
   TH2D* ell1pteta=(TH2D*)ftrg->Get("ell1pteta");
+  
+  TFile* loosE = new TFile("/afs/cern.ch/work/y/yanchu/graviton/CMSSW_8_0_10/src/CMGTools/XZZ2l2nu/data/Loose_80X_2ndPeriod.txt_SF2D.root");
+  TH2F* esfh2=(TH2F*)loosE->Get("EGamma_SF2D");
 
   Double_t effdt1a,effdt2a,effmc1a,effmc2a,errdt1a,errdt2a,errmc1a,errmc2a,effdt1,effdt2,effmc1,effmc2,errdt1,errdt2,errmc1,errmc2,trgsfall,idsfall,isosfall,trgsfallerr,idsfallerr,isosfallerr,temp1,temp2;
   TBranch *b_trgsfall=tree_out->Branch("trgsf",&trgsfall,"trgsf/D");
@@ -63,7 +67,7 @@ int main(int argc, char** argv) {
   TBranch *b_isosfallerr=tree_out->Branch("isosf_err",&isosfallerr,"isosf_err/D");
   TBranch *b_idsfallerr=tree_out->Branch("idsf_err",&idsfallerr,"idsf_err/D");
 
-  Float_t llnunu_l1_l1_phi, llnunu_l1_l1_eta, llnunu_l1_l2_phi, llnunu_l1_l2_eta,llnunu_l1_l1_pt,llnunu_l1_l2_pt;
+  Float_t llnunu_l1_l1_phi, llnunu_l1_l1_eta, llnunu_l1_l2_phi, llnunu_l1_l2_eta,llnunu_l1_l1_pt,llnunu_l1_l2_pt,llnunu_l1_l1_eSCeta,llnunu_l1_l2_eSCeta;
   int lpdgid;
   tree->SetBranchAddress("llnunu_l1_l1_pdgId",&lpdgid);
   tree->SetBranchAddress("llnunu_l1_l1_phi",&llnunu_l1_l1_phi);
@@ -72,6 +76,8 @@ int main(int argc, char** argv) {
   tree->SetBranchAddress("llnunu_l1_l2_pt",&llnunu_l1_l2_pt);
   tree->SetBranchAddress("llnunu_l1_l1_eta",&llnunu_l1_l1_eta);
   tree->SetBranchAddress("llnunu_l1_l2_eta",&llnunu_l1_l2_eta);
+  tree->SetBranchAddress("llnunu_l1_l1_eSCeta",&llnunu_l1_l1_eSCeta);
+  tree->SetBranchAddress("llnunu_l1_l2_eSCeta",&llnunu_l1_l2_eSCeta);
 
   for (int i=0; i<(int)tree->GetEntries(); i++){
     tree->GetEntry(i);
@@ -117,8 +123,14 @@ int main(int argc, char** argv) {
       trgsfallerr=TMath::Power((TMath::Power((1-effdt1)*errdt2,2)+TMath::Power((1-effdt2)*errdt1,2)),.5);
     }
     if(abs(lpdgid)==11){
-      idsfall=1;
-      idsfallerr=0;
+      if(llnunu_l1_l1_pt>200) effdt1=1;
+      else effdt1=esfh2->GetBinContent(esfh2->FindBin(llnunu_l1_l1_eSCeta,llnunu_l1_l1_pt));
+      if(llnunu_l1_l2_pt>200) effdt2=1;
+      else effdt2=esfh2->GetBinContent(esfh2->FindBin(llnunu_l1_l2_eSCeta,llnunu_l1_l2_pt));
+      errdt1=esfh2->GetBinError(esfh2->FindBin(llnunu_l1_l1_eSCeta,llnunu_l1_l1_pt));
+      errdt2=esfh2->GetBinError(esfh2->FindBin(llnunu_l1_l2_eSCeta,llnunu_l1_l2_pt));
+      idsfall=effdt1*effdt2;
+      idsfallerr=TMath::Power((TMath::Power(effdt1*errdt2,2)+TMath::Power(errdt1*effdt2,2)),.5);
       isosfall=1;
       isosfallerr=0;
       trgsfall=ell1pteta->GetBinContent(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
