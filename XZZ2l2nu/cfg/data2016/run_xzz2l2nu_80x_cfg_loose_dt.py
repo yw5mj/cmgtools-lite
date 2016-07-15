@@ -20,9 +20,11 @@ triggerFlagsAna.triggerBits ={
     "ISOMU":triggers_1mu_iso,
     "MU":triggers_1mu_noniso,
     "MUv2":triggers_1mu_noniso_v2,
+    "MU50":triggers_1mu_noniso_M50,
     "ISOELE":triggers_1e,
     "ELE":triggers_1e_noniso,
     "ELEv2":triggers_1e_noniso_v2,
+    "ELE115":triggers_1e_noniso_E115,
     "MUMU": triggers_mumu,
     "MUMUNOISO":triggers_mumu_noniso,
     "ELEL": triggers_ee,
@@ -91,7 +93,7 @@ if test==1:
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        c.files = c.files[5]
+        c.files = c.files[2]
         #c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
         c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
