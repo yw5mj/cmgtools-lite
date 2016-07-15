@@ -44,19 +44,19 @@ int main(int argc, char** argv) {
   // out_tree
   TTree* tree_out = tree->CloneTree(0);
 
-  TFile* ftkhp = new TFile("/data2/yanchu/informations/leptoneff/lpt80x/all80.root");
+  TFile* ftkhp = new TFile("all80.root");
   TH1F* tkhpetadt=(TH1F*)ftkhp->Get("tkhpdtetahist");
   TH1F* tkhpetamc=(TH1F*)ftkhp->Get("tkhpmcetahist");
   TH1F* hpetadt=(TH1F*)ftkhp->Get("hpdtetahist");
   TH1F* hpetamc=(TH1F*)ftkhp->Get("hpmcetahist");
   TH1F* isoeta=(TH1F*)ftkhp->Get("tkissfeta");
 
-  TFile* ftrg = new TFile("/data2/yanchu/informations/triggereff/trg80x/triggereff80x.root");
+  TFile* ftrg = new TFile("triggereff80x.root");
   TH2D* mul1pteta=(TH2D*)ftrg->Get("mul1pteta");
   TH2D* mul2pteta=(TH2D*)ftrg->Get("mul2pteta");
   TH2D* ell1pteta=(TH2D*)ftrg->Get("ell1pteta");
   
-  TFile* loosE = new TFile("/afs/cern.ch/work/y/yanchu/graviton/CMSSW_8_0_10/src/CMGTools/XZZ2l2nu/data/Loose_80X_2ndPeriod.txt_SF2D.root");
+  TFile* loosE = new TFile("Loose_80X_2ndPeriod.txt_SF2D.root");
   TH2F* esfh2=(TH2F*)loosE->Get("EGamma_SF2D");
 
   Double_t effdt1a,effdt2a,effmc1a,effmc2a,errdt1a,errdt2a,errmc1a,errmc2a,effdt1,effdt2,effmc1,effmc2,errdt1,errdt2,errmc1,errmc2,trgsfall,idsfall,isosfall,trgsfallerr,idsfallerr,isosfallerr,temp1,temp2;

@@ -20,15 +20,15 @@ njob="0"
 #for infile in $inputdir/*/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/Single*/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/Bulk*/vvTreeProducer/tree.root ; 
-#for infile in $inputdir/DYJetsToLL_M50/vvTreeProducer/tree.root ; 
-for infile in $inputdir/*/vvTreeProducer/tree.root ;
+#for infile in $inputdir/*/vvTreeProducer/tree.root ;
+for infile in $inputdir/DYJetsToLL_M50/vvTreeProducer/tree.root ; 
 do
   echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"
-  outfile="${outfile/\/vvTreeProducer\/tree/}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/}"
 
   # if do PUscan using Zjets:
-  #outfile="${outfile/\/vvTreeProducer\/tree/_PUScanV2}"
+  outfile="${outfile/\/vvTreeProducer\/tree/_PUScanV2}"
 
   inSkimFile=${infile/vvTreeProducer\/tree.root/skimAnalyzerCount\/SkimReport.txt}
 
