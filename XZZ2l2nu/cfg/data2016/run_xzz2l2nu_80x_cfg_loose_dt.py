@@ -10,6 +10,7 @@ from PhysicsTools.HeppyCore.framework.heppy_loop import getHeppyOption
 
 #Load all common analyzers
 from CMGTools.XZZ2l2nu.analyzers.coreXZZ_cff import *
+from CMGTools.XZZ2l2nu.analyzers.XZZTrgEff import *
 
 #-------- SAMPLES AND TRIGGERS -----------
 from CMGTools.XZZ2l2nu.samples.loadSamples80x import *
@@ -44,6 +45,11 @@ multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>50.0 and x.leg1.mass()
 
 #-------- SEQUENCE
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
+trgEffAna = cfg.Analyzer(
+    XZZTrgEff, name="TriggerEfficiencyAnalyzer",
+    eleHLT='HLT_Ele105_CaloIdVT_GsfTrkIdT',
+    muHLT='HLT_Mu45_eta2p1'
+    )
 
 coreSequence = [
     skimAnalyzer,
@@ -62,7 +68,7 @@ coreSequence = [
 ]
     
 #sequence = cfg.Sequence(coreSequence)
-sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
+sequence = cfg.Sequence(coreSequence+[vvSkimmer,trgEffAna,vvTreeProducer])
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,fullTreeProducer])
  
 
