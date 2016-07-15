@@ -151,7 +151,7 @@ class StackPlotter(object):
         self.doRatioPlot=False
 
         self.fout = ROOT.TFile(self.outFileName+'.root', 'recreate')
-        c1 = ROOT.TCanvas(self.outTag, self.outTag, 700, 910);
+        c1 = ROOT.TCanvas(self.outTag, self.outTag, 800, 1040);
         c1.Print(self.outFileName+'.ps[')
         c1.Print(self.outFileName+'.pdf[')
 
@@ -187,7 +187,7 @@ class StackPlotter(object):
 
         self.fout.cd()
 
-        c1 = ROOT.TCanvas(output+'_'+"c1", "c1", 700, 910); c1.Draw()
+        c1 = ROOT.TCanvas(output+'_'+"c1", "c1", 800, 1040); c1.Draw()
         #c1.SetWindowSize(700 + (700 - c1.GetWw()), (910 + (910 - c1.GetWh())))
         p1 = ROOT.TPad(output+'_'+"pad1","pad1",0,0.25,1,0.99)
         p1.SetBottomMargin(0.15)
@@ -449,9 +449,9 @@ class StackPlotter(object):
         for hist in hists: hist.Write()  
         #fout.Close()
 
-        c1.Delete()
-        p1.Delete()
-        p2.Delete()
+        #c1.Delete()
+        #p1.Delete()
+        #p2.Delete()
 
         return plot
 
