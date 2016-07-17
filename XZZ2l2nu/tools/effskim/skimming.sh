@@ -12,15 +12,15 @@ g++ skimming.cc -o skimming.exe `root-config --cflags` `root-config --libs`
 
 #inputs
 #inputdir=/data/XZZ/76X_Ntuple/76X_20160514
-inputdir=/data/XZZ/80X_Ntuple/80X_20160705_Skim
+inputdir=/data2/yanchu/80X_Ntuple/80X_20160705_ZPTSkim
 #inputdir=/data/mewu/76X_new
 #inputdir=/afs/cern.ch/work/m/mewu/public/76X_new
 #outputdir=AnalysisRegion
-outputdir=/data2/yanchu/80X_Ntuple/80X_20160705_ZPTSkim
+outputdir=/data2/yanchu/80X_Ntuple/80X_20160705_ZPTSkim_lepsf
 mkdir -p ${outputdir}
 
 #for infile in $inputdir/*/vvTreeProducer/tree.root ; 
-for infile in $(ls $inputdir/*.root|grep -v 2016B|grep -v DYJetsToLL|grep -v BulkGrav)
+for infile in $(ls $inputdir/*.root)
 do
 #  echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"
