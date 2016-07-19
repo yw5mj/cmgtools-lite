@@ -98,16 +98,20 @@ mcSamples = signalSamples + backgroundSamples + jercRefMC + extraBackgroundMC
 # data
 SingleMuon=[SingleMuon_Run2016B_PromptReco,
             SingleMuon_Run2016B_PromptReco_v2,
-            SingleMuon_Run2016C_PromptReco_v2]
+            SingleMuon_Run2016C_PromptReco_v2,
+            SingleMuon_Run2016D_PromptReco_v2]
 SingleElectron=[SingleElectron_Run2016B_PromptReco,
                 SingleElectron_Run2016B_PromptReco_v2,
-                SingleElectron_Run2016C_PromptReco_v2]
+                SingleElectron_Run2016C_PromptReco_v2,
+                SingleElectron_Run2016D_PromptReco_v2]
 #SinglePhoton=[SinglePhoton_Run2016B_PromptReco,
 #              SinglePhoton_Run2016B_PromptReco_v2,
-#              SinglePhoton_Run2016C_PromptReco_v2]
+#              SinglePhoton_Run2016C_PromptReco_v2,
+#              SinglePhoton_Run2016D_PromptReco_v2]
 #MuonEG=[MuonEG_Run2016B_PromptReco,
 #      MuonEG_Run2016B_PromptReco_v2,
-#      MuonEG_Run2016C_PromptReco_v2]
+#      MuonEG_Run2016C_PromptReco_v2,
+#      MuonEG_Run2016D_PromptReco_v2]
 
 for s in SingleMuon:
     #s.triggers = triggers_1mu_noniso
@@ -135,8 +139,9 @@ silverJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/1
 #goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-274443_13TeV_PromptReco_Collisions16_JSON.txt'
 #goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt'
 #goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON.txt'
-goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276097_13TeV_PromptReco_Collisions16_JSON_NoL1T_v2.txt'
-run_range = (271036,276097)
+#goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276097_13TeV_PromptReco_Collisions16_JSON_NoL1T_v2.txt'
+goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276384_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
+run_range = (271036,276384)
 
 jsonFile = goldenJson
 

@@ -1,9 +1,9 @@
 Run selection  >= 271036 and <= 999999
 RRAPI: http://runregistry.web.cern.ch/runregistry/api/app with payload None
-RRAPI: Response 200 Date: Wed, 13 Jul 2016 05:01:20 GMT Server: Apache Connection: close Content-Length: 4 Content-Type: text/plain 
+RRAPI: Response 200 Date: Fri, 15 Jul 2016 05:00:59 GMT Server: Apache Connection: close Content-Length: 4 Content-Type: text/plain 
 RRAPI: app =  user
 RRAPI: http://runregistry.web.cern.ch/runregistry/api/GLOBAL/runsummary/tsv/number%2Cevents%2Cbfield%2ChltKeyDescription/none/LATEST/data with payload {"filter": {"runClassName": "Collisions16", "datasets": {"datasetName": "like %Online%", "rowClass": "org.cern.cms.dqm.runregistry.user.model.RunDatasetRowGlobal"}, "number": ">= 271036 and <= 999999"}}
-RRAPI: Response 200 Date: Wed, 13 Jul 2016 05:01:20 GMT Server: Apache Connection: close Content-Type: text/plain 
+RRAPI: Response 200 Date: Fri, 15 Jul 2016 05:00:59 GMT Server: Apache Connection: close Content-Type: text/plain 
 number	events	bfield	hltKeyDescription
 271036	1182681	0.01894479022	/cdaq/physics/firstCollisions16/v1.3/HLT/V1
 271037	3198	0.01894479022	/cdaq/physics/firstCollisions16/v1.3/HLT/V1
@@ -376,5 +376,11 @@ number	events	bfield	hltKeyDescription
 276653	5183424240	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.1/HLT/V3
 276655	11437123344	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.1/HLT/V3
 276659	2416447986	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.1/HLT/V3
-276775	12122378739	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.1/HLT/V3
+276775	13312140972	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.1/HLT/V3
+276776	17880058986	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.1/HLT/V3
+276794	6972506484	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.2/HLT/V1
+276807	1880666934	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.2/HLT/V1
+276808	10153903668	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.2/HLT/V1
+276810	3086597856	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.3/HLT/V1
+276811	22678698764	3.79928591523	/cdaq/physics/Run2016/25ns10e33/v2.2.3/HLT/V1
 
