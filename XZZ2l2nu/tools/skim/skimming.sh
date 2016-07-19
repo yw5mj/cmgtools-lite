@@ -11,8 +11,12 @@ selection="(1)"
 g++ skimming.cc -o skimming.exe `root-config --cflags` `root-config --libs`
 
 #inputs
-inputdir=/data/XZZ/80X_Ntuple/80X_20160621
-outputdir=/home/heli/work/XZZ/80X_Ntuple/80X_20160621_Skim
+inputdir=/datag/heli/XZZ/80X_20160716
+outputdir=/dataf/heli/XZZ/80X_20160716_Skim
+#inputdir=/datab/heli/XZZ/80X_20160716
+#outputdir=/dataf/heli/XZZ/80X_20160716_Skim
+#inputdir=/data/XZZ/80X_Ntuple/80X_20160621
+#outputdir=/home/heli/work/XZZ/80X_Ntuple/80X_20160621_Skim
 #inputdir=/data/XZZ/80X_Ntuple/80X_20160618
 #outputdir=/home/heli/work/XZZ/80X_Ntuple/80X_20160618_Skim
 #outputdir=/data/XZZ/80X_Ntuple/80X_20160618_Skim
@@ -49,7 +53,7 @@ do
   echo -- AllEvents: $AllEvents , SumWeights: $SumWeights
   echo -- Selection: $selection
   echo -- Command:   ./skimming.exe $infile $outfile $AllEvents $SumWeights $selection
-  ./skimming.exe $infile $outfile $AllEvents $SumWeights $selection
+  ./skimming.exe $infile $outfile $AllEvents $SumWeights $selection &> $outfile.log &
 
 done
 
