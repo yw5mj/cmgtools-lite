@@ -9,13 +9,13 @@ std::string filename =
   ;
 
 std::string selec = 
-  "(1)"
-  //"abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11"
+  //"(1)"
+  "abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11"
   //"abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13"
   ;
 std::string tag = 
-  "_met_para_study"
-  //"_met_para_study_el"
+  //"_met_para_study"
+  "_met_para_study_el"
   //"_met_para_study_mu"
 ;
 
@@ -53,6 +53,7 @@ int fit_slice_gaus(TH2D* h2d, TH1D** h1d);
 void fit_met_para(){
 
   gROOT->ProcessLine(".x tdrstyle.C");
+  gStyle->SetOptTitle(0);
 
   lumipt = new TPaveText(0.2,0.9,0.8,0.98,"brNDC");
   lumipt->SetBorderSize(0);
