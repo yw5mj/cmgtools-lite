@@ -19,9 +19,9 @@ njob="0"
 
 #for infile in $inputdir/*/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/Bulk*/vvTreeProducer/tree.root ; 
-#for infile in $inputdir/*/vvTreeProducer/tree.root ;
 #for infile in $inputdir/DYJetsToLL_M50/vvTreeProducer/tree.root ; 
-for infile in $(ls $inputdir/Single*/vvTreeProducer/tree.root | grep -v 2016B); 
+#for infile in $(ls $inputdir/Single*/vvTreeProducer/tree.root ); 
+for infile in $inputdir/*/vvTreeProducer/tree.root ;
 do
   echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"

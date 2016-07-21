@@ -30,6 +30,8 @@ int main(int argc, char** argv) {
   // output file name
   std::string outputfile((const char*)argv[2]);
 
+  bool isDyJets = (outputfile.find("DYJets")!=std::string::npos);
+
 
   // nevts 
   double SumEvents = atof(argv[3]);  
@@ -51,8 +53,8 @@ int main(int argc, char** argv) {
   //TTree* tree_out = tree->CopyTree(Cuts.c_str());
   TTree* tree_out = tree->CloneTree(0);;
 
-  TBranch *b_SumEvents=tree_out->Branch("SumEvents",&SumEvents,"SumEvents/D");
-  TBranch *b_SumWeights=tree_out->Branch("SumWeights",&SumWeights,"SumWeights/D");
+  tree_out->Branch("SumEvents",&SumEvents,"SumEvents/D");
+  tree_out->Branch("SumWeights",&SumWeights,"SumWeights/D");
 
 
   char name[3000];
@@ -61,9 +63,21 @@ int main(int argc, char** argv) {
 
   Int_t isData;
   tree->SetBranchAddress("isData",&isData);
-  ULong64_t evt;
-  tree->SetBranchAddress("evt",&evt);
+  
+  // check if tree has events
+  if (tree->GetEntries()<=0) return 0;
 
+  tree->GetEntry(0);
+  
+
+  UInt_t          run;
+  UInt_t          lumi;
+  ULong64_t       evt;
+  tree->SetBranchAddress("run",&run);
+  tree->SetBranchAddress("lumi",&lumi);
+  tree->SetBranchAddress("evt",&evt);
+  Float_t genWeight;
+  tree->SetBranchAddress("genWeight",&genWeight);
 
   // pileup file tags
   std::vector<std::string> pileup_tags = {
@@ -84,18 +98,17 @@ int main(int argc, char** argv) {
   std::vector<Double_t*> pileup_weights;
   std::vector<TBranch*> pileup_branches;
 
-  for (int i=0; i<(int)pileup_tags.size(); i++) {
-    sprintf(name, "results/pileup_MC_80x_271036-276384_%s.root",pileup_tags.at(i).c_str());
-    pileup_files.push_back(new TFile(name));
-    pileup_hists.push_back((TH1D*)pileup_files.at(i)->Get("puweight_dtmc"));
-    pileup_weights.push_back(new Double_t(1.0));
-    sprintf(name, "puWeight%s", pileup_tags.at(i).c_str());
-    sprintf(name1, "puWeight%s/D", pileup_tags.at(i).c_str());
-    pileup_branches.push_back(tree_out->Branch(name,pileup_weights.at(i),name1));
-    
-
+  if (!isData) {
+    for (int i=0; i<(int)pileup_tags.size(); i++) {
+      sprintf(name, "results/pileup_MC_80x_271036-276384_%s.root",pileup_tags.at(i).c_str());
+      pileup_files.push_back(new TFile(name));
+      pileup_hists.push_back((TH1D*)pileup_files.at(i)->Get("puweight_dtmc"));
+      pileup_weights.push_back(new Double_t(1.0));
+      sprintf(name, "puWeight%s", pileup_tags.at(i).c_str());
+      sprintf(name1, "puWeight%s/D", pileup_tags.at(i).c_str());
+      pileup_branches.push_back(tree_out->Branch(name,pileup_weights.at(i),name1));
+    }
   }
-
 
   // doDyJetsSigma, correct dyjets mc to match data
   TFile* file_dt_sigma;
@@ -139,9 +152,9 @@ int main(int argc, char** argv) {
 
   //
   Double_t ZPtWeight;
-  TBranch *b_ZPtWeight=tree_out->Branch("ZPtWeight",&ZPtWeight,"ZPtWeight/D");
   Double_t PhiStarWeight;
-  TBranch *b_PhiStarWeight=tree_out->Branch("PhiStarWeight",&PhiStarWeight,"PhiStarWeight/D");
+  tree_out->Branch("ZPtWeight",&ZPtWeight,"ZPtWeight/D");
+  tree_out->Branch("PhiStarWeight",&PhiStarWeight,"PhiStarWeight/D");
 
   TFile* fdyzpt;
   TH1D* hdyzptdt;
@@ -158,7 +171,6 @@ int main(int argc, char** argv) {
   Int_t ngenZ;
   Int_t ngenLep;
   Float_t genZ_pt[10], genLep_eta[10], genLep_phi[10];
-  tree->GetEntry(0);
   if (!isData) {
     tree->SetBranchAddress("ngenZ", &ngenZ);
     tree->SetBranchAddress("genZ_pt", genZ_pt);
@@ -167,47 +179,53 @@ int main(int argc, char** argv) {
     tree->SetBranchAddress("genLep_phi", genLep_phi);
   }
 
-  if (doDyJets) {
 
-    // met shift  sigma
-    file_dt_sigma = new TFile("SingleEMU_Run2016BCD_PromptReco_met_para_study.root");
-    file_mc_sigma = new TFile("DYJetsToLL_M50_met_para_study.root");
+  // met shift  sigma
+  file_dt_sigma = new TFile("SingleEMU_Run2016BCD_PromptReco_met_para_study.root");
+  file_mc_sigma = new TFile("DYJetsToLL_M50_met_para_study.root");
 
-    h_dt_met_para_shift = (TH1D*)file_dt_sigma->Get("h_met_para_vs_zpt_mean");
-    h_mc_met_para_shift = (TH1D*)file_mc_sigma->Get("h_met_para_vs_zpt_mean");
+  h_dt_met_para_shift = (TH1D*)file_dt_sigma->Get("h_met_para_vs_zpt_mean");
+  h_mc_met_para_shift = (TH1D*)file_mc_sigma->Get("h_met_para_vs_zpt_mean");
 
-    h_dt_met_para_sigma = (TH1D*)file_dt_sigma->Get("h_met_para_vs_zpt_sigma");
-    h_dt_met_perp_sigma = (TH1D*)file_dt_sigma->Get("h_met_perp_vs_zpt_sigma");
-    h_mc_met_para_sigma = (TH1D*)file_mc_sigma->Get("h_met_para_vs_zpt_sigma");
-    h_mc_met_perp_sigma = (TH1D*)file_mc_sigma->Get("h_met_perp_vs_zpt_sigma");
+  h_dt_met_para_sigma = (TH1D*)file_dt_sigma->Get("h_met_para_vs_zpt_sigma");
+  h_dt_met_perp_sigma = (TH1D*)file_dt_sigma->Get("h_met_perp_vs_zpt_sigma");
+  h_mc_met_para_sigma = (TH1D*)file_mc_sigma->Get("h_met_para_vs_zpt_sigma");
+  h_mc_met_perp_sigma = (TH1D*)file_mc_sigma->Get("h_met_perp_vs_zpt_sigma");
 
-    h_ratio_met_para_sigma_dtmc = (TH1D*)h_dt_met_para_sigma->Clone("h_ratio_met_para_sigma_dtmc");
-    h_ratio_met_perp_sigma_dtmc = (TH1D*)h_dt_met_perp_sigma->Clone("h_ratio_met_perp_sigma_dtmc");
-    h_ratio_met_para_sigma_dtmc->Divide(h_mc_met_para_sigma);
-    h_ratio_met_perp_sigma_dtmc->Divide(h_mc_met_perp_sigma);
+  h_ratio_met_para_sigma_dtmc = (TH1D*)h_dt_met_para_sigma->Clone("h_ratio_met_para_sigma_dtmc");
+  h_ratio_met_perp_sigma_dtmc = (TH1D*)h_dt_met_perp_sigma->Clone("h_ratio_met_perp_sigma_dtmc");
+  h_ratio_met_para_sigma_dtmc->Divide(h_mc_met_para_sigma);
+  h_ratio_met_perp_sigma_dtmc->Divide(h_mc_met_perp_sigma);
 
-    fdyzpt = new TFile("UnfoldingOutputZPt.root");
-    hdyzptdt = (TH1D*)fdyzpt->Get("hUnfold");
-    hdyzptmc = (TH1D*)fdyzpt->Get("hTruth");
-    hdyzpt_dtmc_ratio = (TH1D*)hdyzptdt->Clone("hdyzpt_dtmc_ratio");
-    hdyzpt_dtmc_ratio->Divide(hdyzptmc);
-    gdyzpt_dtmc_ratio = new TGraphErrors(hdyzpt_dtmc_ratio);
+  fdyzpt = new TFile("UnfoldingOutputZPt.root");
+  hdyzptdt = (TH1D*)fdyzpt->Get("hUnfold");
+  hdyzptmc = (TH1D*)fdyzpt->Get("hTruth");
+  hdyzpt_dtmc_ratio = (TH1D*)hdyzptdt->Clone("hdyzpt_dtmc_ratio");
+  hdyzpt_dtmc_ratio->Divide(hdyzptmc);
+  gdyzpt_dtmc_ratio = new TGraphErrors(hdyzpt_dtmc_ratio);
 
-    fdyphistar = new TFile("UnfoldingOutputPhiStar.root");
-    hdyphistardt = (TH1D*)fdyphistar->Get("hUnfold");
-    hdyphistarmc = (TH1D*)fdyphistar->Get("hTruth");
-    hdyphistar_dtmc_ratio = (TH1D*)hdyphistardt->Clone("hdyphistar_dtmc_ratio");
-    hdyphistar_dtmc_ratio->Divide(hdyphistarmc);
-    gdyphistar_dtmc_ratio = new TGraphErrors(hdyphistar_dtmc_ratio);
+  fdyphistar = new TFile("UnfoldingOutputPhiStar.root");
+  hdyphistardt = (TH1D*)fdyphistar->Get("hUnfold");
+  hdyphistarmc = (TH1D*)fdyphistar->Get("hTruth");
+  hdyphistar_dtmc_ratio = (TH1D*)hdyphistardt->Clone("hdyphistar_dtmc_ratio");
+  hdyphistar_dtmc_ratio->Divide(hdyphistarmc);
+  gdyphistar_dtmc_ratio = new TGraphErrors(hdyphistar_dtmc_ratio);
 
 
-  }
+
 
 
   //
   int n_interval = 5000;
   Int_t nTrueInt; 
   tree->SetBranchAddress( "nTrueInt", &nTrueInt );
+
+
+  TTree* tree_out_duplic;
+  if (isData){
+    tree_out_duplic = tree->CloneTree(0);
+    tree_out_duplic->SetName("tree_duplic");
+  }
 
   for (int i=0; i<(int)tree->GetEntries(); i++){
   //for (int i=0; i<(int)1000; i++){
@@ -217,49 +235,63 @@ int main(int argc, char** argv) {
       std::cout << "Event " << i << "   " << std::endl;
     }
 
-    for (int j=0; j<(int)pileup_tags.size(); j++){
-      *(pileup_weights.at(j)) = pileup_hists.at(j)->GetBinContent(pileup_hists.at(j)->FindBin(nTrueInt));
-    }
-
-    if (doDyJets) {
-      double met_para = llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi);
-      double met_perp = llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi);
-      if (isData)  met_para -= h_dt_met_para_shift->GetBinContent(h_dt_met_para_shift->FindBin(llnunu_l1_pt));
-      else {
-        met_para -= h_dt_met_para_shift->GetBinContent(h_dt_met_para_shift->FindBin(llnunu_l1_pt));
-        met_para *= h_ratio_met_para_sigma_dtmc->GetBinContent(h_ratio_met_para_sigma_dtmc->FindBin(llnunu_l1_pt));
-        met_perp *= h_ratio_met_perp_sigma_dtmc->GetBinContent(h_ratio_met_perp_sigma_dtmc->FindBin(llnunu_l1_pt));
-      }
-      double met_x = met_para*cos(llnunu_l1_phi)-met_perp*sin(llnunu_l1_phi);
-      double met_y = met_para*sin(llnunu_l1_phi)+met_perp*cos(llnunu_l1_phi);
-      TVector2 vec_met;
-      vec_met.Set(met_x, met_y);
-      llnunu_l2_pt = vec_met.Mod();
-      llnunu_l2_phi = TVector2::Phi_mpi_pi(vec_met.Phi());
-
-      double et1 = TMath::Sqrt(llnunu_l1_mass*llnunu_l1_mass + llnunu_l1_pt*llnunu_l1_pt);
-      double et2 = TMath::Sqrt(llnunu_l1_mass*llnunu_l1_mass);
-      llnunu_mt = TMath::Sqrt(2.0*llnunu_l1_mass*llnunu_l1_mass + 2.0* (et1*et2 - llnunu_l1_pt*cos(llnunu_l1_phi)*met_x - llnunu_l1_pt*sin(llnunu_l1_phi)*met_y));
-
-      //
-      if (!isData) {
-        // zpt weight
-        if (ngenZ>0) ZPtWeight = gdyzpt_dtmc_ratio->Eval(genZ_pt[0]);
-        else ZPtWeight = gdyzpt_dtmc_ratio->Eval(llnunu_l1_pt);
-
-        // phistar weight
-        double phistar(0.0);
-        if (ngenLep>1) phistar = TMath::Tan((TMath::Pi()-TMath::Abs(TVector2::Phi_mpi_pi(genLep_phi[0]-genLep_phi[1])))/2.0)*TMath::Sin(TMath::ACos(TMath::TanH((genLep_eta[0]-genLep_eta[1])/2.0)));
-        else phistar = TMath::Tan((TMath::Pi()-TMath::Abs(TVector2::Phi_mpi_pi(llnunu_l1_l1_phi-llnunu_l1_l2_phi)))/2.0)*TMath::Sin(TMath::ACos(TMath::TanH((llnunu_l1_l1_eta-llnunu_l1_l2_eta)/2.0)));
-        PhiStarWeight = gdyphistar_dtmc_ratio->Eval(phistar);
+    if (!isData) {
+      for (int j=0; j<(int)pileup_tags.size(); j++){
+        *(pileup_weights.at(j)) = pileup_hists.at(j)->GetBinContent(pileup_hists.at(j)->FindBin(nTrueInt));
       }
     }
 
-    tree_out->Fill();
+    double met_para = llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi);
+    double met_perp = llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi);
+    if (isData) {
+      met_para -= h_dt_met_para_shift->GetBinContent(h_dt_met_para_shift->FindBin(llnunu_l1_pt));
+    }
+    else {
+      met_para -= h_mc_met_para_shift->GetBinContent(h_mc_met_para_shift->FindBin(llnunu_l1_pt));
+    }
+
+    if (!isData && isDyJets){
+      met_para *= h_ratio_met_para_sigma_dtmc->GetBinContent(h_ratio_met_para_sigma_dtmc->FindBin(llnunu_l1_pt));
+      met_perp *= h_ratio_met_perp_sigma_dtmc->GetBinContent(h_ratio_met_perp_sigma_dtmc->FindBin(llnunu_l1_pt));
+    }
+    double met_x = met_para*cos(llnunu_l1_phi)-met_perp*sin(llnunu_l1_phi);
+    double met_y = met_para*sin(llnunu_l1_phi)+met_perp*cos(llnunu_l1_phi);
+    TVector2 vec_met;
+    vec_met.Set(met_x, met_y);
+    llnunu_l2_pt = vec_met.Mod();
+    llnunu_l2_phi = TVector2::Phi_mpi_pi(vec_met.Phi());
+
+    double et1 = TMath::Sqrt(llnunu_l1_mass*llnunu_l1_mass + llnunu_l1_pt*llnunu_l1_pt);
+    double et2 = TMath::Sqrt(llnunu_l1_mass*llnunu_l1_mass);
+    llnunu_mt = TMath::Sqrt(2.0*llnunu_l1_mass*llnunu_l1_mass + 2.0* (et1*et2 - llnunu_l1_pt*cos(llnunu_l1_phi)*met_x - llnunu_l1_pt*sin(llnunu_l1_phi)*met_y));
+
+    //
+    if (!isData&&isDyJets) {
+      // zpt weight
+      if (ngenZ>0) ZPtWeight = gdyzpt_dtmc_ratio->Eval(genZ_pt[0]);
+      else ZPtWeight = gdyzpt_dtmc_ratio->Eval(llnunu_l1_pt);
+      // put zpt weight in genWeight
+      genWeight *= ZPtWeight;
+
+      // phistar weight
+      double phistar(0.0);
+      if (ngenLep>1) phistar = TMath::Tan((TMath::Pi()-TMath::Abs(TVector2::Phi_mpi_pi(genLep_phi[0]-genLep_phi[1])))/2.0)*TMath::Sin(TMath::ACos(TMath::TanH((genLep_eta[0]-genLep_eta[1])/2.0)));
+      else phistar = TMath::Tan((TMath::Pi()-TMath::Abs(TVector2::Phi_mpi_pi(llnunu_l1_l1_phi-llnunu_l1_l2_phi)))/2.0)*TMath::Sin(TMath::ACos(TMath::TanH((llnunu_l1_l1_eta-llnunu_l1_l2_eta)/2.0)));
+      PhiStarWeight = gdyphistar_dtmc_ratio->Eval(phistar);
+    }
+
+    sprintf(name, "run==%u&&lumi==%u&&evt==%llu", run,lumi,evt);
+    if ( isData && (tree_out->GetEntries(name)) >0 ) {
+      tree_out_duplic->Fill();
+    }
+    else {
+      tree_out->Fill();
+    }
   }
 
   foutput->cd();
   tree_out->Write();
+  tree_out_duplic->Write();
   foutput->Close();
   finput->Close();
 
