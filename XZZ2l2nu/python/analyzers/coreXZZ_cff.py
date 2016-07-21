@@ -8,6 +8,7 @@ from CMGTools.XZZ2l2nu.analyzers.Skimmer import *
 from CMGTools.XZZ2l2nu.analyzers.XZZLeptonicVMaker import *
 from CMGTools.XZZ2l2nu.analyzers.PackedCandidateLoader import *
 from CMGTools.XZZ2l2nu.analyzers.XZZMultiFinalState  import *
+from CMGTools.XZZ2l2nu.analyzers.XZZMultTrgEff import *
 from CMGTools.XZZ2l2nu.tools.leptonID  import *
 from CMGTools.XZZ2l2nu.analyzers.XZZGenAnalyzer import *
 from CMGTools.XZZ2l2nu.analyzers.XZZLeptonAnalyzer import *
@@ -88,6 +89,15 @@ lepAna = cfg.Analyzer(
                                      # 'raw' (uncorrected), 'weights' (delta beta weights; not validated)
                                      # Choose None to just use the individual object's PU correction
     )
+
+multtrg = cfg.Analyzer(
+    XZZMultTrgEff, name="multitrigger",
+    HLTlist=[
+        'HLT_Ele105_CaloIdVT_GsfTrkIdT',
+        'HLT_Mu45_eta2p1',
+        'HLT_Mu50'
+        ],
+)
 
 ## Jets Analyzer (generic)
 jetAna = cfg.Analyzer(
