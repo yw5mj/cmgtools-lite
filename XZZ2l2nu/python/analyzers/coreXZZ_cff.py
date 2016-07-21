@@ -94,8 +94,18 @@ multtrg = cfg.Analyzer(
     XZZMultTrgEff, name="multitrigger",
     HLTlist=[
         'HLT_Ele105_CaloIdVT_GsfTrkIdT',
+        'HLT_Ele115_CaloIdVT_GsfTrkIdT',
         'HLT_Mu45_eta2p1',
-        'HLT_Mu50'
+        'HLT_Mu50',
+        'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ',
+        'HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ',
+        'HLT_Ele23_WPLoose_Gsf',
+        'HLT_Ele22_eta2p1_WP75_Gsf',
+        'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ',
+        'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ',
+        'HLT_IsoMu20',
+        'HLT_IsoTkMu20',
+        'HLT_IsoMu27',
         ],
 )
 
