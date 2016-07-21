@@ -27,7 +27,7 @@ njob="0"
 
 #for infile in $(ls $inputdir/*.root|grep -v 2016B|grep -v DYJetsToLL|grep -v BulkGrav);
 #for infile in  $inputdir/*.root ;
-for infile in $(ls $inputdir/*.root|grep -v Single);
+for infile in $(ls $inputdir/*.root|grep -v Single | grep -v MGMLM );
 do
 #  echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"

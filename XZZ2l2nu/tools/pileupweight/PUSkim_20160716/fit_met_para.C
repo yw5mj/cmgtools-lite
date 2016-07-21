@@ -4,24 +4,24 @@ std::string inputdir =
   "/dataf/heli/XZZ/80X_20160705_L9p17_Skim"
   ;
 std::string filename =
-  //"DYJetsToLL_M50"
-  "SingleEMU_Run2016BCD_PromptReco"
+  "DYJetsToLL_M50"
+  //"SingleEMU_Run2016BCD_PromptReco"
   ;
 
 std::string selec = 
   //"(1)"
-  "abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11"
-  //"abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13"
+  //"abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11"
+  "abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13"
   ;
 std::string tag = 
   //"_met_para_study"
-  "_met_para_study_el"
-  //"_met_para_study_mu"
+  //"_met_para_study_el"
+  "_met_para_study_mu"
 ;
 
 std::string lumiTag = 
-  "CMS 13 TeV 2016 L=9.17 fb^{-1}"
-  //"CMS 13 TeV Simulation for 2016 Data"
+  //"CMS 13 TeV 2016 L=9.17 fb^{-1}"
+  "CMS 13 TeV Simulation for 2016 Data"
   ;
 
 char name[1000];
