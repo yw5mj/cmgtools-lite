@@ -12,11 +12,11 @@ pu_list=[61000, 61100, 61200, 61300, 61400, 61500, 61600, 61700, 61800, 61900, 6
 inputdir='/dataf/heli/XZZ/80X_20160711_LinksForPUScan'
 
 
-#outtag='scan_pu_pass2_smp'
-outtag='scan_pu_pass2_b2g'
+outtag='scan_pu_pass2_smp'
+#outtag='scan_pu_pass2_b2g'
 
-#DataHLT="DblLepHLT"
-DataHLT="SglLepHLT"
+DataHLT="DblLepHLT"
+#DataHLT="SglLepHLT"
 
 outtag += '_'+DataHLT
 
