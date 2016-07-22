@@ -10,7 +10,6 @@ from PhysicsTools.HeppyCore.framework.heppy_loop import getHeppyOption
 
 #Load all common analyzers
 from CMGTools.XZZ2l2nu.analyzers.coreXZZ_cff import *
-from CMGTools.XZZ2l2nu.analyzers.XZZTrgEff import *
 
 #-------- SAMPLES AND TRIGGERS -----------
 from CMGTools.XZZ2l2nu.samples.loadSamples80x import *
@@ -45,12 +44,6 @@ multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>50.0 and x.leg1.mass()
 
 #-------- SEQUENCE
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
-trgEffAna = cfg.Analyzer(
-    XZZTrgEff, name="TriggerEfficiencyAnalyzer",
-    eleHLT='HLT_Ele105_CaloIdVT_GsfTrkIdT',
-    muHLT='HLT_Mu45_eta2p1'
-    )
-
 coreSequence = [
     skimAnalyzer,
     genAna,
@@ -68,7 +61,7 @@ coreSequence = [
 ]
     
 #sequence = cfg.Sequence(coreSequence)
-sequence = cfg.Sequence(coreSequence+[vvSkimmer,trgEffAna,vvTreeProducer])
+sequence = cfg.Sequence(coreSequence+[vvSkimmer,multtrg,vvTreeProducer])
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,fullTreeProducer])
  
 
@@ -81,9 +74,9 @@ if test==1:
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #selectedComponents = [SingleMuon_Run2015C_25ns_16Dec]
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2] 
-    #selectedComponents = SingleMuon+SingleElectron
+    selectedComponents = SingleMuon+SingleElectron
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2,SingleElectron_Run2016B_PromptReco_v2] 
-    selectedComponents = [SingleMuon_Run2016D_PromptReco_v2,SingleElectron_Run2016D_PromptReco_v2] 
+    #selectedComponents = [SingleMuon_Run2016D_PromptReco_v2,SingleElectron_Run2016D_PromptReco_v2] 
     #selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
     #selectedComponents = [DYJetsToLL_M50]
@@ -94,9 +87,9 @@ if test==1:
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        c.files = c.files[1]
-        #c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
-        c.splitFactor = 1
+        #c.files = c.files[:1]
+        c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
+        #c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso
 
