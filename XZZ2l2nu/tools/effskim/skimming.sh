@@ -11,8 +11,10 @@ selection="(1)"
 g++ skimming.cc -o skimming.exe `root-config --cflags` `root-config --libs`
 
 #inputs
-inputdir=/dataf/heli/XZZ/80X_20160705_L9p17_Skim
-outputdir=/datag/heli/XZZ/80X_20160705_L9p17_EffSkim
+inputdir=/data/XZZ/80X_20160721_Skim
+outputdir=/home/heli/XZZ/80X_20160721_EffSkim_v2
+#inputdir=/dataf/heli/XZZ/80X_20160705_L9p17_Skim
+#outputdir=/datag/heli/XZZ/80X_20160705_L9p17_EffSkim
 #inputdir=/dataf/heli/XZZ/80X_20160705_L6p26_Skim
 #outputdir=/datad/heli/XZZ/80X_20160705_L6p26_Skim_ZpTLepTSkim
 #inputdir=/data/XZZ/76X_Ntuple/76X_20160514
@@ -38,7 +40,7 @@ do
   ./skimming.exe $infile $outfile &> ${outfile}.log &
 
   njob=$(( njob + 1 ))
-  if [ "$njob" -eq "100" ]; then
+  if [ "$njob" -eq "30" ]; then
     wait
     njob="0"
   fi

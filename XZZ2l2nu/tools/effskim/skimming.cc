@@ -51,12 +51,18 @@ int main(int argc, char** argv) {
   TH1F* hpetamc=(TH1F*)ftkhp->Get("hpmcetahist");
   TH1F* isoeta=(TH1F*)ftkhp->Get("tkissfeta");
 
+  /*
   TFile* ftrg = new TFile("triggereff80x.root");
   TH2D* mul1pteta=(TH2D*)ftrg->Get("mul1pteta");
   TH2D* mul2pteta=(TH2D*)ftrg->Get("mul2pteta");
   TH2D* ell1pteta=(TH2D*)ftrg->Get("ell1pteta");
-  
-  TFile* loosE = new TFile("Loose_80X_2ndPeriod.txt_SF2D.root");
+  */
+  TFile* ftrg = new TFile("trgeff_L12p9.root");
+  TH2D* mul1pteta = (TH2D*)ftrg->Get("hr_mu_l1_eta_pt");
+  TH2D* ell1pteta = (TH2D*)ftrg->Get("hr_el_l1_eta_pt");
+ 
+  //TFile* loosE = new TFile("Loose_80X_2ndPeriod.txt_SF2D.root");
+  TFile* loosE = new TFile("egammaEffi.txt_SF2D.root");
   TH2F* esfh2=(TH2F*)loosE->Get("EGamma_SF2D");
 
   Double_t effdt1a,effdt2a,effmc1a,effmc2a,errdt1a,errdt2a,errmc1a,errmc2a,effdt1,effdt2,effmc1,effmc2,errdt1,errdt2,errmc1,errmc2,trgsfall,idsfall,isosfall,trgsfallerr,idsfallerr,isosfallerr,temp1,temp2;
@@ -114,13 +120,19 @@ int main(int argc, char** argv) {
       errdt2=isoeta->GetBinError(isoeta->FindBin(llnunu_l1_l2_eta));
       isosfall=effdt1*effdt2;
       isosfallerr=TMath::Power((TMath::Power(effdt1*errdt2,2)+TMath::Power(errdt1*effdt2,2)),.5);
-
+/*
       effdt1=mul1pteta->GetBinContent(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
       effdt2=mul2pteta->GetBinContent(mul2pteta->FindBin(llnunu_l1_l2_pt,abs(llnunu_l1_l2_eta)))/100;
       errdt1=mul1pteta->GetBinError(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
       errdt2=mul2pteta->GetBinError(mul2pteta->FindBin(llnunu_l1_l2_pt,abs(llnunu_l1_l2_eta)))/100;
       trgsfall=effdt1+effdt2-effdt1*effdt2;
       trgsfallerr=TMath::Power((TMath::Power((1-effdt1)*errdt2,2)+TMath::Power((1-effdt2)*errdt1,2)),.5);
+*/
+      effdt1=mul1pteta->GetBinContent(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)));
+      errdt1=mul1pteta->GetBinError(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)));
+      trgsfall=effdt1;
+      trgsfallerr=errdt1;
+
     }
     if(abs(lpdgid)==11){
       if(llnunu_l1_l1_pt>200) effdt1=1;
@@ -133,8 +145,10 @@ int main(int argc, char** argv) {
       idsfallerr=TMath::Power((TMath::Power(effdt1*errdt2,2)+TMath::Power(errdt1*effdt2,2)),.5);
       isosfall=1;
       isosfallerr=0;
-      trgsfall=ell1pteta->GetBinContent(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
-      trgsfallerr=ell1pteta->GetBinError(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
+      //trgsfall=ell1pteta->GetBinContent(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
+      //trgsfallerr=ell1pteta->GetBinError(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
+      trgsfall=ell1pteta->GetBinContent(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)));
+      trgsfallerr=ell1pteta->GetBinError(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)));
     }
 
     tree_out->Fill();

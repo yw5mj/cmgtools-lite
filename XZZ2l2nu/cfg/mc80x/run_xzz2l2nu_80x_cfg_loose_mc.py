@@ -19,9 +19,11 @@ triggerFlagsAna.triggerBits ={
     "ISOMU":triggers_1mu_iso,
     "MU":triggers_1mu_noniso,
     "MUv2":triggers_1mu_noniso_v2,
+    "MU50":triggers_1mu_noniso_M50,
     "ISOELE":triggers_1e,
     "ELE":triggers_1e_noniso,
     "ELEv2":triggers_1e_noniso_v2,
+    "ELE115":triggers_1e_noniso_E115,
     "MUMU": triggers_mumu,
     "MUMUNOISO":triggers_mumu_noniso,
     "ELEL": triggers_ee,
@@ -81,19 +83,19 @@ if test==1:
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2,SingleElectron_Run2016B_PromptReco_v2] 
     #selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
-    #selectedComponents = [DYJetsToLL_M50]
+    selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1600] 
     #selectedComponents = signalSamples
     #selectedComponents = signalSamples+backgroundSamples[4:]
-    selectedComponents = backgroundSamples[1:4]
+    #selectedComponents = backgroundSamples[1:4]
     #selectedComponents = [TTTo2L2Nu]
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        #c.files = c.files[:1]
-        c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
-        #c.splitFactor = 1
+        c.files = c.files[0]
+        #c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
+        c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso
 

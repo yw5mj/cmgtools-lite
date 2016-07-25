@@ -17,6 +17,12 @@ twoVectorType = NTupleObjectType("twoVector", variables = [
     NTupleVariable("phi",   lambda x : x.phi()),
 ])
 
+threeVectorType = NTupleObjectType("threeVector", variables = [
+    NTupleVariable("x",    lambda x : x.x()),
+    NTupleVariable("y",    lambda x : x.y()),
+    NTupleVariable("z",    lambda x : x.z()),
+])
+
 fourVectorType = NTupleObjectType("fourVector", variables = [
     NTupleVariable("pt",    lambda x : x.pt()),
     NTupleVariable("px",    lambda x : x.px()),
