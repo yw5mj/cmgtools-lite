@@ -9,7 +9,7 @@ from math import *
 #pu_list=[65000, 65500, 66000, 66500, 67000, 67500, 68000, 68500, 69000, 69500, 70000, 70500, 71000, 71500, 72000, 72500, 73000] 
 #pu_list=[61000, 61500,62000, 62500, 63000, 63500, 64000, 64500, 65000, 65500, 66000, 66500, 67000, 67500, 68000, 68500, 69000, 69500, 70000, 70500, 71000, 71500, 72000, 72500, 73000, 73500, 74000, 74500, 75000, 75500, 76000, 76500, 77000, 77500] 
 #pu_list=[61000, 61100, 61200, 61300, 61400, 61500, 61600, 61700, 61800, 61900, 62000, 62100, 62200, 62300, 62400, 62500, 62600, 62700, 62800, 62900, 63000]
-pu_list=[61000, 61100, 61200, 61300, 61400, 61500, 61600, 61700, 61800, 61900, 62000, 62100, 62200, 62300] #, 62400, 62500, 62600, 62700, 62800, 62900, 63000]
+pu_list=[61000, 61100, 61200, 61300, 61400, 61500, 61600, 61700, 61800, 61900, 62000, 62100, 62200, 62300, 62400, 62500, 62600, 62700, 62800, 62900, 63000]
 #pu_list=[
 #100000, 101000, 102000, 103000, 104000, 105000, 106000, 107000, 108000, 109000, 110000, 111000, 112000, 113000, 114000, 115000, 116000, 117000, 118000, 119000, 120000, 121000, 122000, 123000, 124000, 125000, 126000, 127000, 128000, 129000, 130000]
 #75000, 75500, 76000, 76500, 77000, 77500,78000, 78500, 79000, 79500, 80000, 80500, 81000, 81500, 82000, 82500, 83000, 83500, 84000, 84500, 85000, 85500, 86000, 86500, 87000, 87500, 88000, 88500, 89000, 89500, 90000, 90500, 91000, 91500, 92000, 92500, 93000, 93500, 94000, 94500, 95000, 96000, 97000, 98000, 99000, 100000, 101000, 102000, 103000, 104000, 105000, 106000, 107000, 108000, 109000, 110000, 111000, 112000, 113000, 114000, 115000, 116000, 117000, 118000, 119000, 120000, 121000, 122000, 123000, 124000, 125000, 126000, 127000, 128000, 129000, 130000, 131000, 132000, 133000, 134000, 135000, 136000, 137000, 138000, 139000, 140000, 141000, 142000, 143000, 144000, 145000, 146000, 147000, 148000, 149000, 150000]
@@ -18,7 +18,8 @@ pu_list=[61000, 61100, 61200, 61300, 61400, 61500, 61600, 61700, 61800, 61900, 6
 
 
 #inputdir='/dataf/heli/XZZ/80X_20160721_Skim'
-inputdir='/home/heli/XZZ/80X_20160721_Skim'
+#inputdir='/home/heli/XZZ/80X_20160721_Skim'
+inputdir='/data/XZZ/80X_20160721_Skim'
 
 
 outtag='scan_pu_smp_pass2'
@@ -29,7 +30,8 @@ DataHLT="DblLepHLT"
 outtag += '_'+DataHLT
 
 
-dtfileName='SingleEMU_Run2016BCD_PromptReco.root'
+dtfileName='SingleEMU_Run2016BCD_PromptReco_killdup.root'
+#dtfileName='SingleEMU_Run2016BCD_PromptReco.root'
 #mcfileName='DYJetsToLL_M50_PUScan.root'
 #mcfileName='DYJetsToLL_M50_PUScanV2.root'
 #mcfileName='DYJetsToLL_M50_PUScanV3.root'
@@ -67,12 +69,12 @@ plots.SetLeftMargin(0.15)
 plots.SetBottomMargin(0.15)
 
 
-lumipt = TPaveText(0.45,0.8,0.9,0.9,"brNDC")
+lumipt = TPaveText(0.45,0.85,0.9,0.93,"brNDC")
 lumipt.SetBorderSize(0)
 lumipt.SetTextAlign(12)
 lumipt.SetFillStyle(0)
 lumipt.SetTextFont(42)
-lumipt.SetTextSize(0.045)
+lumipt.SetTextSize(0.04)
 lumipt.AddText(0.15,0.15, lumiTag)
 
 plots.Print(outtag+'.ps[')
@@ -202,7 +204,7 @@ br=fc_chi2ndf_pu.GetParError(1);
 cr=fc_chi2ndf_pu.GetParError(2);
 xmin=-b/2./c;
 xminerr=sqrt(1./2/2/c/c*br*br+b*b/2/2/c/c/c/c*cr*cr)
-gr_chi2ndf_pu.SetTitle('Pileup Data/MC matching Chi2/Ndf vs. MB xsec, min at {xm:.3f}#pm{xmr:.3f} mb'.format(xm=xmin, xmr=xminerr))
+gr_chi2ndf_pu.SetTitle('Chi2/Ndf vs. MB xsec, best fit at {xm:.3f}#pm{xmr:.3f} mb'.format(xm=xmin, xmr=xminerr))
 
 print '#########################################################################'
 print ' Pileup MB xsec fitresults: best MB xsec = {xm:.3f}#pm{xmr:.3f} mb'.format(xm=xmin, xmr=xminerr)

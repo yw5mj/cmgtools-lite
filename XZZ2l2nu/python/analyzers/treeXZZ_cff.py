@@ -61,6 +61,7 @@ vvTreeProducer = cfg.Analyzer(
          #NTupleVariable("nElMu",lambda ev: len(ev.ElMu) , int),       
          NTupleVariable("nLLNuNu",lambda ev: len(ev.LLNuNu) , int),       
          NTupleVariable("nVert",  lambda ev: len(ev.goodVertices), int, help="Number of good vertices"), 
+         #NTupleVariable("nVertAll",  lambda ev: len(ev.vertices), int, help="Number of good vertices"), 
          NTupleVariable("vtx_x",  lambda ev: ev.goodVertices[0].x(), float, help="primary vertex x"), 
          NTupleVariable("vtx_y",  lambda ev: ev.goodVertices[0].y(), float, help="primary vertex y"), 
          NTupleVariable("vtx_z",  lambda ev: ev.goodVertices[0].z(), float, help="primary vertex z"), 
@@ -92,6 +93,8 @@ vvTreeProducer = cfg.Analyzer(
          #"cleanJetsAll"     : NTupleCollection("cleanJetsAll",jetType,100, help="cleaned jets"),
          #"jets"       : NTupleCollection("jet_corr",jetType,15, help="all jets with new JEC for 76X applied"),
          #"jets_raw"   : NTupleCollection("jet",JetType,15, help="all jets from miniAOD"),
+         "vertices"   : NTupleCollection("allvtx", threeVectorType, 300, help="all vertecies"),
+         "goodVertices"   : NTupleCollection("goodvtx", threeVectorType, 300, help="good vertecies"),
      }
 )
 

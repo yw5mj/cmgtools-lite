@@ -80,36 +80,12 @@ int main(int argc, char** argv) {
   tree->SetBranchAddress("lumi",&lumi);
   tree->SetBranchAddress("evt",&evt);
 
-  // vector to store not-duplicated run, lumi, evt
-  //std::vector<UInt_t> v_run;
-  //std::vector<UInt_t> v_lumi;
-  //std::vector<ULong64_t> v_evt;
-  //std::vector<UInt_t>::iterator it_v_run;
-  //std::vector<UInt_t>::iterator it_v_lumi;
-  //std::vector<ULong64_t>::iterator it_v_evt;
-
-/* 
-  TEntryList* tlist = new TEntryList(tree);
-  // duplication removal
-  if (isData) {
-    std::set< std::pair<UInt_t, ULong64_t> > evt_set; 
-    for (int i=0; i<(int)tree->GetEntries(); i++) {
-      std::pair<UInt_t, ULong64_t> evt_pair = std::make_pair(run, evt);
-      if (evt_set.count(evt_pair) == 0){
-        evt_set.insert(evt_pair);
-        tlist->Enter(i, tree);
-      }
-    }
-    tree->SetEntryList(tlist);
-  }
-*/
-
   Float_t genWeight;
   if (!isData) tree->SetBranchAddress("genWeight",&genWeight);
 
   // pileup file tags
   std::vector<std::string> pileup_tags = {
-    "62118", "61651",
+    "62194", "61674", "62118", "61651", "61658",
    //"68715", "68883", 
   // "62154",
   // "61665",
@@ -249,15 +225,7 @@ int main(int argc, char** argv) {
   Int_t nTrueInt; 
   if (!isData) tree->SetBranchAddress( "nTrueInt", &nTrueInt );
 
-/*
-  TTree* tree_out_duplic;
-  if (isData){
-    tree_out_duplic = tree->CloneTree(0);
-    tree_out_duplic->SetName("tree_duplic");
-  }
-*/
   for (int i=0; i<(int)tree->GetEntries(); i++){
-  //for (int i=0; i<(int)1000; i++){
     tree->GetEntry(i);
 
     if ( i%n_interval == 0 ) {
@@ -309,48 +277,11 @@ int main(int argc, char** argv) {
       PhiStarWeight = gdyphistar_dtmc_ratio->Eval(phistar);
     }
 
-    // check duplication
-    //bool duplicated = false;
-/*
-    if (isData) {
-      std::pair<UInt_t, ULong64_t> evt_pair = std::make_pair(run, evt);
-      if (evt_set.count(evt_pair) == 0 ){
-        evt_set.insert(evt_pair);
-        tlist->Enter(i, tree);
-      }
-    }
-*/
     tree_out->Fill();
-/*
-    if (isData){
-      duplicated = true;
-      it_v_evt = std::find(v_evt.begin(), v_evt.end(), evt);
-      if (it_v_evt==v_evt.end()) {
-        duplicated = false; 
-      }
-      else {
-        it_v_run = std::find(v_run.begin(), v_run.end(), run);
-        if (it_v_run==v_run.end()) {
-          duplicated = false;
-        }
-      }
-    }
-
-    if ( isData && duplicated ) {
-      tree_out_duplic->Fill();
-    }
-    else {
-      tree_out->Fill();
-      v_run.push_back(run);
-      v_lumi.push_back(lumi);
-      v_evt.push_back(evt);
-    }
-*/
   }
 
   foutput->cd();
   tree_out->Write();
-//  tree_out_duplic->Write();
   foutput->Close();
   finput->Close();
 
