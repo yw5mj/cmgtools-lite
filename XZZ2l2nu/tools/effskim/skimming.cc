@@ -3,6 +3,7 @@
 #include "TBranch.h"
 #include "TH2D.h"
 #include "TH2F.h"
+#include "TH1F.h"
 #include "TMath.h"
 #include "TVector2.h"
 #include "TGraphErrors.h"
@@ -36,9 +37,11 @@ int main(int argc, char** argv) {
   if(tree->FindBranch("trgsf"))  tree->SetBranchStatus("trgsf",0);
   if(tree->FindBranch("idsf"))  tree->SetBranchStatus("idsf",0);
   if(tree->FindBranch("isosf"))  tree->SetBranchStatus("isosf",0);
+  if(tree->FindBranch("trksf"))  tree->SetBranchStatus("trksf",0);
   if(tree->FindBranch("trgsf_err"))  tree->SetBranchStatus("trgsf_err",0);
   if(tree->FindBranch("idsf_err"))  tree->SetBranchStatus("idsf_err",0);
   if(tree->FindBranch("isosf_err"))  tree->SetBranchStatus("isosf_err",0);
+  if(tree->FindBranch("trksf_err"))  tree->SetBranchStatus("trksf_err",0);
   // out_tree
   TTree* tree_out = tree->CloneTree(0);
 
@@ -63,13 +66,21 @@ int main(int argc, char** argv) {
   TFile* loosE = new TFile("egammaEffi.txt_SF2D.root");
   TH2F* esfh2=(TH2F*)loosE->Get("EGamma_SF2D");
 
-  Double_t effdt1a,effdt2a,effmc1a,effmc2a,errdt1a,errdt2a,errmc1a,errmc2a,effdt1,effdt2,effmc1,effmc2,errdt1,errdt2,errmc1,errmc2,trgsfall,idsfall,isosfall,trgsfallerr,idsfallerr,isosfallerr,temp1,temp2;
+  TFile* fEtk = new TFile("egammatracking.root");
+  TH2F* etksf=(TH2F*)fEtk->Get("EGamma_SF2D");
+
+  TFile* fMtk = new TFile("muontrackingsf.root");
+  TH1F* mtksf=(TH1F*)fMtk->Get("hist_ratio_eta");
+
+  Double_t effdt1a,effdt2a,effmc1a,effmc2a,errdt1a,errdt2a,errmc1a,errmc2a,effdt1,effdt2,effmc1,effmc2,errdt1,errdt2,errmc1,errmc2,trgsfall,idsfall,isosfall,trgsfallerr,idsfallerr,isosfallerr,trksfall,trksfallerr,temp1,temp2;
   TBranch *b_trgsfall=tree_out->Branch("trgsf",&trgsfall,"trgsf/D");
   TBranch *b_isosfall=tree_out->Branch("isosf",&isosfall,"isosf/D");
   TBranch *b_idsfall=tree_out->Branch("idsf",&idsfall,"idsf/D");
+  TBranch *b_trksfall=tree_out->Branch("trksf",&trksfall,"trksf/D");
   TBranch *b_trgsfallerr=tree_out->Branch("trgsf_err",&trgsfallerr,"trgsf_err/D");
   TBranch *b_isosfallerr=tree_out->Branch("isosf_err",&isosfallerr,"isosf_err/D");
   TBranch *b_idsfallerr=tree_out->Branch("idsf_err",&idsfallerr,"idsf_err/D");
+  TBranch *b_trksfallerr=tree_out->Branch("trksf_err",&trksfallerr,"trksf_err/D");
 
   Float_t llnunu_l1_l1_phi, llnunu_l1_l1_eta, llnunu_l1_l2_phi, llnunu_l1_l2_eta,llnunu_l1_l1_pt,llnunu_l1_l2_pt,llnunu_l1_l1_eSCeta,llnunu_l1_l2_eSCeta;
   int lpdgid;
@@ -112,12 +123,20 @@ int main(int argc, char** argv) {
       else{
 	idsfall=1;
 	idsfallerr=1;}
+
       effdt1=isopteta->GetBinContent(isopteta->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
       effdt2=isopteta->GetBinContent(isopteta->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
       errdt1=isopteta->GetBinError(isopteta->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
       errdt2=isopteta->GetBinError(isopteta->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
       isosfall=effdt1*effdt2;
       isosfallerr=TMath::Power((TMath::Power(effdt1*errdt2,2)+TMath::Power(errdt1*effdt2,2)),.5);
+
+      effdt1=mtksf->GetBinContent(mtksf->FindBin(llnunu_l1_l1_eta));
+      effdt2=mtksf->GetBinContent(mtksf->FindBin(llnunu_l1_l2_eta));
+      errdt1=mtksf->GetBinError(mtksf->FindBin(llnunu_l1_l1_eta));
+      errdt2=mtksf->GetBinError(mtksf->FindBin(llnunu_l1_l2_eta));
+      trksfall=effdt1*effdt2;
+      trksfallerr=TMath::Power((TMath::Power(effdt1*errdt2,2)+TMath::Power(errdt1*effdt2,2)),.5);
 
       effdt1=mul1pteta->GetBinContent(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
       effdt2=mul2pteta->GetBinContent(mul2pteta->FindBin(llnunu_l1_l2_pt,abs(llnunu_l1_l2_eta)))/100;
@@ -141,6 +160,14 @@ int main(int argc, char** argv) {
       errdt2=esfh2->GetBinError(esfh2->FindBin(llnunu_l1_l2_eSCeta,llnunu_l1_l2_pt));
       idsfall=effdt1*effdt2;
       idsfallerr=TMath::Power((TMath::Power(effdt1*errdt2,2)+TMath::Power(errdt1*effdt2,2)),.5);
+
+      effdt1=etksf->GetBinContent(etksf->FindBin(llnunu_l1_l1_eSCeta,100));
+      effdt2=etksf->GetBinContent(etksf->FindBin(llnunu_l1_l2_eSCeta,100));
+      errdt1=etksf->GetBinError(etksf->FindBin(llnunu_l1_l1_eSCeta,100));
+      errdt2=etksf->GetBinError(etksf->FindBin(llnunu_l1_l2_eSCeta,100));
+      trksfall=effdt1*effdt2;
+      trksfallerr=TMath::Power((TMath::Power(effdt1*errdt2,2)+TMath::Power(errdt1*effdt2,2)),.5);
+
       isosfall=1;
       isosfallerr=0;
       trgsfall=ell1pteta->GetBinContent(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
