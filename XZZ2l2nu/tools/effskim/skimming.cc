@@ -44,12 +44,22 @@ int main(int argc, char** argv) {
   // out_tree
   TTree* tree_out = tree->CloneTree(0);
 
+  /*
   TFile* ftkhp = new TFile("all80.root");
   TH1F* tkhpetadt=(TH1F*)ftkhp->Get("tkhpdtetahist");
   TH1F* tkhpetamc=(TH1F*)ftkhp->Get("tkhpmcetahist");
   TH1F* hpetadt=(TH1F*)ftkhp->Get("hpdtetahist");
   TH1F* hpetamc=(TH1F*)ftkhp->Get("hpmcetahist");
   TH1F* isoeta=(TH1F*)ftkhp->Get("tkissfeta");
+  */
+
+  TFile* ftkhp = new TFile("muonid80x.root");
+  TFile* ftkhpold = new TFile("all80.root");
+  TH1F* tkhpetadt=(TH1F*)ftkhp->Get("eff_trackHighPt_80Xdata_pteta");
+  TH1F* tkhpetamc=(TH1F*)ftkhp->Get("eff_trackHighPt_80Xmc_pteta");
+  TH1F* hpetadt=(TH1F*)ftkhp->Get("eff_HighPt_80Xdata_eta");
+  TH1F* hpetamc=(TH1F*)ftkhp->Get("eff_HighPt_80Xmc_eta");
+  TH1F* isoeta=(TH1F*)ftkhpold->Get("tkissfeta");
 
   /*
   TFile* ftrg = new TFile("triggereff80x.root");
@@ -88,18 +98,18 @@ int main(int argc, char** argv) {
   for (int i=0; i<(int)tree->GetEntries(); i++){
     tree->GetEntry(i);
     if(abs(lpdgid)==13){
-      effdt1=tkhpetadt->GetBinContent(tkhpetadt->FindBin(llnunu_l1_l1_eta));
-      effmc1=tkhpetamc->GetBinContent(tkhpetamc->FindBin(llnunu_l1_l1_eta));
-      errdt1=tkhpetadt->GetBinError(tkhpetadt->FindBin(llnunu_l1_l1_eta));
-      errmc1=tkhpetamc->GetBinError(tkhpetamc->FindBin(llnunu_l1_l1_eta));
+      effdt1=tkhpetadt->GetBinContent(tkhpetadt->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_TuneP_pt));
+      effmc1=tkhpetamc->GetBinContent(tkhpetamc->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_TuneP_pt));
+      errdt1=tkhpetadt->GetBinError(tkhpetadt->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_TuneP_pt));
+      errmc1=tkhpetamc->GetBinError(tkhpetamc->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_TuneP_pt));
       effdt1a=hpetadt->GetBinContent(hpetadt->FindBin(llnunu_l1_l1_eta));
       effmc1a=hpetamc->GetBinContent(hpetamc->FindBin(llnunu_l1_l1_eta));
       errdt1a=hpetadt->GetBinError(hpetadt->FindBin(llnunu_l1_l1_eta));
       errmc1a=hpetamc->GetBinError(hpetamc->FindBin(llnunu_l1_l1_eta));
-      effdt2=tkhpetadt->GetBinContent(tkhpetadt->FindBin(llnunu_l1_l2_eta));
-      effmc2=tkhpetamc->GetBinContent(tkhpetamc->FindBin(llnunu_l1_l2_eta));
-      errdt2=tkhpetadt->GetBinError(tkhpetadt->FindBin(llnunu_l1_l2_eta));
-      errmc2=tkhpetamc->GetBinError(tkhpetamc->FindBin(llnunu_l1_l2_eta));
+      effdt2=tkhpetadt->GetBinContent(tkhpetadt->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_TuneP_pt));
+      effmc2=tkhpetamc->GetBinContent(tkhpetamc->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_TuneP_pt));
+      errdt2=tkhpetadt->GetBinError(tkhpetadt->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_TuneP_pt));
+      errmc2=tkhpetamc->GetBinError(tkhpetamc->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_TuneP_pt));
       effdt2a=hpetadt->GetBinContent(hpetadt->FindBin(llnunu_l1_l2_eta));
       effmc2a=hpetamc->GetBinContent(hpetamc->FindBin(llnunu_l1_l2_eta));
       errdt2a=hpetadt->GetBinError(hpetadt->FindBin(llnunu_l1_l2_eta));

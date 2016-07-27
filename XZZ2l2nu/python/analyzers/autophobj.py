@@ -29,6 +29,7 @@ fourVectorType = NTupleObjectType("fourVector", variables = [
     NTupleVariable("py",    lambda x : x.py()),
     NTupleVariable("pz",    lambda x : x.pz()),
     NTupleVariable("eta",   lambda x : x.eta()),
+    NTupleVariable("rapidity",   lambda x : x.rapidity()),
     NTupleVariable("phi",   lambda x : x.phi()),
     NTupleVariable("mass",  lambda x : x.mass()),
     NTupleVariable("p4",    lambda x : x, "TLorentzVector", default=ROOT.reco.Particle.LorentzVector(0.,0.,0.,0.), filler = lambda vector, obj: vector.SetPtEtaPhiM(obj.pt(), obj.eta(), obj.phi(), obj.mass())),

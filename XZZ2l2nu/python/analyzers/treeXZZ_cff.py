@@ -93,8 +93,8 @@ vvTreeProducer = cfg.Analyzer(
          #"cleanJetsAll"     : NTupleCollection("cleanJetsAll",jetType,100, help="cleaned jets"),
          #"jets"       : NTupleCollection("jet_corr",jetType,15, help="all jets with new JEC for 76X applied"),
          #"jets_raw"   : NTupleCollection("jet",JetType,15, help="all jets from miniAOD"),
-         "vertices"   : NTupleCollection("allvtx", threeVectorType, 300, help="all vertecies"),
-         "goodVertices"   : NTupleCollection("goodvtx", threeVectorType, 300, help="good vertecies"),
+         #"vertices"   : NTupleCollection("allvtx", threeVectorType, 300, help="all vertecies"),
+         #"goodVertices"   : NTupleCollection("goodvtx", threeVectorType, 300, help="good vertecies"),
      }
 )
 
