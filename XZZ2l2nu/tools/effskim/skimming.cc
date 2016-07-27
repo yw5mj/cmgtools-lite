@@ -1,8 +1,6 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TBranch.h"
-#include "TH1D.h"
-#include "TH1F.h"
 #include "TH2D.h"
 #include "TH2F.h"
 #include "TMath.h"
@@ -44,32 +42,22 @@ int main(int argc, char** argv) {
   // out_tree
   TTree* tree_out = tree->CloneTree(0);
 
-  /*
-  TFile* ftkhp = new TFile("all80.root");
-  TH1F* tkhpetadt=(TH1F*)ftkhp->Get("tkhpdtetahist");
-  TH1F* tkhpetamc=(TH1F*)ftkhp->Get("tkhpmcetahist");
-  TH1F* hpetadt=(TH1F*)ftkhp->Get("hpdtetahist");
-  TH1F* hpetamc=(TH1F*)ftkhp->Get("hpmcetahist");
-  TH1F* isoeta=(TH1F*)ftkhp->Get("tkissfeta");
-  */
+  TFile* ftkhp = new TFile("all80x12p9.root");
+  TH2F* tkhpdt=(TH2F*)ftkhp->Get("eff_trackHighPt_80Xdata_pteta");
+  TH2F* tkhpmc=(TH2F*)ftkhp->Get("eff_trackHighPt_80Xmc_pteta");
+  TH2F* hpdt=(TH2F*)ftkhp->Get("eff_HighPt_80Xdata_pteta");
+  TH2F* hpmc=(TH2F*)ftkhp->Get("eff_HighPt_80Xmc_pteta");
+  TH2F* isopteta=(TH2F*)ftkhp->Get("sf_trackerIso_80X_pteta");
 
-  TFile* ftkhp = new TFile("muonid80x.root");
-  TFile* ftkhpold = new TFile("all80.root");
-  TH1F* tkhpetadt=(TH1F*)ftkhp->Get("eff_trackHighPt_80Xdata_pteta");
-  TH1F* tkhpetamc=(TH1F*)ftkhp->Get("eff_trackHighPt_80Xmc_pteta");
-  TH1F* hpetadt=(TH1F*)ftkhp->Get("eff_HighPt_80Xdata_eta");
-  TH1F* hpetamc=(TH1F*)ftkhp->Get("eff_HighPt_80Xmc_eta");
-  TH1F* isoeta=(TH1F*)ftkhpold->Get("tkissfeta");
 
-  /*
-  TFile* ftrg = new TFile("triggereff80x.root");
+  TFile* ftrg = new TFile("trigereff12p9.root");
   TH2D* mul1pteta=(TH2D*)ftrg->Get("mul1pteta");
   TH2D* mul2pteta=(TH2D*)ftrg->Get("mul2pteta");
   TH2D* ell1pteta=(TH2D*)ftrg->Get("ell1pteta");
-  */
-  TFile* ftrg = new TFile("trgeff_L12p9.root");
-  TH2D* mul1pteta = (TH2D*)ftrg->Get("hr_mu_l1_eta_pt");
-  TH2D* ell1pteta = (TH2D*)ftrg->Get("hr_el_l1_eta_pt");
+
+  //  TFile* ftrg = new TFile("trgeff_L12p9.root");
+  //TH2D* mul1pteta = (TH2D*)ftrg->Get("hr_mu_l1_eta_pt");
+  //TH2D* ell1pteta = (TH2D*)ftrg->Get("hr_el_l1_eta_pt");
  
   //TFile* loosE = new TFile("Loose_80X_2ndPeriod.txt_SF2D.root");
   TFile* loosE = new TFile("egammaEffi.txt_SF2D.root");
@@ -98,22 +86,22 @@ int main(int argc, char** argv) {
   for (int i=0; i<(int)tree->GetEntries(); i++){
     tree->GetEntry(i);
     if(abs(lpdgid)==13){
-      effdt1=tkhpetadt->GetBinContent(tkhpetadt->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_TuneP_pt));
-      effmc1=tkhpetamc->GetBinContent(tkhpetamc->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_TuneP_pt));
-      errdt1=tkhpetadt->GetBinError(tkhpetadt->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_TuneP_pt));
-      errmc1=tkhpetamc->GetBinError(tkhpetamc->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_TuneP_pt));
-      effdt1a=hpetadt->GetBinContent(hpetadt->FindBin(llnunu_l1_l1_eta));
-      effmc1a=hpetamc->GetBinContent(hpetamc->FindBin(llnunu_l1_l1_eta));
-      errdt1a=hpetadt->GetBinError(hpetadt->FindBin(llnunu_l1_l1_eta));
-      errmc1a=hpetamc->GetBinError(hpetamc->FindBin(llnunu_l1_l1_eta));
-      effdt2=tkhpetadt->GetBinContent(tkhpetadt->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_TuneP_pt));
-      effmc2=tkhpetamc->GetBinContent(tkhpetamc->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_TuneP_pt));
-      errdt2=tkhpetadt->GetBinError(tkhpetadt->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_TuneP_pt));
-      errmc2=tkhpetamc->GetBinError(tkhpetamc->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_TuneP_pt));
-      effdt2a=hpetadt->GetBinContent(hpetadt->FindBin(llnunu_l1_l2_eta));
-      effmc2a=hpetamc->GetBinContent(hpetamc->FindBin(llnunu_l1_l2_eta));
-      errdt2a=hpetadt->GetBinError(hpetadt->FindBin(llnunu_l1_l2_eta));
-      errmc2a=hpetamc->GetBinError(hpetamc->FindBin(llnunu_l1_l2_eta));
+      effdt1=tkhpdt->GetBinContent(tkhpdt->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
+      effmc1=tkhpmc->GetBinContent(tkhpmc->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
+      errdt1=tkhpdt->GetBinError(tkhpdt->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
+      errmc1=tkhpmc->GetBinError(tkhpmc->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
+      effdt1a=hpdt->GetBinContent(hpdt->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
+      effmc1a=hpmc->GetBinContent(hpmc->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
+      errdt1a=hpdt->GetBinError(hpdt->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
+      errmc1a=hpmc->GetBinError(hpmc->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
+      effdt2=tkhpdt->GetBinContent(tkhpdt->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
+      effmc2=tkhpmc->GetBinContent(tkhpmc->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
+      errdt2=tkhpdt->GetBinError(tkhpdt->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
+      errmc2=tkhpmc->GetBinError(tkhpmc->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
+      effdt2a=hpdt->GetBinContent(hpdt->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
+      effmc2a=hpmc->GetBinContent(hpmc->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
+      errdt2a=hpdt->GetBinError(hpdt->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
+      errmc2a=hpmc->GetBinError(hpmc->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
       temp1=effdt1*effdt2a+effdt1a*effdt2-effdt1a*effdt2a;
       temp2=effmc1*effmc2a+effmc1a*effmc2-effmc1a*effmc2a;
       if(temp1&&temp2){
@@ -124,24 +112,24 @@ int main(int argc, char** argv) {
       else{
 	idsfall=1;
 	idsfallerr=1;}
-      effdt1=isoeta->GetBinContent(isoeta->FindBin(llnunu_l1_l1_eta));
-      effdt2=isoeta->GetBinContent(isoeta->FindBin(llnunu_l1_l2_eta));
-      errdt1=isoeta->GetBinError(isoeta->FindBin(llnunu_l1_l1_eta));
-      errdt2=isoeta->GetBinError(isoeta->FindBin(llnunu_l1_l2_eta));
+      effdt1=isopteta->GetBinContent(isopteta->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
+      effdt2=isopteta->GetBinContent(isopteta->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
+      errdt1=isopteta->GetBinError(isopteta->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
+      errdt2=isopteta->GetBinError(isopteta->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
       isosfall=effdt1*effdt2;
       isosfallerr=TMath::Power((TMath::Power(effdt1*errdt2,2)+TMath::Power(errdt1*effdt2,2)),.5);
-/*
+
       effdt1=mul1pteta->GetBinContent(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
       effdt2=mul2pteta->GetBinContent(mul2pteta->FindBin(llnunu_l1_l2_pt,abs(llnunu_l1_l2_eta)))/100;
       errdt1=mul1pteta->GetBinError(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
       errdt2=mul2pteta->GetBinError(mul2pteta->FindBin(llnunu_l1_l2_pt,abs(llnunu_l1_l2_eta)))/100;
       trgsfall=effdt1+effdt2-effdt1*effdt2;
       trgsfallerr=TMath::Power((TMath::Power((1-effdt1)*errdt2,2)+TMath::Power((1-effdt2)*errdt1,2)),.5);
-*/
-      effdt1=mul1pteta->GetBinContent(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)));
-      errdt1=mul1pteta->GetBinError(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)));
-      trgsfall=effdt1;
-      trgsfallerr=errdt1;
+
+      //      effdt1=mul1pteta->GetBinContent(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)));
+      //errdt1=mul1pteta->GetBinError(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)));
+      //trgsfall=effdt1;
+      //trgsfallerr=errdt1;
 
     }
     if(abs(lpdgid)==11){
@@ -155,10 +143,10 @@ int main(int argc, char** argv) {
       idsfallerr=TMath::Power((TMath::Power(effdt1*errdt2,2)+TMath::Power(errdt1*effdt2,2)),.5);
       isosfall=1;
       isosfallerr=0;
-      //trgsfall=ell1pteta->GetBinContent(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
-      //trgsfallerr=ell1pteta->GetBinError(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
-      trgsfall=ell1pteta->GetBinContent(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)));
-      trgsfallerr=ell1pteta->GetBinError(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)));
+      trgsfall=ell1pteta->GetBinContent(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
+      trgsfallerr=ell1pteta->GetBinError(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
+      //trgsfall=ell1pteta->GetBinContent(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)));
+      //trgsfallerr=ell1pteta->GetBinError(ell1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)));
     }
 
     tree_out->Fill();
