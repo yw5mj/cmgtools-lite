@@ -18,6 +18,7 @@ from CMGTools.XZZ2l2nu.analyzers.XZZMETAnalyzer import *
 from CMGTools.XZZ2l2nu.analyzers.XZZDumpEvtList import *
 from CMGTools.XZZ2l2nu.analyzers.XZZJetAnalyzer import *
 from CMGTools.XZZ2l2nu.analyzers.XZZLHEWeightAnalyzer import *
+from CMGTools.XZZ2l2nu.analyzers.XZZPhotonAnalyzer import *
 
 ###########################
 # define analyzers
@@ -108,6 +109,25 @@ multtrg = cfg.Analyzer(
         'HLT_IsoMu27',
         ],
 )
+
+## Photon Analyzer (generic)
+photonAna = cfg.Analyzer(
+    XZZPhotonAnalyzer, name='photonAnalyzer',
+    photons='slimmedPhotons',
+    ptMin = 15,
+    etaMax = 2.5,
+    doPhotonScaleCorrections=False,
+    gammaID = "POG_SPRING15_25ns_Loose",
+    rhoPhoton = 'fixedGridRhoFastjetAll',
+    gamma_isoCorr = 'rhoArea',
+    doFootprintRemovedIsolation = True,
+    packedCandidates = 'packedPFCandidates',
+    footprintRemovedIsolationPUCorr = 'rhoArea',
+    conversionSafe_eleVeto = True,
+    do_mc_match = True,
+    do_randomCone = False,
+)
+
 
 ## Jets Analyzer (generic)
 jetAna = cfg.Analyzer(
@@ -251,6 +271,7 @@ coreSequence = [
     lepAna,
     jetAna,
     metAna,
+    photonAna,
     leptonicVAna,
 #    packedAna,
     multiStateAna,

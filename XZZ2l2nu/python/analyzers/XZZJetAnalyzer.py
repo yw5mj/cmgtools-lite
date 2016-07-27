@@ -234,7 +234,8 @@ class JetAnalyzer( Analyzer ):
                     if pairs[jet] is None:
                         pass
                     else:
-                        jet.matchedGenJet = pairs[jet] 
+                        jet.matchedGenJet = pairs[jet]
+                        jet.matchedGenJetIdx = self.genJets.index(pairs[jet]) 
                 else: pass
                 if self.debug: print '[Debug] I am event = ', event.input.eventAuxiliary().id().event()
                 if self.smearJets:
