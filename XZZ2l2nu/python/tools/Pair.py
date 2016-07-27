@@ -93,6 +93,9 @@ class Pair(object):
     def eta(self):
         return self.LV.eta()
 
+    def rapidity(self):
+        return self.LV.Rapidity()
+
     def phi(self):
         return self.LV.phi()
 
@@ -110,6 +113,9 @@ class Pair(object):
 
     def TuneP_eta(self):
         return self.TuneP_LV.Eta()
+
+    def TuneP_rapidity(self):
+        return self.TuneP_LV.Rapidity()
 
     def TuneP_phi(self):
         return self.TuneP_LV.Phi()

@@ -54,6 +54,7 @@ coreSequence = [
     lepAna,
     jetAna,
     metAna,
+    #photonAna,
     leptonicVAna,
     multiStateAna,
     eventFlagsAna,

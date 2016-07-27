@@ -18,6 +18,7 @@ from CMGTools.XZZ2l2nu.analyzers.XZZMETAnalyzer import *
 from CMGTools.XZZ2l2nu.analyzers.XZZDumpEvtList import *
 from CMGTools.XZZ2l2nu.analyzers.XZZJetAnalyzer import *
 from CMGTools.XZZ2l2nu.analyzers.XZZLHEWeightAnalyzer import *
+from CMGTools.XZZ2l2nu.analyzers.XZZPhotonAnalyzer import *
 
 ###########################
 # define analyzers
@@ -109,6 +110,25 @@ multtrg = cfg.Analyzer(
         ],
 )
 
+## Photon Analyzer (generic)
+photonAna = cfg.Analyzer(
+    XZZPhotonAnalyzer, name='photonAnalyzer',
+    photons='slimmedPhotons',
+    ptMin = 15,
+    etaMax = 2.5,
+    doPhotonScaleCorrections=False,
+    gammaID = "POG_SPRING15_25ns_Loose",
+    rhoPhoton = 'fixedGridRhoFastjetAll',
+    gamma_isoCorr = 'rhoArea',
+    doFootprintRemovedIsolation = True,
+    packedCandidates = 'packedPFCandidates',
+    footprintRemovedIsolationPUCorr = 'rhoArea',
+    conversionSafe_eleVeto = True,
+    do_mc_match = True,
+    do_randomCone = False,
+)
+
+
 ## Jets Analyzer (generic)
 jetAna = cfg.Analyzer(
     JetAnalyzer, name='jetAnalyzer',
@@ -117,8 +137,8 @@ jetAna = cfg.Analyzer(
     copyJetsByValue = True,      #Whether or not to copy the input jets or to work with references (should be 'True' if JetAnalyzer is run more than once)
     genJetCol = 'slimmedGenJets',
     rho = ('fixedGridRhoFastjetAll','',''), # it was ('fixedGridRhoFastjetAll','','') 
-    jetPt = 5., # default used to be 25.
-    jetEta = 4.7,
+    jetPt = 0., # default used to be 25.
+    jetEta = 6.0,  #4.7,
     jetEtaCentral = 2.4,
     jetLepDR = 0.4,
     jetLepArbitration = (lambda jet,lepton : lepton), # you can decide which to keep in case of overlaps; e.g. if the jet is b-tagged you might want to keep the jet
@@ -145,7 +165,7 @@ jetAna = cfg.Analyzer(
     cleanJetsFromTaus = False,
     cleanJetsFromIsoTracks = False,
     doQG = False,
-    do_mc_match = False,
+    do_mc_match = True,
     collectionPostFix = "",
     calculateSeparateCorrections = False, # should be True if recalibrateJets is True, otherwise L1s will be inconsistent
     calculateType1METCorrection  = False,
@@ -251,6 +271,7 @@ coreSequence = [
     lepAna,
     jetAna,
     metAna,
+    photonAna,
     leptonicVAna,
 #    packedAna,
     multiStateAna,

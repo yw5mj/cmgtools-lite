@@ -88,13 +88,15 @@ vvTreeProducer = cfg.Analyzer(
          "genZBosons" : NTupleCollection("genZ", genParticleType, 100, help="Generated V bosons"),
          "LLNuNu"     : NTupleCollection("llnunu",LLNuNuType ,5, help="VV candidate with di-lepton and MET"),
          "genXZZ" : NTupleCollection("genX", VVType, 10, mcOnly=True, help="Generated X->ZZ"),
+	 "jets"       : NTupleCollection("jet",JetType,100, help="all jets in miniaod"),
          #"LHE_weights"    : NTupleCollection("LHEweight",  weightsInfoType, 1000, help="LHE weight info"),
-         "jets"       : NTupleCollection("jet",JetType,100, help="all jets in miniaod"),
+         #"genJets"       : NTupleCollection("genjet",JetType,100, help="genJets in miniaod"),
+         "selectedPhotons"       : NTupleCollection("photon",photonType,100, help="selected photons in miniaod"),
          #"cleanJetsAll"     : NTupleCollection("cleanJetsAll",jetType,100, help="cleaned jets"),
          #"jets"       : NTupleCollection("jet_corr",jetType,15, help="all jets with new JEC for 76X applied"),
          #"jets_raw"   : NTupleCollection("jet",JetType,15, help="all jets from miniAOD"),
-         "vertices"   : NTupleCollection("allvtx", threeVectorType, 300, help="all vertecies"),
-         "goodVertices"   : NTupleCollection("goodvtx", threeVectorType, 300, help="good vertecies"),
+         #"vertices"   : NTupleCollection("allvtx", threeVectorType, 300, help="all vertecies"),
+         #"goodVertices"   : NTupleCollection("goodvtx", threeVectorType, 300, help="good vertecies"),
      }
 )
 
