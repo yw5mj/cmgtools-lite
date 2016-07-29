@@ -100,13 +100,18 @@ vvTreeProducer = cfg.Analyzer(
      }
 )
 
+
 lepeffTreeProducer = cfg.Analyzer(
      AutoFillTreeProducer, name='lepeffTreeProducer',
      vectorTree = True,
      saveTLorentzVectors = False,  # can set to True to get also the TLorentzVectors, but trees will be bigger
      defaultFloatType = 'F', # use Float_t for floating point
+     globalVariables = [
+        NTupleVariable("nMuon",lambda ev: len(ev.selectedMuons) if hasattr(ev,"selectedMuons") else 0, int),
+        NTupleVariable("nElectron",lambda ev: len(ev.selectedElectrons) if hasattr(ev,"selectedElectrons") else 0, int),
+        ],
      collections = {
-         "llpair"  : NTupleCollection("llpair",llpairType ,5, help="lepton eff study"),
+         "llpair"  : NTupleCollection("llpair",llpairType ,15, help="lepton eff study"),
      }
 )
 
