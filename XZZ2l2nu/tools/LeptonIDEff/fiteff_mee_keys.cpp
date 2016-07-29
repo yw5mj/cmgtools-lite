@@ -55,7 +55,8 @@ int main(int argc, char** argv) {
 
   // open steering file names
   config  steer(std::string((const char*)argv[1]));
-  
+  // allow signal fitting shift
+  bool sgshift = steer.getBool("SignalShift");
   // output root file name
   std::string OutRootFile = steer.getString("OutRootFile");
   // output ps plot file name
@@ -301,7 +302,7 @@ int main(int argc, char** argv) {
           //fall->FixParameter(0, Ndata_fit);
           // release total
           fall->SetParameter(0, Ndata_fit);
-          fall->SetParLimits(0, Ndata_fit*0.9, Ndata_fit*1.1);
+          fall->SetParLimits(0, Ndata_fit*0.99, Ndata_fit*1.01);
 
           // par[1] : signal fraction initial value 0.5
           fall->SetParameter(1, 0.99);
@@ -321,14 +322,16 @@ int main(int argc, char** argv) {
           //   release frac
           fall->ReleaseParameter(1);
           //   release shift
-          fall->ReleaseParameter(3+2);
+	  if (sgshift)
+	  fall->ReleaseParameter(3+2);
           //   release sigma
           fall->ReleaseParameter(4+2);
 
 
           // set par limits
           fall->SetParLimits(1, 0., 1.);
-          fall->SetParLimits(3+2, -2, 2);
+	  if (sgshift)
+	  fall->SetParLimits(3+2, -1, 1);
           fall->SetParLimits(4+2, 0, 2);
 
           // fix frac to be 1: for FullMC fit because no background actually
@@ -350,7 +353,7 @@ int main(int argc, char** argv) {
           std::cout << " -- Fit to Data :: Done" << std::endl;
 
           // if sigma (par 4+2) hit limits, shift err (par 3+2) set to 10 GeV (a big number)
-          if (fall->GetParameter(4+2)>=3) fall->SetParError(3+2, 10);
+	  if (fall->GetParameter(4+2)>=3&&sgshift) fall->SetParError(3+2, 10);
 
           // comment: should not fit 2nd time with shift and sigma fixed, because that error should be considered.
           // fix shift and sigma; 
