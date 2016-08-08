@@ -24,7 +24,7 @@ meffAna = cfg.Analyzer(
     genfilter=False,
     pfbkg=True,
     checktag=True,
-    muHLT="HLT_IsoMu20_v"
+    muHLT="HLT_IsoTkMu27_v*"
     )
 
 lepeffTreeProducer.globalVariables.extend(

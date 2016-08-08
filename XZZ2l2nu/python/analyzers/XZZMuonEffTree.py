@@ -38,7 +38,7 @@ class XZZMuonEffTree( Analyzer ):
         itg=1
         if not mu.muonID("POG_ID_Tight"): itg-=1
 #        if (mu.physObj.pfIsolationR04().sumChargedHadronPt + max(0., mu.physObj.pfIsolationR04().sumNeutralHadronEt + mu.physObj.pfIsolationR04().sumPhotonEt - 0.5*mu.physObj.pfIsolationR04().sumPUPt))/mu.pt()>.2: itg-=2
-        if mu.absIsoWithFSR()/mu.pt()>.2: itg-=2
+        if mu.absIsoWithFSR(0.4)/mu.pt()>.2: itg-=2
         if not [i for i in tobs if deltaR(mu.eta(),mu.phi(),i.eta(),i.phi())<.3]: itg-=4
         if mu.pt()<21: itg-=8
         return itg
