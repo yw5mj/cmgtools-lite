@@ -114,6 +114,10 @@ triggers_photon165_HE10 = ["HLT_Photon165_HE10_v*"]
 # Added by Mengqing:
 triggers_photon_unbias = [ "HLT_Photon%d_R9Id90_HE10_IsoM_v*" % pt for pt in (22,30,36,50,75,90,120) ] # unbiased, prescaled
 
+# all photon
+triggers_all_photons = ["HLT_Photon*"]
+
+
 # monojets triggers
 #MC is NoiseCleaned but data will be JetIdCleaned
 triggers_met90_mht90 = ["HLT_PFMET90_PFMHT90_IDTight_v*","HLT_PFMET90_PFMHT90_IDLoose_v*"]
