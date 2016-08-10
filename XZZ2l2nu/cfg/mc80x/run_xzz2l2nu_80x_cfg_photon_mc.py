@@ -31,19 +31,35 @@ triggerFlagsAna.triggerBits ={
     "HT900":triggers_HT900,
     "JJ":triggers_dijet_fat,
     "MET90":triggers_met90_mht90+triggers_metNoMu90_mhtNoMu90,
-    "MET120":triggers_metNoMu120_mhtNoMu120
+    "MET120":triggers_metNoMu120_mhtNoMu120,
+    "PHOTONHZZ": triggers_photon_unbias,
+    "ALLPHOTON": triggers_all_photons
 }
 
 #-------- Analyzer
 from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
 
-leptonicVAna.selectMuMuPair = (lambda x: ((x.leg1.pt()>20 or x.leg2.pt()>20)))
-leptonicVAna.selectElElPair =(lambda x: x.leg1.pt()>20.0 or x.leg2.pt()>20.0 )
-leptonicVAna.selectVBoson = (lambda x: x.mass()>50.0 and x.mass()<180.0)
-multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>50.0 and x.leg1.mass()<180.0)
+multiStateAna.processTypes = ['PhotonJets']
+multiStateAna.selectPhotonJets = (lambda x: x.leg1.pt()>20.0 and x.leg2.pt()>-0.0)
+vvSkimmer.required = ['PhotonJets']
+
+vvTreeProducer.globalVariables = [
+         NTupleVariable("nVert",  lambda ev: len(ev.goodVertices), int, help="Number of good vertices"), 
+         NTupleVariable("nVertAll",  lambda ev: len(ev.vertices), int, help="Number of good vertices"), 
+         NTupleVariable("rho", lambda ev: ev.rho , float),
+     ]
+vvTreeProducer.globalObjects =  {  }
+
+vvTreeProducer.collections = {
+	 "jets"       : NTupleCollection("jet",JetType,100, help="all jets in miniaod"),
+         "selectedPhotons"       : NTupleCollection("photon",photonType,100, help="selected photons in miniaod"),
+         "PhotonJets"     : NTupleCollection("gjet",PhotonJetType ,100, help="photon and MET"),
+     }
+
+
+
 
 #-------- SEQUENCE
-#sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
 coreSequence = [
     skimAnalyzer,
     genAna,
@@ -51,18 +67,18 @@ coreSequence = [
     triggerAna,
     pileUpAna,
     vertexAna,
-    lepAna,
+    #lepAna,
+    photonAna, 
     jetAna,
     metAna,
-    #photonAna,
-    leptonicVAna,
     multiStateAna,
     eventFlagsAna,
     triggerFlagsAna,
 ]
     
 #sequence = cfg.Sequence(coreSequence)
-sequence = cfg.Sequence(coreSequence+[vvSkimmer,multtrg,vvTreeProducer])
+sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
+#sequence = cfg.Sequence(coreSequence+[vvSkimmer,multtrg,vvTreeProducer])
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,fullTreeProducer])
  
 
@@ -72,10 +88,14 @@ if test==1:
     # test a single component, using a single thread.
     #selectedComponents = dataSamples
     #selectedComponents = mcSamples
+    #selectedComponents = SinglePhoton
+    #selectedComponents = [SinglePhoton_Run2016D_PromptReco_v2]
+    #selectedComponents = [GJet_Pt_20toInf_DoubleEMEnriched]
+    #selectedComponents = [GJet_Pt_20to40_DoubleEMEnriched, GJet_Pt_40toInf_DoubleEMEnriched]
+    selectedComponents = [GJet_Pt_20toInf_DoubleEMEnriched, GJet_Pt_20to40_DoubleEMEnriched, GJet_Pt_40toInf_DoubleEMEnriched]
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #selectedComponents = [SingleMuon_Run2015C_25ns_16Dec]
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2] 
-    selectedComponents = [SingleMuon_Run2016D_PromptReco_v2] 
     #selectedComponents = SingleMuon+SingleElectron
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2,SingleElectron_Run2016B_PromptReco_v2] 
     #selectedComponents = [SingleMuon_Run2016D_PromptReco_v2,SingleElectron_Run2016D_PromptReco_v2] 
@@ -89,9 +109,9 @@ if test==1:
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        c.files = c.files[3]
-        #c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
-        c.splitFactor = 1
+        #c.files = c.files[3:10]
+        c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
+        #c.splitFactor = 7
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso
 

@@ -30,9 +30,6 @@ VVType = NTupleObjectType("VVType", baseObjectTypes=[], variables = [
   NTupleVariable("TuneP_deltaR",   lambda x : x['pair'].TuneP_deltaR(), float),       
   NTupleVariable("mt",   lambda x : x['pair'].mt(), float),       
   NTupleVariable("TuneP_mt",   lambda x : x['pair'].TuneP_mt(), float),       
-  NTupleVariable("mta",   lambda x : x['pair'].mta(), float),       
-  NTupleVariable("mtb",   lambda x : x['pair'].mtb(), float),       
-  NTupleVariable("mtc",   lambda x : x['pair'].mtc(), float),   
 ])
 
 
