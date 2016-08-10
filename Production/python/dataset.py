@@ -156,7 +156,7 @@ class CMSDataset( BaseDataset ):
             else:
                 print "WARNING: queries with run ranges are slow in DAS"
                 query += "   run between [%s,%s]" % ( run_range[0],run_range[1] )
-        dbs='das_client.py --query="file %s=%s"'%(qwhat,query)
+        dbs='das_client --query="file %s=%s"'%(qwhat,query)
         if begin >= 0:
             dbs += ' --index %d' % begin
         if end >= 0:
@@ -235,7 +235,7 @@ class CMSDataset( BaseDataset ):
             else:
                 print "WARNING: queries with run ranges are slow in DAS"
                 query = "%s run between [%d, %d]" % (query,runmin if runmin > 0 else 1, runmax if runmax > 0 else 999999)
-        dbs='das_client.py --query="summary %s=%s"'%(qwhat,query)
+        dbs='das_client --query="summary %s=%s"'%(qwhat,query)
         dbsOut = _dasPopen(dbs).readlines()
 
         entries = []
@@ -258,7 +258,7 @@ class CMSDataset( BaseDataset ):
             else:
                 print "WARNING: queries with run ranges are slow in DAS"
                 query = "%s run between [%d, %d]" % (query,runmin if runmin > 0 else 1, runmax if runmax > 0 else 999999)
-        dbs='das_client.py --query="summary %s=%s"'%(qwhat,query)
+        dbs='das_client --query="summary %s=%s"'%(qwhat,query)
         dbsOut = _dasPopen(dbs).readlines()
 
         entries = []
@@ -398,7 +398,7 @@ class PrivateDataset ( BaseDataset ):
     def buildListOfFilesDBS(self, name, dbsInstance):
         entries = self.findPrimaryDatasetNumFiles(name, dbsInstance, -1, -1)
         files = []
-        dbs = 'das_client.py --query="file dataset=%s instance=prod/%s" --limit=%s' % (name, dbsInstance, entries)
+        dbs = 'das_client --query="file dataset=%s instance=prod/%s" --limit=%s' % (name, dbsInstance, entries)
         dbsOut = _dasPopen(dbs)
         for line in dbsOut:
             if line.find('/store')==-1:
@@ -424,7 +424,7 @@ class PrivateDataset ( BaseDataset ):
             else:
                 print "WARNING: queries with run ranges are slow in DAS"
                 query = "%s run between [%d, %d]" % (query,runmin if runmin > 0 else 1, runmax if runmax > 0 else 999999)
-        dbs='das_client.py --query="summary %s=%s instance=prod/%s"'%(qwhat, query, dbsInstance)
+        dbs='das_client --query="summary %s=%s instance=prod/%s"'%(qwhat, query, dbsInstance)
         dbsOut = _dasPopen(dbs).readlines()
 
         entries = []
@@ -448,7 +448,7 @@ class PrivateDataset ( BaseDataset ):
             else:
                 print "WARNING: queries with run ranges are slow in DAS"
                 query = "%s run between [%d, %d]" % (query,runmin if runmin > 0 else 1, runmax if runmax > 0 else 999999)
-        dbs='das_client.py --query="summary %s=%s instance=prod/%s"'%(qwhat, query, dbsInstance)
+        dbs='das_client --query="summary %s=%s instance=prod/%s"'%(qwhat, query, dbsInstance)
         dbsOut = _dasPopen(dbs).readlines()
         
         entries = []
