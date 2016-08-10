@@ -50,6 +50,20 @@ LLNuNuType = NTupleObjectType("LLNuNuType", baseObjectTypes=[VVType], variables 
     NTupleVariable("metOvSqSET",   lambda x : (x['pair'].leg2.pt())/math.sqrt(x['pair'].leg2.sumEt()), float), 
 ])
 
+PhotonJetType = NTupleObjectType("PhotonJetType", baseObjectTypes=[], variables = [
+    NTupleVariable("deltaPhi",   lambda x : x['pair'].deltaPhi(), float),
+    NTupleVariable("mt",   lambda x : x['pair'].mt(), float),
+    NTupleSubObject("l1",  lambda x : x['pair'].leg1,photonType),
+    NTupleSubObject("l2",  lambda x : x['pair'].leg2,metType),
+    NTupleVariable("CosDeltaPhi",   lambda x : math.cos(x['pair'].deltaPhi()), float),
+    NTupleVariable("dPTPara",   lambda x : (x['pair'].leg1.pt() + x['pair'].leg2.pt() * math.cos(x['pair'].deltaPhi())), float),
+    NTupleVariable("dPTParaRel",   lambda x : (x['pair'].leg1.pt() + x['pair'].leg2.pt() * math.cos(x['pair'].deltaPhi()))/(x['pair'].leg1.pt()), float),
+    NTupleVariable("dPTPerp",   lambda x : (x['pair'].leg2.pt() * math.sin(x['pair'].deltaPhi())), float),
+    NTupleVariable("dPTPerpRel",   lambda x : (x['pair'].leg2.pt() * math.sin(x['pair'].deltaPhi()))/(x['pair'].leg1.pt()), float),
+    NTupleVariable("metOvSqSET",   lambda x : (x['pair'].leg2.pt())/math.sqrt(x['pair'].leg2.sumEt()), float),
+])
+
+
 llpairType = NTupleObjectType("llpairType", baseObjectTypes=[], variables = [
     NTupleSubObject("Z",  lambda x : x,LLType),
     NTupleSubObject("l1",  lambda x : x.leg1,leptonType),

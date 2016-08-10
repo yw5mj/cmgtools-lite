@@ -91,7 +91,7 @@ vvTreeProducer = cfg.Analyzer(
 	 "jets"       : NTupleCollection("jet",JetType,100, help="all jets in miniaod"),
          #"LHE_weights"    : NTupleCollection("LHEweight",  weightsInfoType, 1000, help="LHE weight info"),
          #"genJets"       : NTupleCollection("genjet",JetType,100, help="genJets in miniaod"),
-         "selectedPhotons"       : NTupleCollection("photon",photonType,100, help="selected photons in miniaod"),
+         #"selectedPhotons"       : NTupleCollection("photon",photonType,100, help="selected photons in miniaod"),
          #"cleanJetsAll"     : NTupleCollection("cleanJetsAll",jetType,100, help="cleaned jets"),
          #"jets"       : NTupleCollection("jet_corr",jetType,15, help="all jets with new JEC for 76X applied"),
          #"jets_raw"   : NTupleCollection("jet",JetType,15, help="all jets from miniAOD"),
@@ -100,13 +100,18 @@ vvTreeProducer = cfg.Analyzer(
      }
 )
 
+
 lepeffTreeProducer = cfg.Analyzer(
      AutoFillTreeProducer, name='lepeffTreeProducer',
      vectorTree = True,
      saveTLorentzVectors = False,  # can set to True to get also the TLorentzVectors, but trees will be bigger
      defaultFloatType = 'F', # use Float_t for floating point
+     globalVariables = [
+        NTupleVariable("nMuon",lambda ev: len(ev.selectedMuons) if hasattr(ev,"selectedMuons") else 0, int),
+        NTupleVariable("nElectron",lambda ev: len(ev.selectedElectrons) if hasattr(ev,"selectedElectrons") else 0, int),
+        ],
      collections = {
-         "llpair"  : NTupleCollection("llpair",llpairType ,5, help="lepton eff study"),
+         "llpair"  : NTupleCollection("llpair",llpairType ,15, help="lepton eff study"),
      }
 )
 

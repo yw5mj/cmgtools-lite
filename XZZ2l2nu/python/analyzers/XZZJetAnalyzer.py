@@ -87,7 +87,7 @@ def cleanJetsAndLeptons(jets,leptons,deltaR,arbitration):
 #         return factor 
 
 
-class JetAnalyzer( Analyzer ):
+class XZZJetAnalyzer( Analyzer ):
     """Taken from RootTools.JetAnalyzer, simplified, modified, added corrections    
        Please sync your jet output and MET output with: (Apr-2016)
        https://twiki.cern.ch/twiki/bin/view/CMS/JERCReference#Reference_table_for_MC
@@ -95,7 +95,7 @@ class JetAnalyzer( Analyzer ):
     def __init__(self, cfg_ana, cfg_comp, looperName):
         self.debug = getattr(cfg_ana, 'debug', False)
 
-        super(JetAnalyzer,self).__init__(cfg_ana, cfg_comp, looperName)
+        super(XZZJetAnalyzer,self).__init__(cfg_ana, cfg_comp, looperName)
         mcGT   = cfg_ana.mcGT   if hasattr(cfg_ana,'mcGT')   else "PHYS14_25_V2"
         dataGT = cfg_ana.dataGT if hasattr(cfg_ana,'dataGT') else "GR_70_V2_AN1"
 
@@ -144,7 +144,7 @@ class JetAnalyzer( Analyzer ):
         if not hasattr(self.cfg_ana ,"collectionPostFix"):self.cfg_ana.collectionPostFix=""
 
     def declareHandles(self):
-        super(JetAnalyzer, self).declareHandles()
+        super(XZZJetAnalyzer, self).declareHandles()
         self.handles['jets']   = AutoHandle( self.cfg_ana.jetCol, 'std::vector<pat::Jet>' )
         #self.handles['jets_raw']   = AutoHandle( self.cfg_ana.jetCol, 'std::vector<pat::Jet>' )
         self.handles['genJet'] = AutoHandle( self.cfg_ana.genJetCol, 'vector<reco::GenJet>' )
@@ -154,7 +154,7 @@ class JetAnalyzer( Analyzer ):
         self.handles['rho_jer'] = AutoHandle( self.cfg_ana.rho[1] if self.cfg_ana.rho[1]!='' else self.cfg_ana.rho[0], 'double' )
         
     def beginLoop(self, setup):
-        super(JetAnalyzer,self).beginLoop(setup)
+        super(XZZJetAnalyzer,self).beginLoop(setup)
         self.counters.addCounter('jets')
         count = self.counters.counter('jets')
         count.register('All Events')
@@ -352,7 +352,9 @@ class JetAnalyzer( Analyzer ):
         self.gamma_cleanJetsFailId = [j for j in self.gamma_cleanJetsFailIdAll if abs(j.eta()) <  self.cfg_ana.jetEtaCentral ]
         
         ## Associate jets to leptons
-        incleptons = event.inclusiveLeptons if hasattr(event, 'inclusiveLeptons') else event.selectedLeptons
+        incleptons = event.selectedLeptons if hasattr(event, 'selectedLeptons') else []
+        if hasattr(event, 'inclusiveLeptons'): 
+            incleptons = event.inclusiveLeptons
         jlpairs = matchObjectCollection(incleptons, allJets, self.jetLepDR**2)
 
         for jet in allJets:
@@ -529,9 +531,9 @@ class JetAnalyzer( Analyzer ):
             print '[Debug] I am scaling jet: jer_sf = %.4f, jer_jetpt = %.4f' % (jet.jerfactor, jet.pt() )
             print '[Debug] I am smearing jet: jer_sf = %.4f, res = %.4f, jer_jetpt = %.4f' % (jet.jerfactor, jet.resolution, jet.pt() )
             
-setattr(JetAnalyzer,"defaultConfig", cfg.Analyzer(
+setattr(XZZJetAnalyzer,"defaultConfig", cfg.Analyzer(
     debug=False,    
-    class_object = JetAnalyzer,
+    class_object = XZZJetAnalyzer,
     jetCol = 'slimmedJets',
     copyJetsByValue = False,      #Whether or not to copy the input jets or to work with references (should be 'True' if JetAnalyzer is run more than once)
     genJetCol = 'slimmedGenJets',

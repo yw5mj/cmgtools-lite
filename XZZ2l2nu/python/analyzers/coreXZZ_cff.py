@@ -131,7 +131,7 @@ photonAna = cfg.Analyzer(
 
 ## Jets Analyzer (generic)
 jetAna = cfg.Analyzer(
-    JetAnalyzer, name='jetAnalyzer',
+    XZZJetAnalyzer, name='jetAnalyzer',
     debug=False,
     jetCol = 'slimmedJets',
     copyJetsByValue = True,      #Whether or not to copy the input jets or to work with references (should be 'True' if JetAnalyzer is run more than once)
@@ -214,8 +214,10 @@ packedAna = cfg.Analyzer(
 multiStateAna = cfg.Analyzer(
     XZZMultiFinalState,
     name='MultiFinalStateMaker',
-    selectPairLLNuNu = (lambda x: x.leg1.pt()>100.0 and x.leg1.mass()>60.0 and x.leg1.mass()<120.0 and x.leg2.pt()>50.0),
-    selectPairElMuNuNu = (lambda x: x.leg1.pt()>100.0 and x.leg1.mass()>30.0 and x.leg1.mass()<150.0 and x.leg2.pt()>50.0),
+    processTypes = ["LLNuNu"], # can include "LLNuNu", "ElMuNuNu", "PhotonJets" 
+    selectPairLLNuNu = (lambda x: x.leg1.pt()>20.0 and x.leg1.mass()>60.0 and x.leg1.mass()<180.0 and x.leg2.pt()>0.0),
+    selectPairElMuNuNu = (lambda x: x.leg1.pt()>20.0 and x.leg1.mass()>30.0 and x.leg1.mass()<300.0 and x.leg2.pt()>0.0),
+    selectPhotonJets = (lambda x: x.leg1.pt()>20.0 and x.leg2.pt()>50.0),
     suffix = '',
     )
 

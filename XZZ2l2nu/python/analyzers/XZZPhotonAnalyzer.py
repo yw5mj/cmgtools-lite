@@ -30,6 +30,7 @@ class XZZPhotonAnalyzer( Analyzer ):
         if self.doFootprintRemovedIsolation:
             self.footprintRemovedIsolationPUCorr =  self.cfg_ana.footprintRemovedIsolationPUCorr
             self.IsolationComputer = heppy.IsolationComputer()
+        self.isoCorr = self.cfg_ana.gamma_isoCorr
 	#FIXME: only Embedded works
         if self.cfg_ana.doPhotonScaleCorrections:
             conf = cfg_ana.doPhotonScaleCorrections
@@ -84,16 +85,18 @@ class XZZPhotonAnalyzer( Analyzer ):
             if gamma.pt() < self.cfg_ana.ptMin: continue
             if abs(gamma.eta()) > self.cfg_ana.etaMax: continue
             foundPhoton = True
+            gamma.isoCorr = self.cfg_ana.gamma_isoCorr
 
             gamma.rho = float(self.handles['rhoPhoton'].product()[0])
+            # updated with 2015 recipe, also used in 2016 ichep analysis, Effective areas for the SPRING15, conditions: bx25 ns:
             # https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedPhotonIdentificationRun2#Selection_implementation_details
-            if   abs(gamma.eta()) < 1.0:   gamma.EffectiveArea03 = [ 0.0234, 0.0053, 0.078  ]
-            elif abs(gamma.eta()) < 1.479: gamma.EffectiveArea03 = [ 0.0189, 0.0103, 0.0629 ]
-            elif abs(gamma.eta()) < 2.0:   gamma.EffectiveArea03 = [ 0.0171, 0.0057, 0.0264 ]
-            elif abs(gamma.eta()) < 2.2:   gamma.EffectiveArea03 = [ 0.0129, 0.0070, 0.0462 ]
-            elif abs(gamma.eta()) < 2.3:   gamma.EffectiveArea03 = [ 0.0110, 0.0152, 0.0740 ]
-            elif abs(gamma.eta()) < 2.4:   gamma.EffectiveArea03 = [ 0.0074, 0.0232, 0.0924 ]
-            else:                          gamma.EffectiveArea03 = [ 0.0035, 0.1709, 0.1484 ]
+            if   abs(gamma.eta()) < 1.0:   gamma.EffectiveArea03 = [ 0.0, 0.0599, 0.1271 ]
+            elif abs(gamma.eta()) < 1.479: gamma.EffectiveArea03 = [ 0.0, 0.0819, 0.1101 ]
+            elif abs(gamma.eta()) < 2.0:   gamma.EffectiveArea03 = [ 0.0, 0.0696, 0.0756 ]
+            elif abs(gamma.eta()) < 2.2:   gamma.EffectiveArea03 = [ 0.0, 0.0360, 0.1175 ]
+            elif abs(gamma.eta()) < 2.3:   gamma.EffectiveArea03 = [ 0.0, 0.0360, 0.1498 ]
+            elif abs(gamma.eta()) < 2.4:   gamma.EffectiveArea03 = [ 0.0, 0.0462, 0.1857 ]
+            else:                          gamma.EffectiveArea03 = [ 0.0, 0.0656, 0.2183 ]          
 
             if self.doFootprintRemovedIsolation:
                 self.attachFootprintRemovedIsolation(gamma)
@@ -101,18 +104,18 @@ class XZZPhotonAnalyzer( Analyzer ):
             gamma.relIso = (max(gamma.chargedHadronIso()-gamma.rho*gamma.EffectiveArea03[0],0) + max(gamma.neutralHadronIso()-gamma.rho*gamma.EffectiveArea03[1],0) + max(gamma.photonIso() - gamma.rho*gamma.EffectiveArea03[2],0))/gamma.pt()
 
             def idWP(gamma,X):
-                """Create an integer equal to 1-2-3 for (loose,medium,tight)"""
+                """Create an integer equal to 1-2-3 for POG_SPRING15_25ns_(Loose,Medium,Tight)"""
 
                 id=0
-                if gamma.photonID(X%"Loose"):
+                if gamma.passPhotonID(X%"Loose",self.cfg_ana.conversionSafe_eleVeto) and gamma.passPhotonIso(X%"Loose",self.cfg_ana.gamma_isoCorr):
                     id=1
-                #if gamma.photonID(X%"Medium"):
-                #    id=2 
-                if gamma.photonID(X%"Tight"):
+                if gamma.passPhotonID(X%"Medium",self.cfg_ana.conversionSafe_eleVeto) and gamma.passPhotonIso(X%"Medium",self.cfg_ana.gamma_isoCorr):
+                    id=2
+                if gamma.passPhotonID(X%"Tight",self.cfg_ana.conversionSafe_eleVeto) and gamma.passPhotonIso(X%"Tight",self.cfg_ana.gamma_isoCorr):
                     id=3
-                return id
-
-            gamma.idCutBased = idWP(gamma, "PhotonCutBasedID%s")
+                return id           
+ 
+            gamma.idCutBased = idWP(gamma, "POG_SPRING15_25ns_%s")
 
 
             keepThisPhoton = True
@@ -329,7 +332,7 @@ class XZZPhotonAnalyzer( Analyzer ):
     def process(self, event):
         self.readCollections( event.input )
         self.makePhotons(event)
-#        self.printInfo(event)   
+    #    self.printInfo(event)   
 
         if self.cfg_ana.do_randomCone:
             self.randomCone(event)
@@ -351,7 +354,7 @@ setattr(XZZPhotonAnalyzer,"defaultConfig",cfg.Analyzer(
     etaMax = 2.5,
     # energy scale corrections (off by default)
     doPhotonScaleCorrections=False, 
-    gammaID = "PhotonCutBasedIDLoose_CSA14",
+    gammaID = "POG_SPRING15_25ns_Loose", 
     rhoPhoton = 'fixedGridRhoFastjetAll',
     gamma_isoCorr = 'rhoArea',
     # Footprint-removed isolation, removing all the footprint of the photon

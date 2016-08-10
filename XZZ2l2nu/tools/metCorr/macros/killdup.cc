@@ -37,8 +37,8 @@ int main(int argc, char** argv) {
   TFile* finput = new TFile(inputfile.c_str());
   TFile* foutput = new TFile(outputfile.c_str(), "recreate");
 
-  char name[3000];
-  char name1[3000];
+//  char name[3000];
+//  char name1[3000];
 
   // tree
   TTree* tree = (TTree*)finput->Get("tree");

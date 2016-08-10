@@ -123,7 +123,7 @@ for s in SingleElectron:
     #s.vetoTriggers = triggers_1mu_noniso
     s.vetoTriggers = []
 for s in SinglePhoton:
-    #s.trigers = triggers_photon_unbias
+    #s.trigers = triggers_all_photons
     s.trigers = []
     s.vetoTriggers = []
 
