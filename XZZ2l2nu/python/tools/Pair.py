@@ -14,11 +14,13 @@ class Pair(object):
         if hasattr(leg1,'TuneP_pt'):
             self.tunepl1.SetPtEtaPhiM(leg1.TuneP_pt(),leg1.TuneP_eta(),leg1.TuneP_phi(),leg1.TuneP_m())
         else: 
+            self.tunepl1.SetPtEtaPhiM(leg1.pt(),leg1.eta(),leg1.phi(),leg1.mass())
             self.useTuneP-=1
         self.tunepl2=ROOT.TLorentzVector()
         if hasattr(leg2,'TuneP_pt'):
             self.tunepl2.SetPtEtaPhiM(leg2.TuneP_pt(),leg2.TuneP_eta(),leg2.TuneP_phi(),leg2.TuneP_m())
         else: 
+            self.tunepl2.SetPtEtaPhiM(leg2.pt(),leg2.eta(),leg2.phi(),leg2.mass())
             self.useTuneP-=2
 
         self.leg1 = leg1
