@@ -3,11 +3,16 @@
 dir=mc2
 out=/data2/XZZ2/80X_20160810_Chunks
 
-# first do a overall sync
+if [ ! -e "$out" ]; then
+  echo "ERROR:: Do not exist output directory $out, exist... "
+  exit 0
+fi
+
+echo "#### first do a overall sync"
 
 rsync -var $dir $out/
 
-# go to check each directory
+echo "#### go to check each directory "
 cd $dir
 
 list=`ls -1 -d */`

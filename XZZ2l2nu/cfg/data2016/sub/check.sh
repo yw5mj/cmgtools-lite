@@ -1,8 +1,18 @@
 #!/bin/sh
 
 dir=dt1
-out=/data2/XZZ2/80X_20160810_Chunks/dt1
+out=/data2/XZZ2/80X_20160810_Chunks
 
+if [ ! -e "$out" ]; then
+  echo "ERROR:: Do not exist output directory $out, exist... "
+  exit 0
+fi
+
+echo "#### first do a overall sync"
+
+rsync -var $dir $out/
+
+echo "#### go to check each directory "
 cd $dir
 
 list=`ls -1 -d */`
@@ -17,8 +27,8 @@ do
     echo "- job is not finished or has problem to be resubmitted .. "
   else
     echo "- job finished successfully copy out and delete .. "
-    echo " > rsync -var $job $out/"
-    rsync -var $job $out/
+    echo " > rsync -var $job $out/$dir/"
+    rsync -var $job $out/$dir/
     echo " > rm -rf $job"
     rm -rf $job
   fi
