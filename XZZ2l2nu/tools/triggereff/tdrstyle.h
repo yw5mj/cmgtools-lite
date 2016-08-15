@@ -93,7 +93,7 @@ void setTDRStyle()
 	tdrStyle->SetPadTopMargin(0.1);
 	tdrStyle->SetPadBottomMargin(0.18);
 	tdrStyle->SetPadLeftMargin(0.18);
-	tdrStyle->SetPadRightMargin(0.05);
+	tdrStyle->SetPadRightMargin(0.10);
 
 	// For the Global title:
 	tdrStyle->SetOptTitle(1);

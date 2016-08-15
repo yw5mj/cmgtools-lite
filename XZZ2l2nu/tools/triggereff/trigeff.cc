@@ -10,6 +10,7 @@
 #include "TCanvas.h"
 #include "tdrstyle.h"
 #include "TLegend.h"
+#include "TMath.h"
 
 int main(){
 
@@ -97,12 +98,32 @@ int main(){
   tree->Draw("fabs(llnunu_l1_l2_eta):llnunu_l1_l2_pt>>htrg_l2_l1p", sel_l1_l1p.c_str());
   tree->Draw("fabs(llnunu_l1_l2_eta):llnunu_l1_l2_pt>>htrg_l2_l1f", sel_l1_l1f.c_str());
 
-  Double_t Ntrg_tot    = htrg_l2_tot->Integral();
-  Double_t Ntrg_l1pl2f = htrg_l2_l1pl2f->Integral();
-  Double_t Ntrg_l1pl2p = htrg_l2_l1pl2p->Integral();
-  Double_t Ntrg_l1fl2p = htrg_l2_l1fl2p->Integral();
-  Double_t Ntrg_l1p = htrg_l2_l1p->Integral();
-  Double_t Ntrg_l1f = htrg_l2_l1f->Integral();
+  Double_t Ntrg_tot;
+  Double_t Ntrg_tot_err;
+  Double_t Ntrg_l1pl2f;
+  Double_t Ntrg_l1pl2f_err;
+  Double_t Ntrg_l1pl2p;
+  Double_t Ntrg_l1pl2p_err;
+  Double_t Ntrg_l1fl2p;
+  Double_t Ntrg_l1fl2p_err;
+  Double_t Ntrg_l1p;
+  Double_t Ntrg_l1p_err;
+  Double_t Ntrg_l1f;
+  Double_t Ntrg_l1f_err;
+
+  Ntrg_tot = htrg_l2_tot->IntegralAndError(Int_t(1), NPtBins, Int_t(1), NEtaBins, Ntrg_tot_err);
+  Ntrg_l1p = htrg_l2_l1p->IntegralAndError(Int_t(1), NPtBins, Int_t(1), NEtaBins, Ntrg_l1p_err);
+  Ntrg_l1f = htrg_l2_l1f->IntegralAndError(Int_t(1), NPtBins, Int_t(1), NEtaBins, Ntrg_l1f_err);
+  Ntrg_l1pl2f = htrg_l2_l1pl2f->IntegralAndError(Int_t(1), NPtBins, Int_t(1), NEtaBins, Ntrg_l1pl2f_err);
+  Ntrg_l1pl2p = htrg_l2_l1pl2p->IntegralAndError(Int_t(1), NPtBins, Int_t(1), NEtaBins, Ntrg_l1pl2p_err);
+  Ntrg_l1fl2p = htrg_l2_l1fl2p->IntegralAndError(Int_t(1), NPtBins, Int_t(1), NEtaBins, Ntrg_l1fl2p_err);
+
+  //Double_t Ntrg_tot    = htrg_l2_tot->Integral();
+  //Double_t Ntrg_l1pl2f = htrg_l2_l1pl2f->Integral();
+  //Double_t Ntrg_l1pl2p = htrg_l2_l1pl2p->Integral();
+  //Double_t Ntrg_l1fl2p = htrg_l2_l1fl2p->Integral();
+  //Double_t Ntrg_l1p = htrg_l2_l1p->Integral();
+  //Double_t Ntrg_l1f = htrg_l2_l1f->Integral();
 
   Double_t eff_l1pl2f = Ntrg_l1pl2f/Ntrg_tot;
   Double_t eff_l1pl2p = Ntrg_l1pl2p/Ntrg_tot;
@@ -322,27 +343,57 @@ int main(){
     if ( !((llnunu_l1_mass>70&&llnunu_l1_mass<110)&&abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_l1_pt>50&&fabs(llnunu_l1_l1_eta)<2.4&&llnunu_l1_l2_pt>20&&fabs(llnunu_l1_l2_eta)<2.4&&(llnunu_l1_l1_highPtID>=0.991||llnunu_l1_l2_highPtID>=0.99)) ) {
       continue;
     }
-    double sf  = Ntrg_l1pl2f/Ntrg_tot
-               // *htrg_l1_l1pl2f_norm_vs_tot->GetBinContent(htrg_l1_l1pl2f_norm_vs_tot->FindBin(llnunu_l1_l1_pt,fabs(llnunu_l1_l1_eta)))
-                *htrg_l1_l1p_norm_vs_tot->GetBinContent(htrg_l1_l1p_norm_vs_tot->FindBin(llnunu_l1_l1_pt,fabs(llnunu_l1_l1_eta))) 
-                *htrg_l2_l1pl2f_norm_vs_l1p->GetBinContent(htrg_l2_l1pl2f_norm_vs_l1p->FindBin(llnunu_l1_l2_pt,fabs(llnunu_l1_l2_eta)))
-               + Ntrg_l1pl2p/Ntrg_tot
-               // *htrg_l1_l1pl2p_norm_vs_tot->GetBinContent(htrg_l1_l1pl2p_norm_vs_tot->FindBin(llnunu_l1_l1_pt,fabs(llnunu_l1_l1_eta)))
-                *htrg_l1_l1p_norm_vs_tot->GetBinContent(htrg_l1_l1p_norm_vs_tot->FindBin(llnunu_l1_l1_pt,fabs(llnunu_l1_l1_eta)))
-               //*htrg_l1_l1pl2p_norm_vs_l1p->GetBinContent(htrg_l1_l1pl2p_norm_vs_l1p->FindBin(llnunu_l1_l1_pt,fabs(llnunu_l1_l1_eta)))
-                *htrg_l2_l1pl2p_norm_vs_l1p->GetBinContent(htrg_l2_l1pl2p_norm_vs_l1p->FindBin(llnunu_l1_l2_pt,fabs(llnunu_l1_l2_eta)))
-               + Ntrg_l1fl2p/Ntrg_tot
-                *htrg_l2_l1fl2p_norm_vs_tot->GetBinContent(htrg_l2_l1fl2p_norm_vs_tot->FindBin(llnunu_l1_l2_pt,fabs(llnunu_l1_l2_eta)))
-               // *htrg_l1_l1fl2p_norm_vs_tot->GetBinContent(htrg_l1_l1fl2p_norm_vs_tot->FindBin(llnunu_l1_l1_pt,fabs(llnunu_l1_l1_eta)))
-               // *htrg_l2_l1fl2p_norm_vs_l1f->GetBinContent(htrg_l2_l1fl2p_norm_vs_l1f->FindBin(llnunu_l1_l2_pt,fabs(llnunu_l1_l2_eta)))
-              ;
+
+    int trg_bin_l1 = htrg_l1_l1p_norm_vs_tot->FindBin(llnunu_l1_l1_pt,fabs(llnunu_l1_l1_eta));
+    int trg_bin_l2 = htrg_l2_l1pl2f_norm_vs_l1p->FindBin(llnunu_l1_l2_pt,fabs(llnunu_l1_l2_eta));
+    double trg_sc_l1_l1p_vs_tot = htrg_l1_l1p_norm_vs_tot->GetBinContent(trg_bin_l1);
+    double trg_sc_l2_l1pl2f_vs_l1p = htrg_l2_l1pl2f_norm_vs_l1p->GetBinContent(trg_bin_l2);
+    double trg_sc_l2_l1pl2p_vs_l1p = htrg_l2_l1pl2p_norm_vs_l1p->GetBinContent(trg_bin_l2);
+    double trg_sc_l2_l1fl2p_vs_tot = htrg_l2_l1fl2p_norm_vs_tot->GetBinContent(trg_bin_l2);
+    double trg_sc_l1_l1p_vs_tot_err = htrg_l1_l1p_norm_vs_tot->GetBinError(trg_bin_l1);
+    double trg_sc_l2_l1pl2f_vs_l1p_err = htrg_l2_l1pl2f_norm_vs_l1p->GetBinError(trg_bin_l2);
+    double trg_sc_l2_l1pl2p_vs_l1p_err = htrg_l2_l1pl2p_norm_vs_l1p->GetBinError(trg_bin_l2);
+    double trg_sc_l2_l1fl2p_vs_tot_err = htrg_l2_l1fl2p_norm_vs_tot->GetBinError(trg_bin_l2);
+    
+    double trg_npass = Ntrg_l1pl2f*trg_sc_l1_l1p_vs_tot*trg_sc_l2_l1pl2f_vs_l1p
+                     + Ntrg_l1pl2p*trg_sc_l1_l1p_vs_tot*trg_sc_l2_l1pl2p_vs_l1p
+                     + Ntrg_l1fl2p*trg_sc_l2_l1fl2p_vs_tot
+                     ;
+    double trg_npass_err = pow(Ntrg_l1pl2f_err*trg_sc_l1_l1p_vs_tot*trg_sc_l2_l1pl2f_vs_l1p,2) 
+                         + pow(Ntrg_l1pl2f*trg_sc_l1_l1p_vs_tot_err*trg_sc_l2_l1pl2f_vs_l1p,2)
+                         + pow(Ntrg_l1pl2f*trg_sc_l1_l1p_vs_tot*trg_sc_l2_l1pl2f_vs_l1p_err,2)
+                         + pow(Ntrg_l1pl2p_err*trg_sc_l1_l1p_vs_tot*trg_sc_l2_l1pl2p_vs_l1p,2)
+                         + pow(Ntrg_l1pl2p*trg_sc_l1_l1p_vs_tot_err*trg_sc_l2_l1pl2p_vs_l1p,2)
+                         + pow(Ntrg_l1pl2p*trg_sc_l1_l1p_vs_tot*trg_sc_l2_l1pl2p_vs_l1p_err,2)
+                         + pow(Ntrg_l1fl2p_err*trg_sc_l2_l1fl2p_vs_tot,2)
+                         + pow(Ntrg_l1fl2p*trg_sc_l2_l1fl2p_vs_tot_err,2)
+                         ;
+    trg_npass_err = sqrt(trg_npass_err);
+
+    double trg_nfail = Ntrg_tot-trg_npass;
+    double trg_nfail_err = sqrt(Ntrg_tot_err*Ntrg_tot_err-Ntrg_l1pl2f_err*Ntrg_l1pl2f_err-Ntrg_l1pl2p_err*Ntrg_l1pl2p_err-Ntrg_l1fl2p_err*Ntrg_l1fl2p_err);
+    
+    
+    double trg_eff = trg_npass/(trg_npass+trg_nfail);
+    double trg_eff_err = (pow(trg_nfail*trg_npass_err,2)+pow(trg_npass*trg_nfail_err,2))/pow(trg_npass+trg_nfail,4);
+    trg_eff_err = sqrt(trg_eff_err);
+
+    double trg_eff_up = trg_eff+0.5*trg_eff_err;
+    double trg_eff_dn = trg_eff-0.5*trg_eff_err;
+
+    if (trg_eff>=1) trg_eff=1;
+    if (trg_eff<=0) trg_eff=0;
+    if (trg_eff_up>=1) trg_eff_up=1;
+    if (trg_eff_dn>=1) trg_eff_dn=1;
+    if (trg_eff_up<=0) trg_eff_up=0;
+    if (trg_eff_dn<=0) trg_eff_dn=0;
  
-    htrg_l1_tgsf->Fill(llnunu_l1_l1_pt, fabs(llnunu_l1_l1_eta), sf);
-    htrg_l2_tgsf->Fill(llnunu_l1_l2_pt, fabs(llnunu_l1_l2_eta), sf);
-    htrg_l1_pt_tgsf->Fill(llnunu_l1_l1_pt, sf);
-    htrg_l2_pt_tgsf->Fill(llnunu_l1_l2_pt, sf);
-    htrg_l1_eta_tgsf->Fill(llnunu_l1_l1_eta, sf);
-    htrg_l2_eta_tgsf->Fill(llnunu_l1_l2_eta, sf);
+    htrg_l1_tgsf->Fill(llnunu_l1_l1_pt, fabs(llnunu_l1_l1_eta), trg_eff);
+    htrg_l2_tgsf->Fill(llnunu_l1_l2_pt, fabs(llnunu_l1_l2_eta), trg_eff);
+    htrg_l1_pt_tgsf->Fill(llnunu_l1_l1_pt, trg_eff);
+    htrg_l2_pt_tgsf->Fill(llnunu_l1_l2_pt, trg_eff);
+    htrg_l1_eta_tgsf->Fill(llnunu_l1_l1_eta, trg_eff);
+    htrg_l2_eta_tgsf->Fill(llnunu_l1_l2_eta, trg_eff);
 
   }
 
