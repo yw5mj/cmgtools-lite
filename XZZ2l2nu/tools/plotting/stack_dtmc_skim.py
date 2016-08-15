@@ -7,7 +7,7 @@ from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
-tag="N80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
+tag="NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="DataHLT_oldLumiJson_"
 #tag="test_"
 #tag=""
@@ -18,11 +18,11 @@ cutChain='tight'
 #cutChain='tightzpt100met100'
 #cutChain='tightzpt100met200'
 
-channel='mu' # can be el or mu or both
-LogY=False
+channel='all' # can be el or mu or both
+LogY=True
 test=False
 DrawLeptons=True
-doRhoScale=True
+doRhoScale=False
 
 #lepsf="(1)"
 #lepsf="idsf"
@@ -34,11 +34,13 @@ lepsf="trgsf*isosf*idsf"
 
 if doRhoScale: 
     tag+="RhoWt_"
-    lepsf=lepsf+"*(0.122360+0.180976*rho+-0.010879*pow(rho,2)+0.000226*pow(rho,3)-0.000002*pow(rho,4))"
+    lepsf=lepsf+"*(0.602*exp(-0.5*pow((x-8.890)/6.187,2))+0.829*exp(-0.5*pow((x-21.404)/10.866,2)))"
+    #lepsf=lepsf+"*(0.122360+0.180976*rho+-0.010879*pow(rho,2)+0.000226*pow(rho,3)-0.000002*pow(rho,4))"
 
 outdir='plots'
 
 indir='/data/XZZ/80X_20160721_SkimV2_EffSkim'
+#indir='/data/XZZ/80X_20160721_SkimV2_EffSkim'
 #indir='/dataf/heli/XZZ/80X_20160721_EffSkim_v2'
 #indir='/data2/XZZ2/80X_20160721_EffSkim_v2'
 #indir='/datag/heli/XZZ/80X_20160705_L9p17_EffSkim'
