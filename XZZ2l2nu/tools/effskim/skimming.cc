@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <ctime>
 
 int main(int argc, char** argv) {
 
@@ -24,14 +25,18 @@ int main(int argc, char** argv) {
      exit(1) ;
   }
 
+  time_t now = time(0);
+  char* dt = ctime(&now);
+  std::cout << "Start time is: " << dt << std::endl;
+
   // input file name
   std::string inputfile((const char*)argv[1]); 
   // output file name
   std::string outputfile((const char*)argv[2]);
   // initialize
   // root files
-  TFile* finput = new TFile(inputfile.c_str());
-  TFile* foutput = new TFile(outputfile.c_str(), "recreate");
+  TFile* finput = TFile::Open(inputfile.c_str());
+  TFile* foutput = TFile::Open(outputfile.c_str(), "recreate");
   // tree
   TTree* tree = (TTree*)finput->Get("tree");
   if(tree->FindBranch("trgsf"))  tree->SetBranchStatus("trgsf",0);
@@ -45,7 +50,7 @@ int main(int argc, char** argv) {
   // out_tree
   TTree* tree_out = tree->CloneTree(0);
 
-  TFile* ftkhp = new TFile("all80x12p9.root");
+  TFile* ftkhp = TFile::Open("all80x12p9.root");
   TH2F* tkhpdt=(TH2F*)ftkhp->Get("eff_trackHighPt_80Xdata_pteta");
   TH2F* tkhpmc=(TH2F*)ftkhp->Get("eff_trackHighPt_80Xmc_pteta");
   TH2F* hpdt=(TH2F*)ftkhp->Get("eff_HighPt_80Xdata_pteta");
@@ -53,23 +58,71 @@ int main(int argc, char** argv) {
   TH2F* isopteta=(TH2F*)ftkhp->Get("sf_trackerIso_80X_pteta");
 
 
-  TFile* ftrg = new TFile("trigereff12p9.root");
+  TFile* ftrg = TFile::Open("trigereff12p9.root");
   TH2D* mul1pteta=(TH2D*)ftrg->Get("mul1pteta");
   TH2D* mul2pteta=(TH2D*)ftrg->Get("mul2pteta");
   TH2D* ell1pteta=(TH2D*)ftrg->Get("ell1pteta");
 
-  //  TFile* ftrg = new TFile("trgeff_L12p9.root");
+  TFile* ftrg_mu = TFile::Open("trigeff_mu.root");
+  TH2D* htrg_l1_tot = (TH2D*)ftrg_mu->Get("htrg_l1_tot");
+  TH2D* htrg_l1_l1pl2f = (TH2D*)ftrg_mu->Get("htrg_l1_l1pl2f");
+  TH2D* htrg_l1_l1pl2p = (TH2D*)ftrg_mu->Get("htrg_l1_l1pl2p");
+  TH2D* htrg_l1_l1fl2p = (TH2D*)ftrg_mu->Get("htrg_l1_l1fl2p");
+  TH2D* htrg_l2_tot = (TH2D*)ftrg_mu->Get("htrg_l2_tot");
+  TH2D* htrg_l2_l1pl2f = (TH2D*)ftrg_mu->Get("htrg_l2_l1pl2f");
+  TH2D* htrg_l2_l1pl2p = (TH2D*)ftrg_mu->Get("htrg_l2_l1pl2p");
+  TH2D* htrg_l2_l1fl2p = (TH2D*)ftrg_mu->Get("htrg_l2_l1fl2p");
+
+  Double_t Ntrg_tot    = htrg_l2_tot->Integral();
+  Double_t Ntrg_l1pl2f = htrg_l2_l1pl2f->Integral();
+  Double_t Ntrg_l1pl2p = htrg_l2_l1pl2p->Integral();
+  Double_t Ntrg_l1fl2p = htrg_l2_l1fl2p->Integral();
+
+  TH2D* htrg_l1_tot_norm = (TH2D*)htrg_l1_tot->Clone("htrg_l1_tot_norm");
+  TH2D* htrg_l1_l1pl2f_norm = (TH2D*)htrg_l1_l1pl2f->Clone("htrg_l1_l1pl2f_norm");
+  TH2D* htrg_l1_l1pl2p_norm = (TH2D*)htrg_l1_l1pl2p->Clone("htrg_l1_l1pl2p_norm");
+  TH2D* htrg_l1_l1fl2p_norm = (TH2D*)htrg_l1_l1fl2p->Clone("htrg_l1_l1fl2p_norm");
+  TH2D* htrg_l2_tot_norm = (TH2D*)htrg_l2_tot->Clone("htrg_l2_tot_norm");
+  TH2D* htrg_l2_l1pl2f_norm = (TH2D*)htrg_l2_l1pl2f->Clone("htrg_l2_l1pl2f_norm");
+  TH2D* htrg_l2_l1pl2p_norm = (TH2D*)htrg_l2_l1pl2p->Clone("htrg_l2_l1pl2p_norm");
+  TH2D* htrg_l2_l1fl2p_norm = (TH2D*)htrg_l2_l1fl2p->Clone("htrg_l2_l1fl2p_norm");
+
+  htrg_l1_tot_norm->Scale(1./htrg_l2_tot_norm->Integral());
+  htrg_l1_l1pl2f_norm->Scale(1./htrg_l2_l1pl2f_norm->Integral());
+  htrg_l1_l1pl2p_norm->Scale(1./htrg_l2_l1pl2p_norm->Integral());
+  htrg_l1_l1fl2p_norm->Scale(1./htrg_l2_l1fl2p_norm->Integral());
+  htrg_l2_tot_norm->Scale(1./htrg_l2_tot_norm->Integral());
+  htrg_l2_l1pl2f_norm->Scale(1./htrg_l2_l1pl2f_norm->Integral());
+  htrg_l2_l1pl2p_norm->Scale(1./htrg_l2_l1pl2p_norm->Integral());
+  htrg_l2_l1fl2p_norm->Scale(1./htrg_l2_l1fl2p_norm->Integral());
+
+  TH2D* htrg_l1_l1pl2f_norm_ratio = (TH2D*)htrg_l1_l1pl2f_norm->Clone("htrg_l1_l1pl2f_norm_ratio");
+  TH2D* htrg_l1_l1pl2p_norm_ratio = (TH2D*)htrg_l1_l1pl2p_norm->Clone("htrg_l1_l1pl2p_norm_ratio");
+  TH2D* htrg_l1_l1fl2p_norm_ratio = (TH2D*)htrg_l1_l1fl2p_norm->Clone("htrg_l1_l1fl2p_norm_ratio");
+  TH2D* htrg_l2_l1pl2f_norm_ratio = (TH2D*)htrg_l2_l1pl2f_norm->Clone("htrg_l2_l1pl2f_norm_ratio");
+  TH2D* htrg_l2_l1pl2p_norm_ratio = (TH2D*)htrg_l2_l1pl2p_norm->Clone("htrg_l2_l1pl2p_norm_ratio");
+  TH2D* htrg_l2_l1fl2p_norm_ratio = (TH2D*)htrg_l2_l1fl2p_norm->Clone("htrg_l2_l1fl2p_norm_ratio");
+
+  htrg_l1_l1pl2f_norm_ratio->Divide(htrg_l1_tot_norm);
+  htrg_l1_l1pl2p_norm_ratio->Divide(htrg_l1_tot_norm);
+  htrg_l1_l1fl2p_norm_ratio->Divide(htrg_l1_tot_norm);
+  htrg_l2_l1pl2f_norm_ratio->Divide(htrg_l2_tot_norm);
+  htrg_l2_l1pl2p_norm_ratio->Divide(htrg_l2_tot_norm);
+  htrg_l2_l1fl2p_norm_ratio->Divide(htrg_l2_tot_norm);
+
+
+  //TFile* ftrg = new TFile("trgeff_L12p9.root");
   //TH2D* mul1pteta = (TH2D*)ftrg->Get("hr_mu_l1_eta_pt");
   //TH2D* ell1pteta = (TH2D*)ftrg->Get("hr_el_l1_eta_pt");
  
   //TFile* loosE = new TFile("Loose_80X_2ndPeriod.txt_SF2D.root");
-  TFile* loosE = new TFile("egammaEffi.txt_SF2D.root");
+  TFile* loosE = TFile::Open("egammaEffi.txt_SF2D.root");
   TH2F* esfh2=(TH2F*)loosE->Get("EGamma_SF2D");
 
-  TFile* fEtk = new TFile("egammatracking.root");
+  TFile* fEtk = TFile::Open("egammatracking.root");
   TH2F* etksf=(TH2F*)fEtk->Get("EGamma_SF2D");
 
-  TFile* fMtk = new TFile("muontrackingsf.root");
+  TFile* fMtk = TFile::Open("muontrackingsf.root");
   TH1F* mtksf=(TH1F*)fMtk->Get("hist_ratio_eta");
 
   Double_t effdt1a,effdt2a,effmc1a,effmc2a,errdt1a,errdt2a,errmc1a,errmc2a,effdt1,effdt2,effmc1,effmc2,errdt1,errdt2,errmc1,errmc2,trgsfall,idsfall,isosfall,trgsfallerr,idsfallerr,isosfallerr,trksfall,trksfallerr,temp1,temp2;
@@ -138,12 +191,24 @@ int main(int argc, char** argv) {
       trksfall=effdt1*effdt2;
       trksfallerr=TMath::Power((TMath::Power(effdt1*errdt2,2)+TMath::Power(errdt1*effdt2,2)),.5);
 
-      effdt1=mul1pteta->GetBinContent(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
-      effdt2=mul2pteta->GetBinContent(mul2pteta->FindBin(llnunu_l1_l2_pt,abs(llnunu_l1_l2_eta)))/100;
-      errdt1=mul1pteta->GetBinError(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
-      errdt2=mul2pteta->GetBinError(mul2pteta->FindBin(llnunu_l1_l2_pt,abs(llnunu_l1_l2_eta)))/100;
-      trgsfall=effdt1+effdt2-effdt1*effdt2;
-      trgsfallerr=TMath::Power((TMath::Power((1-effdt1)*errdt2,2)+TMath::Power((1-effdt2)*errdt1,2)),.5);
+      //effdt1=mul1pteta->GetBinContent(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
+      //effdt2=mul2pteta->GetBinContent(mul2pteta->FindBin(llnunu_l1_l2_pt,abs(llnunu_l1_l2_eta)))/100;
+      //errdt1=mul1pteta->GetBinError(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)))/100;
+      //errdt2=mul2pteta->GetBinError(mul2pteta->FindBin(llnunu_l1_l2_pt,abs(llnunu_l1_l2_eta)))/100;
+      //trgsfall=effdt1+effdt2-effdt1*effdt2;
+      //trgsfallerr=TMath::Power((TMath::Power((1-effdt1)*errdt2,2)+TMath::Power((1-effdt2)*errdt1,2)),.5);
+
+      trgsfall = Ntrg_l1pl2f/Ntrg_tot
+                *htrg_l1_l1pl2f_norm_ratio->GetBinContent(htrg_l1_l1pl2f_norm_ratio->FindBin(llnunu_l1_l1_pt,fabs(llnunu_l1_l1_eta)))
+                *htrg_l2_l1pl2f_norm_ratio->GetBinContent(htrg_l2_l1pl2f_norm_ratio->FindBin(llnunu_l1_l2_pt,fabs(llnunu_l1_l2_eta)))
+               + Ntrg_l1pl2p/Ntrg_tot
+                *htrg_l1_l1pl2p_norm_ratio->GetBinContent(htrg_l1_l1pl2p_norm_ratio->FindBin(llnunu_l1_l1_pt,fabs(llnunu_l1_l1_eta)))
+                *htrg_l2_l1pl2p_norm_ratio->GetBinContent(htrg_l2_l1pl2p_norm_ratio->FindBin(llnunu_l1_l2_pt,fabs(llnunu_l1_l2_eta)))
+               + Ntrg_l1fl2p/Ntrg_tot
+                *htrg_l1_l1fl2p_norm_ratio->GetBinContent(htrg_l1_l1fl2p_norm_ratio->FindBin(llnunu_l1_l1_pt,fabs(llnunu_l1_l1_eta)))
+                *htrg_l2_l1fl2p_norm_ratio->GetBinContent(htrg_l2_l1fl2p_norm_ratio->FindBin(llnunu_l1_l2_pt,fabs(llnunu_l1_l2_eta)))
+              ;
+      trgsfallerr = 0;
 
       //      effdt1=mul1pteta->GetBinContent(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)));
       //errdt1=mul1pteta->GetBinError(mul1pteta->FindBin(llnunu_l1_l1_pt,abs(llnunu_l1_l1_eta)));
@@ -184,6 +249,11 @@ int main(int argc, char** argv) {
   tree_out->Write();
   foutput->Close();
   finput->Close();
+
+
+  now = time(0);
+  dt = ctime(&now);
+  std::cout << "End time is: " << dt << std::endl;
 
   return 0;
 

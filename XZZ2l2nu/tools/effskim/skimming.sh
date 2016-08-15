@@ -10,9 +10,21 @@ selection="(1)"
 # compile
 g++ skimming.cc -o skimming.exe `root-config --cflags` `root-config --libs`
 
+
+alias eos='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select'
+
 #inputs
-inputdir=/home/heli/XZZ/80X_20160721_SkimV2
-outputdir=/datab/yanchu/XZZ/80X_20160721_EffSkim_v2
+inputdir=/data2/XZZ/80X_20160721_SkimV2
+outputdir=/data/XZZ/80X_20160721_SkimV2_EffSkim
+#inputdir=/eos/cms/store/caf/user/heli/XZZ/80X_20160721_Skim
+#outputdir=/eos/cms/store/caf/user/heli/XZZ/80X_20160721_EffSkim_v3
+#inputdir=/home/heli/XZZ/80X_20160721_SkimV2
+#outputdir=/datab/yanchu/XZZ/80X_20160721_EffSkim_v2
+#inputdir=/datab/yanchu/XZZ/80X_20160721_EffSkim_v2
+#outputdir=/home/heli/XZZ/80X_20160721_EffSkim_v2
+#outputdir=/dataf/heli/XZZ/80X_20160721_EffSkim_v2
+#inputdir=/data/XZZ/80X_20160721_Skim
+#outputdir=/data2/XZZ2/80X_20160721_EffSkim_v3
 #inputdir=/dataf/heli/XZZ/80X_20160705_L9p17_Skim
 #outputdir=/datag/heli/XZZ/80X_20160705_L9p17_EffSkim
 #inputdir=/dataf/heli/XZZ/80X_20160705_L6p26_Skim
@@ -23,24 +35,32 @@ outputdir=/datab/yanchu/XZZ/80X_20160721_EffSkim_v2
 #inputdir=/afs/cern.ch/work/m/mewu/public/76X_new
 #outputdir=AnalysisRegion
 #outputdir=/data2/yanchu/80X_Ntuple/80X_20160705_ZPTSkim
+
 mkdir -p ${outputdir}
+#eos mkdir -p ${outputdir}
 
 njob="0"
 
 #for infile in $(ls $inputdir/*.root|grep -v 2016B|grep -v DYJetsToLL|grep -v BulkGrav);
 #for infile in  $inputdir/*.root ;
+#for infile in $(ls $inputdir/ | grep root |grep  Run2016 | grep killdup );
+#for infile in $(eos ls $inputdir/*.root | grep root |grep  Run2016 | grep killdup );
 for infile in $(ls $inputdir/*.root|grep -v Run2016);
 do
 #  echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"
   outfile="${outfile/\/vvTreeProducer\/tree/}"
 
+  #infile="root://eoscms/"${inputdir}/${infile} 
+  #outfile="root://eoscms/"${outfile}
+
   echo -- Command: ./skimming.exe $infile $outfile 
 
+  
   ./skimming.exe $infile $outfile > ${outfile}.log &
 
   njob=$(( njob + 1 ))
-  if [ "$njob" -eq "30" ]; then
+  if [ "$njob" -eq "100" ]; then
     wait
     njob="0"
   fi
