@@ -43,9 +43,9 @@ njob="0"
 
 #for infile in $(ls $inputdir/*.root|grep -v 2016B|grep -v DYJetsToLL|grep -v BulkGrav);
 #for infile in  $inputdir/*.root ;
-#for infile in $(ls $inputdir/*.root|grep -v Run2016);
 #for infile in $(eos ls $inputdir/*.root | grep root |grep  Run2016 | grep killdup );
-for infile in $(ls $inputdir/*.root | grep root |grep  Run2016 | grep killdup );
+#for infile in $(ls $inputdir/*.root | grep root |grep  Run2016 | grep killdup );
+for infile in $(ls $inputdir/*.root|grep -v Run2016);
 do
 #  echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"
