@@ -5,15 +5,18 @@ std::string inputdir =
   "./"
   ;
 std::string filename =
-  "DYJetsToLL_M50"
+  //"DYJetsToLL_M50"
+  "DYJetsToLL_M50_SkimV4"
   //"SingleEMU_Run2016BCD_PromptReco_killdup"
+  //"SingleEMU_Run2016BCD_PromptReco_SkimV3"
   ;
 
-std::string selec = 
-  "(1)"
-  //"abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11"
-  //"abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13"
+std::string base_selec = 
+  "(llnunu_l1_mass>50&&llnunu_l1_mass<180)"
+  //"(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11&&llnunu_l1_mass>50&&llnunu_l1_mass<180)"
+  //"(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_mass>50&&llnunu_l1_mass<180)"
   ;
+
 std::string tag = 
   "_met_para_study"
   //"_met_para_study_el"
@@ -24,6 +27,16 @@ std::string lumiTag =
   //"CMS 13 TeV 2016 L=12.9 fb^{-1}"
   "CMS 13 TeV Simulation for 2016 Data"
   ;
+
+
+// add weight
+std::string weight_selec = std::string("*(genWeight*ZPtWeight*puWeight68075/SumWeights*1921.8*3*12900.0)");
+
+// rho weight
+std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
+
+//std::string selec = base_selec;
+std::string selec = base_selec + weight_selec + rhoweight_selec;
 
 char name[1000];
 std::string histname;

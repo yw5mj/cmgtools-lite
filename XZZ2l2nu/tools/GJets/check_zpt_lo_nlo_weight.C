@@ -1,8 +1,8 @@
 {
 
 
-TFile* file1 = TFile::Open("80X_20160705/DYJetsToLL_M50/vvTreeProducer/tree.root");
-TFile* file2 = TFile::Open("80X_20160705/DYJetsToLL_M50_MGMLM_BIG/vvTreeProducer/tree.root");
+TFile* file1 = TFile::Open("DYJetsToLL_M50_SkimV3.root");
+TFile* file2 = TFile::Open("DYJetsToLL_M50_MGMLM_SkimV3.root");
 
 
 TTree* tree1 = (TTree*)file1->Get("tree");
@@ -21,8 +21,8 @@ hzpt1->Sumw2();
 hzpt2->Sumw2();
 
 
-tree1->Draw("genZ_pt>>hzpt1", "(ngenZ>0)*(genWeight)");
-tree2->Draw("genZ_pt>>hzpt2", "(ngenZ>0)*(genWeight)");
+tree1->Draw("llnunu_l1_pt>>hzpt1", "(1)*(genWeight*ZPtWeight)");
+tree2->Draw("llnunu_l1_pt>>hzpt2", "(1)*(genWeight*ZPtWeight)");
 
 hzpt1->SetLineColor(2);
 hzpt2->SetLineColor(4);
@@ -44,8 +44,8 @@ hzeta1->Sumw2();
 hzeta2->Sumw2();
 
 
-tree1->Draw("genZ_eta>>hzeta1", "(ngenZ>0)*(genWeight)");
-tree2->Draw("genZ_eta>>hzeta2", "(ngenZ>0)*(genWeight)");
+tree1->Draw("llnunu_l1_eta>>hzeta1", "(1)*(genWeight*ZPtWeight)");
+tree2->Draw("llnunu_l1_eta>>hzeta2", "(1)*(genWeight*ZPtWeight)");
 
 hzeta1->SetLineColor(2);
 hzeta2->SetLineColor(4);
@@ -65,8 +65,8 @@ hzmass1->Sumw2();
 hzmass2->Sumw2();
 
 
-tree1->Draw("genZ_mass>>hzmass1", "(ngenZ>0)*(genWeight)");
-tree2->Draw("genZ_mass>>hzmass2", "(ngenZ>0)*(genWeight)");
+tree1->Draw("llnunu_l1_mass>>hzmass1", "(1)*(genWeight*ZPtWeight)");
+tree2->Draw("llnunu_l1_mass>>hzmass2", "(1)*(genWeight*ZPtWeight)");
 
 hzmass1->SetLineColor(2);
 hzmass2->SetLineColor(4);
@@ -78,7 +78,7 @@ hzmass2->Scale(1./hzmass2->Integral());
 hzmass1->Draw();
 hzmass2->Draw("same");
 
-/*
+
 
 TH1D* hzeta1_wt = new TH1D("hzeta1_wt", "hzeta1_wt", 100, -10, 10);
 TH1D* hzeta2_wt = new TH1D("hzeta2_wt", "hzeta2_wt", 100, -10, 10);
@@ -86,37 +86,8 @@ TH1D* hzeta2_wt = new TH1D("hzeta2_wt", "hzeta2_wt", 100, -10, 10);
 hzeta1_wt->Sumw2();
 hzeta2_wt->Sumw2();
 
-Int_t ngenZ;
-Float_t genZ_pt;
-Float_t genZ_eta;
-Float_t genZ_mass;
 
-tree2->SetBranchAddress("ngenZ", &ngenZ);
-tree2->SetBranchAddress("genZ_pt", &genZ_pt);
-tree2->SetBranchAddress("genZ_eta", &genZ_eta);
-tree2->SetBranchAddress("genZ_mass", &genZ_mass);
-
-for (int i=0; i<(int)tree2->GetEntries(); i++){  
-  tree2->GetEntry(i);
-  if (ngenZ==0) continue;
-
-  double w= hzptr12->GetBinContent(hzptr12->FindBin(genZ_pt));
-
-  hzeta2_wt->Fill(genZ_eta, w);
-
-
-
-}
-
-
-hzeta2_wt->Scale(1./hzeta2_wt->Integral());
-
-hzeta1->Draw();
-hzeta2_wt->Draw("same");
-
-*/
-
-TFile* fout = new TFile("study_zpt.root", "recreate");
+TFile* fout = new TFile("check_zpt_lo_nlo_weight.root", "recreate");
 
 hzpt1->Write();
 hzpt2->Write();
@@ -126,7 +97,6 @@ hzeta1->Write();
 hzeta2->Write();
 hzmass1->Write();
 hzmass2->Write();
-//hzeta2_wt->Write();
 
 fout->Close();
 

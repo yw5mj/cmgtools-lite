@@ -35,6 +35,7 @@ int main(int argc, char** argv) {
   std::string outputfile((const char*)argv[2]);
 
   bool isDyJets = (outputfile.find("DYJets")!=std::string::npos);
+  bool isDyJetsLO = (outputfile.find("DYJets")!=std::string::npos && outputfile.find("MGMLM")!=std::string::npos);
 
 
   // nevts 
@@ -141,6 +142,8 @@ int main(int argc, char** argv) {
   Float_t llnunu_l1_pt;
   Float_t llnunu_l1_phi;
   Float_t llnunu_l1_eta;
+  Float_t llnunu_l2_px;
+  Float_t llnunu_l2_py;
   Float_t llnunu_l2_pt;
   Float_t llnunu_l2_phi;
   Float_t llnunu_l1_l1_pt;
@@ -158,6 +161,8 @@ int main(int argc, char** argv) {
   tree->SetBranchAddress("llnunu_l1_pt",&llnunu_l1_pt);
   tree->SetBranchAddress("llnunu_l1_phi",&llnunu_l1_phi);
   tree->SetBranchAddress("llnunu_l1_eta",&llnunu_l1_eta);
+  tree->SetBranchAddress("llnunu_l2_px",&llnunu_l2_px);
+  tree->SetBranchAddress("llnunu_l2_py",&llnunu_l2_py);
   tree->SetBranchAddress("llnunu_l2_pt",&llnunu_l2_pt);
   tree->SetBranchAddress("llnunu_l2_phi",&llnunu_l2_phi);
   tree->SetBranchAddress("llnunu_l1_l1_pt",&llnunu_l1_l1_pt);
@@ -169,15 +174,31 @@ int main(int argc, char** argv) {
   tree->SetBranchAddress("llnunu_l1_l1_pdgId",&llnunu_l1_l1_pdgId);
   tree->SetBranchAddress("llnunu_l1_l2_pdgId",&llnunu_l1_l2_pdgId);
 
+
+  // old met 
+  Float_t llnunu_l2_pt_old, llnunu_l2_phi_old, llnunu_mt_old;
+  if (isDyJets||isData) {
+    std::cout << " -- isDyJets " << std::endl;
+    tree_out->Branch("llnunu_mt_old", &llnunu_mt_old, "llnunu_mt_old/F");
+    tree_out->Branch("llnunu_l2_pt_old", &llnunu_l2_pt_old, "llnunu_l2_pt_old/F");
+    tree_out->Branch("llnunu_l2_phi_old", &llnunu_l2_phi_old, "llnunu_l2_phi_old/F");
+  }
+
   // add rapidity
   Float_t llnunu_l1_rapidity;
-  if (addZrapidity)  tree->Branch("llnunu_l1_rapidity", &llnunu_l1_rapidity, "llnunu_l1_rapidity/F");
+  if (addZrapidity)  tree_out->Branch("llnunu_l1_rapidity", &llnunu_l1_rapidity, "llnunu_l1_rapidity/F");
 
   //
-  Double_t ZPtWeight;
-  Double_t PhiStarWeight;
-  tree_out->Branch("ZPtWeight",&ZPtWeight,"ZPtWeight/D");
-  tree_out->Branch("PhiStarWeight",&PhiStarWeight,"PhiStarWeight/D");
+  Float_t ZPtWeight, ZPtWeight_up, ZPtWeight_dn;
+  //Float_t PhiStarWeight, PhiStarWeight_up, PhiStarWeight_dn;
+  if (!isData && isDyJets) {
+    tree_out->Branch("ZPtWeight",&ZPtWeight,"ZPtWeight/F");
+    tree_out->Branch("ZPtWeight_up",&ZPtWeight_up,"ZPtWeight_up/F");
+    tree_out->Branch("ZPtWeight_dn",&ZPtWeight_dn,"ZPtWeight_dn/F");
+    //tree_out->Branch("PhiStarWeight",&PhiStarWeight,"PhiStarWeight/F");
+    //tree_out->Branch("PhiStarWeight_up",&PhiStarWeight_up,"PhiStarWeight_up/F");
+    //tree_out->Branch("PhiStarWeight_dn",&PhiStarWeight_dn,"PhiStarWeight_dn/F");
+  }
 
   TFile* fdyzpt;
   TH1D* hdyzptdt;
@@ -202,120 +223,133 @@ int main(int argc, char** argv) {
     tree->SetBranchAddress("genLep_phi", genLep_phi);
   }
 
+  // LO to NLO ZJets
+  TFile* f_zjet_lo_to_nlo;
+  TH1D* h_zjet_lo_to_nlo;
+  
 
-  // met shift  sigma
-  file_dt_sigma[0] = new TFile("SingleEMU_Run2016BCD_PromptReco_killdup_met_para_study.root");
-  file_dt_sigma[1] = new TFile("SingleEMU_Run2016BCD_PromptReco_killdup_met_para_study_mu.root");
-  file_dt_sigma[2] = new TFile("SingleEMU_Run2016BCD_PromptReco_killdup_met_para_study_el.root");
-  file_mc_sigma[0] = new TFile("DYJetsToLL_M50_met_para_study.root");
-  file_mc_sigma[1] = new TFile("DYJetsToLL_M50_met_para_study_mu.root");
-  file_mc_sigma[2] = new TFile("DYJetsToLL_M50_met_para_study_el.root");
+  if (doRecoil && (isData || isDyJets)) {
+    // met shift  sigma
+    file_dt_sigma[0] = new TFile("SingleEMU_Run2016BCD_PromptReco_killdup_met_para_study.root");
+    file_dt_sigma[1] = new TFile("SingleEMU_Run2016BCD_PromptReco_killdup_met_para_study_mu.root");
+    file_dt_sigma[2] = new TFile("SingleEMU_Run2016BCD_PromptReco_killdup_met_para_study_el.root");
+    file_mc_sigma[0] = new TFile("DYJetsToLL_M50_SkimV4_met_para_study.root");
+    file_mc_sigma[1] = new TFile("DYJetsToLL_M50_SkimV4_met_para_study_mu.root");
+    file_mc_sigma[2] = new TFile("DYJetsToLL_M50_SkimV4_met_para_study_el.root");
+    //file_mc_sigma[0] = new TFile("DYJetsToLL_M50_met_para_study.root");
+    //file_mc_sigma[1] = new TFile("DYJetsToLL_M50_met_para_study_mu.root");
+    //file_mc_sigma[2] = new TFile("DYJetsToLL_M50_met_para_study_el.root");
 
-  h_dt_met_para_shift[0] = (TH1D*)file_dt_sigma[0]->Get("h_met_para_vs_zpt_mean");
-  h_mc_met_para_shift[0] = (TH1D*)file_mc_sigma[0]->Get("h_met_para_vs_zpt_mean");
+    h_dt_met_para_shift[0] = (TH1D*)file_dt_sigma[0]->Get("h_met_para_vs_zpt_mean");
+    h_mc_met_para_shift[0] = (TH1D*)file_mc_sigma[0]->Get("h_met_para_vs_zpt_mean");
 
-  h_dt_met_para_sigma[0] = (TH1D*)file_dt_sigma[0]->Get("h_met_para_vs_zpt_sigma");
-  h_dt_met_perp_sigma[0] = (TH1D*)file_dt_sigma[0]->Get("h_met_perp_vs_zpt_sigma");
-  h_mc_met_para_sigma[0] = (TH1D*)file_mc_sigma[0]->Get("h_met_para_vs_zpt_sigma");
-  h_mc_met_perp_sigma[0] = (TH1D*)file_mc_sigma[0]->Get("h_met_perp_vs_zpt_sigma");
+    h_dt_met_para_sigma[0] = (TH1D*)file_dt_sigma[0]->Get("h_met_para_vs_zpt_sigma");
+    h_dt_met_perp_sigma[0] = (TH1D*)file_dt_sigma[0]->Get("h_met_perp_vs_zpt_sigma");
+    h_mc_met_para_sigma[0] = (TH1D*)file_mc_sigma[0]->Get("h_met_para_vs_zpt_sigma");
+    h_mc_met_perp_sigma[0] = (TH1D*)file_mc_sigma[0]->Get("h_met_perp_vs_zpt_sigma");
 
-  h_ratio_met_para_sigma_dtmc[0] = (TH1D*)h_dt_met_para_sigma[0]->Clone("h_ratio_met_para_sigma_dtmc");
-  h_ratio_met_perp_sigma_dtmc[0] = (TH1D*)h_dt_met_perp_sigma[0]->Clone("h_ratio_met_perp_sigma_dtmc");
-  h_ratio_met_para_sigma_dtmc[0]->Divide(h_mc_met_para_sigma[0]);
-  h_ratio_met_perp_sigma_dtmc[0]->Divide(h_mc_met_perp_sigma[0]);
+    h_ratio_met_para_sigma_dtmc[0] = (TH1D*)h_dt_met_para_sigma[0]->Clone("h_ratio_met_para_sigma_dtmc");
+    h_ratio_met_perp_sigma_dtmc[0] = (TH1D*)h_dt_met_perp_sigma[0]->Clone("h_ratio_met_perp_sigma_dtmc");
+    h_ratio_met_para_sigma_dtmc[0]->Divide(h_mc_met_para_sigma[0]);
+    h_ratio_met_perp_sigma_dtmc[0]->Divide(h_mc_met_perp_sigma[0]);
 
-  h_dt_met_para_shift[1] = (TH1D*)file_dt_sigma[1]->Get("h_met_para_vs_zpt_mean");
-  h_mc_met_para_shift[1] = (TH1D*)file_mc_sigma[1]->Get("h_met_para_vs_zpt_mean");
+    h_dt_met_para_shift[1] = (TH1D*)file_dt_sigma[1]->Get("h_met_para_vs_zpt_mean");
+    h_mc_met_para_shift[1] = (TH1D*)file_mc_sigma[1]->Get("h_met_para_vs_zpt_mean");
 
-  h_dt_met_para_sigma[1] = (TH1D*)file_dt_sigma[1]->Get("h_met_para_vs_zpt_sigma");
-  h_dt_met_perp_sigma[1] = (TH1D*)file_dt_sigma[1]->Get("h_met_perp_vs_zpt_sigma");
-  h_mc_met_para_sigma[1] = (TH1D*)file_mc_sigma[1]->Get("h_met_para_vs_zpt_sigma");
-  h_mc_met_perp_sigma[1] = (TH1D*)file_mc_sigma[1]->Get("h_met_perp_vs_zpt_sigma");
+    h_dt_met_para_sigma[1] = (TH1D*)file_dt_sigma[1]->Get("h_met_para_vs_zpt_sigma");
+    h_dt_met_perp_sigma[1] = (TH1D*)file_dt_sigma[1]->Get("h_met_perp_vs_zpt_sigma");
+    h_mc_met_para_sigma[1] = (TH1D*)file_mc_sigma[1]->Get("h_met_para_vs_zpt_sigma");
+    h_mc_met_perp_sigma[1] = (TH1D*)file_mc_sigma[1]->Get("h_met_perp_vs_zpt_sigma");
 
-  h_ratio_met_para_sigma_dtmc[1] = (TH1D*)h_dt_met_para_sigma[1]->Clone("h_ratio_met_para_sigma_dtmc_mu");
-  h_ratio_met_perp_sigma_dtmc[1] = (TH1D*)h_dt_met_perp_sigma[1]->Clone("h_ratio_met_perp_sigma_dtmc_mu");
-  h_ratio_met_para_sigma_dtmc[1]->Divide(h_mc_met_para_sigma[1]);
-  h_ratio_met_perp_sigma_dtmc[1]->Divide(h_mc_met_perp_sigma[1]);
+    h_ratio_met_para_sigma_dtmc[1] = (TH1D*)h_dt_met_para_sigma[1]->Clone("h_ratio_met_para_sigma_dtmc_mu");
+    h_ratio_met_perp_sigma_dtmc[1] = (TH1D*)h_dt_met_perp_sigma[1]->Clone("h_ratio_met_perp_sigma_dtmc_mu");
+    h_ratio_met_para_sigma_dtmc[1]->Divide(h_mc_met_para_sigma[1]);
+    h_ratio_met_perp_sigma_dtmc[1]->Divide(h_mc_met_perp_sigma[1]);
 
-  h_dt_met_para_shift[2] = (TH1D*)file_dt_sigma[2]->Get("h_met_para_vs_zpt_mean");
-  h_mc_met_para_shift[2] = (TH1D*)file_mc_sigma[2]->Get("h_met_para_vs_zpt_mean");
+    h_dt_met_para_shift[2] = (TH1D*)file_dt_sigma[2]->Get("h_met_para_vs_zpt_mean");
+    h_mc_met_para_shift[2] = (TH1D*)file_mc_sigma[2]->Get("h_met_para_vs_zpt_mean");
 
-  h_dt_met_para_sigma[2] = (TH1D*)file_dt_sigma[2]->Get("h_met_para_vs_zpt_sigma");
-  h_dt_met_perp_sigma[2] = (TH1D*)file_dt_sigma[2]->Get("h_met_perp_vs_zpt_sigma");
-  h_mc_met_para_sigma[2] = (TH1D*)file_mc_sigma[2]->Get("h_met_para_vs_zpt_sigma");
-  h_mc_met_perp_sigma[2] = (TH1D*)file_mc_sigma[2]->Get("h_met_perp_vs_zpt_sigma");
+    h_dt_met_para_sigma[2] = (TH1D*)file_dt_sigma[2]->Get("h_met_para_vs_zpt_sigma");
+    h_dt_met_perp_sigma[2] = (TH1D*)file_dt_sigma[2]->Get("h_met_perp_vs_zpt_sigma");
+    h_mc_met_para_sigma[2] = (TH1D*)file_mc_sigma[2]->Get("h_met_para_vs_zpt_sigma");
+    h_mc_met_perp_sigma[2] = (TH1D*)file_mc_sigma[2]->Get("h_met_perp_vs_zpt_sigma");
 
-  h_ratio_met_para_sigma_dtmc[2] = (TH1D*)h_dt_met_para_sigma[2]->Clone("h_ratio_met_para_sigma_dtmc_el");
-  h_ratio_met_perp_sigma_dtmc[2] = (TH1D*)h_dt_met_perp_sigma[2]->Clone("h_ratio_met_perp_sigma_dtmc_el");
-  h_ratio_met_para_sigma_dtmc[2]->Divide(h_mc_met_para_sigma[2]);
-  h_ratio_met_perp_sigma_dtmc[2]->Divide(h_mc_met_perp_sigma[2]);
+    h_ratio_met_para_sigma_dtmc[2] = (TH1D*)h_dt_met_para_sigma[2]->Clone("h_ratio_met_para_sigma_dtmc_el");
+    h_ratio_met_perp_sigma_dtmc[2] = (TH1D*)h_dt_met_perp_sigma[2]->Clone("h_ratio_met_perp_sigma_dtmc_el");
+    h_ratio_met_para_sigma_dtmc[2]->Divide(h_mc_met_para_sigma[2]);
+    h_ratio_met_perp_sigma_dtmc[2]->Divide(h_mc_met_perp_sigma[2]);
 
-  // smooth functions
-  h_dt_met_para_shift[0]->SetName("h_dt_met_para_shift_all");
-  h_mc_met_para_shift[0]->SetName("h_mc_met_para_shift_all");
-  h_dt_met_para_shift[1]->SetName("h_dt_met_para_shift_mu");
-  h_mc_met_para_shift[1]->SetName("h_mc_met_para_shift_mu");
-  h_dt_met_para_shift[2]->SetName("h_dt_met_para_shift_el");
-  h_mc_met_para_shift[2]->SetName("h_mc_met_para_shift_el");
-  h_dt_met_para_shift[3] = (TH1D*)h_dt_met_para_shift[0]->Clone("h_dt_met_para_shift_all_smooth");
-  h_mc_met_para_shift[3] = (TH1D*)h_mc_met_para_shift[0]->Clone("h_mc_met_para_shift_all_smooth");
-  h_dt_met_para_shift[4] = (TH1D*)h_dt_met_para_shift[1]->Clone("h_dt_met_para_shift_mu_smooth");
-  h_mc_met_para_shift[4] = (TH1D*)h_mc_met_para_shift[1]->Clone("h_mc_met_para_shift_mu_smooth");
-  h_dt_met_para_shift[5] = (TH1D*)h_dt_met_para_shift[2]->Clone("h_dt_met_para_shift_el_smooth");
-  h_mc_met_para_shift[5] = (TH1D*)h_mc_met_para_shift[2]->Clone("h_mc_met_para_shift_el_smooth");
-  h_dt_met_para_shift[3]->Smooth();
-  h_mc_met_para_shift[3]->Smooth();
-  h_dt_met_para_shift[4]->Smooth();
-  h_mc_met_para_shift[4]->Smooth();
-  h_dt_met_para_shift[5]->Smooth();
-  h_mc_met_para_shift[5]->Smooth();
+    // smooth functions
+    h_dt_met_para_shift[0]->SetName("h_dt_met_para_shift_all");
+    h_mc_met_para_shift[0]->SetName("h_mc_met_para_shift_all");
+    h_dt_met_para_shift[1]->SetName("h_dt_met_para_shift_mu");
+    h_mc_met_para_shift[1]->SetName("h_mc_met_para_shift_mu");
+    h_dt_met_para_shift[2]->SetName("h_dt_met_para_shift_el");
+    h_mc_met_para_shift[2]->SetName("h_mc_met_para_shift_el");
+    h_dt_met_para_shift[3] = (TH1D*)h_dt_met_para_shift[0]->Clone("h_dt_met_para_shift_all_smooth");
+    h_mc_met_para_shift[3] = (TH1D*)h_mc_met_para_shift[0]->Clone("h_mc_met_para_shift_all_smooth");
+    h_dt_met_para_shift[4] = (TH1D*)h_dt_met_para_shift[1]->Clone("h_dt_met_para_shift_mu_smooth");
+    h_mc_met_para_shift[4] = (TH1D*)h_mc_met_para_shift[1]->Clone("h_mc_met_para_shift_mu_smooth");
+    h_dt_met_para_shift[5] = (TH1D*)h_dt_met_para_shift[2]->Clone("h_dt_met_para_shift_el_smooth");
+    h_mc_met_para_shift[5] = (TH1D*)h_mc_met_para_shift[2]->Clone("h_mc_met_para_shift_el_smooth");
+    h_dt_met_para_shift[3]->Smooth();
+    h_mc_met_para_shift[3]->Smooth();
+    h_dt_met_para_shift[4]->Smooth();
+    h_mc_met_para_shift[4]->Smooth();
+    h_dt_met_para_shift[5]->Smooth();
+    h_mc_met_para_shift[5]->Smooth();
+ 
+    gr_dt_met_para_shift[3] = new TGraphErrors(h_dt_met_para_shift[3]);
+    gr_mc_met_para_shift[3] = new TGraphErrors(h_mc_met_para_shift[3]);
+    gr_dt_met_para_shift[4] = new TGraphErrors(h_dt_met_para_shift[4]);
+    gr_mc_met_para_shift[4] = new TGraphErrors(h_mc_met_para_shift[4]);
+    gr_dt_met_para_shift[5] = new TGraphErrors(h_dt_met_para_shift[5]);
+    gr_mc_met_para_shift[5] = new TGraphErrors(h_mc_met_para_shift[5]);
+  
+    h_ratio_met_para_sigma_dtmc[3] = (TH1D*)h_ratio_met_para_sigma_dtmc[0]->Clone("h_ratio_met_para_sigma_dtmc_all_smooth");
+    h_ratio_met_para_sigma_dtmc[4] = (TH1D*)h_ratio_met_para_sigma_dtmc[1]->Clone("h_ratio_met_para_sigma_dtmc_mu_smooth");
+    h_ratio_met_para_sigma_dtmc[5] = (TH1D*)h_ratio_met_para_sigma_dtmc[2]->Clone("h_ratio_met_para_sigma_dtmc_el_smooth");
+    h_ratio_met_para_sigma_dtmc[3]->Smooth();
+    h_ratio_met_para_sigma_dtmc[4]->Smooth();
+    h_ratio_met_para_sigma_dtmc[5]->Smooth();
+  
+    h_ratio_met_perp_sigma_dtmc[3] = (TH1D*)h_ratio_met_perp_sigma_dtmc[0]->Clone("h_ratio_met_perp_sigma_dtmc_all_smooth");
+    h_ratio_met_perp_sigma_dtmc[4] = (TH1D*)h_ratio_met_perp_sigma_dtmc[1]->Clone("h_ratio_met_perp_sigma_dtmc_mu_smooth");
+    h_ratio_met_perp_sigma_dtmc[5] = (TH1D*)h_ratio_met_perp_sigma_dtmc[2]->Clone("h_ratio_met_perp_sigma_dtmc_el_smooth");
+    h_ratio_met_perp_sigma_dtmc[3]->Smooth();
+    h_ratio_met_perp_sigma_dtmc[4]->Smooth();
+    h_ratio_met_perp_sigma_dtmc[5]->Smooth();
+ 
+    gr_ratio_met_para_sigma_dtmc[3] = new TGraphErrors(h_ratio_met_para_sigma_dtmc[3]);
+    gr_ratio_met_para_sigma_dtmc[4] = new TGraphErrors(h_ratio_met_para_sigma_dtmc[4]);
+    gr_ratio_met_para_sigma_dtmc[5] = new TGraphErrors(h_ratio_met_para_sigma_dtmc[5]);
+    gr_ratio_met_perp_sigma_dtmc[3] = new TGraphErrors(h_ratio_met_perp_sigma_dtmc[3]);
+    gr_ratio_met_perp_sigma_dtmc[4] = new TGraphErrors(h_ratio_met_perp_sigma_dtmc[4]);
+    gr_ratio_met_perp_sigma_dtmc[5] = new TGraphErrors(h_ratio_met_perp_sigma_dtmc[5]);
+  }
 
-  gr_dt_met_para_shift[3] = new TGraphErrors(h_dt_met_para_shift[3]);
-  gr_mc_met_para_shift[3] = new TGraphErrors(h_dt_met_para_shift[3]);
-  gr_dt_met_para_shift[4] = new TGraphErrors(h_dt_met_para_shift[4]);
-  gr_mc_met_para_shift[4] = new TGraphErrors(h_dt_met_para_shift[4]);
-  gr_dt_met_para_shift[5] = new TGraphErrors(h_dt_met_para_shift[5]);
-  gr_mc_met_para_shift[5] = new TGraphErrors(h_dt_met_para_shift[5]);
+  if (!isData && isDyJets){
+  
+    fdyzpt = new TFile("UnfoldingOutputZPt.root");
+    hdyzptdt = (TH1D*)fdyzpt->Get("hUnfold");
+    hdyzptmc = (TH1D*)fdyzpt->Get("hTruth");
+    hdyzpt_dtmc_ratio = (TH1D*)hdyzptdt->Clone("hdyzpt_dtmc_ratio");
+    hdyzpt_dtmc_ratio->Divide(hdyzptmc);
+    gdyzpt_dtmc_ratio = new TGraphErrors(hdyzpt_dtmc_ratio);
 
-  h_ratio_met_para_sigma_dtmc[3] = (TH1D*)h_ratio_met_para_sigma_dtmc[0]->Clone("h_ratio_met_para_sigma_dtmc_all_smooth");
-  h_ratio_met_para_sigma_dtmc[4] = (TH1D*)h_ratio_met_para_sigma_dtmc[1]->Clone("h_ratio_met_para_sigma_dtmc_mu_smooth");
-  h_ratio_met_para_sigma_dtmc[5] = (TH1D*)h_ratio_met_para_sigma_dtmc[2]->Clone("h_ratio_met_para_sigma_dtmc_el_smooth");
-  h_ratio_met_para_sigma_dtmc[3]->Smooth();
-  h_ratio_met_para_sigma_dtmc[4]->Smooth();
-  h_ratio_met_para_sigma_dtmc[5]->Smooth();
+    //fdyphistar = new TFile("UnfoldingOutputPhiStar.root");
+    //hdyphistardt = (TH1D*)fdyphistar->Get("hUnfold");
+    //hdyphistarmc = (TH1D*)fdyphistar->Get("hTruth");
+    //hdyphistar_dtmc_ratio = (TH1D*)hdyphistardt->Clone("hdyphistar_dtmc_ratio");
+    //hdyphistar_dtmc_ratio->Divide(hdyphistarmc);
+    //gdyphistar_dtmc_ratio = new TGraphErrors(hdyphistar_dtmc_ratio);
+  }
 
-  h_ratio_met_perp_sigma_dtmc[3] = (TH1D*)h_ratio_met_perp_sigma_dtmc[0]->Clone("h_ratio_met_perp_sigma_dtmc_all_smooth");
-  h_ratio_met_perp_sigma_dtmc[4] = (TH1D*)h_ratio_met_perp_sigma_dtmc[1]->Clone("h_ratio_met_perp_sigma_dtmc_mu_smooth");
-  h_ratio_met_perp_sigma_dtmc[5] = (TH1D*)h_ratio_met_perp_sigma_dtmc[2]->Clone("h_ratio_met_perp_sigma_dtmc_el_smooth");
-  h_ratio_met_perp_sigma_dtmc[3]->Smooth();
-  h_ratio_met_perp_sigma_dtmc[4]->Smooth();
-  h_ratio_met_perp_sigma_dtmc[5]->Smooth();
-
-  gr_ratio_met_para_sigma_dtmc[3] = new TGraphErrors(h_ratio_met_para_sigma_dtmc[3]);
-  gr_ratio_met_para_sigma_dtmc[4] = new TGraphErrors(h_ratio_met_para_sigma_dtmc[4]);
-  gr_ratio_met_para_sigma_dtmc[5] = new TGraphErrors(h_ratio_met_para_sigma_dtmc[5]);
-  gr_ratio_met_perp_sigma_dtmc[3] = new TGraphErrors(h_ratio_met_perp_sigma_dtmc[3]);
-  gr_ratio_met_perp_sigma_dtmc[4] = new TGraphErrors(h_ratio_met_perp_sigma_dtmc[4]);
-  gr_ratio_met_perp_sigma_dtmc[5] = new TGraphErrors(h_ratio_met_perp_sigma_dtmc[5]);
-
-
-  fdyzpt = new TFile("UnfoldingOutputZPt.root");
-  hdyzptdt = (TH1D*)fdyzpt->Get("hUnfold");
-  hdyzptmc = (TH1D*)fdyzpt->Get("hTruth");
-  hdyzpt_dtmc_ratio = (TH1D*)hdyzptdt->Clone("hdyzpt_dtmc_ratio");
-  hdyzpt_dtmc_ratio->Divide(hdyzptmc);
-  gdyzpt_dtmc_ratio = new TGraphErrors(hdyzpt_dtmc_ratio);
-
-  fdyphistar = new TFile("UnfoldingOutputPhiStar.root");
-  hdyphistardt = (TH1D*)fdyphistar->Get("hUnfold");
-  hdyphistarmc = (TH1D*)fdyphistar->Get("hTruth");
-  hdyphistar_dtmc_ratio = (TH1D*)hdyphistardt->Clone("hdyphistar_dtmc_ratio");
-  hdyphistar_dtmc_ratio->Divide(hdyphistarmc);
-  gdyphistar_dtmc_ratio = new TGraphErrors(hdyphistar_dtmc_ratio);
-
-
-
-
+  if (!isData && isDyJets && isDyJetsLO){
+    // zjets lo to nlo
+    f_zjet_lo_to_nlo = TFile::Open("zpt_lo_to_nlo.root");
+    h_zjet_lo_to_nlo = (TH1D*)f_zjet_lo_to_nlo->Get("hzptr12");
+  }
 
   //
   int n_interval = 5000;
@@ -337,37 +371,49 @@ int main(int argc, char** argv) {
     double met_para = llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi);
     double met_perp = llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi);
     if (abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13) {
+      h_dt_met_para_shift[6] = h_dt_met_para_shift[4];
+      h_mc_met_para_shift[6] = h_mc_met_para_shift[4];
+      h_ratio_met_para_sigma_dtmc[6] = h_ratio_met_para_sigma_dtmc[4];
+      h_ratio_met_perp_sigma_dtmc[6] = h_ratio_met_perp_sigma_dtmc[4];
       gr_dt_met_para_shift[6] = gr_dt_met_para_shift[4];
       gr_mc_met_para_shift[6] = gr_mc_met_para_shift[4];
       gr_ratio_met_para_sigma_dtmc[6] = gr_ratio_met_para_sigma_dtmc[4];
       gr_ratio_met_perp_sigma_dtmc[6] = gr_ratio_met_perp_sigma_dtmc[4];
     }
     else if (abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11) {
+      h_dt_met_para_shift[6] = h_dt_met_para_shift[5];
+      h_mc_met_para_shift[6] = h_mc_met_para_shift[5];
+      h_ratio_met_para_sigma_dtmc[6] = h_ratio_met_para_sigma_dtmc[5];
+      h_ratio_met_perp_sigma_dtmc[6] = h_ratio_met_perp_sigma_dtmc[5];
       gr_dt_met_para_shift[6] = gr_dt_met_para_shift[5];
       gr_mc_met_para_shift[6] = gr_mc_met_para_shift[5];
       gr_ratio_met_para_sigma_dtmc[6] = gr_ratio_met_para_sigma_dtmc[5];
       gr_ratio_met_perp_sigma_dtmc[6] = gr_ratio_met_perp_sigma_dtmc[5];
     }
     else {
+      h_dt_met_para_shift[6] = h_dt_met_para_shift[3];
+      h_mc_met_para_shift[6] = h_mc_met_para_shift[3];
+      h_ratio_met_para_sigma_dtmc[6] = h_ratio_met_para_sigma_dtmc[3];
+      h_ratio_met_perp_sigma_dtmc[6] = h_ratio_met_perp_sigma_dtmc[3];
       gr_dt_met_para_shift[6] = gr_dt_met_para_shift[3];
       gr_mc_met_para_shift[6] = gr_mc_met_para_shift[3];
       gr_ratio_met_para_sigma_dtmc[6] = gr_ratio_met_para_sigma_dtmc[3];
       gr_ratio_met_perp_sigma_dtmc[6] = gr_ratio_met_perp_sigma_dtmc[3];
     }
-    if (isData) {
-      //met_para -= h_dt_met_para_shift[6]->GetBinContent(h_dt_met_para_shift[6]->FindBin(llnunu_l1_pt));
-      met_para -= gr_dt_met_para_shift[6]->Eval(llnunu_l1_pt);
+    if (doRecoil && isData) {
+      met_para -= h_dt_met_para_shift[6]->GetBinContent(h_dt_met_para_shift[6]->FindBin(llnunu_l1_pt));
+      //met_para -= gr_dt_met_para_shift[6]->Eval(llnunu_l1_pt);
     }
-    else {
-      //met_para -= h_mc_met_para_shift[6]->GetBinContent(h_mc_met_para_shift[6]->FindBin(llnunu_l1_pt));
-      met_para -= gr_mc_met_para_shift[6]->Eval(llnunu_l1_pt);
+    else if (doRecoil&&isDyJets) {
+      met_para -= h_mc_met_para_shift[6]->GetBinContent(h_mc_met_para_shift[6]->FindBin(llnunu_l1_pt));
+      //met_para -= gr_mc_met_para_shift[6]->Eval(llnunu_l1_pt);
     }
 
-    if (!isData && isDyJets){
-      //met_para *= h_ratio_met_para_sigma_dtmc[3]->GetBinContent(h_ratio_met_para_sigma_dtmc[3]->FindBin(llnunu_l1_pt));
-      //met_perp *= h_ratio_met_perp_sigma_dtmc[3]->GetBinContent(h_ratio_met_perp_sigma_dtmc[3]->FindBin(llnunu_l1_pt));
-      met_para *= gr_ratio_met_para_sigma_dtmc[6]->Eval(llnunu_l1_pt);
-      met_perp *= gr_ratio_met_perp_sigma_dtmc[6]->Eval(llnunu_l1_pt);
+    if (doRecoil && !isData && isDyJets){
+      met_para *= h_ratio_met_para_sigma_dtmc[6]->GetBinContent(h_ratio_met_para_sigma_dtmc[6]->FindBin(llnunu_l1_pt));
+      met_perp *= h_ratio_met_perp_sigma_dtmc[6]->GetBinContent(h_ratio_met_perp_sigma_dtmc[6]->FindBin(llnunu_l1_pt));
+      //met_para *= gr_ratio_met_para_sigma_dtmc[6]->Eval(llnunu_l1_pt);
+      //met_perp *= gr_ratio_met_perp_sigma_dtmc[6]->Eval(llnunu_l1_pt);
     }
 
     Float_t met_x;
@@ -375,11 +421,17 @@ int main(int argc, char** argv) {
     Float_t et1;
     Float_t et2;
   
-    if (doRecoil) {
+    if (doRecoil && (isData || isDyJets) ) {
+
+      llnunu_l2_pt_old = llnunu_l2_pt;
+      llnunu_l2_phi_old = llnunu_l2_phi;
+      llnunu_mt_old = llnunu_mt;
       met_x = met_para*cos(llnunu_l1_phi)-met_perp*sin(llnunu_l1_phi);
       met_y = met_para*sin(llnunu_l1_phi)+met_perp*cos(llnunu_l1_phi);
       TVector2 vec_met;
       vec_met.Set(met_x, met_y);
+      llnunu_l2_px = met_x;
+      llnunu_l2_py = met_y;
       llnunu_l2_pt = vec_met.Mod();
       llnunu_l2_phi = TVector2::Phi_mpi_pi(vec_met.Phi());
 
@@ -387,26 +439,69 @@ int main(int argc, char** argv) {
       et2 = TMath::Sqrt(llnunu_l1_mass*llnunu_l1_mass + llnunu_l2_pt*llnunu_l2_pt);
       llnunu_mt = TMath::Sqrt(2.0*llnunu_l1_mass*llnunu_l1_mass + 2.0* (et1*et2 - llnunu_l1_pt*cos(llnunu_l1_phi)*met_x - llnunu_l1_pt*sin(llnunu_l1_phi)*met_y));
     }
+
     //
+    ZPtWeight=1.0;
+    ZPtWeight_up=1.0;
+    ZPtWeight_dn=1.0;
+    //PhiStarWeight=1.0;
+    //PhiStarWeight_up=1.0;
+    //PhiStarWeight_dn=1.0;
+
     if (!isData&&isDyJets) {
+      
       // zpt weight
-      if (ngenZ>0) ZPtWeight = gdyzpt_dtmc_ratio->Eval(genZ_pt[0]);
-      else ZPtWeight = gdyzpt_dtmc_ratio->Eval(llnunu_l1_pt);
+      //if (ngenZ>0) ZPtWeight = gdyzpt_dtmc_ratio->Eval(genZ_pt[0]);
+      //else ZPtWeight = gdyzpt_dtmc_ratio->Eval(llnunu_l1_pt);
+      Int_t zptBin=0;
+      if (ngenZ>0) {
+        zptBin = hdyzpt_dtmc_ratio->FindBin(genZ_pt[0]);
+        if (genZ_pt[0]>1000) zptBin = hdyzpt_dtmc_ratio->FindBin(999);
+      }
+      else {
+        zptBin = hdyzpt_dtmc_ratio->FindBin(llnunu_l1_pt);
+        if (llnunu_l1_pt>1000) zptBin = hdyzpt_dtmc_ratio->FindBin(999);
+      }
+      ZPtWeight = hdyzpt_dtmc_ratio->GetBinContent(zptBin);
+      ZPtWeight_up = ZPtWeight+0.5*hdyzpt_dtmc_ratio->GetBinError(zptBin);
+      ZPtWeight_dn = ZPtWeight-0.5*hdyzpt_dtmc_ratio->GetBinError(zptBin);
       // put zpt weight in genWeight
-      genWeight *= ZPtWeight;
+      //genWeight *= ZPtWeight;
 
       // phistar weight
-      double phistar(0.0);
-      if (ngenLep>1) phistar = TMath::Tan((TMath::Pi()-TMath::Abs(TVector2::Phi_mpi_pi(genLep_phi[0]-genLep_phi[1])))/2.0)*TMath::Sin(TMath::ACos(TMath::TanH((genLep_eta[0]-genLep_eta[1])/2.0)));
-      else phistar = TMath::Tan((TMath::Pi()-TMath::Abs(TVector2::Phi_mpi_pi(llnunu_l1_l1_phi-llnunu_l1_l2_phi)))/2.0)*TMath::Sin(TMath::ACos(TMath::TanH((llnunu_l1_l1_eta-llnunu_l1_l2_eta)/2.0)));
-      PhiStarWeight = gdyphistar_dtmc_ratio->Eval(phistar);
+      //double phistar(0.0);
+      //if (ngenLep>1) phistar = TMath::Tan((TMath::Pi()-TMath::Abs(TVector2::Phi_mpi_pi(genLep_phi[0]-genLep_phi[1])))/2.0)*TMath::Sin(TMath::ACos(TMath::TanH((genLep_eta[0]-genLep_eta[1])/2.0)));
+      //else phistar = TMath::Tan((TMath::Pi()-TMath::Abs(TVector2::Phi_mpi_pi(llnunu_l1_l1_phi-llnunu_l1_l2_phi)))/2.0)*TMath::Sin(TMath::ACos(TMath::TanH((llnunu_l1_l1_eta-llnunu_l1_l2_eta)/2.0)));
+      //PhiStarWeight = gdyphistar_dtmc_ratio->Eval(phistar);
 
-      if (addZrapidity) {
-        TLorentzVector z4vec;
-        z4vec.SetPtEtaPhiM(llnunu_l1_pt,llnunu_l1_eta,llnunu_l1_phi,llnunu_l1_mass);
-        llnunu_l1_rapidity = z4vec.Rapidity();
+
+      // for LO ZJets samples
+      if (isDyJetsLO){
+        Double_t zjet_lo_to_nlo_wt = 1.0;
+        Double_t zjet_lo_to_nlo_wt_err = 0.0;
+        //Int_t zptBin=0;
+        if (ngenZ>0) {
+          zptBin = h_zjet_lo_to_nlo->FindBin(genZ_pt[0]);
+          if (genZ_pt[0]>1000) zptBin = h_zjet_lo_to_nlo->FindBin(999);
+        }
+        else {
+          zptBin = h_zjet_lo_to_nlo->FindBin(llnunu_l1_pt);
+          if (llnunu_l1_pt>1000) zptBin = h_zjet_lo_to_nlo->FindBin(999);
+        }
+        zjet_lo_to_nlo_wt = h_zjet_lo_to_nlo->GetBinContent(zptBin);
+        zjet_lo_to_nlo_wt_err = h_zjet_lo_to_nlo->GetBinError(zptBin);
+        ZPtWeight *= zjet_lo_to_nlo_wt;
+        ZPtWeight_up *= zjet_lo_to_nlo_wt;
+        ZPtWeight_dn *= zjet_lo_to_nlo_wt;
       }
     }
+
+    if (addZrapidity) {
+      TLorentzVector z4vec;
+      z4vec.SetPtEtaPhiM(llnunu_l1_pt,llnunu_l1_eta,llnunu_l1_phi,llnunu_l1_mass);
+      llnunu_l1_rapidity = z4vec.Rapidity();
+    }
+
     tree_out->Fill();
   }
 
