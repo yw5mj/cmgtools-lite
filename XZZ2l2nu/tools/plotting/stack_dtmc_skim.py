@@ -7,7 +7,7 @@ from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
-tag="NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
+tag="WORecoil_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="DataHLT_oldLumiJson_"
 #tag="test_"
 #tag=""
@@ -19,10 +19,10 @@ cutChain='tight'
 #cutChain='tightzpt100met200'
 
 channel='all' # can be el or mu or both
-LogY=True
-test=False
-DrawLeptons=True
-doRhoScale=False
+LogY=False
+test=True
+DrawLeptons=False
+doRhoScale=True
 
 #lepsf="(1)"
 #lepsf="idsf"
@@ -34,12 +34,13 @@ lepsf="trgsf*isosf*idsf"
 
 if doRhoScale: 
     tag+="RhoWt_"
-    lepsf=lepsf+"*(0.602*exp(-0.5*pow((x-8.890)/6.187,2))+0.829*exp(-0.5*pow((x-21.404)/10.866,2)))"
+    lepsf=lepsf+"*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))"
     #lepsf=lepsf+"*(0.122360+0.180976*rho+-0.010879*pow(rho,2)+0.000226*pow(rho,3)-0.000002*pow(rho,4))"
 
 outdir='plots'
 
-indir='/data/XZZ/80X_20160721_SkimV2_EffSkim'
+indir='root://eoscms//store/caf/user/heli/XZZ/80X_20160721_EffSkim_v2'
+#indir='/data/XZZ/80X_20160721_SkimV2_EffSkim'
 #indir='/data/XZZ/80X_20160721_SkimV2_EffSkim'
 #indir='/dataf/heli/XZZ/80X_20160721_EffSkim_v2'
 #indir='/data2/XZZ2/80X_20160721_EffSkim_v2'
@@ -217,7 +218,9 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 zjetsPlotters=[]
 #zjetsSamples = ['DYJetsToLL_M50_HT100to200','DYJetsToLL_M50_HT200to400','DYJetsToLL_M50_HT400to600','DYJetsToLL_M50_HT600toInf']
-zjetsSamples = ['DYJetsToLL_M50'] # M50
+#zjetsSamples = ['DYJetsToLL_M50'] # M50
+zjetsSamples = ['DYJetsToLL_M50_noRecoil'] # M50
+#zjetsSamples = ['DYJetsToLL_M50_newRecoil'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_BIG'] # M50_BIG = M50 + M50_Ext
 #zjetsSamples = ['DYJetsToLL_M50_BIG_ZPt'] 
 
@@ -345,7 +348,9 @@ dataSamples = [
 #'SingleElectron_Run2016C_PromptReco_v2',
 #'SingleMuon_Run2016D_PromptReco_v2',
 #'SingleElectron_Run2016D_PromptReco_v2',
-'SingleEMU_Run2016BCD_PromptReco_killdup', 
+#'SingleEMU_Run2016BCD_PromptReco_killdup', 
+'SingleEMU_Run2016BCD_PromptReco_noRecoil', 
+#'SingleEMU_Run2016BCD_PromptReco_newRecoil', 
 #'SingleEMU_Run2016BCD_PromptReco_killdup_old', 
 ]
 for sample in dataSamples:
@@ -392,7 +397,10 @@ Stack.doRatio(doRatio)
 tag+='_'
 
 if test: 
-    Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 300, 0.0, 3000.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_high3',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
+    #Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 300, 0.0, 3000.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_high3',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
+    Stack.drawStack('llnunu_l2_pt', cuts, str(lumi*1000), 100, 0, 300, titlex = "MET", units = "GeV",output=tag+'met_low2',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
+    Stack.drawStack('llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi)', cuts, str(lumi*1000), 100, -200, 200.0, titlex = "MET_{#parallel}", units = "GeV",output=tag+'met_para',outDir=outdir,separateSignal=sepSig)
+    Stack.drawStack('llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi)', cuts, str(lumi*1000), 100, -200, 200.0, titlex = "MET_{#perp}", units = "GeV",output=tag+'met_perp',outDir=outdir,separateSignal=sepSig)
 else: 
     Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 300, 0.0, 3000.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_high3',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
     Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 240, 0.0, 1200.0, titlex = "M_{T}", units = "GeV",output=tag+'mt',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)

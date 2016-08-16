@@ -9,7 +9,7 @@ class TreePlotter(PlotterBase):
 
     def __init__(self,name, file,tree,weight = "1"):
         self.name = name
-        self.file = ROOT.TFile(file)
+        self.file = ROOT.TFile.Open(file)
         self.tree = self.file.Get(tree)
         if tree ==0:
             print "Tree not found\n"

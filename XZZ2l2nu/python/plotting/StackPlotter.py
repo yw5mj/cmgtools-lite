@@ -150,7 +150,7 @@ class StackPlotter(object):
         self.outFileName=outDir+'/'+outTag
         self.doRatioPlot=False
 
-        self.fout = ROOT.TFile(self.outFileName+'.root', 'recreate')
+        self.fout = ROOT.TFile.Open(self.outFileName+'.root', 'recreate')
         c1 = ROOT.TCanvas(self.outTag, self.outTag, 800, 1040);
         c1.Print(self.outFileName+'.ps[')
         c1.Print(self.outFileName+'.pdf[')
@@ -183,7 +183,7 @@ class StackPlotter(object):
 
     def drawStack(self,var,cut,lumi,bins,mini,maxi,titlex = "", units = "", output = 'out', outDir='.', separateSignal=False, blinding=False, blindingCut=100.0, fakeData=False):
 
-        #fout = ROOT.TFile(outDir+'/'+outputTag+'_'+output+'.root', 'recreate')
+        #fout = ROOT.TFile.Open(outDir+'/'+outputTag+'_'+output+'.root', 'recreate')
 
         self.fout.cd()
 
@@ -532,7 +532,7 @@ class StackPlotter(object):
         
     def drawCutEff(self,var,cut,lumi,bins,mini,maxi,titlex = "", units = "", output = 'out', outDir='.'):
 
-        #fout = ROOT.TFile(outDir+'/'+output+'.root', 'recreate')
+        #fout = ROOT.TFile.Open(outDir+'/'+output+'.root', 'recreate')
         self.fout.cd()
 
         c1 = ROOT.TCanvas(output+'_'+"c1", "c1", 600, 600); c1.Draw()
@@ -740,7 +740,7 @@ class StackPlotter(object):
 
     def drawCutSignif(self,var,cut,lumi,bins,mini,maxi,titlex = "", units = "", output = 'out', outDir='.'):
 
-        #fout = ROOT.TFile(outDir+'/'+output+'.root', 'recreate')
+        #fout = ROOT.TFile.Open(outDir+'/'+output+'.root', 'recreate')
         self.fout.cd()
 
         c1 = ROOT.TCanvas(output+'_'+"c1", "c1", 600, 600); c1.Draw()
@@ -917,7 +917,7 @@ class StackPlotter(object):
 
     def drawCutROC(self,var,cut,lumi,bins,mini,maxi, titlex="", units="", output = 'out', outDir='.'):
 
-        #fout = ROOT.TFile(outDir+'/'+output+'.root', 'recreate')
+        #fout = ROOT.TFile.Open(outDir+'/'+output+'.root', 'recreate')
         self.fout.cd()
 
         c1 = ROOT.TCanvas(output+'_'+"c1", "c1", 600, 600); c1.Draw()
