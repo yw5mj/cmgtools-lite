@@ -30,9 +30,11 @@ njob="0"
 #for infile in $(ls $inputdir/Single*/vvTreeProducer/tree.root ); 
 #for infile in $(ls $inputdir/Single*/vvTreeProducer/tree.root ); 
 #for infile in $inputdir/*/vvTreeProducer/tree.root ;
-#for infile in $inputdir/DYJetsToLL_M50/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/DYJetsToLL*/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/Sing*/vvTreeProducer/tree.root ; 
-for infile in $inputdir/DYJetsToLL*/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/DYJetsToLL_M50/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/DYJetsToLL_M50_MGMLM/vvTreeProducer/tree.root ; 
+for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root ; 
 do
   echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"
