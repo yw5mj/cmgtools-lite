@@ -6,21 +6,27 @@ std::string inputdir =
   ;
 std::string filename =
   //"DYJetsToLL_M50"
-  "DYJetsToLL_M50_SkimV4"
+  //"DYJetsToLL_M50_SkimV4"
+  //"DYJetsToLL_M50_MGMLM_Ext1_SkimRecoilOnlyMC_RecoilSmooth"
+  "DYJetsToLL_M50_SkimRecoilOnlyMC_RecoilGraph"
+  //"DYJetsToLL_M50_SkimRecoilOnlyMC_RecoilSmooth"
+  //"DYJetsToLL_M50_SkimRecoilOnlyMC_RecoilNoSmooth"
+  //"SingleEMU_Run2016BCD_PromptReco"
   //"SingleEMU_Run2016BCD_PromptReco_killdup"
   //"SingleEMU_Run2016BCD_PromptReco_SkimV3"
+  //"SingleEMU_Run2016BCD_PromptReco_SkimRecoilOnlyMC"
   ;
 
 std::string base_selec = 
-  "(llnunu_l1_mass>50&&llnunu_l1_mass<180)"
+  //"(llnunu_l1_mass>50&&llnunu_l1_mass<180)"
   //"(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11&&llnunu_l1_mass>50&&llnunu_l1_mass<180)"
-  //"(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_mass>50&&llnunu_l1_mass<180)"
+  "(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_mass>50&&llnunu_l1_mass<180)"
   ;
 
 std::string tag = 
-  "_met_para_study"
+  //"_met_para_study"
   //"_met_para_study_el"
-  //"_met_para_study_mu"
+  "_met_para_study_mu"
 ;
 
 std::string lumiTag = 
