@@ -12,7 +12,8 @@ g++ skimming.cc -o skimming.exe `root-config --cflags` `root-config --libs`
 
 #inputs
 inputdir=/data2/XZZ2/80X_20160721_LinksForSkimV3
-outputdir=/data/XZZ/80X_20160721_SkimV3
+outputdir=/data/XZZ/80X_20160721_SkimRecoilOnlyMC
+#outputdir=/data/XZZ/80X_20160721_SkimV3
 #outputdir=/data/XZZ/80X_20160721_SkimV4
 #inputdir=/data2/XZZ2/80X_20160724
 #outputdir=/data2/XZZ2/80X_20160724_Skim
@@ -31,17 +32,19 @@ njob="0"
 #for infile in $(ls $inputdir/Single*/vvTreeProducer/tree.root ); 
 #for infile in $inputdir/*/vvTreeProducer/tree.root ;
 #for infile in $inputdir/DYJetsToLL*/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/DYJetsToLL_M50_MGMLM/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/Sing*/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/DYJetsToLL_M50/vvTreeProducer/tree.root ; 
-#for infile in $inputdir/DYJetsToLL_M50_MGMLM/vvTreeProducer/tree.root ; 
 for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root ; 
 do
   echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"
-  outfile="${outfile/\/vvTreeProducer\/tree/}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/}"
 
-  # if do PUscan using Zjets:
-  #outfile="${outfile/\/vvTreeProducer\/tree/_PUScanV2}"
+  # if do Special using Zjets:
+  #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilGraph}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilNoSmooth}"
+  outfile="${outfile/\/vvTreeProducer\/tree/_RecoilSmooth}"
 
   inSkimFile=${infile/vvTreeProducer\/tree.root/skimAnalyzerCount\/SkimReport.txt}
 

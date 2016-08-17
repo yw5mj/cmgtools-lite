@@ -14,10 +14,14 @@ g++ skimming.cc -o skimming.exe `root-config --cflags` `root-config --libs`
 alias eos='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select'
 
 #inputs
+inputdir=/data/XZZ/80X_20160721_SkimRecoilOnlyMC
+outputdir=/home/heli/XZZ/80X_20160721_SkimV2_EffSkim
+#outputdir=/data2/XZZ2/80X_20160721_SkimRecoilOnlyMC_EffSkim
+#outputdir=/data2/XZZ2/80X_20160721_SkimRecoilOnlyMC_EffSkim
 #inputdir=/data/XZZ/80X_20160721_SkimV4
 #outputdir=/data2/XZZ2/80X_20160721_SkimV4_EffSkim
-inputdir=/data/XZZ/80X_20160721_SkimV3
-outputdir=/data2/XZZ2/80X_20160721_SkimV3_EffSkim
+#inputdir=/data/XZZ/80X_20160721_SkimV3
+#outputdir=/data2/XZZ2/80X_20160721_SkimV3_EffSkim
 #inputdir=/data2/XZZ2/80X_20160721_SkimV2
 #outputdir=/data/XZZ/80X_20160721_SkimV2_EffSkim
 #inputdir=/eos/cms/store/caf/user/heli/XZZ/80X_20160721_Skim
@@ -46,13 +50,18 @@ mkdir -p ${outputdir}
 njob="0"
 
 #for infile in $(ls $inputdir/*.root|grep -v 2016B|grep -v DYJetsToLL|grep -v BulkGrav);
-#for infile in  $inputdir/*.root ;
 #for infile in $(eos ls $inputdir/*.root | grep root |grep  Run2016 | grep killdup );
 #for infile in $(ls $inputdir/*.root|grep -v Run2016);
 #for infile in $(ls $inputdir/*.root | grep root |grep  Run2016 | grep killdup );
 #for infile in $(ls $inputdir/*.root | grep root |grep  Run2016BCD );
+#for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1.root;
 #for infile in $inputdir/DYJetsToLL_M50.root;
-for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1.root;
+#for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth.root;
+#for infile in $inputdir/DYJetsToLL_M50_RecoilSmooth.root;
+#for infile in $inputdir/DYJetsToLL_M50_RecoilGraph.root;
+#for infile in $inputdir/DYJetsToLL_M50_Recoil*.root;
+#for infile in  $inputdir/*.root ;
+for infile in $inputdir/SingleEMU_Run2016BCD_PromptReco.root;
 do
 #  echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"

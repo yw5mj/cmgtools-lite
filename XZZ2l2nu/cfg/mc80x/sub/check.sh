@@ -1,7 +1,8 @@
 #!/bin/sh
 
 dir=mc2
-out=/data2/XZZ2/80X_20160810_Chunks/resub
+out=/home/heli/80X_20160816_Chunks/
+#out=/data2/XZZ2/80X_20160810_Chunks/resub
 
 if [ ! -e "$out" ]; then
   echo "ERROR:: Do not exist output directory $out, exist... "
