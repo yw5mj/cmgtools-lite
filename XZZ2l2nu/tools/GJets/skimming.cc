@@ -21,7 +21,9 @@ bool addZrapidity = true;
 bool doRecoil = true;
 bool correctData = false;
 bool doRecoilUseSmooth = true;
-bool doRecoilUseGraph = false; 
+bool doRecoilUseGraph = true;
+bool lightWeight = true;
+ 
 int main(int argc, char** argv) {
 
   if( argc<6 ) {
@@ -56,6 +58,17 @@ int main(int argc, char** argv) {
 
   // tree
   TTree* tree = (TTree*)finput->Get("tree");
+
+  // light weight skim
+  if (lightWeight){
+    tree->SetBranchStatus("lep_*",0);
+    tree->SetBranchStatus("jet_*",0);
+    tree->SetBranchStatus("llnunu_LV_*",0);
+    tree->SetBranchStatus("llnunu_TuneP_LV_*",0);
+    tree->SetBranchStatus("triggers*",0);
+    tree->SetBranchStatus("llnunu_l1_l1_leps*",0);
+    tree->SetBranchStatus("llnunu_l1_l2_leps*",0);
+  }
 
   // out_tree
   //TTree* tree_out = tree->CopyTree(Cuts.c_str());
@@ -159,7 +172,10 @@ int main(int argc, char** argv) {
   Float_t llnunu_l1_l2_eta;
   Int_t llnunu_l1_l1_pdgId;
   Int_t llnunu_l1_l2_pdgId;
- 
+
+  Float_t llnunu_deltaPhi, llnunu_TuneP_deltaPhi, llnunu_TuneP_mt, llnunu_CosdphiZMet;
+  Float_t llnunu_dPTPara, llnunu_dPTParaRel, llnunu_dPTPerp, llnunu_dPTPerpRel, llnunu_metOvSqSET, llnunu_l2_sumEt;
+  Float_t llnunu_l1_TuneP_pt, llnunu_l1_TuneP_eta, llnunu_l1_TuneP_phi, llnunu_l1_TuneP_mass; 
 
   tree->SetBranchAddress("llnunu_mt",&llnunu_mt);
   tree->SetBranchAddress("llnunu_l1_mass",&llnunu_l1_mass);
@@ -179,6 +195,19 @@ int main(int argc, char** argv) {
   tree->SetBranchAddress("llnunu_l1_l1_pdgId",&llnunu_l1_l1_pdgId);
   tree->SetBranchAddress("llnunu_l1_l2_pdgId",&llnunu_l1_l2_pdgId);
 
+  tree->SetBranchAddress("llnunu_deltaPhi", &llnunu_deltaPhi);
+  tree->SetBranchAddress("llnunu_TuneP_deltaPhi", &llnunu_TuneP_deltaPhi);
+  tree->SetBranchAddress("llnunu_TuneP_mt", &llnunu_TuneP_mt);
+  tree->SetBranchAddress("llnunu_CosdphiZMet", &llnunu_CosdphiZMet);
+  tree->SetBranchAddress("llnunu_dPTPara", &llnunu_dPTPara);
+  tree->SetBranchAddress("llnunu_dPTParaRel", &llnunu_dPTParaRel);
+  tree->SetBranchAddress("llnunu_dPTPerp", &llnunu_dPTPerp);
+  tree->SetBranchAddress("llnunu_dPTPerpRel", &llnunu_dPTPerpRel);
+  tree->SetBranchAddress("llnunu_metOvSqSET", &llnunu_metOvSqSET);
+  tree->SetBranchAddress("llnunu_l2_sumEt", &llnunu_l2_sumEt);
+  tree->SetBranchAddress("llnunu_l1_TuneP_pt", &llnunu_l1_TuneP_pt);
+  tree->SetBranchAddress("llnunu_l1_TuneP_eta", &llnunu_l1_TuneP_eta);
+  tree->SetBranchAddress("llnunu_l1_TuneP_phi", &llnunu_l1_TuneP_phi);
 
   // old met 
   Float_t llnunu_l2_pt_old, llnunu_l2_phi_old, llnunu_mt_old;
@@ -387,8 +416,8 @@ int main(int argc, char** argv) {
         *(pileup_weights.at(j)) = pileup_hists.at(j)->GetBinContent(pileup_hists.at(j)->FindBin(nTrueInt));
       }
     }
-    double met_para = llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi);
-    double met_perp = llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi);
+    Float_t met_para = llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi);
+    Float_t met_perp = llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi);
     if ( doRecoil && ((isData &&correctData)||isDyJets) ) {
       if (abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13) {
         Int_t idd=1;
@@ -482,29 +511,40 @@ int main(int argc, char** argv) {
           }
         }
       }
-    }
-    Float_t met_x;
-    Float_t met_y;
-    Float_t et1;
-    Float_t et2;
-  
-    if (doRecoil && (isData || isDyJets) ) {
 
+      // recalculate vars
+
+      // store some essential old vars
       llnunu_l2_pt_old = llnunu_l2_pt;
       llnunu_l2_phi_old = llnunu_l2_phi;
       llnunu_mt_old = llnunu_mt;
-      met_x = met_para*cos(llnunu_l1_phi)-met_perp*sin(llnunu_l1_phi);
-      met_y = met_para*sin(llnunu_l1_phi)+met_perp*cos(llnunu_l1_phi);
+
+      // recalculate
+      llnunu_l2_px = met_para*cos(llnunu_l1_phi)-met_perp*sin(llnunu_l1_phi);
+      llnunu_l2_py = met_para*sin(llnunu_l1_phi)+met_perp*cos(llnunu_l1_phi);
       TVector2 vec_met;
-      vec_met.Set(met_x, met_y);
-      llnunu_l2_px = met_x;
-      llnunu_l2_py = met_y;
+      vec_met.Set(llnunu_l2_px, llnunu_l2_py);
       llnunu_l2_pt = vec_met.Mod();
       llnunu_l2_phi = TVector2::Phi_mpi_pi(vec_met.Phi());
+      
+      llnunu_deltaPhi = TVector2::Phi_mpi_pi(llnunu_l2_phi-llnunu_l1_phi);
+      llnunu_TuneP_deltaPhi = TVector2::Phi_mpi_pi(llnunu_l2_phi-llnunu_l1_TuneP_phi);
+      llnunu_CosdphiZMet = TMath::Cos(llnunu_deltaPhi);
+          
+      llnunu_dPTPara = fabs(llnunu_l1_pt+llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi)); 
+      llnunu_dPTParaRel = llnunu_dPTPara/llnunu_l1_pt;
+      llnunu_dPTPerp = fabs(llnunu_l1_pt+llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi));
+      llnunu_dPTPerpRel = llnunu_dPTPerp/llnunu_l1_pt;
+      llnunu_metOvSqSET = llnunu_l2_pt/llnunu_l2_sumEt;
 
-      et1 = TMath::Sqrt(llnunu_l1_mass*llnunu_l1_mass + llnunu_l1_pt*llnunu_l1_pt);
-      et2 = TMath::Sqrt(llnunu_l1_mass*llnunu_l1_mass + llnunu_l2_pt*llnunu_l2_pt);
-      llnunu_mt = TMath::Sqrt(2.0*llnunu_l1_mass*llnunu_l1_mass + 2.0* (et1*et2 - llnunu_l1_pt*cos(llnunu_l1_phi)*met_x - llnunu_l1_pt*sin(llnunu_l1_phi)*met_y));
+      Float_t et1 = TMath::Sqrt(llnunu_l1_mass*llnunu_l1_mass + llnunu_l1_pt*llnunu_l1_pt);
+      Float_t et2 = TMath::Sqrt(llnunu_l1_mass*llnunu_l1_mass + llnunu_l2_pt*llnunu_l2_pt);
+      llnunu_mt = TMath::Sqrt(2.0*llnunu_l1_mass*llnunu_l1_mass + 2.0* (et1*et2 - llnunu_l1_pt*cos(llnunu_l1_phi)*llnunu_l2_px - llnunu_l1_pt*sin(llnunu_l1_phi)*llnunu_l2_py));
+
+      et1 = TMath::Sqrt(llnunu_l1_TuneP_mass*llnunu_l1_TuneP_mass + llnunu_l1_TuneP_pt*llnunu_l1_TuneP_pt);
+      et2 = TMath::Sqrt(llnunu_l1_TuneP_mass*llnunu_l1_TuneP_mass + llnunu_l2_pt*llnunu_l2_pt);
+      llnunu_TuneP_mt = TMath::Sqrt(2.0*llnunu_l1_TuneP_mass*llnunu_l1_TuneP_mass + 2.0* (et1*et2 - llnunu_l1_TuneP_pt*cos(llnunu_l1_TuneP_phi)*llnunu_l2_px - llnunu_l1_TuneP_pt*sin(llnunu_l1_TuneP_phi)*llnunu_l2_py));
+
     }
 
     //

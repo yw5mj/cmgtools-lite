@@ -42,9 +42,9 @@ do
   #outfile="${outfile/\/vvTreeProducer\/tree/}"
 
   # if do Special using Zjets:
-  #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilGraph}"
+  outfile="${outfile/\/vvTreeProducer\/tree/_RecoilGraph}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilNoSmooth}"
-  outfile="${outfile/\/vvTreeProducer\/tree/_RecoilSmooth}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilSmooth}"
 
   inSkimFile=${infile/vvTreeProducer\/tree.root/skimAnalyzerCount\/SkimReport.txt}
 
