@@ -198,7 +198,7 @@ int main(int argc, char** argv) {
   TFile* fMtk = TFile::Open("muontrackingsf.root");
   TH1F* mtksf=(TH1F*)fMtk->Get("hist_ratio_eta");
 
-  Double_t effdt1a,effdt2a,effmc1a,effmc2a,errdt1a,errdt2a,errmc1a,errmc2a,effdt1,effdt2,effmc1,effmc2,errdt1,errdt2,errmc1,errmc2,trgsfall,idsfall,isosfall,trgsfallerr,idsfallerr,isosfallerr,trksfall,trksfallerr,temp1,temp2;
+  Double_t effdt1a,effdt2a,effmc1a,effmc2a,errdt1a,errdt2a,errmc1a,errmc2a,effdt1,effdt2,effmc1,effmc2,errdt1,errdt2,errmc1,errmc2,trgsfall,idsfall,isosfall,trgsfallerr,idsfallerr,isosfallerr,trksfall,trksfallerr,temp1,temp2,tkhighptdt1,tkhighptmc1,highptdt1,highptmc1,tkhighptdt2,tkhighptmc2,highptdt2,highptmc2;
   Double_t trgsfall_up,trgsfall_dn;
   TBranch *b_trgsfall=tree_out->Branch("trgsf",&trgsfall,"trgsf/D");
   TBranch *b_isosfall=tree_out->Branch("isosf",&isosfall,"isosf/D");
@@ -209,6 +209,14 @@ int main(int argc, char** argv) {
   TBranch *b_trgsfall_dn=tree_out->Branch("trgsf_dn",&trgsfall_dn,"trgsf_dn/D");
   TBranch *b_isosfallerr=tree_out->Branch("isosf_err",&isosfallerr,"isosf_err/D");
   TBranch *b_idsfallerr=tree_out->Branch("idsf_err",&idsfallerr,"idsf_err/D");
+  TBranch *b_tkhighpt_dt_eff_m1=tree_out->Branch("tkhighpt_dt_eff_m1",&tkhighptdt1,"tkhighpt_dt_eff_m1/D");
+  TBranch *b_tkhighpt_mc_eff_m1=tree_out->Branch("tkhighpt_mc_eff_m1",&tkhighptmc1,"tkhighpt_mc_eff_m1/D");
+  TBranch *b_highpt_dt_eff_m1=tree_out->Branch("highpt_dt_eff_m1",&highptdt1,"highpt_dt_eff_m1/D");
+  TBranch *b_highpt_mc_eff_m1=tree_out->Branch("highpt_mc_eff_m1",&highptmc1,"highpt_mc_eff_m1/D");
+  TBranch *b_tkhighpt_dt_eff_m2=tree_out->Branch("tkhighpt_dt_eff_m2",&tkhighptdt2,"tkhighpt_dt_eff_m2/D");
+  TBranch *b_tkhighpt_mc_eff_m2=tree_out->Branch("tkhighpt_mc_eff_m2",&tkhighptmc2,"tkhighpt_mc_eff_m2/D");
+  TBranch *b_highpt_dt_eff_m2=tree_out->Branch("highpt_dt_eff_m2",&highptdt2,"highpt_dt_eff_m2/D");
+  TBranch *b_highpt_mc_eff_m2=tree_out->Branch("highpt_mc_eff_m2",&highptmc2,"highpt_mc_eff_m2/D");
   TBranch *b_trksfallerr=tree_out->Branch("trksf_err",&trksfallerr,"trksf_err/D");
 
   Float_t llnunu_l1_l1_phi, llnunu_l1_l1_eta, llnunu_l1_l2_phi, llnunu_l1_l2_eta,llnunu_l1_l1_pt,llnunu_l1_l2_pt,llnunu_l1_l1_eSCeta,llnunu_l1_l2_eSCeta;
@@ -228,6 +236,14 @@ int main(int argc, char** argv) {
     if (i%10000==0) std::cout << " Events " << i << std::endl;
     tree->GetEntry(i);
     if(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13){
+      tkhighptdt1=tkhpdt->GetBinContent(tkhpdt->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
+      tkhighptmc1=tkhpmc->GetBinContent(tkhpmc->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
+      highptdt1=hpdt->GetBinContent(hpdt->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
+      highptmc1=hpmc->GetBinContent(hpmc->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
+      tkhighptdt2=tkhpdt->GetBinContent(tkhpdt->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
+      tkhighptmc2=tkhpmc->GetBinContent(tkhpmc->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
+      highptdt2=hpdt->GetBinError(hpdt->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
+      highptmc2=hpmc->GetBinError(hpmc->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
       effdt1=tkhpdt->GetBinContent(tkhpdt->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
       effmc1=tkhpmc->GetBinContent(tkhpmc->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
       errdt1=tkhpdt->GetBinError(tkhpdt->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
@@ -332,6 +348,14 @@ int main(int argc, char** argv) {
 
     }
     else if(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11){
+      tkhighptdt1=1;
+      tkhighptmc1=1;
+      highptdt1=1;
+      highptmc1=1;
+      tkhighptdt2=1;
+      tkhighptmc2=1;
+      highptdt2=1;
+      highptmc2=1;
       if(llnunu_l1_l1_pt>200) effdt1=1;
       else effdt1=esfh2->GetBinContent(esfh2->FindBin(llnunu_l1_l1_eSCeta,llnunu_l1_l1_pt));
       if(llnunu_l1_l2_pt>200) effdt2=1;
