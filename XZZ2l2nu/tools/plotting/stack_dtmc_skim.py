@@ -25,8 +25,8 @@ cutChain='tight'
 #cutChain='tightzpt100met200'
 
 channel='el' # can be el or mu or both
-LogY=True
-test=True
+LogY=False
+test=False
 DrawLeptons=True
 doRhoScale=True
 
