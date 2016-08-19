@@ -14,8 +14,10 @@ g++ skimming.cc -o skimming.exe `root-config --cflags` `root-config --libs`
 alias eos='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select'
 
 #inputs
-inputdir=/data/XZZ/80X_20160721_SkimRecoilOnlyMC
-outputdir=/home/heli/XZZ/80X_20160721_SkimV2_EffSkim
+inputdir=/home/heli/XZZ/80X_20160818_light_Skim
+outputdir=/home/heli/XZZ/80X_20160818_light_Skim_EffSkim
+#inputdir=/data/XZZ/80X_20160721_SkimRecoilOnlyMC
+#outputdir=/home/heli/XZZ/80X_20160721_SkimV2_EffSkim
 #outputdir=/data2/XZZ2/80X_20160721_SkimRecoilOnlyMC_EffSkim
 #outputdir=/data2/XZZ2/80X_20160721_SkimRecoilOnlyMC_EffSkim
 #inputdir=/data/XZZ/80X_20160721_SkimV4
@@ -56,11 +58,14 @@ njob="0"
 #for infile in $(ls $inputdir/*.root | grep root |grep  Run2016BCD );
 #for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1.root;
 #for infile in $inputdir/DYJetsToLL_M50.root;
-#for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth.root;
 #for infile in $inputdir/DYJetsToLL_M50_RecoilSmooth.root;
-#for infile in $inputdir/DYJetsToLL_M50_RecoilGraph.root;
 #for infile in $inputdir/DYJetsToLL_M50_Recoil*.root;
 #for infile in  $inputdir/*.root ;
+#for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth.root;
+#for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1_RecoilGraph.root;
+#for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth.root;
+#for infile in $inputdir/DYJetsToLL_M50_RecoilGraph.root;
+#for infile in $(ls $inputdir/*.root|grep -v Single | grep -v DYJets);
 for infile in $inputdir/SingleEMU_Run2016BCD_PromptReco.root;
 do
 #  echo "+++ skimming $infile +++"

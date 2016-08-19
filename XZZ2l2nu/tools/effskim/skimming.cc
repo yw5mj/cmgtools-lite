@@ -44,6 +44,7 @@ int main(int argc, char** argv) {
 
   // light weight skim
   if (lightWeight){
+    /*
     tree->SetBranchStatus("lep_*",0);
     tree->SetBranchStatus("jet_*",0);
     tree->SetBranchStatus("llnunu_LV_*",0);
@@ -51,6 +52,14 @@ int main(int argc, char** argv) {
     tree->SetBranchStatus("triggers*",0);
     tree->SetBranchStatus("llnunu_l1_l1_leps*",0);
     tree->SetBranchStatus("llnunu_l1_l2_leps*",0);
+    */
+    if(tree->FindBranch("lep_*")) tree->SetBranchStatus("lep_*",0);
+    if(tree->FindBranch("jet_*")) tree->SetBranchStatus("jet_*",0);
+    if(tree->FindBranch("llnunu_LV_*")) tree->SetBranchStatus("llnunu_LV_*",0);
+    if(tree->FindBranch("llnunu_TuneP_LV_*")) tree->SetBranchStatus("llnunu_TuneP_LV_*",0);
+    if(tree->FindBranch("triggers*")) tree->SetBranchStatus("triggers*",0);
+    if(tree->FindBranch("llnunu_l1_l2_leps*")) tree->SetBranchStatus("llnunu_l1_l1_leps*",0);
+    if(tree->FindBranch("llnunu_l1_l2_leps*")) tree->SetBranchStatus("llnunu_l1_l2_leps*",0);
   }
 
   if(tree->FindBranch("trgsf"))  tree->SetBranchStatus("trgsf",0);

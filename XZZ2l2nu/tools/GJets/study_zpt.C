@@ -1,7 +1,8 @@
 {
 
 
-TFile* file1 = TFile::Open("80X_20160705/DYJetsToLL_M50/vvTreeProducer/tree.root");
+//TFile* file1 = TFile::Open("80X_20160705/DYJetsToLL_M50/vvTreeProducer/tree.root");
+TFile* file1 = TFile::Open("/data2/XZZ/76X_20160705/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root");
 TFile* file2 = TFile::Open("80X_20160705/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
 
 
