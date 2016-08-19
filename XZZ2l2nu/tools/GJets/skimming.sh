@@ -8,11 +8,16 @@ selection="(1)"
 
 
 # compile
-g++ skimming.cc -o skimming.exe `root-config --cflags` `root-config --libs`
+g++ -c KalmanMuonCalibrator.cc -o KalmanMuonCalibrator.o `root-config --cflags` -I.
+g++ -c skimming.cc -o skimming.o `root-config --cflags` -I. 
+g++ KalmanMuonCalibrator.o skimming.o -o skimming.exe `root-config --cflags` `root-config --libs` -lMinuit2 -I. -L.
 
 #inputs
-inputdir=/data2/XZZ2/80X_20160721_LinksForSkimV3
-outputdir=/data/XZZ/80X_20160721_SkimRecoilOnlyMC
+inputdir=/home/heli/XZZ/80X_20160818_light
+outputdir=/home/heli/XZZ/80X_20160818_light_Skim
+#outputdir=/home/heli/XZZ/80X_20160818_light_Skim
+#inputdir=/data2/XZZ2/80X_20160721_LinksForSkimV3
+#outputdir=/data/XZZ/80X_20160721_SkimRecoilOnlyMC
 #outputdir=/data/XZZ/80X_20160721_SkimV3
 #outputdir=/data/XZZ/80X_20160721_SkimV4
 #inputdir=/data2/XZZ2/80X_20160724
@@ -33,18 +38,20 @@ njob="0"
 #for infile in $inputdir/*/vvTreeProducer/tree.root ;
 #for infile in $inputdir/DYJetsToLL*/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/DYJetsToLL_M50_MGMLM/vvTreeProducer/tree.root ; 
-#for infile in $inputdir/Sing*/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/DYJetsToLL_M50/vvTreeProducer/tree.root ; 
-for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/Sing*/vvTreeProducer/tree.root ; 
+for infile in $(ls $inputdir/*/vvTreeProducer/tree.root | grep -v Single | grep -v DYJets ); 
 do
   echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/}"
 
-  # if do Special using Zjets:
-  outfile="${outfile/\/vvTreeProducer\/tree/_RecoilGraph}"
+  # options for outputs
+  outfile="${outfile/\/vvTreeProducer\/tree/}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_NoRecoil}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilNoSmooth}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilSmooth}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilGraph}"
 
   inSkimFile=${infile/vvTreeProducer\/tree.root/skimAnalyzerCount\/SkimReport.txt}
 

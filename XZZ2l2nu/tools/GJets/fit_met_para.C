@@ -1,15 +1,20 @@
 
 
 std::string inputdir = 
+  "/home/heli/XZZ/80X_20160818_light_Skim"
   //"/datag/heli/XZZ/80X_20160721_LinksForSkim"
-  "./"
+  //"./"
   ;
 std::string filename =
+  //"DYJetsToLL_M50_NoRecoil"
+  //"DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
+  "SingleEMU_Run2016BCD_PromptReco"
   //"DYJetsToLL_M50"
   //"DYJetsToLL_M50_SkimV4"
-  //"DYJetsToLL_M50_MGMLM_Ext1_SkimRecoilOnlyMC_RecoilSmooth"
+  //"DYJetsToLL_M50_MGMLM_Ext1_SkimRecoilOnlyMC_NoRecoil"
   //"DYJetsToLL_M50_MGMLM_Ext1_SkimRecoilOnlyMC_RecoilNoSmooth"
-  "DYJetsToLL_M50_MGMLM_Ext1_SkimRecoilOnlyMC_RecoilGraph"
+  //"DYJetsToLL_M50_MGMLM_Ext1_SkimRecoilOnlyMC_RecoilSmooth"
+  //"DYJetsToLL_M50_MGMLM_Ext1_SkimRecoilOnlyMC_RecoilGraph"
   //"DYJetsToLL_M50_SkimRecoilOnlyMC_RecoilGraph"
   //"DYJetsToLL_M50_SkimRecoilOnlyMC_RecoilSmooth"
   //"DYJetsToLL_M50_SkimRecoilOnlyMC_RecoilNoSmooth"
@@ -43,8 +48,8 @@ std::string weight_selec = std::string("*(genWeight*ZPtWeight*puWeight68075/SumW
 // rho weight
 std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
 
-//std::string selec = base_selec;
-std::string selec = base_selec + weight_selec + rhoweight_selec;
+std::string selec = base_selec;
+//std::string selec = base_selec + weight_selec + rhoweight_selec;
 
 char name[1000];
 std::string histname;

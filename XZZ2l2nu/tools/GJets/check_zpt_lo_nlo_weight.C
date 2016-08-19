@@ -1,15 +1,19 @@
 {
 
 
-TFile* file1 = TFile::Open("DYJetsToLL_M50_SkimRecoilOnlyMC_RecoilGraph.root");
-TFile* file2 = TFile::Open("DYJetsToLL_M50_MGMLM_Ext1_SkimRecoilOnlyMC_RecoilGraph.root");
+TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160818_light_Skim/DYJetsToLL_M50_NoRecoil.root");
+TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160818_light_Skim/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil.root");
 
+std::string tag = "NoRecoil";
 
 TTree* tree1 = (TTree*)file1->Get("tree");
 TTree* tree2 = (TTree*)file2->Get("tree");
 
-Double_t ZPtBins[] = {0,1.25,2.5,3.75,5,6.25,7.5,8.75,10,11.25,12.5,15,17.5,20,25,30,35,40,45,50,60,70,80,90,100,110,130,150,170,190,220,250,300,500,1000};
+//Double_t ZPtBins[] = {0,1.25,2.5,3.75,5,6.25,7.5,8.75,10,11.25,12.5,15,17.5,20,25,30,35,40,45,50,60,70,80,90,100,110,130,150,170,190,220,250,300,500,1000};
+Double_t ZPtBins[] = {0, 1.25, 2.5, 3.75, 5, 6.25, 7.5, 8.75, 10, 11.25, 12.5, 15, 17.5, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 110, 130, 150, 170, 190, 220, 250, 400, 1000};
 Int_t NZPtBins = sizeof(ZPtBins)/sizeof(ZPtBins[0]) - 1;
+
+char name[1000];
 
 TH1D* hzpt1 = new TH1D("hzpt1", "hzpg1", NZPtBins, ZPtBins);
 TH1D* hzpt2 = new TH1D("hzpt2", "hzpg2", NZPtBins, ZPtBins);
@@ -86,8 +90,8 @@ TH1D* hzeta2_wt = new TH1D("hzeta2_wt", "hzeta2_wt", 100, -10, 10);
 hzeta1_wt->Sumw2();
 hzeta2_wt->Sumw2();
 
-
-TFile* fout = new TFile("check_zpt_lo_nlo_weight.root", "recreate");
+sprintf(name, "check_zpt_lo_nlo_weight_%s.root", tag.c_str());
+TFile* fout = new TFile(name, "recreate");
 
 hzpt1->Write();
 hzpt2->Write();
