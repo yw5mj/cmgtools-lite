@@ -73,7 +73,8 @@ int main(int argc, char** argv) {
   // out_tree
   TTree* tree_out = tree->CloneTree(0);
 
-  TFile* ftkhp = TFile::Open("all80x12p9.root");
+  //TFile* ftkhp = TFile::Open("all80x12p9.root");
+  TFile* ftkhp = TFile::Open("muon80x12p9.root");
   TH2F* tkhpdt=(TH2F*)ftkhp->Get("eff_trackHighPt_80Xdata_pteta");
   TH2F* tkhpmc=(TH2F*)ftkhp->Get("eff_trackHighPt_80Xmc_pteta");
   TH2F* hpdt=(TH2F*)ftkhp->Get("eff_HighPt_80Xdata_pteta");
