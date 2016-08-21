@@ -243,8 +243,8 @@ int main(int argc, char** argv) {
       highptmc1=hpmc->GetBinContent(hpmc->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
       tkhighptdt2=tkhpdt->GetBinContent(tkhpdt->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
       tkhighptmc2=tkhpmc->GetBinContent(tkhpmc->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
-      highptdt2=hpdt->GetBinError(hpdt->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
-      highptmc2=hpmc->GetBinError(hpmc->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
+      highptdt2=hpdt->GetBinContent(hpdt->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
+      highptmc2=hpmc->GetBinContent(hpmc->FindBin(llnunu_l1_l2_eta,llnunu_l1_l2_pt));
       effdt1=tkhpdt->GetBinContent(tkhpdt->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
       effmc1=tkhpmc->GetBinContent(tkhpmc->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
       errdt1=tkhpdt->GetBinError(tkhpdt->FindBin(llnunu_l1_l1_eta,llnunu_l1_l1_pt));
