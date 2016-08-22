@@ -1,9 +1,9 @@
 {
 
 
-TFile* file1 = TFile::Open("DYJetsToLL_M50.root");
 TFile* file2 = TFile::Open("GJet_Pt_20toInf_DoubleEMEnriched.root");
-
+TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160818_light_Skim/DYJetsToLL_M50.root");
+TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160818_light/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
 
 TTree* tree1 = (TTree*)file1->Get("tree");
 TTree* tree2 = (TTree*)file2->Get("tree");
