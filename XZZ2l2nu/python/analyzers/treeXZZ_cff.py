@@ -68,7 +68,9 @@ vvTreeProducer = cfg.Analyzer(
          NTupleVariable("triggersf",  lambda x : getattr(x,'trgsf',1), help="singleelectron/muon trigger sf"),
          NTupleVariable("triggersfUp",  lambda x : getattr(x,'trgsfUp',1), help="singleelectron/muon trigger sf upper"),
          NTupleVariable("triggersfLo",  lambda x : getattr(x,'trgsfLo',1), help="singleelectron/muon trigger sf lower"),
-         NTupleVariable("rho", lambda ev: ev.rho , float),
+         NTupleVariable("rho", lambda ev: ev.rho, float),
+         NTupleVariable("lheNb", lambda ev: ev.lheNb, int),
+         NTupleVariable("lheNj", lambda ev: ev.lheNj, int),
      ],
 
      globalObjects =  {
@@ -85,9 +87,9 @@ vvTreeProducer = cfg.Analyzer(
          #"ElMu"  : NTupleCollection("elmu",LLType,5, help="electron - muon pair for non-resonant bkg"),
          "selectedLeptons" : NTupleCollection("lep",leptonType,100, help="selected leptons"),
          "genLeptons" : NTupleCollection("genLep", genParticleType, 100, help="Generated leptons (e/mu) from W/Z decays"),
-         "genZBosons" : NTupleCollection("genZ", genParticleType, 100, help="Generated V bosons"),
+         "genZBosons" : NTupleCollection("genZ", tlorentzFourVectorType, 100, help="Generated V bosons"),
          "LLNuNu"     : NTupleCollection("llnunu",LLNuNuType ,5, help="VV candidate with di-lepton and MET"),
-         "genXZZ" : NTupleCollection("genX", VVType, 10, mcOnly=True, help="Generated X->ZZ"),
+         "genXZZ" : NTupleCollection("genX", tlorentzFourVectorType, 10, mcOnly=True, help="Generated X->ZZ"),
 	 "jets"       : NTupleCollection("jet",JetType,100, help="all jets in miniaod"),
          #"LHE_weights"    : NTupleCollection("LHEweight",  weightsInfoType, 1000, help="LHE weight info"),
          #"genJets"       : NTupleCollection("genjet",JetType,100, help="genJets in miniaod"),

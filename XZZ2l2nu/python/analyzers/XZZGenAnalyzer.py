@@ -17,8 +17,14 @@ class XZZGenAnalyzer( Analyzer ):
  
     def declareHandles(self):
         super(XZZGenAnalyzer, self).declareHandles()
-        self.mchandles['genParticles'] = AutoHandle( 'prunedGenParticles', 'std::vector<reco::GenParticle>' )
-                
+        self.mchandles['prunedGenParticles'] = AutoHandle( 'prunedGenParticles', 'std::vector<reco::GenParticle>' )
+        self.mchandles['packedGenParticles'] = AutoHandle( 'packedGenParticles', 'std::vector<pat::PackedGenParticle>' )
+        self.mchandles['LHEinfo'] = AutoHandle('externalLHEProducer',
+                                                  'LHEEventProduct',
+                                                  mayFail=True,
+                                                  fallbackLabel='source',
+                                                  lazy=False )
+               
     def beginLoop(self,setup):
         super(XZZGenAnalyzer,self).beginLoop(setup)
 
@@ -32,37 +38,75 @@ class XZZGenAnalyzer( Analyzer ):
 
     def makeMCInfo(self, event, bosonID = 23):
         verbose = getattr(self.cfg_ana, 'verbose', False)
-        rawGenParticles = self.mchandles['genParticles'].product() 
+        pruned = self.mchandles['prunedGenParticles'].product()
+        packed = self.mchandles['packedGenParticles'].product()
 
+        event.genParticles = [ p for p in packed ]
         selectedGenParticles = []
         event.genZBosons = []
         event.genLeptons = []
+        event.mother_genLeptons = []
         event.genElectrons = []
         event.genMuons = []
+	event.genLeptonsFsr = []
+	event.genElectronsFsr = []
+	event.genMuonsFsr = []
+        event.genTaus = []
         event.genNeutrinos = []
         event.genJets = []
         event.genXZZ = []
 
-        event.genZBosons = [ p for p in rawGenParticles if (abs(p.pdgId()) == bosonID) and p.numberOfDaughters() > 0 and abs(p.daughter(0).pdgId()) != 23 ]
+        #event.genZBosons = [ p for p in pruned if (abs(p.pdgId()) == bosonID) and p.numberOfDaughters() > 0 ]
         
-        for zboson in event.genZBosons:
-            selectedGenParticles.append(zboson)
-            for i in xrange( zboson.numberOfDaughters() ):
-                dau = zboson.daughter(i)
-                dauid = dau.pdgId()
-                if abs(dauid) in [11,13]:
-                    event.genLeptons.append(dau)
-                    selectedGenParticles.append(dau)
-                    if abs(dauid)==11: event.genElectrons.append(dau)
-                    if abs(dauid)==13: event.genMuons.append(dau)
-                elif abs(dauid) in [12,14,16]:
-                    event.genNeutrinos.append(dau)
-                    selectedGenParticles.append(dau)
-                elif abs(dauid) in range(7):
-                    event.genJets.append(dau)
- 
-        event.genParticles = selectedGenParticles    
-        
+        #for zboson in event.genZBosons:
+        #    selectedGenParticles.append(zboson)
+        #    for i in xrange( zboson.numberOfDaughters() ):
+        #        dau = zboson.daughter(i)
+        #        dauid = dau.pdgId()
+        #        if abs(dauid) in [11,13]:
+        #            event.genLeptons.append(dau)
+        #            selectedGenParticles.append(dau)
+        #            if abs(dauid)==11: event.genElectrons.append(dau)
+        #            if abs(dauid)==13: event.genMuons.append(dau)
+        #        elif abs(dauid) in [12,14,16]:
+        #            event.genNeutrinos.append(dau)
+        #            selectedGenParticles.append(dau)
+        #        elif abs(dauid) in range(7):
+        #            event.genJets.append(dau)
+
+        event.genMuons = [ p for p in pruned if abs(p.pdgId())==13 and  p.status()==1 and p.isPromptFinalState() and p.fromHardProcessFinalState() ]
+        event.genElectrons = [ p for p in pruned if abs(p.pdgId())==11 and  p.status()==1 and p.isPromptFinalState() and p.fromHardProcessFinalState() ]
+        event.genTaus = [ p for p in pruned if abs(p.pdgId())==15 and p.status()==2  and p.isPromptDecayed() ]
+        event.genNeutrinos = [ p for p in pruned if (abs(p.pdgId()) in [12,14,16]) and p.isPromptFinalState() and p.fromHardProcessFinalState() ]
+        event.genMuonsFsr = [ p for p in pruned if abs(p.pdgId())==13 and  p.status()==1 and p.isPromptFinalState() and not p.fromHardProcessFinalState() ]
+        event.genElectronsFsr = [ p for p in pruned if abs(p.pdgId())==11 and  p.status()==1 and p.isPromptFinalState() and not p.fromHardProcessFinalState() ]
+
+        event.genLeptons = event.genMuons + event.genElectrons + event.genTaus
+        event.genLeptonsFsr = event.genMuonsFsr + event.genElectronsFsr
+
+        if len(event.genLeptonsFsr)==0:
+	    # for no fsr case
+            if len(event.genLeptons)==2:
+                Z = event.genLeptons[0].p4()+event.genLeptons[1].p4()
+                event.genZBosons.append(Z)
+        elif len(event.genLeptonsFsr)>=2 and len(event.genLeptons)==2:
+            # for fsr case, find the mother Fsr leptons and create the Z
+            fsr_mothers = [ p.mother(0) for p in event.genLeptonsFsr ]
+            event.mother_genLeptons = event.genLeptons
+            for ip, p in enumerate(event.mother_genLeptons):
+                if p.mother(0) in fsr_mothers:
+                    event.mother_genLeptons[ip] = p.mother(0)
+            Z = event.mother_genLeptons[0].p4()+event.mother_genLeptons[1].p4()
+            event.genZBosons.append(Z)
+
+        # neutrinos to create another Z
+        if len(event.genNeutrinos)==2:
+            Z = event.genNeutrinos[0].p4()+event.genNeutrinos[1].p4()
+            event.genZBosons.append(Z)
+                    
+            
+            
+
         if len(event.genZBosons)>=2 and len(event.genLeptons)>=2 and len(event.genNeutrinos)>=2:
             event.genIsXZZ2l2nu = True
         else: 
@@ -89,25 +133,8 @@ class XZZGenAnalyzer( Analyzer ):
 
         
         if len(event.genZBosons)>=2 :
-            #for idx,genz in enumerate(event.genZBosons):
-                #if genz.numberOfMothers()>1: 
-                #    print 'GenZ ['+str(idx)+']: '
-                #    print '   numberOfMothers(): '+str(genz.numberOfMothers())
-            #    print 'GenZ ['+str(idx)+']: mother(0) '
-            #    print genz.mother(0)
-
-            #if event.genZBosons[0].mother(0) == event.genZBosons[1].mother(0):
-            # if come from the same mother, take the mother
-            #    event.genXZZ.append(event.genZBosons[0].mother(0))
-            # not use the mother directly, because it doesn't seem to give the right mt... not yet understand why.     
-            # create a new one sum the two Zs instead.
-            #else:
-            # if not, create a new one sum the two Zs
-            genX = Pair(event.genZBosons[0],event.genZBosons[1],0)
-            #print genX
-            #print 'et='+str(genX.et())+'; Et='+str(genX.energy()*genX.pt()/genX.p())+'; mt='+str(genX.mt())+'; Mt='+str(math.sqrt((genX.energy()*genX.pt()/genX.p())**2-genX.pt()**2))
-            #print 'pt='+str(genX.pt())+'; p='+str(genX.p())+'; E='+str(genX.energy())
-            event.genXZZ.append({'pair':genX})
+            genX = event.genZBosons[0].p4()+event.genZBosons[1].p4()
+            event.genXZZ.append(genX)
             
 
         if self.cfg_ana.verbose and event.genIsXZZ2l2nu:
@@ -115,8 +142,22 @@ class XZZGenAnalyzer( Analyzer ):
             print "N gen Leptons: "+str(len(event.genLeptons))
             print "N gen neutrinos: "+str(len(event.genNeutrinos))
 
+        # get n partons info
+        event.lheNb = 0
+        event.lheNj = 0
+        lheEvent = self.mchandles['LHEinfo'].product().hepeup();
+        lheParticles = lheEvent.PUP;
+        for idxParticle in range(len(lheParticles)):
+            idx = abs(lheEvent.IDUP[idxParticle])
+            status = lheEvent.ISTUP[idxParticle]
+            if status == 1 and idx==5:  event.lheNb += 1
+            if status == 1 and ((idx >= 1 and idx <= 6) or idx == 21) : event.lheNj += 1
+              
+
     def process(self, event):
         self.readCollections( event.input )
+
+        
 
         # if not MC, nothing to do
         if not self.cfg_comp.isMC: 

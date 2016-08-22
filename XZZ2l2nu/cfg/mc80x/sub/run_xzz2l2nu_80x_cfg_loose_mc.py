@@ -86,9 +86,11 @@ if test==1:
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
     #selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
+    #selectedComponents = [DY1JetsToLL_M50_MGMLM]
+    selectedComponents = [DY1JetsToLL_M50_MGMLM, DY2JetsToLL_M50_MGMLM, DY3JetsToLL_M50_MGMLM, DY4JetsToLL_M50_MGMLM, DYBJetsToLL_M50_MGMLM]
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1600] 
     #selectedComponents = signalSamples
-    selectedComponents = signalSamples+backgroundSamples
+    #selectedComponents = signalSamples+backgroundSamples[4:]
     #selectedComponents = backgroundSamples[1:4]
     #selectedComponents = [TTTo2L2Nu]
     #selectedComponents = [BulkGravToZZ_narrow_800]
