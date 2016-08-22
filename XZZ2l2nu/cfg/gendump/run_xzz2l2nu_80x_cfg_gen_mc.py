@@ -22,7 +22,10 @@ coreSequence = [
     genAna,
 ]
 
-vvTreeProducer.globalVariables = []
+vvTreeProducer.globalVariables = [
+         NTupleVariable("lheNb", lambda ev: ev.lheNb, int),
+         NTupleVariable("lheNj", lambda ev: ev.lheNj, int),
+]
 vvTreeProducer.globalObjects =  {  }
 vvTreeProducer.collections = {
          "genLeptons" : NTupleCollection("genLep", genParticleType, 100, help="Generated leptons (e/mu) from W/Z decays"),
@@ -44,7 +47,8 @@ sequence = cfg.Sequence(coreSequence+[vvTreeProducer])
 test = 1
 if test==1:
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1000]
-    selectedComponents = [DYJetsToLL_M50]
+    selectedComponents = [DY1JetsToLL_M50_MGMLM]
+    #selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
     for c in selectedComponents:
         c.files = c.files[1]

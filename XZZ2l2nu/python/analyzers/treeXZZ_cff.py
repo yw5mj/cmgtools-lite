@@ -68,7 +68,9 @@ vvTreeProducer = cfg.Analyzer(
          NTupleVariable("triggersf",  lambda x : getattr(x,'trgsf',1), help="singleelectron/muon trigger sf"),
          NTupleVariable("triggersfUp",  lambda x : getattr(x,'trgsfUp',1), help="singleelectron/muon trigger sf upper"),
          NTupleVariable("triggersfLo",  lambda x : getattr(x,'trgsfLo',1), help="singleelectron/muon trigger sf lower"),
-         NTupleVariable("rho", lambda ev: ev.rho , float),
+         NTupleVariable("rho", lambda ev: ev.rho, float),
+         NTupleVariable("lheNb", lambda ev: ev.lheNb, int),
+         NTupleVariable("lheNj", lambda ev: ev.lheNj, int),
      ],
 
      globalObjects =  {

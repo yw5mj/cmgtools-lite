@@ -1,9 +1,9 @@
 {
 
 
-//TFile* file1 = TFile::Open("80X_20160705/DYJetsToLL_M50/vvTreeProducer/tree.root");
-TFile* file1 = TFile::Open("/data2/XZZ/76X_20160705/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root");
-TFile* file2 = TFile::Open("80X_20160705/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
+//TFile* file1 = TFile::Open("/data2/XZZ/76X_20160705/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root");
+TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160818_light/DYJetsToLL_M50/vvTreeProducer/tree.root");
+TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160818_light/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
 
 
 TTree* tree1 = (TTree*)file1->Get("tree");
@@ -22,9 +22,12 @@ TH1D* hzpt2 = new TH1D("hzpt2", "hzpg2", NZPtBins, ZPtBins);
 hzpt1->Sumw2();
 hzpt2->Sumw2();
 
+//tree1->Draw("genZ_pt>>hzpt1", "(ngenZ>0)*(genWeight)");
+//tree2->Draw("genZ_pt>>hzpt2", "(ngenZ>0)*(genWeight)");
 
-tree1->Draw("genZ_pt>>hzpt1", "(ngenZ>0)*(genWeight)");
-tree2->Draw("genZ_pt>>hzpt2", "(ngenZ>0)*(genWeight)");
+tree1->Draw("genZ_pt>>hzpt1", "(ngenZ>0)");
+tree2->Draw("genZ_pt>>hzpt2", "(ngenZ>0)");
+
 
 hzpt1->SetLineColor(2);
 hzpt2->SetLineColor(4);

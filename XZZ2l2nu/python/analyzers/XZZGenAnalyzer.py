@@ -17,10 +17,14 @@ class XZZGenAnalyzer( Analyzer ):
  
     def declareHandles(self):
         super(XZZGenAnalyzer, self).declareHandles()
-        #self.mchandles['genParticles'] = AutoHandle( 'prunedGenParticles', 'std::vector<reco::GenParticle>' )
         self.mchandles['prunedGenParticles'] = AutoHandle( 'prunedGenParticles', 'std::vector<reco::GenParticle>' )
         self.mchandles['packedGenParticles'] = AutoHandle( 'packedGenParticles', 'std::vector<pat::PackedGenParticle>' )
-                
+        self.mchandles['LHEinfo'] = AutoHandle('externalLHEProducer',
+                                                  'LHEEventProduct',
+                                                  mayFail=True,
+                                                  fallbackLabel='source',
+                                                  lazy=False )
+               
     def beginLoop(self,setup):
         super(XZZGenAnalyzer,self).beginLoop(setup)
 
@@ -34,7 +38,6 @@ class XZZGenAnalyzer( Analyzer ):
 
     def makeMCInfo(self, event, bosonID = 23):
         verbose = getattr(self.cfg_ana, 'verbose', False)
-        #rawGenParticles = self.mchandles['genParticles'].product() 
         pruned = self.mchandles['prunedGenParticles'].product()
         packed = self.mchandles['packedGenParticles'].product()
 
@@ -52,7 +55,6 @@ class XZZGenAnalyzer( Analyzer ):
         event.genJets = []
         event.genXZZ = []
 
-        #event.genZBosons = [ p for p in rawGenParticles if (abs(p.pdgId()) == bosonID) and p.numberOfDaughters() > 0 and abs(p.daughter(0).pdgId()) != 23 ]
         #event.genZBosons = [ p for p in pruned if (abs(p.pdgId()) == bosonID) and p.numberOfDaughters() > 0 ]
         
         #for zboson in event.genZBosons:
@@ -140,8 +142,22 @@ class XZZGenAnalyzer( Analyzer ):
             print "N gen Leptons: "+str(len(event.genLeptons))
             print "N gen neutrinos: "+str(len(event.genNeutrinos))
 
+        # get n partons info
+        event.lheNb = 0
+        event.lheNj = 0
+        lheEvent = self.mchandles['LHEinfo'].product().hepeup();
+        lheParticles = lheEvent.PUP;
+        for idxParticle in range(len(lheParticles)):
+            idx = abs(lheEvent.IDUP[idxParticle])
+            status = lheEvent.ISTUP[idxParticle]
+            if status == 1 and idx==5:  event.lheNb += 1
+            if status == 1 and ((idx >= 1 and idx <= 6) or idx == 21) : event.lheNj += 1
+              
+
     def process(self, event):
         self.readCollections( event.input )
+
+        
 
         # if not MC, nothing to do
         if not self.cfg_comp.isMC: 
