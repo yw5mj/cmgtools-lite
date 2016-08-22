@@ -57,13 +57,13 @@ weightsInfoType = NTupleObjectType("WeightsInfo", mcOnly=True, variables = [
 ### BASIC VERSION WITH ONLY MAIN LEPTON ID CRITERIA
 leptonType = NTupleObjectType("lepton", baseObjectTypes = [ particleType ], variables = [
     NTupleVariable("charge",   lambda x : x.charge(), int),
-    NTupleVariable("hasgen",  lambda x : getattr(x,"hasgen",-1), help="has gen particle"),
-    NTupleVariable("ptErr",  lambda x : x.ptErr() if hasattr(x,'istag') and x.istag else -999, help="pt Error"),
-    NTupleVariable("TuneP_pt",  lambda x : x.TuneP_pt() if hasattr(x,'TuneP_pt') and ((hasattr(x,'istag') and x.istag) or (not hasattr(x,'istag'))) else x.pt(), help="TuneP Pt for muon"),
-    NTupleVariable("TuneP_ptErr",  lambda x : x.TuneP_ptErr() if hasattr(x,'TuneP_ptErr') and ((hasattr(x,'istag') and x.istag) or (not hasattr(x,'istag'))) else x.ptErr(), help="TuneP Pt error for muon"),
-    NTupleVariable("TuneP_eta",  lambda x : x.TuneP_eta() if hasattr(x,'TuneP_eta') and ((hasattr(x,'istag') and x.istag) or (not hasattr(x,'istag'))) else x.eta(), help="TuneP Pt for muon"),
-    NTupleVariable("TuneP_phi",  lambda x : x.TuneP_phi() if hasattr(x,'TuneP_phi') and ((hasattr(x,'istag') and x.istag) or (not hasattr(x,'istag'))) else x.phi(), help="TuneP Pt for muon"),
-    NTupleVariable("TuneP_type",  lambda x : x.TuneP_type() if hasattr(x,'TuneP_type') and  ((hasattr(x,'istag') and x.istag) or (not hasattr(x,'istag'))) else -999, help="TuneP type for muon, https://cmssdt.cern.ch/SDT/doxygen/CMSSW_7_6_3_patch2/doc/html/df/de3/classreco_1_1Muon.html#afceb985a23ee1d456e4dc91391f2e7fe"),
+    NTupleVariable("hasgen",  lambda x : getattr(x,"hasgen",-1), int, help="has gen particle"),
+    NTupleVariable("ptErr",  lambda x : x.ptErr() if abs(x.pdgId())==13 else -999, help="pt Error"),
+    NTupleVariable("TuneP_pt",  lambda x : x.TuneP_pt() if abs(x.pdgId())==13 else x.pt(), help="TuneP Pt for muon"),
+    NTupleVariable("TuneP_ptErr",  lambda x : x.physObj.tunePMuonBestTrack().ptError() if abs(x.pdgId())==13 else -999, help="TuneP Pt error for muon"),
+    NTupleVariable("TuneP_eta",  lambda x : x.TuneP_eta() if abs(x.pdgId())==13 else x.eta(), help="TuneP eta for muon"),
+    NTupleVariable("TuneP_phi",  lambda x : x.TuneP_phi() if abs(x.pdgId())==13 else x.phi(), help="TuneP phi for muon"),
+    NTupleVariable("TuneP_type",  lambda x : x.physObj.tunePMuonBestTrackType() if abs(x.pdgId())==13 else -999, help="TuneP type for muon, https://cmssdt.cern.ch/SDT/doxygen/CMSSW_7_6_3_patch2/doc/html/df/de3/classreco_1_1Muon.html#afceb985a23ee1d456e4dc91391f2e7fe"),
     # Impact parameter
     NTupleVariable("dxy",   lambda x : x.dxy(), help="d_{xy} with respect to PV, in cm (with sign)"),
     NTupleVariable("dz",    lambda x : x.dz() , help="d_{z} with respect to PV, in cm (with sign)"),
@@ -96,6 +96,7 @@ leptonType = NTupleObjectType("lepton", baseObjectTypes = [ particleType ], vari
     #NTupleVariable("pf1_pt",  lambda x : x.sourceCandidatePtr(1).pt() if x.numberOfSourceCandidatePtrs()>1 else -999 , help="lepton pf1 pt"),
     #NTupleVariable("pf1_eta",  lambda x : x.sourceCandidatePtr(1).eta() if x.numberOfSourceCandidatePtrs()>1 else -999 , help="lepton pf1 eta"),
     #NTupleVariable("pf1_phi",  lambda x : x.sourceCandidatePtr(1).phi() if x.numberOfSourceCandidatePtrs()>1 else -999 , help="lepton pf1 phi"),
+    NTupleVariable("trigerob_HLTbit", lambda x : x.triggerbit if hasattr(x,'triggerbit')  else -100, int, help="Electron matched HLT object path bit"),
 ])
 
 ### EXTENDED VERSION WITH INDIVIUAL DISCRIMINATING VARIABLES
@@ -106,6 +107,7 @@ leptonTypeExtra = NTupleObjectType("leptonExtra", baseObjectTypes = [ leptonType
     # Extra muon ID working points
     NTupleVariable("softMuonId", lambda x : x.muonID("POG_ID_Soft") if abs(x.pdgId())==13 else 1, int, help="Muon POG Soft id"),
     NTupleVariable("pfMuonId",   lambda x : x.muonID("POG_ID_Loose") if abs(x.pdgId())==13 else 1, int, help="Muon POG Loose id"),
+    NTupleVariable("tightMuonId",   lambda x : x.muonID("POG_ID_Tight") if abs(x.pdgId())==13 else 1, int, help="Muon POG Tight id"),
     # Extra electron ID working points
     NTupleVariable("eleCutId2012_full5x5",     lambda x : (1*x.electronID("POG_Cuts_ID_2012_full5x5_Veto") + 1*x.electronID("POG_Cuts_ID_2012_full5x5_Loose") + 1*x.electronID("POG_Cuts_ID_2012_full5x5_Medium") + 1*x.electronID("POG_Cuts_ID_2012_full5x5_Tight")) if abs(x.pdgId()) == 11 else -1, int, help="Electron cut-based id (POG 2012, full5x5 shapes): 0=none, 1=veto, 2=loose, 3=medium, 4=tight"),
     # Extra tracker-related variables
@@ -137,7 +139,6 @@ leptonTypeExtra = NTupleObjectType("leptonExtra", baseObjectTypes = [ leptonType
 #    NTupleVariable("trigerob_eta", lambda x : x.triggerob.eta if hasattr(x,'triggerob') else -100, help="Electron matched HLT object eta"),
 #    NTupleVariable("trigerob_phi", lambda x : x.triggerob.phi if hasattr(x,'triggerob') else -100, help="Electron matched HLT object phi"),
 #    NTupleVariable("trigerob_deltaR", lambda x : x.triggerob.dR if hasattr(x,'triggerob') else -100, help="Electron matched HLT object phi"),
-    NTupleVariable("trigerob_HLTbit", lambda x : x.triggerbit if hasattr(x,'triggerbit')  else -100, int, help="Electron matched HLT object path bit"),
 ])
  
 

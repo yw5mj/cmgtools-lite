@@ -140,7 +140,7 @@ class XZZLeptonAnalyzer( Analyzer ):
         event.selectedMuons.sort(key = lambda l : l.pt(), reverse = True)
         event.selectedElectrons.sort(key = lambda l : l.pt(), reverse = True)
         if self.cfg_comp.isMC:
-            for i in event.selectedLeptons: i.hasgen=i.physObj.genParticle().__nonzero__()
+            for i in event.selectedLeptons: i.hasgen=int(i.physObj.genParticle().__nonzero__())+int(i.physObj.genParticle().__nonzero__() and i.physObj.genParticle().isPromptFinalState())
 
     def makeAllMuons(self, event):
         """

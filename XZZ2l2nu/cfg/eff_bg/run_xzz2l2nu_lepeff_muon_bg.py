@@ -21,10 +21,12 @@ from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
 meffAna = cfg.Analyzer(
     XZZMuonEffTree,
     name='mEffTree',
-    genfilter=False,
     pfbkg=True,
     checktag=True,
-    muHLT="HLT_IsoTkMu27_v*"
+    muHLT=["HLT_IsoMu20_v",
+           "HLT_IsoMu22_v",
+           "HLT_IsoMu27_v",
+           ]
     )
 
 lepeffTreeProducer.globalVariables.extend(
@@ -70,9 +72,9 @@ if test==1:
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        c.files = c.files[0]
-#        c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
-        c.splitFactor = 1
+#        c.files = c.files[0]
+        c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
+#        c.splitFactor = 1
         c.triggers=[]
         c.vetoTriggers = []
 
