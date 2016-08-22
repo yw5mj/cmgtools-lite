@@ -37,9 +37,15 @@ fourVectorType = NTupleObjectType("fourVector", variables = [
 ])
 tlorentzFourVectorType = NTupleObjectType("tlorentzFourVectorType", variables = [
     NTupleVariable("pt",    lambda x : x.Pt()),
+    NTupleVariable("px",    lambda x : x.Px()),
+    NTupleVariable("py",    lambda x : x.Py()),
+    NTupleVariable("pz",    lambda x : x.Pz()),
     NTupleVariable("eta",   lambda x : x.Eta()),
+    NTupleVariable("rapidity",   lambda x : x.Rapidity()),
     NTupleVariable("phi",   lambda x : x.Phi()),
     NTupleVariable("energy",  lambda x : x.E()),
+    NTupleVariable("mass",  lambda x : x.M()),
+    NTupleVariable("mt",  lambda x : x.Mt()),
 ])
 particleType = NTupleObjectType("particle", baseObjectTypes = [ fourVectorType ], variables = [
     NTupleVariable("pdgId",   lambda x : x.pdgId(), int),
@@ -257,6 +263,22 @@ genParticleType = NTupleObjectType("genParticle", baseObjectTypes = [ particleTy
     NTupleVariable("charge",   lambda x : x.threeCharge()/3.0, float),
     NTupleVariable("status",   lambda x : x.status(),int),
 ])
+genParticleWithMotherInfo = NTupleObjectType("genParticleWithMotherInfo", baseObjectTypes = [ genParticleType ], mcOnly=True, variables = [
+    NTupleVariable("isLastCopyBeforeFSR", lambda x : x.isLastCopyBeforeFSR(), int, help="isLastCopyBeforeFSR"),
+    NTupleVariable("motherId", lambda x : x.mother(0).pdgId() if x.mother(0) else 0, int, help="pdgId of the mother of the particle"),
+    NTupleVariable("motherStatus", lambda x : x.mother(0).status() if x.mother(0) else 0, int, help="status of the mother of the particle"),
+    NTupleVariable("motherisLastCopyBeforeFSR", lambda x : x.mother(0).isLastCopyBeforeFSR() if x.mother(0) else 0, int, help="isLastCopyBeforeFSR of the mother of the particle"),
+    NTupleVariable("motherPt", lambda x : x.mother(0).pt() if x.mother(0) else 0, float, help="pt of the mother of the particle"),
+    NTupleVariable("motherEta", lambda x : x.mother(0).eta() if x.mother(0) else 0, float, help="eta of the mother of the particle"),
+    NTupleVariable("motherPhi", lambda x : x.mother(0).phi() if x.mother(0) else 0, float, help="phi of the mother of the particle"),
+    NTupleVariable("grandmotherId", lambda x : x.mother(0).mother(0).pdgId() if x.mother(0) and x.mother(0).mother(0) else 0, int, help="pdgId of the grandmother of the particle"),
+    NTupleVariable("grandmotherStatus", lambda x : x.mother(0).mother(0).status() if x.mother(0) and x.mother(0).mother(0) else 0, int, help="status of the grandmother of the particle"),
+    NTupleVariable("grandmotherisLastCopyBeforeFSR", lambda x : x.mother(0).mother(0).isLastCopyBeforeFSR() if x.mother(0) and x.mother(0).mother(0) else 0, int, help="isLastCopyBeforeFSR of the grandmother of the particle"),
+    NTupleVariable("grandmotherPt", lambda x : x.mother(0).mother(0).pt() if x.mother(0) and x.mother(0).mother(0) else 0, float, help="pt of the grandmother of the particle"),
+    NTupleVariable("grandmotherEta", lambda x : x.mother(0).mother(0).eta() if x.mother(0) and x.mother(0).mother(0) else 0, float, help="eta of the grandmother of the particle"),
+    NTupleVariable("grandmotherPhi", lambda x : x.mother(0).mother(0).phi() if x.mother(0) and x.mother(0).mother(0) else 0, float, help="phi of the grandmother of the particle"),
+])
+
 genParticleWithMotherId = NTupleObjectType("genParticleWithMotherId", baseObjectTypes = [ genParticleType ], mcOnly=True, variables = [
     NTupleVariable("motherId", lambda x : x.mother(0).pdgId() if x.mother(0) else 0, int, help="pdgId of the mother of the particle"),
     NTupleVariable("grandmotherId", lambda x : x.mother(0).mother(0).pdgId() if x.mother(0) and x.mother(0).mother(0) else 0, int, help="pdgId of the grandmother of the particle")
