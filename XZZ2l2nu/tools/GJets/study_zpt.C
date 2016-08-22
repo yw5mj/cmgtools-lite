@@ -22,11 +22,11 @@ TH1D* hzpt2 = new TH1D("hzpt2", "hzpg2", NZPtBins, ZPtBins);
 hzpt1->Sumw2();
 hzpt2->Sumw2();
 
-//tree1->Draw("genZ_pt>>hzpt1", "(ngenZ>0)*(genWeight)");
-//tree2->Draw("genZ_pt>>hzpt2", "(ngenZ>0)*(genWeight)");
+tree1->Draw("genZ_pt>>hzpt1", "(ngenZ>0)*(genWeight)");
+tree2->Draw("genZ_pt>>hzpt2", "(ngenZ>0)*(genWeight)");
 
-tree1->Draw("genZ_pt>>hzpt1", "(ngenZ>0)");
-tree2->Draw("genZ_pt>>hzpt2", "(ngenZ>0)");
+//tree1->Draw("genZ_pt>>hzpt1", "(ngenZ>0)");
+//tree2->Draw("genZ_pt>>hzpt2", "(ngenZ>0)");
 
 
 hzpt1->SetLineColor(2);
