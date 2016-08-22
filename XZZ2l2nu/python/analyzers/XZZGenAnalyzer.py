@@ -41,6 +41,7 @@ class XZZGenAnalyzer( Analyzer ):
         pruned = self.mchandles['prunedGenParticles'].product()
         packed = self.mchandles['packedGenParticles'].product()
 
+        event.genParticles = [ p for p in packed ]
         selectedGenParticles = []
         event.genZBosons = []
         event.genLeptons = []
@@ -105,7 +106,6 @@ class XZZGenAnalyzer( Analyzer ):
                     
             
             
-        event.genParticles = event.genMuons + event.genElectrons + event.genMuonsFsr + event.genElectronsFsr + event.genTaus + event.genNeutrinos +event.genZBosons
 
         if len(event.genZBosons)>=2 and len(event.genLeptons)>=2 and len(event.genNeutrinos)>=2:
             event.genIsXZZ2l2nu = True

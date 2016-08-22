@@ -47,7 +47,8 @@ sequence = cfg.Sequence(coreSequence+[vvTreeProducer])
 test = 1
 if test==1:
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1000]
-    selectedComponents = [DY1JetsToLL_M50_MGMLM]
+    #selectedComponents = [DY1JetsToLL_M50_MGMLM]
+    selectedComponents = [DY1JetsToLL_M50_MGMLM, DY2JetsToLL_M50_MGMLM, DY3JetsToLL_M50_MGMLM, DY4JetsToLL_M50_MGMLM, DYBJetsToLL_M50_MGMLM]
     #selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
     for c in selectedComponents:
