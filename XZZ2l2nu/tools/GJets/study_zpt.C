@@ -1,13 +1,15 @@
 {
 
 
-TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160822/DYJetsToLL_M50/vvTreeProducer/tree.root");
+TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160822/DYJetsToLL_M50_Ext/vvTreeProducer/tree.root");
+//TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160822/DYJetsToLL_M50/vvTreeProducer/tree.root");
 TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160822/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
 //TFile* file1 = TFile::Open("/data2/XZZ/76X_20160705/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root");
 //TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160818_light/DYJetsToLL_M50/vvTreeProducer/tree.root");
 //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160818_light/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
 
-std::string tag = "study_zpt";
+std::string tag = "study_zpt_new2";
+//std::string tag = "study_zpt";
 //std::string tag = "study_zpt_old";
 char name[1000];
 
