@@ -39,8 +39,8 @@ tree2->Draw("genZ_pt>>hzpt2", "(ngenZ>0)*(genWeight)");
 hzpt1->SetLineColor(2);
 hzpt2->SetLineColor(4);
 
-hzpt1->Scale(1./hzpt1->Integral());
-hzpt2->Scale(1./hzpt2->Integral());
+hzpt1->Scale(1./hzpt1->Integral(), "width");
+hzpt2->Scale(1./hzpt2->Integral(), "width");
 
 hzpt1->Draw();
 hzpt2->Draw("same");
