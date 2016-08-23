@@ -2,6 +2,7 @@
 #include "TTree.h"
 #include "TBranch.h"
 #include "TH1D.h"
+#include "TF1.h"
 #include "TMath.h"
 #include "TGraphErrors.h"
 #include "TVector2.h"
@@ -18,6 +19,12 @@
 #include "KalmanMuonCalibrator.h"
 
 bool doDyJets = true;
+bool doDyJetsUseSmooth = false;
+bool doDyJetsUseGraph = false;
+bool doDyJetsUseFunction = true;
+bool doDyJetsLOUseSmooth = false;
+bool doDyJetsLOUseSmoothGraph = true;
+bool doDyJetsLOUseFunction = true;
 bool addZrapidity = false;
 bool doRecoil = false;
 bool correctData = false;
@@ -76,7 +83,7 @@ int main(int argc, char** argv) {
 
   // out_tree
   //TTree* tree_out = tree->CopyTree(Cuts.c_str());
-  TTree* tree_out = tree->CloneTree(0);;
+  TTree* tree_out = tree->CloneTree(0);
 
   tree_out->Branch("SumEvents",&SumEvents,"SumEvents/D");
   tree_out->Branch("SumWeights",&SumWeights,"SumWeights/D");
@@ -261,7 +268,7 @@ int main(int argc, char** argv) {
   //
   Float_t ZPtWeight, ZPtWeight_up, ZPtWeight_dn;
   //Float_t PhiStarWeight, PhiStarWeight_up, PhiStarWeight_dn;
-  if (!isData && isDyJets) {
+  if (doDyJets && !isData && isDyJets) {
     tree_out->Branch("ZPtWeight",&ZPtWeight,"ZPtWeight/F");
     tree_out->Branch("ZPtWeight_up",&ZPtWeight_up,"ZPtWeight_up/F");
     tree_out->Branch("ZPtWeight_dn",&ZPtWeight_dn,"ZPtWeight_dn/F");
@@ -274,7 +281,10 @@ int main(int argc, char** argv) {
   TH1D* hdyzptdt;
   TH1D* hdyzptmc;
   TH1D* hdyzpt_dtmc_ratio;
+  TH1D* hdyzpt_dtmc_ratio_smooth;
   TGraphErrors* gdyzpt_dtmc_ratio;
+  TF1* fczpt1;
+  TF1* fczpt2;
 
   TFile* fdyphistar;
   TH1D* hdyphistardt;
@@ -296,6 +306,8 @@ int main(int argc, char** argv) {
   // LO to NLO ZJets
   TFile* f_zjet_lo_to_nlo;
   TH1D* h_zjet_lo_to_nlo;
+  TH1D* h_zjet_lo_to_nlo_smooth;
+  TGraphErrors* g_zjet_lo_to_nlo_smooth;
   
 
   if (doRecoil && ((isData && correctData) || isDyJets)) {
@@ -418,14 +430,25 @@ int main(int argc, char** argv) {
     gr_ratio_met_perp_sigma_dtmc[5] = new TGraphErrors(h_ratio_met_perp_sigma_dtmc[5]);
   }
 
-  if (!isData && isDyJets){
+  if (doDyJets && !isData && isDyJets){
   
-    fdyzpt = new TFile("UnfoldingOutputZPt.root");
-    hdyzptdt = (TH1D*)fdyzpt->Get("hUnfold");
-    hdyzptmc = (TH1D*)fdyzpt->Get("hTruth");
-    hdyzpt_dtmc_ratio = (TH1D*)hdyzptdt->Clone("hdyzpt_dtmc_ratio");
-    hdyzpt_dtmc_ratio->Divide(hdyzptmc);
-    gdyzpt_dtmc_ratio = new TGraphErrors(hdyzpt_dtmc_ratio);
+    fdyzpt = new TFile("dyjets_zpt_weight.root");
+    hdyzptdt = (TH1D*)fdyzpt->Get("hdyzptdt"); 
+    hdyzptmc = (TH1D*)fdyzpt->Get("hdyzptmc"); 
+    hdyzpt_dtmc_ratio = (TH1D*)fdyzpt->Get("hdyzpt_dtmc_ratio"); 
+    hdyzpt_dtmc_ratio_smooth = (TH1D*)fdyzpt->Get("hdyzpt_dtmc_ratio_smooth"); 
+    gdyzpt_dtmc_ratio = (TGraphErrors*)fdyzpt->Get("gdyzpt_dtmc_ratio"); 
+    fczpt1 = (TF1*)fdyzpt->Get("fczpt1"); 
+    fczpt2 = (TF1*)fdyzpt->Get("fczpt2"); 
+    
+
+    // old codes below.
+    //fdyzpt = new TFile("UnfoldingOutputZPt.root");
+    //hdyzptdt = (TH1D*)fdyzpt->Get("hUnfold");
+    //hdyzptmc = (TH1D*)fdyzpt->Get("hTruth");
+    //hdyzpt_dtmc_ratio = (TH1D*)hdyzptdt->Clone("hdyzpt_dtmc_ratio");
+    //hdyzpt_dtmc_ratio->Divide(hdyzptmc);
+    //gdyzpt_dtmc_ratio = new TGraphErrors(hdyzpt_dtmc_ratio);
 
     //fdyphistar = new TFile("UnfoldingOutputPhiStar.root");
     //hdyphistardt = (TH1D*)fdyphistar->Get("hUnfold");
@@ -435,10 +458,14 @@ int main(int argc, char** argv) {
     //gdyphistar_dtmc_ratio = new TGraphErrors(hdyphistar_dtmc_ratio);
   }
 
-  if (!isData && isDyJets && isDyJetsLO){
+  if (doDyJets && !isData && isDyJets && isDyJetsLO){
     // zjets lo to nlo
     f_zjet_lo_to_nlo = TFile::Open("zpt_lo_to_nlo.root");
     h_zjet_lo_to_nlo = (TH1D*)f_zjet_lo_to_nlo->Get("hzptr12");
+    h_zjet_lo_to_nlo->SetName("h_zjet_lo_to_nlo");
+    h_zjet_lo_to_nlo_smooth = (TH1D*)h_zjet_lo_to_nlo->Clone("h_zjet_lo_to_nlo_smooth");
+    g_zjet_lo_to_nlo_smooth = new TGraphErrors(h_zjet_lo_to_nlo_smooth);
+    //doDyJetsLOUseSmooth
   }
 
   // correct Muon Pt
@@ -683,11 +710,9 @@ int main(int argc, char** argv) {
     //PhiStarWeight_up=1.0;
     //PhiStarWeight_dn=1.0;
 
-    if (!isData&&isDyJets) {
+    if (doDyJets && !isData&&isDyJets) {
       
       // zpt weight
-      //if (ngenZ>0) ZPtWeight = gdyzpt_dtmc_ratio->Eval(genZ_pt[0]);
-      //else ZPtWeight = gdyzpt_dtmc_ratio->Eval(llnunu_l1_pt);
       Int_t zptBin=0;
       if (ngenZ>0) {
         zptBin = hdyzpt_dtmc_ratio->FindBin(genZ_pt[0]);
@@ -697,9 +722,23 @@ int main(int argc, char** argv) {
         zptBin = hdyzpt_dtmc_ratio->FindBin(llnunu_l1_pt);
         if (llnunu_l1_pt>1000) zptBin = hdyzpt_dtmc_ratio->FindBin(999);
       }
-      ZPtWeight = hdyzpt_dtmc_ratio->GetBinContent(zptBin);
+      if (doDyJetsUseSmooth) {
+        ZPtWeight = hdyzpt_dtmc_ratio_smooth->GetBinContent(zptBin);
+      }
+      else if (doDyJetsUseGraph) {
+        if (ngenZ>0) ZPtWeight = gdyzpt_dtmc_ratio->Eval(genZ_pt[0]);
+        else ZPtWeight = gdyzpt_dtmc_ratio->Eval(llnunu_l1_pt);
+      }
+      else if (doDyJetsUseFunction) {
+        if (ngenZ>0) ZPtWeight = fczpt2->Eval(genZ_pt[0]);
+        else ZPtWeight = fczpt2->Eval(llnunu_l1_pt);
+      }
+      else { 
+        ZPtWeight = hdyzpt_dtmc_ratio->GetBinContent(zptBin);
+      }
       ZPtWeight_up = ZPtWeight+0.5*hdyzpt_dtmc_ratio->GetBinError(zptBin);
       ZPtWeight_dn = ZPtWeight-0.5*hdyzpt_dtmc_ratio->GetBinError(zptBin);
+
       // put zpt weight in genWeight
       //genWeight *= ZPtWeight;
 
@@ -723,7 +762,16 @@ int main(int argc, char** argv) {
           zptBin = h_zjet_lo_to_nlo->FindBin(llnunu_l1_pt);
           if (llnunu_l1_pt>1000) zptBin = h_zjet_lo_to_nlo->FindBin(999);
         }
-        zjet_lo_to_nlo_wt = h_zjet_lo_to_nlo->GetBinContent(zptBin);
+        if (doDyJetsLOUseSmooth) { 
+          zjet_lo_to_nlo_wt = h_zjet_lo_to_nlo_smooth->GetBinContent(zptBin);
+        }
+        else if (doDyJetsLOUseSmoothGraph) {
+          if (ngenZ>0) zjet_lo_to_nlo_wt = g_zjet_lo_to_nlo_smooth->Eval(genZ_pt[0]);
+          else zjet_lo_to_nlo_wt = g_zjet_lo_to_nlo_smooth->Eval(llnunu_l1_pt);
+        }
+        else {
+          zjet_lo_to_nlo_wt = h_zjet_lo_to_nlo->GetBinContent(zptBin);
+        }
         zjet_lo_to_nlo_wt_err = h_zjet_lo_to_nlo->GetBinError(zptBin);
         ZPtWeight *= zjet_lo_to_nlo_wt;
         ZPtWeight_up *= zjet_lo_to_nlo_wt;

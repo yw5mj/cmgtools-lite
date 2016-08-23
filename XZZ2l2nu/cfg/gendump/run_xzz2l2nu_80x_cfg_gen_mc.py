@@ -48,12 +48,14 @@ test = 1
 if test==1:
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1000]
     #selectedComponents = [DY1JetsToLL_M50_MGMLM]
-    selectedComponents = [DY1JetsToLL_M50_MGMLM, DY2JetsToLL_M50_MGMLM, DY3JetsToLL_M50_MGMLM, DY4JetsToLL_M50_MGMLM, DYBJetsToLL_M50_MGMLM]
+    #selectedComponents = [DY1JetsToLL_M50_MGMLM, DY2JetsToLL_M50_MGMLM, DY3JetsToLL_M50_MGMLM, DY4JetsToLL_M50_MGMLM, DYBJetsToLL_M50_MGMLM]
+    #selectedComponents = [DYJetsToLL_M50, DYJetsToLL_M50_MGMLM_Ext1, DY1JetsToLL_M50_MGMLM, DY2JetsToLL_M50_MGMLM, DY3JetsToLL_M50_MGMLM, DY4JetsToLL_M50_MGMLM, DYBJetsToLL_M50_MGMLM]
+    selectedComponents = [DYJetsToLL_M50_Ext]
     #selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
     for c in selectedComponents:
         c.files = c.files[1]
-        #c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
+        #c.splitFactor = (len(c.files)/30 if len(c.files)>30 else 1)
         c.splitFactor = 1
 
 

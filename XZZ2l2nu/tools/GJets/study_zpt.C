@@ -1,10 +1,15 @@
 {
 
 
+TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160822/DYJetsToLL_M50/vvTreeProducer/tree.root");
+TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160822/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
 //TFile* file1 = TFile::Open("/data2/XZZ/76X_20160705/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root");
-TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160818_light/DYJetsToLL_M50/vvTreeProducer/tree.root");
-TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160818_light/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
+//TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160818_light/DYJetsToLL_M50/vvTreeProducer/tree.root");
+//TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160818_light/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
 
+std::string tag = "study_zpt";
+//std::string tag = "study_zpt_old";
+char name[1000];
 
 TTree* tree1 = (TTree*)file1->Get("tree");
 TTree* tree2 = (TTree*)file2->Get("tree");
@@ -38,9 +43,31 @@ hzpt2->Scale(1./hzpt2->Integral());
 hzpt1->Draw();
 hzpt2->Draw("same");
 
-
 TH1D* hzptr12 = (TH1D*)hzpt1->Clone("hzptr12");
 hzptr12->Divide(hzpt2);
+
+TH1D* hzptsb1 = new TH1D("hzptsb1", "hzptsb1", 100, 0, 1500);
+TH1D* hzptsb2 = new TH1D("hzptsb2", "hzptsb2", 100, 0, 1500);
+
+hzptsb1->Sumw2();
+hzptsb2->Sumw2();
+
+tree1->Draw("genZ_pt>>hzptsb1", "(ngenZ>0)*(genWeight)");
+tree2->Draw("genZ_pt>>hzptsb2", "(ngenZ>0)*(genWeight)");
+
+
+hzptsb1->SetLineColor(2);
+hzptsb2->SetLineColor(4);
+
+hzptsb1->Scale(1./hzptsb1->Integral());
+hzptsb2->Scale(1./hzptsb2->Integral());
+
+hzptsb1->Draw();
+hzptsb2->Draw("same");
+
+
+TH1D* hzptsbr12 = (TH1D*)hzptsb1->Clone("hzptsbr12");
+hzptsbr12->Divide(hzptsb2);
 
 TH1D* hzeta1 = new TH1D("hzeta1", "hzeta1", 100, -10, 10);
 TH1D* hzeta2 = new TH1D("hzeta2", "hzeta2", 100, -10, 10);
@@ -63,8 +90,8 @@ hzeta1->Draw();
 hzeta2->Draw("same");
 
 
-TH1D* hzmass1 = new TH1D("hzmass1", "hzmass1", 100, -10, 10);
-TH1D* hzmass2 = new TH1D("hzmass2", "hzmass2", 100, -10, 10);
+TH1D* hzmass1 = new TH1D("hzmass1", "hzmass1", 100, 50, 180);
+TH1D* hzmass2 = new TH1D("hzmass2", "hzmass2", 100, 50,180);
 
 hzmass1->Sumw2();
 hzmass2->Sumw2();
@@ -121,11 +148,15 @@ hzeta2_wt->Draw("same");
 
 */
 
-TFile* fout = new TFile("study_zpt.root", "recreate");
+sprintf(name, "%s.root", tag.c_str());
+TFile* fout = new TFile(name, "recreate");
 
 hzpt1->Write();
 hzpt2->Write();
 hzptr12->Write();
+hzptsb1->Write();
+hzptsb2->Write();
+hzptsbr12->Write();
 
 hzeta1->Write();
 hzeta2->Write();
