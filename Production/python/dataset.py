@@ -257,22 +257,9 @@ class CMSDataset( BaseDataset ):
         return { 'files':sum(files), 'events':sum(events), 'lumis':sum(lumis) }
 
 
-<<<<<<< HEAD
-        query, qwhat = dataset, "dataset"
-        if "#" in dataset: qwhat = "block"
-        if runmin >0 or runmax > 0:
-            if runmin == runmax:
-                query = "%s run=%d" % (query,runmin)
-            else:
-                print "WARNING: queries with run ranges are slow in DAS"
-                query = "%s run between [%d, %d]" % (query,runmin if runmin > 0 else 1, runmax if runmax > 0 else 999999)
-        dbs='das_client --query="summary %s=%s"'%(qwhat,query)
-        dbsOut = _dasPopen(dbs).readlines()
-=======
     @staticmethod
     def findPrimaryDatasetEntries(dataset, runmin, runmax):
         return self.findPrimaryDatasetSummaries(dataset, runmin, runmax)['events']
->>>>>>> 80X
 
     @staticmethod
     def findPrimaryDatasetNumFiles(dataset, runmin, runmax):
