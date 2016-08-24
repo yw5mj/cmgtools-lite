@@ -242,9 +242,9 @@ class XZZLeptonAnalyzer( Analyzer ):
         # Electron scale calibrations
         if self.cfg_ana.doElectronScaleCorrections:
             for idx,ele in enumerate(allelectrons):
-                print 'LeptonAnalyzer:: ele(',idx,'): before Corr, pT(e) =',ele.pt()
+                #print 'LeptonAnalyzer:: ele(',idx,'): before Corr, pT(e) =',ele.pt()
                 self.electronEnergyCalibrator.correct(ele, event.run)
-                print 'LeptonAnalyzer:: ele(',idx,'):  after Corr, pT(e) =',ele.pt()
+                #print 'LeptonAnalyzer:: ele(',idx,'):  after Corr, pT(e) =',ele.pt()
 
         # Attach the vertex
         for ele in allelectrons:
