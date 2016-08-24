@@ -74,12 +74,13 @@ if test==1:
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #selectedComponents = [SingleMuon_Run2015C_25ns_16Dec]
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2] 
+    selectedComponents = [SingleMuon_Run2016D_PromptReco_v2] 
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2,SingleElectron_Run2016B_PromptReco_v2] 
     #selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
     #selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
-    selectedComponents = [DY1JetsToLL_M50_MGMLM]
+    #selectedComponents = [DY1JetsToLL_M50_MGMLM]
     #selectedComponents = [DY1JetsToLL_M50_MGMLM, DY2JetsToLL_M50_MGMLM, DY3JetsToLL_M50_MGMLM, DY4JetsToLL_M50_MGMLM, DYBJetsToLL_M50_MGMLM]
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1600] 
     #selectedComponents = signalSamples
@@ -89,9 +90,9 @@ if test==1:
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        #c.files = c.files[:1]
-        c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
-        #c.splitFactor = 1
+        c.files = c.files[:1]
+        #c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
+        c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso
 
