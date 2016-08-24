@@ -21,7 +21,7 @@ Instructions for package development.
 2. Setup Environment
 
   ```
-  release=CMSSW_8_0_10
+  release=CMSSW_8_0_11
   tag=""
   export SCRAM_ARCH=slc6_amd64_gcc530
   alias cmsenv='eval `scramv1 runtime -sh`'
