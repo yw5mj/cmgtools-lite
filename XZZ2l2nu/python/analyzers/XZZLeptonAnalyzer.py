@@ -4,6 +4,7 @@ from PhysicsTools.Heppy.physicsobjects.Electron import Electron
 from PhysicsTools.Heppy.physicsobjects.Muon import Muon
 from PhysicsTools.HeppyCore.utils.deltar import deltaR
 import PhysicsTools.HeppyCore.framework.config as cfg
+from PhysicsTools.Heppy.physicsutils.ElectronCalibrator import Run2ElectronCalibrator
 from PhysicsTools.HeppyCore.utils.deltar import * 
 from PhysicsTools.Heppy.physicsutils.genutils import *
 import ROOT
@@ -16,6 +17,17 @@ class XZZLeptonAnalyzer( Analyzer ):
     
     def __init__(self, cfg_ana, cfg_comp, looperName ):
         super(XZZLeptonAnalyzer,self).__init__(cfg_ana,cfg_comp,looperName)
+
+        #FIXME: only Embedded works
+        if self.cfg_ana.doElectronScaleCorrections:
+            conf = cfg_ana.doElectronScaleCorrections
+            self.electronEnergyCalibrator = Run2ElectronCalibrator(
+                conf['data'],
+                conf['GBRForest'],
+                cfg_comp.isMC,
+                conf['isSync'] if 'isSync' in conf else False,
+            )
+
     #----------------------------------------
     # DECLARATION OF HANDLES OF LEPTONS STUFF   
     #----------------------------------------
@@ -227,6 +239,13 @@ class XZZLeptonAnalyzer( Analyzer ):
             else:
                 ele.looseiso=True if ele.relIsoea03<0.121 else False
 
+        # Electron scale calibrations
+        if self.cfg_ana.doElectronScaleCorrections:
+            for idx,ele in enumerate(allelectrons):
+                #print 'LeptonAnalyzer:: ele(',idx,'): before Corr, pT(e) =',ele.pt()
+                self.electronEnergyCalibrator.correct(ele, event.run)
+                #print 'LeptonAnalyzer:: ele(',idx,'):  after Corr, pT(e) =',ele.pt()
+
         # Attach the vertex
         for ele in allelectrons:
             ele.associatedVertex = event.goodVertices[0] if hasattr(event,"goodVertices") and len(event.goodVertices)>0 else event.vertices[0]
@@ -389,6 +408,12 @@ setattr(XZZLeptonAnalyzer,"defaultConfig",cfg.Analyzer(
     miniIsolationPUCorr = None, # Allowed options: 'rhoArea' (EAs for 03 cone scaled by R^2), 'deltaBeta', 
                                      # 'raw' (uncorrected), 'weights' (delta beta weights; not validated)
                                      # Choose None to just use the individual object's PU correction
+    doElectronScaleCorrections = {
+        'data' : 'EgammaAnalysis/ElectronTools/data/ScalesSmearings/80X_ichepV1_2016_ele',
+        'GBRForest': ('$CMSSW_BASE/src/CMGTools/XZZ2l2nu/data/GBRForest_data_ICHEP16_combined.root',
+                      'gedelectron_p4combination_25ns'),
+        'isSync': False
+    },
     do_filter=True,
     )
 )
