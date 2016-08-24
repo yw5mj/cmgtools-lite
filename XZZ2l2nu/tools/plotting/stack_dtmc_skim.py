@@ -9,7 +9,7 @@ from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 #tag="TkHptId_NewPuMuSf_MuPtScale_MCRecoilGraph_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="HptId_NewPuMuSf_MuPtScale_MCRecoilGraph_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
-tag="NewPuMuSf_MuPtScale_MCRecoilGraph_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
+tag="BigZJets_NewPuMuSf_MuPtScale_MCRecoilGraph_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="Test_MCRecoilSmooth_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="BigZJetsMC_NewRecoil_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="BigZJetsMC_MCRecoilSmooth_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
@@ -27,7 +27,7 @@ cutChain='tight'
 #cutChain='tightzpt100met200'
 
 channel='el' # can be el or mu or both
-LogY=False
+LogY=True
 test=False
 DrawLeptons=True
 doRhoScale=True
@@ -243,21 +243,24 @@ zjetsPlotters=[]
 #zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1_RecoilGraph'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_RecoilSmooth'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_RecoilNoSmooth'] # M50
-zjetsSamples = ['DYJetsToLL_M50_RecoilGraph'] # M50
+#zjetsSamples = ['DYJetsToLL_M50_RecoilGraph'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_BIG'] # M50_BIG = M50 + M50_Ext
 #zjetsSamples = ['DYJetsToLL_M50_BIG_ZPt'] 
+zjetsSamples = ['DYJetsToLL_M50_BIG_RecoilGraph'] # M50
 
 
 for sample in zjetsSamples:
     zjetsPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
-    zjetsPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
+    #zjetsPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
+    zjetsPlotters[-1].addCorrectionFactor('(1)','norm')
     if ZJetsZPtWeight: zjetsPlotters[-1].addCorrectionFactor('ZPtWeight','ZPtWeight')
     #zjetsPlotters[-1].addCorrectionFactor('PhiStarWeight','PhiStarWeight')
     #zjetsPlotters[-1].addCorrectionFactor('xsec','xsec')
     zjetsPlotters[-1].addCorrectionFactor('(1921.8*3)','xsec') # FEWZ NNLO.results_z_m50_nnlo_inclusive_NNPDF30_nlo_as_0118
     #zjetsPlotters[-1].addCorrectionFactor('(1907.0*3)','xsec') # FEWZ NNLO.results_z_m50_nnlo_fsrOn_lowstat_inclusive_NNPDF30_nlo_as_0118
-    zjetsPlotters[-1].addCorrectionFactor('genWeight','genWeight')
+    #zjetsPlotters[-1].addCorrectionFactor('genWeight','genWeight')
+    zjetsPlotters[-1].addCorrectionFactor('ZJetsGenWeight','genWeight')
     zjetsPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     zjetsPlotters[-1].addCorrectionFactor(lepsf,'lepsf')
     allPlotters[sample] = zjetsPlotters[-1]
