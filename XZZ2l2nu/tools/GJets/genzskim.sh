@@ -10,6 +10,9 @@ inputdir=/home/heli/XZZ/80X_20160818_light
 inputdirgen=/home/heli/XZZ/80X_20160822
 #inputdirgen=/data2/XZZ2/80X_20160822
 outputdir=/home/heli/XZZ/80X_20160818_lightgen
+
+mkdir -p $outputdir
+
 for dd in ${inputdir}/DYJets*/vvTreeProducer;
 do 
   infile="${dd}/tree.root";

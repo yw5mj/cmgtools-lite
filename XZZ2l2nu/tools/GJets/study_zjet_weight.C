@@ -1,6 +1,8 @@
 {
   TFile* fout = new TFile("dyjets_zpt_weight.root", "recreate");
 
+  gROOT->ProcessLine(".x tdrstyle.C");
+
   TFile* fdyzpt = new TFile("UnfoldingOutputZPt.root");
   TH1D* hdyzptdt = (TH1D*)fdyzpt->Get("hUnfold");
   TH1D* hdyzptmc = (TH1D*)fdyzpt->Get("hTruth");
@@ -22,7 +24,26 @@
   hdyzpt_dtmc_ratio_smooth->SetLineColor(4);
   hdyzpt_dtmc_ratio_smooth->SetMarkerColor(4);
 
-  TF1* fczpt2 = new TF1("fczpt2", "[0]-[1]*TMath::Erf((x-[2])/[3])+[4]*TMath::Erf((x-[5])/[6])-[7]*TMath::Erf((x-[8])/[9])",0,3000);;
+  //
+  hdyzpt_dtmc_ratio->SetLineColor(1);
+  hdyzpt_dtmc_ratio->SetMarkerColor(1);
+  hdyzpt_dtmc_ratio->SetMarkerStyle(20);
+  hdyzpt_dtmc_ratio->GetXaxis()->SetTitle("gen p_{T}(Z) (GeV)");
+  hdyzpt_dtmc_ratio->GetYaxis()->SetTitle("Data(unfolded)/MC(NLO)");
+  hdyzpt_dtmc_ratio->GetXaxis()->SetTitleOffset(1.25);
+  hdyzpt_dtmc_ratio->GetYaxis()->SetTitleOffset(1.25);
+  hdyzpt_dtmc_ratio->GetXaxis()->SetTitleSize(0.05);
+  hdyzpt_dtmc_ratio->GetYaxis()->SetTitleSize(0.05);
+  hdyzpt_dtmc_ratio->GetXaxis()->SetLabelSize(0.04);
+  hdyzpt_dtmc_ratio->GetYaxis()->SetLabelSize(0.04);
+  
+  
+   
+
+  TF1* fczpt2 = new TF1("fczpt2", "[0]-[1]*TMath::Erf((x-[2])/[3])+[4]*TMath::Erf((x-[5])/[6])-[7]*TMath::Erf((x-[8])/[9])",0,3000);
+  fczpt2->SetLineWidth(2);
+  fczpt2->SetNpx(10000); 
+
   fczpt2->SetParameters(1.02852,0.0949640,19.0422,10.4487,0.0758834,56.1146,41.1653, 0.1, 100, 100);
   //fczpt2->SetParameters(-2.978752, 0.131293, 14.500684, 10.332572, 4.097619, -252.264980, 196.546957, 0.258976, 142.987571, 394.031326);
 
@@ -51,7 +72,8 @@
   std::cout << ");" << std::endl;
 
   char name[3000]; 
-  sprintf(name, "  double weight = %f-%f*TMath::Erf((x-%f)/%f)+%f*TMath::Erf((x-%f)/%f)-%f*TMath::Erf((x-%f)/%f)", 
+  //sprintf(name, "  double weight = %f-%f*TMath::Erf((x-%f)/%f)+%f*TMath::Erf((x-%f)/%f)-%f*TMath::Erf((x-%f)/%f)", 
+  sprintf(name, "  double weight = (%f-%f*TMath::Erf((genZ_pt-%f)/%f)+%f*TMath::Erf((genZ_pt-%f)/%f)-%f*TMath::Erf((genZ_pt-%f)/%f))", 
      fczpt2->GetParameter(0), 
      fczpt2->GetParameter(1), 
      fczpt2->GetParameter(2), 

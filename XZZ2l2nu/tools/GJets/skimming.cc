@@ -24,7 +24,7 @@ bool doDyJetsUseFunction = true;
 bool doDyJetsLOUseSmooth = false;
 bool doDyJetsLOUseFunction = true;
 bool addZrapidity = false;
-bool doRecoil = false;
+bool doRecoil = true;
 bool correctData = false;
 bool doRecoilUseSmooth = true;
 bool doRecoilUseGraph = true;
@@ -32,7 +32,8 @@ bool doRecoilUseGraph = true;
 bool correctMuonPt = true;
 
 bool lightWeight = false;
- 
+bool addZjetsNewGenWeight = true;
+
 int main(int argc, char** argv) {
 
   if( argc<6 ) {
@@ -107,9 +108,18 @@ int main(int argc, char** argv) {
   tree->SetBranchAddress("lumi",&lumi);
   tree->SetBranchAddress("evt",&evt);
 
+  Float_t ZJetsLOSumWeights(49877138);
+  Float_t ZJetsNLOSumWeights(450670522117);
+  Float_t ZJetsLOSumEvents(49877138);
+  Float_t ZJetsNLOSumEvents(28696958);
   Float_t genWeight;
   if (!isData) tree->SetBranchAddress("genWeight",&genWeight);
 
+
+  Float_t ZJetsGenWeight;
+  if (addZjetsNewGenWeight and !isData and isDyJets) {
+    tree_out->Branch("ZJetsGenWeight", &ZJetsGenWeight, "ZJetsGenWeight/F");  
+  }
   // pileup file tags
   std::vector<std::string> pileup_tags = {
     "69200", "68075", "67921",
@@ -282,6 +292,8 @@ int main(int argc, char** argv) {
   TH1D* hdyzpt_dtmc_lo_ratio_smooth;
   TF1* fcdyzpt_dtmc_ratio;
   TF1* fcdyzpt_dtmc_lo_ratio;
+  TH1D* hdyzpt_mc_nlo_lo_ratio;
+  TF1* fcdyzpt_mc_nlo_lo_ratio;
 
   TFile* fdyphistar;
   TH1D* hdyphistardt;
@@ -307,14 +319,14 @@ int main(int argc, char** argv) {
     file_dt_sigma[1] = new TFile("SingleEMU_Run2016BCD_PromptReco_met_para_study_mu.root");
     file_dt_sigma[2] = new TFile("SingleEMU_Run2016BCD_PromptReco_met_para_study_el.root");
     if (isDyJetsLO) {
-      file_mc_sigma[0] = new TFile("DYJetsToLL_M50_MGMLM_Ext1_SkimRecoilOnlyMC_NoRecoil_met_para_study.root");
-      file_mc_sigma[1] = new TFile("DYJetsToLL_M50_MGMLM_Ext1_SkimRecoilOnlyMC_NoRecoil_met_para_study_mu.root");
-      file_mc_sigma[2] = new TFile("DYJetsToLL_M50_MGMLM_Ext1_SkimRecoilOnlyMC_NoRecoil_met_para_study_el.root");
+      file_mc_sigma[0] = new TFile("DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study.root");
+      file_mc_sigma[1] = new TFile("DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_mu.root");
+      file_mc_sigma[2] = new TFile("DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_el.root");
     }
     else {
-      file_mc_sigma[0] = new TFile("DYJetsToLL_M50_SkimV4_met_para_study.root");
-      file_mc_sigma[1] = new TFile("DYJetsToLL_M50_SkimV4_met_para_study_mu.root");
-      file_mc_sigma[2] = new TFile("DYJetsToLL_M50_SkimV4_met_para_study_el.root");
+      file_mc_sigma[0] = new TFile("DYJetsToLL_M50_NoRecoil_met_para_study.root");
+      file_mc_sigma[1] = new TFile("DYJetsToLL_M50_NoRecoil_met_para_study_mu.root");
+      file_mc_sigma[2] = new TFile("DYJetsToLL_M50_NoRecoil_met_para_study_el.root");
     }
     h_dt_met_para_shift[0] = (TH1D*)file_dt_sigma[0]->Get("h_met_para_vs_zpt_mean");
     h_mc_met_para_shift[0] = (TH1D*)file_mc_sigma[0]->Get("h_met_para_vs_zpt_mean");
@@ -423,13 +435,16 @@ int main(int argc, char** argv) {
 
   if (doDyJets && !isData && isDyJets){
   
-    fdyzpt = new TFile("dyjets_zpt_weight_lo_nlo.root");
+    //fdyzpt = new TFile("dyjets_zpt_weight_lo_nlo.root");
+    fdyzpt = new TFile("dyjets_zpt_weight_lo_nlo_sel.root");
     hdyzpt_dtmc_ratio = (TH1D*)fdyzpt->Get("hdyzpt_dtmc_ratio"); 
     hdyzpt_dtmc_lo_ratio = (TH1D*)fdyzpt->Get("hdyzpt_dtmc_lo_ratio"); 
     hdyzpt_dtmc_ratio_smooth = (TH1D*)fdyzpt->Get("hdyzpt_dtmc_ratio_smooth"); 
     hdyzpt_dtmc_lo_ratio_smooth = (TH1D*)fdyzpt->Get("hdyzpt_dtmc_lo_ratio_smooth"); 
     fcdyzpt_dtmc_ratio = (TF1*)fdyzpt->Get("fcdyzpt_dtmc_ratio"); 
     fcdyzpt_dtmc_lo_ratio = (TF1*)fdyzpt->Get("fcdyzpt_dtmc_lo_ratio"); 
+    hdyzpt_mc_nlo_lo_ratio = (TH1D*)fdyzpt->Get("hdyzpt_mc_nlo_lo_ratio"); 
+    fcdyzpt_mc_nlo_lo_ratio = (TF1*)fdyzpt->Get("fcdyzpt_mc_nlo_lo_ratio"); 
   }
 
   // correct Muon Pt
@@ -677,32 +692,31 @@ int main(int argc, char** argv) {
     if (doDyJets && !isData&&isDyJets) {
       
       // zpt weight
-      if (!isDyJetsLO) {
-        Int_t zptBin=0;
-        if (ngenZ>0) {
-          zptBin = hdyzpt_dtmc_ratio->FindBin(genZ_pt[0]);
-          if (genZ_pt[0]>1000) zptBin = hdyzpt_dtmc_ratio->FindBin(999);
-        }
-        else {
-          zptBin = hdyzpt_dtmc_ratio->FindBin(llnunu_l1_pt);
-          if (llnunu_l1_pt>1000) zptBin = hdyzpt_dtmc_ratio->FindBin(999);
-        }
-        if (doDyJetsUseSmooth) {
-          ZPtWeight = hdyzpt_dtmc_ratio_smooth->GetBinContent(zptBin);
-        }
-        else if (doDyJetsUseFunction) {
-          if (ngenZ>0) ZPtWeight = fcdyzpt_dtmc_ratio->Eval(genZ_pt[0]);
-          else ZPtWeight = fcdyzpt_dtmc_ratio->Eval(llnunu_l1_pt);
-        }
-        else { 
-          ZPtWeight = hdyzpt_dtmc_ratio->GetBinContent(zptBin);
-        }
-        ZPtWeight_up = ZPtWeight+0.5*hdyzpt_dtmc_ratio->GetBinError(zptBin);
-        ZPtWeight_dn = ZPtWeight-0.5*hdyzpt_dtmc_ratio->GetBinError(zptBin);
+      Int_t zptBin=0;
+      if (ngenZ>0) {
+        zptBin = hdyzpt_dtmc_ratio->FindBin(genZ_pt[0]);
+        if (genZ_pt[0]>1000) zptBin = hdyzpt_dtmc_ratio->FindBin(999);
       }
       else {
+        zptBin = hdyzpt_dtmc_ratio->FindBin(llnunu_l1_pt);
+        if (llnunu_l1_pt>1000) zptBin = hdyzpt_dtmc_ratio->FindBin(999);
+      }
+      if (doDyJetsUseSmooth) {
+        ZPtWeight = hdyzpt_dtmc_ratio_smooth->GetBinContent(zptBin);
+      }
+      else if (doDyJetsUseFunction) {
+        if (ngenZ>0) ZPtWeight = fcdyzpt_dtmc_ratio->Eval(genZ_pt[0]);
+        else ZPtWeight = fcdyzpt_dtmc_ratio->Eval(llnunu_l1_pt);
+      }
+      else { 
+        ZPtWeight = hdyzpt_dtmc_ratio->GetBinContent(zptBin);
+      }
+      ZPtWeight_up = ZPtWeight+0.5*hdyzpt_dtmc_ratio->GetBinError(zptBin);
+      ZPtWeight_dn = ZPtWeight-0.5*hdyzpt_dtmc_ratio->GetBinError(zptBin);
+      
+      if (isDyJetsLO) {
         // for LO ZJets samples
-        Int_t zptBin=0;
+        zptBin=0;
         if (ngenZ>0) {
           zptBin = hdyzpt_dtmc_lo_ratio->FindBin(genZ_pt[0]);
           if (genZ_pt[0]>1000) zptBin = hdyzpt_dtmc_lo_ratio->FindBin(999);
@@ -715,18 +729,31 @@ int main(int argc, char** argv) {
           ZPtWeight = hdyzpt_dtmc_lo_ratio_smooth->GetBinContent(zptBin);
         }
         else if (doDyJetsLOUseFunction) {
-          if (ngenZ>0) ZPtWeight = fcdyzpt_dtmc_lo_ratio->Eval(genZ_pt[0]);
-          else ZPtWeight = fcdyzpt_dtmc_lo_ratio->Eval(llnunu_l1_pt);
+        //if (doDyJetsLOUseFunction) {
+          //if (ngenZ>0) ZPtWeight *= fcdyzpt_dtmc_lo_ratio->Eval(genZ_pt[0]);
+          //else ZPtWeight *= fcdyzpt_dtmc_lo_ratio->Eval(llnunu_l1_pt);
+          if (ngenZ>0) ZPtWeight *= fcdyzpt_mc_nlo_lo_ratio->Eval(genZ_pt[0]);
+          else ZPtWeight *= fcdyzpt_mc_nlo_lo_ratio->Eval(llnunu_l1_pt);
         }
         else {
-          ZPtWeight = hdyzpt_dtmc_lo_ratio->GetBinContent(zptBin);
+          //ZPtWeight *= hdyzpt_dtmc_lo_ratio->GetBinContent(zptBin);
+          ZPtWeight *= hdyzpt_mc_nlo_lo_ratio->GetBinContent(zptBin);
         }
+
         ZPtWeight_up = ZPtWeight+0.5*hdyzpt_dtmc_lo_ratio->GetBinError(zptBin);
         ZPtWeight_dn = ZPtWeight-0.5*hdyzpt_dtmc_lo_ratio->GetBinError(zptBin);
 
       }
     }
 
+    if (addZjetsNewGenWeight and !isData and isDyJets) {
+      if (!isDyJetsLO) {
+        ZJetsGenWeight = genWeight/ZJetsNLOSumWeights*ZJetsNLOSumEvents/(ZJetsNLOSumEvents+ZJetsLOSumEvents);
+      }
+      else {
+        ZJetsGenWeight = genWeight/ZJetsLOSumWeights*ZJetsLOSumEvents/(ZJetsNLOSumEvents+ZJetsLOSumEvents);
+      }
+    }
     if (addZrapidity) {
       TLorentzVector z4vec;
       z4vec.SetPtEtaPhiM(llnunu_l1_pt,llnunu_l1_eta,llnunu_l1_phi,llnunu_l1_mass);

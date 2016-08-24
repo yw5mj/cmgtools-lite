@@ -48,10 +48,10 @@ do
 
   # options for outputs
   #outfile="${outfile/\/vvTreeProducer\/tree/}"
-  outfile="${outfile/\/vvTreeProducer\/tree/_NoRecoil}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_NoRecoil}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilNoSmooth}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilSmooth}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilGraph}"
+  outfile="${outfile/\/vvTreeProducer\/tree/_RecoilGraph}"
 
   inSkimFile=${infile/vvTreeProducer\/tree.root/skimAnalyzerCount\/SkimReport.txt}
 
