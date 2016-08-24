@@ -30,12 +30,13 @@ vvTreeProducer.globalObjects =  {  }
 vvTreeProducer.collections = {
          "genLeptons" : NTupleCollection("genLep", genParticleType, 100, help="Generated leptons (e/mu) from W/Z decays"),
          "genLeptonsFsr" : NTupleCollection("genLepFsr", genParticleType, 100, help="Generated leptons (e/mu) from W/Z decays"),
-         #"mother_genLeptons" : NTupleCollection("genLepMother", genParticleType, 100, help="Generated leptons (e/mu) from W/Z decays"),
-         #"genMuons" : NTupleCollection("genMuon", genParticleWithMotherInfo, 100, help="Generated leptons (e/mu) from W/Z decays"),
-         #"genElectrons" : NTupleCollection("genElec", genParticleWithMotherInfo, 100, help="Generated leptons (e/mu) from W/Z decays"),
-         #"genTaus" : NTupleCollection("genTau", genParticleType, 100, help="Generated leptons (e/mu) from W/Z decays"),
-         #"genMuonsFsr" : NTupleCollection("genMuonFsr", genParticleWithMotherInfo, 100, help="Generated leptons (e/mu) from W/Z decays"),
-         #"genElectronsFsr" : NTupleCollection("genElecFsr", genParticleWithMotherInfo, 100, help="Generated leptons (e/mu) from W/Z decays"),
+         "mother_genLeptons" : NTupleCollection("genLepMother", genParticleType, 100, help="Generated leptons (e/mu) from W/Z decays"),
+         "genMuons" : NTupleCollection("genMuon", genParticleWithMotherInfo, 100, help="Generated leptons (e/mu) from W/Z decays"),
+         "genElectrons" : NTupleCollection("genElec", genParticleWithMotherInfo, 100, help="Generated leptons (e/mu) from W/Z decays"),
+         "genTaus" : NTupleCollection("genTau", genParticleType, 100, help="Generated leptons (e/mu) from W/Z decays"),
+         "genMuonsFsr" : NTupleCollection("genMuonFsr", genParticleWithMotherInfo, 100, help="Generated leptons (e/mu) from W/Z decays"),
+         "genElectronsFsr" : NTupleCollection("genElecFsr", genParticleWithMotherInfo, 100, help="Generated leptons (e/mu) from W/Z decays"),
+         "genTausFsr" : NTupleCollection("genTauFsr", genParticleWithMotherInfo, 100, help="Generated leptons (e/mu) from W/Z decays"),
          "genNeutrinos" : NTupleCollection("genNeu", genParticleType, 300, help="Generated leptons (e/mu) from W/Z decays"),
          "genZBosons" : NTupleCollection("genZ", tlorentzFourVectorType, 100, help="Generated V bosons"),
      }
@@ -48,12 +49,14 @@ test = 1
 if test==1:
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1000]
     #selectedComponents = [DY1JetsToLL_M50_MGMLM]
-    selectedComponents = [DY1JetsToLL_M50_MGMLM, DY2JetsToLL_M50_MGMLM, DY3JetsToLL_M50_MGMLM, DY4JetsToLL_M50_MGMLM, DYBJetsToLL_M50_MGMLM]
-    #selectedComponents = [DYJetsToLL_M50]
+    #selectedComponents = [DY1JetsToLL_M50_MGMLM, DY2JetsToLL_M50_MGMLM, DY3JetsToLL_M50_MGMLM, DY4JetsToLL_M50_MGMLM, DYBJetsToLL_M50_MGMLM]
+    #selectedComponents = [DYJetsToLL_M50, DYJetsToLL_M50_MGMLM_Ext1, DY1JetsToLL_M50_MGMLM, DY2JetsToLL_M50_MGMLM, DY3JetsToLL_M50_MGMLM, DY4JetsToLL_M50_MGMLM, DYBJetsToLL_M50_MGMLM]
+    #selectedComponents = [DYJetsToLL_M50_Ext]
+    selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
     for c in selectedComponents:
         c.files = c.files[1]
-        #c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
+        #c.splitFactor = (len(c.files)/30 if len(c.files)>30 else 1)
         c.splitFactor = 1
 
 

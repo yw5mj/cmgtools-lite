@@ -7,8 +7,8 @@ std::string inputdir =
   ;
 std::string filename =
   //"DYJetsToLL_M50_NoRecoil"
-  //"DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
-  "SingleEMU_Run2016BCD_PromptReco"
+  "DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
+  //"SingleEMU_Run2016BCD_PromptReco"
   //"DYJetsToLL_M50"
   //"DYJetsToLL_M50_SkimV4"
   //"DYJetsToLL_M50_MGMLM_Ext1_SkimRecoilOnlyMC_NoRecoil"

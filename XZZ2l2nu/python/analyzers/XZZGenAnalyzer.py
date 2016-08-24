@@ -48,10 +48,11 @@ class XZZGenAnalyzer( Analyzer ):
         event.mother_genLeptons = []
         event.genElectrons = []
         event.genMuons = []
+        event.genTaus = []
 	event.genLeptonsFsr = []
 	event.genElectronsFsr = []
 	event.genMuonsFsr = []
-        event.genTaus = []
+	event.genTausFsr = []
         event.genNeutrinos = []
         event.genJets = []
         event.genXZZ = []
@@ -76,13 +77,16 @@ class XZZGenAnalyzer( Analyzer ):
 
         event.genMuons = [ p for p in pruned if abs(p.pdgId())==13 and  p.status()==1 and p.isPromptFinalState() and p.fromHardProcessFinalState() ]
         event.genElectrons = [ p for p in pruned if abs(p.pdgId())==11 and  p.status()==1 and p.isPromptFinalState() and p.fromHardProcessFinalState() ]
-        event.genTaus = [ p for p in pruned if abs(p.pdgId())==15 and p.status()==2  and p.isPromptDecayed() ]
+        #event.genTaus = [ p for p in pruned if abs(p.pdgId())==15 and p.status()==2  and p.isPromptDecayed() ]
+        event.genTaus = [ p for p in pruned if abs(p.pdgId())==15 and p.status()==2  and p.isPromptDecayed() and p.fromHardProcessDecayed() ]
         event.genNeutrinos = [ p for p in pruned if (abs(p.pdgId()) in [12,14,16]) and p.isPromptFinalState() and p.fromHardProcessFinalState() ]
         event.genMuonsFsr = [ p for p in pruned if abs(p.pdgId())==13 and  p.status()==1 and p.isPromptFinalState() and not p.fromHardProcessFinalState() ]
         event.genElectronsFsr = [ p for p in pruned if abs(p.pdgId())==11 and  p.status()==1 and p.isPromptFinalState() and not p.fromHardProcessFinalState() ]
+        event.genTausFsr = [ p for p in pruned if abs(p.pdgId())==15 and p.status()==2  and p.isPromptDecayed() and not p.fromHardProcessDecayed() ]
 
         event.genLeptons = event.genMuons + event.genElectrons + event.genTaus
-        event.genLeptonsFsr = event.genMuonsFsr + event.genElectronsFsr
+        #event.genLeptonsFsr = event.genMuonsFsr + event.genElectronsFsr
+        event.genLeptonsFsr = event.genMuonsFsr + event.genElectronsFsr + event.genTausFsr
 
         if len(event.genLeptonsFsr)==0:
 	    # for no fsr case
