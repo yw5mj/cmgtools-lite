@@ -137,7 +137,7 @@ class XZZGenAnalyzer( Analyzer ):
 
         
         if len(event.genZBosons)>=2 :
-            genX = event.genZBosons[0].p4()+event.genZBosons[1].p4()
+            genX = event.genZBosons[0]+event.genZBosons[1]
             event.genXZZ.append(genX)
             
 

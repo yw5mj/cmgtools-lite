@@ -74,7 +74,7 @@ if test==1:
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #selectedComponents = [SingleMuon_Run2015C_25ns_16Dec]
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2] 
-    selectedComponents = [SingleMuon_Run2016D_PromptReco_v2] 
+    #selectedComponents = [SingleMuon_Run2016D_PromptReco_v2] 
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2,SingleElectron_Run2016B_PromptReco_v2] 
     #selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
@@ -87,6 +87,7 @@ if test==1:
     #selectedComponents = signalSamples+backgroundSamples[4:]
     #selectedComponents = backgroundSamples[1:4]
     #selectedComponents = [TTTo2L2Nu]
+    selectedComponents = [ZZTo2L2Nu]
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:

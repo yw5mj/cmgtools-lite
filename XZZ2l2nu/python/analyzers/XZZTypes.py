@@ -3,17 +3,17 @@ import math
 
 
 LLType = NTupleObjectType("LLType", baseObjectTypes=[fourVectorType], variables = [
-    NTupleVariable("TuneP_usage",   lambda x : x.useTuneP, int), 
-    NTupleVariable("TuneP_pt",   lambda x : x.TuneP_pt(), float),               
-    NTupleVariable("TuneP_eta",   lambda x : x.TuneP_eta(), float),               
-    NTupleVariable("TuneP_phi",   lambda x : x.TuneP_phi(), float),               
-    NTupleVariable("TuneP_mass",   lambda x : x.TuneP_m(), float),               
+    #NTupleVariable("TuneP_usage",   lambda x : x.useTuneP, int), 
+    #NTupleVariable("TuneP_pt",   lambda x : x.TuneP_pt(), float),               
+    #NTupleVariable("TuneP_eta",   lambda x : x.TuneP_eta(), float),               
+    #NTupleVariable("TuneP_phi",   lambda x : x.TuneP_phi(), float),               
+    #NTupleVariable("TuneP_mass",   lambda x : x.TuneP_m(), float),               
     NTupleVariable("mt",   lambda x : x.mt(), float),       
     NTupleVariable("deltaPhi",   lambda x : x.deltaPhi(), float),       
     NTupleVariable("deltaR",   lambda x : x.deltaR(), float),       
-    NTupleVariable("TuneP_mt",   lambda x : x.TuneP_mt(), float),       
-    NTupleVariable("TuneP_deltaPhi",   lambda x : x.TuneP_deltaPhi(), float),       
-    NTupleVariable("TuneP_deltaR",   lambda x : x.TuneP_deltaR(), float),       
+    #NTupleVariable("TuneP_mt",   lambda x : x.TuneP_mt(), float),       
+    #NTupleVariable("TuneP_deltaPhi",   lambda x : x.TuneP_deltaPhi(), float),       
+    #NTupleVariable("TuneP_deltaR",   lambda x : x.TuneP_deltaR(), float),       
 ])
 
 
