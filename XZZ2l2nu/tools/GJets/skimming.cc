@@ -24,12 +24,12 @@ bool doDyJetsUseFunction = true;
 bool doDyJetsLOUseSmooth = false;
 bool doDyJetsLOUseFunction = true;
 bool addZrapidity = false;
-bool doRecoil = true;
+bool doRecoil = false;
 bool correctData = false;
 bool doRecoilUseSmooth = true;
 bool doRecoilUseGraph = true;
 
-bool correctMuonPt = true;
+bool correctMuonPt = false;
 
 bool lightWeight = false;
 bool addZjetsNewGenWeight = true;
@@ -210,7 +210,7 @@ int main(int argc, char** argv) {
 
   //tree->SetBranchAddress("llnunu_deltaPhi", &llnunu_deltaPhi);
   //tree->SetBranchAddress("llnunu_TuneP_deltaPhi", &llnunu_TuneP_deltaPhi);
-  tree->SetBranchAddress("llnunu_TuneP_mt", &llnunu_TuneP_mt);
+  //tree->SetBranchAddress("llnunu_TuneP_mt", &llnunu_TuneP_mt);
   //tree->SetBranchAddress("llnunu_CosdphiZMet", &llnunu_CosdphiZMet);
   //tree->SetBranchAddress("llnunu_dPTPara", &llnunu_dPTPara);
   //tree->SetBranchAddress("llnunu_dPTParaRel", &llnunu_dPTParaRel);
@@ -218,9 +218,9 @@ int main(int argc, char** argv) {
   //tree->SetBranchAddress("llnunu_dPTPerpRel", &llnunu_dPTPerpRel);
   //tree->SetBranchAddress("llnunu_metOvSqSET", &llnunu_metOvSqSET);
   //tree->SetBranchAddress("llnunu_l2_sumEt", &llnunu_l2_sumEt);
-  tree->SetBranchAddress("llnunu_l1_TuneP_pt", &llnunu_l1_TuneP_pt);
-  tree->SetBranchAddress("llnunu_l1_TuneP_eta", &llnunu_l1_TuneP_eta);
-  tree->SetBranchAddress("llnunu_l1_TuneP_phi", &llnunu_l1_TuneP_phi);
+  //tree->SetBranchAddress("llnunu_l1_TuneP_pt", &llnunu_l1_TuneP_pt);
+  //tree->SetBranchAddress("llnunu_l1_TuneP_eta", &llnunu_l1_TuneP_eta);
+  //tree->SetBranchAddress("llnunu_l1_TuneP_phi", &llnunu_l1_TuneP_phi);
 
   //tree->SetBranchAddress("llnunu_l1_px", &llnunu_l1_px);
   //tree->SetBranchAddress("llnunu_l1_py", &llnunu_l1_py);
@@ -228,25 +228,25 @@ int main(int argc, char** argv) {
   tree->SetBranchAddress("llnunu_l1_mt", &llnunu_l1_mt);
   tree->SetBranchAddress("llnunu_l1_deltaPhi", &llnunu_l1_deltaPhi);
   tree->SetBranchAddress("llnunu_l1_deltaR", &llnunu_l1_deltaR);
-  tree->SetBranchAddress("llnunu_l1_TuneP_mt", &llnunu_l1_TuneP_mt);
-  tree->SetBranchAddress("llnunu_l1_TuneP_deltaPhi", &llnunu_l1_TuneP_deltaPhi);
-  tree->SetBranchAddress("llnunu_l1_TuneP_deltaR", &llnunu_l1_TuneP_deltaR);
+  //tree->SetBranchAddress("llnunu_l1_TuneP_mt", &llnunu_l1_TuneP_mt);
+  //tree->SetBranchAddress("llnunu_l1_TuneP_deltaPhi", &llnunu_l1_TuneP_deltaPhi);
+  //tree->SetBranchAddress("llnunu_l1_TuneP_deltaR", &llnunu_l1_TuneP_deltaR);
   tree->SetBranchAddress("llnunu_l1_l1_charge", &llnunu_l1_l1_charge);
   tree->SetBranchAddress("llnunu_l1_l1_ptErr", &llnunu_l1_l1_ptErr);
-  tree->SetBranchAddress("llnunu_l1_l1_TuneP_pt", &llnunu_l1_l1_TuneP_pt);
-  tree->SetBranchAddress("llnunu_l1_l1_TuneP_ptErr", &llnunu_l1_l1_TuneP_ptErr);
-  tree->SetBranchAddress("llnunu_l1_l1_TuneP_eta", &llnunu_l1_l1_TuneP_eta);
-  tree->SetBranchAddress("llnunu_l1_l1_TuneP_phi", &llnunu_l1_l1_TuneP_phi);
+  //tree->SetBranchAddress("llnunu_l1_l1_TuneP_pt", &llnunu_l1_l1_TuneP_pt);
+  //tree->SetBranchAddress("llnunu_l1_l1_TuneP_ptErr", &llnunu_l1_l1_TuneP_ptErr);
+  //tree->SetBranchAddress("llnunu_l1_l1_TuneP_eta", &llnunu_l1_l1_TuneP_eta);
+  //tree->SetBranchAddress("llnunu_l1_l1_TuneP_phi", &llnunu_l1_l1_TuneP_phi);
   //tree->SetBranchAddress("llnunu_l1_l1_px", &llnunu_l1_l1_px);
   //tree->SetBranchAddress("llnunu_l1_l1_py", &llnunu_l1_l1_py);
   //tree->SetBranchAddress("llnunu_l1_l1_pz", &llnunu_l1_l1_pz);
   tree->SetBranchAddress("llnunu_l1_l1_mass", &llnunu_l1_l1_mass);
   tree->SetBranchAddress("llnunu_l1_l2_charge", &llnunu_l1_l2_charge);
   tree->SetBranchAddress("llnunu_l1_l2_ptErr", &llnunu_l1_l2_ptErr);
-  tree->SetBranchAddress("llnunu_l1_l2_TuneP_pt", &llnunu_l1_l2_TuneP_pt);
-  tree->SetBranchAddress("llnunu_l1_l2_TuneP_ptErr", &llnunu_l1_l2_TuneP_ptErr);
-  tree->SetBranchAddress("llnunu_l1_l2_TuneP_eta", &llnunu_l1_l2_TuneP_eta);
-  tree->SetBranchAddress("llnunu_l1_l2_TuneP_phi", &llnunu_l1_l2_TuneP_phi);
+  //tree->SetBranchAddress("llnunu_l1_l2_TuneP_pt", &llnunu_l1_l2_TuneP_pt);
+  //tree->SetBranchAddress("llnunu_l1_l2_TuneP_ptErr", &llnunu_l1_l2_TuneP_ptErr);
+  //tree->SetBranchAddress("llnunu_l1_l2_TuneP_eta", &llnunu_l1_l2_TuneP_eta);
+  //tree->SetBranchAddress("llnunu_l1_l2_TuneP_phi", &llnunu_l1_l2_TuneP_phi);
   //tree->SetBranchAddress("llnunu_l1_l2_px", &llnunu_l1_l2_px);
   //tree->SetBranchAddress("llnunu_l1_l2_py", &llnunu_l1_l2_py);
   //tree->SetBranchAddress("llnunu_l1_l2_pz", &llnunu_l1_l2_pz);
@@ -471,40 +471,41 @@ int main(int argc, char** argv) {
     if (correctMuonPt && abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13 && llnunu_l1_l1_pt>2. && llnunu_l1_l1_pt<200. ) {
       llnunu_l1_l1_pt = (Float_t)muCalib->getCorrectedPt(double(llnunu_l1_l1_pt), double(llnunu_l1_l1_eta), double(llnunu_l1_l1_phi), double(llnunu_l1_l1_charge)); 
       llnunu_l1_l2_pt = (Float_t)muCalib->getCorrectedPt(double(llnunu_l1_l2_pt), double(llnunu_l1_l2_eta), double(llnunu_l1_l2_phi), double(llnunu_l1_l2_charge)); 
-      llnunu_l1_l1_TuneP_pt = (Float_t)muCalib->getCorrectedPt(double(llnunu_l1_l1_TuneP_pt), double(llnunu_l1_l1_TuneP_eta), double(llnunu_l1_l1_TuneP_phi), double(llnunu_l1_l1_charge)); 
-      llnunu_l1_l2_TuneP_pt = (Float_t)muCalib->getCorrectedPt(double(llnunu_l1_l2_TuneP_pt), double(llnunu_l1_l2_TuneP_eta), double(llnunu_l1_l2_TuneP_phi), double(llnunu_l1_l2_charge)); 
+      //llnunu_l1_l1_TuneP_pt = (Float_t)muCalib->getCorrectedPt(double(llnunu_l1_l1_TuneP_pt), double(llnunu_l1_l1_TuneP_eta), double(llnunu_l1_l1_TuneP_phi), double(llnunu_l1_l1_charge)); 
+      //llnunu_l1_l2_TuneP_pt = (Float_t)muCalib->getCorrectedPt(double(llnunu_l1_l2_TuneP_pt), double(llnunu_l1_l2_TuneP_eta), double(llnunu_l1_l2_TuneP_phi), double(llnunu_l1_l2_charge)); 
       if (!isData) {
         llnunu_l1_l1_pt = (Float_t)muCalib->smear(double(llnunu_l1_l1_pt), double(llnunu_l1_l1_eta));
         llnunu_l1_l2_pt = (Float_t)muCalib->smear(double(llnunu_l1_l2_pt), double(llnunu_l1_l2_eta));
-        llnunu_l1_l1_TuneP_pt = (Float_t)muCalib->smear(double(llnunu_l1_l1_TuneP_pt), double(llnunu_l1_l1_TuneP_eta));
-        llnunu_l1_l2_TuneP_pt = (Float_t)muCalib->smear(double(llnunu_l1_l2_TuneP_pt), double(llnunu_l1_l2_TuneP_eta));
+        //llnunu_l1_l1_TuneP_pt = (Float_t)muCalib->smear(double(llnunu_l1_l1_TuneP_pt), double(llnunu_l1_l1_TuneP_eta));
+        //llnunu_l1_l2_TuneP_pt = (Float_t)muCalib->smear(double(llnunu_l1_l2_TuneP_pt), double(llnunu_l1_l2_TuneP_eta));
       }
       llnunu_l1_l1_ptErr = llnunu_l1_l1_pt*(Float_t)muCalib->getCorrectedError(double(llnunu_l1_l1_pt), double(llnunu_l1_l1_eta), double(llnunu_l1_l1_ptErr/llnunu_l1_l1_pt));
       llnunu_l1_l2_ptErr = llnunu_l1_l2_pt*(Float_t)muCalib->getCorrectedError(double(llnunu_l1_l2_pt), double(llnunu_l1_l2_eta), double(llnunu_l1_l2_ptErr/llnunu_l1_l2_pt));
-      llnunu_l1_l1_TuneP_ptErr = llnunu_l1_l1_TuneP_pt*(Float_t)muCalib->getCorrectedError(double(llnunu_l1_l1_TuneP_pt), double(llnunu_l1_l1_TuneP_eta), double(llnunu_l1_l1_TuneP_ptErr/llnunu_l1_l1_TuneP_pt));
-      llnunu_l1_l2_TuneP_ptErr = llnunu_l1_l2_TuneP_pt*(Float_t)muCalib->getCorrectedError(double(llnunu_l1_l2_TuneP_pt), double(llnunu_l1_l2_TuneP_eta), double(llnunu_l1_l2_TuneP_ptErr/llnunu_l1_l2_TuneP_pt));
-      TLorentzVector l1v, l2v, tpl1v, tpl2v;
+      //llnunu_l1_l1_TuneP_ptErr = llnunu_l1_l1_TuneP_pt*(Float_t)muCalib->getCorrectedError(double(llnunu_l1_l1_TuneP_pt), double(llnunu_l1_l1_TuneP_eta), double(llnunu_l1_l1_TuneP_ptErr/llnunu_l1_l1_TuneP_pt));
+      //llnunu_l1_l2_TuneP_ptErr = llnunu_l1_l2_TuneP_pt*(Float_t)muCalib->getCorrectedError(double(llnunu_l1_l2_TuneP_pt), double(llnunu_l1_l2_TuneP_eta), double(llnunu_l1_l2_TuneP_ptErr/llnunu_l1_l2_TuneP_pt));
+      TLorentzVector l1v, l2v; 
       l1v.SetPtEtaPhiM(llnunu_l1_l1_pt, llnunu_l1_l1_eta, llnunu_l1_l1_phi, llnunu_l1_l1_mass);
       l2v.SetPtEtaPhiM(llnunu_l1_l2_pt, llnunu_l1_l2_eta, llnunu_l1_l2_phi, llnunu_l1_l2_mass);
-      tpl1v.SetPtEtaPhiM(llnunu_l1_l1_TuneP_pt, llnunu_l1_l1_TuneP_eta, llnunu_l1_l1_TuneP_phi, llnunu_l1_l1_mass);
-      tpl2v.SetPtEtaPhiM(llnunu_l1_l2_TuneP_pt, llnunu_l1_l2_TuneP_eta, llnunu_l1_l2_TuneP_phi, llnunu_l1_l2_mass);
+      //TLorentzVector tpl1v, tpl2v;
+      //tpl1v.SetPtEtaPhiM(llnunu_l1_l1_TuneP_pt, llnunu_l1_l1_TuneP_eta, llnunu_l1_l1_TuneP_phi, llnunu_l1_l1_mass);
+      //tpl2v.SetPtEtaPhiM(llnunu_l1_l2_TuneP_pt, llnunu_l1_l2_TuneP_eta, llnunu_l1_l2_TuneP_phi, llnunu_l1_l2_mass);
       TLorentzVector zv = l1v+l2v;
-      TLorentzVector tpzv = tpl1v+tpl2v;
+      //TLorentzVector tpzv = tpl1v+tpl2v;
 
-      llnunu_l1_l1_px = (Float_t)l1v.Px();
-      llnunu_l1_l1_py = (Float_t)l1v.Py();
-      llnunu_l1_l1_pz = (Float_t)l1v.Pz();
+      //llnunu_l1_l1_px = (Float_t)l1v.Px();
+      //llnunu_l1_l1_py = (Float_t)l1v.Py();
+      //llnunu_l1_l1_pz = (Float_t)l1v.Pz();
       llnunu_l1_l1_rapidity = (Float_t)l1v.Rapidity();
-      llnunu_l1_l2_px = (Float_t)l2v.Px();
-      llnunu_l1_l2_py = (Float_t)l2v.Py();
-      llnunu_l1_l2_pz = (Float_t)l2v.Pz();
+      //llnunu_l1_l2_px = (Float_t)l2v.Px();
+      //llnunu_l1_l2_py = (Float_t)l2v.Py();
+      //llnunu_l1_l2_pz = (Float_t)l2v.Pz();
       llnunu_l1_l2_rapidity = (Float_t)l2v.Rapidity();
-      llnunu_l1_l1_TuneP_rapidity = (Float_t)tpl1v.Rapidity();
-      llnunu_l1_l2_TuneP_rapidity = (Float_t)tpl2v.Rapidity();
+      //llnunu_l1_l1_TuneP_rapidity = (Float_t)tpl1v.Rapidity();
+      //llnunu_l1_l2_TuneP_rapidity = (Float_t)tpl2v.Rapidity();
       llnunu_l1_pt = (Float_t)zv.Pt();
-      llnunu_l1_px = (Float_t)zv.Px();
-      llnunu_l1_py = (Float_t)zv.Py();
-      llnunu_l1_pz = (Float_t)zv.Pz();
+      //llnunu_l1_px = (Float_t)zv.Px();
+      //llnunu_l1_py = (Float_t)zv.Py();
+      //llnunu_l1_pz = (Float_t)zv.Pz();
       llnunu_l1_eta = (Float_t)zv.Eta();
       llnunu_l1_phi = (Float_t)zv.Phi();
       llnunu_l1_rapidity = (Float_t)zv.Rapidity();
@@ -512,14 +513,14 @@ int main(int argc, char** argv) {
       llnunu_l1_deltaR = (Float_t)l1v.DeltaR(l2v);
       llnunu_l1_mt = (Float_t)zv.Mt();
       llnunu_l1_mass = (Float_t)zv.M();
-      llnunu_l1_TuneP_pt = (Float_t)tpzv.Pt();
-      llnunu_l1_TuneP_eta = (Float_t)tpzv.Eta();
-      llnunu_l1_TuneP_phi = (Float_t)tpzv.Phi();
-      llnunu_l1_TuneP_rapidity = (Float_t)tpzv.Rapidity();
-      llnunu_l1_TuneP_deltaPhi = (Float_t)tpl1v.DeltaPhi(tpl2v);
-      llnunu_l1_TuneP_deltaR = (Float_t)tpl1v.DeltaR(tpl2v);
-      llnunu_l1_TuneP_mt = (Float_t)tpzv.Mt();
-      llnunu_l1_TuneP_mass = (Float_t)tpzv.M();
+      //llnunu_l1_TuneP_pt = (Float_t)tpzv.Pt();
+      //llnunu_l1_TuneP_eta = (Float_t)tpzv.Eta();
+      //llnunu_l1_TuneP_phi = (Float_t)tpzv.Phi();
+      //llnunu_l1_TuneP_rapidity = (Float_t)tpzv.Rapidity();
+      //llnunu_l1_TuneP_deltaPhi = (Float_t)tpl1v.DeltaPhi(tpl2v);
+      //llnunu_l1_TuneP_deltaR = (Float_t)tpl1v.DeltaR(tpl2v);
+      //llnunu_l1_TuneP_mt = (Float_t)tpzv.Mt();
+      //llnunu_l1_TuneP_mass = (Float_t)tpzv.M();
 
       TVector2 vec_met;
       llnunu_l2_px = llnunu_l2_pt*cos(llnunu_l2_phi);
@@ -527,22 +528,22 @@ int main(int argc, char** argv) {
       vec_met.Set(llnunu_l2_px, llnunu_l2_py);
 
       llnunu_deltaPhi = TVector2::Phi_mpi_pi(llnunu_l2_phi-llnunu_l1_phi);
-      llnunu_TuneP_deltaPhi = TVector2::Phi_mpi_pi(llnunu_l2_phi-llnunu_l1_TuneP_phi);
-      llnunu_CosdphiZMet = TMath::Cos(llnunu_deltaPhi);
+      //llnunu_TuneP_deltaPhi = TVector2::Phi_mpi_pi(llnunu_l2_phi-llnunu_l1_TuneP_phi);
+      //llnunu_CosdphiZMet = TMath::Cos(llnunu_deltaPhi);
 
-      llnunu_dPTPara = fabs(llnunu_l1_pt+llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi));
-      llnunu_dPTParaRel = llnunu_dPTPara/llnunu_l1_pt;
-      llnunu_dPTPerp = fabs(llnunu_l1_pt+llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi));
-      llnunu_dPTPerpRel = llnunu_dPTPerp/llnunu_l1_pt;
-      llnunu_metOvSqSET = llnunu_l2_pt/llnunu_l2_sumEt;
+      //llnunu_dPTPara = fabs(llnunu_l1_pt+llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi));
+      //llnunu_dPTParaRel = llnunu_dPTPara/llnunu_l1_pt;
+      //llnunu_dPTPerp = fabs(llnunu_l1_pt+llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi));
+      //llnunu_dPTPerpRel = llnunu_dPTPerp/llnunu_l1_pt;
+      //llnunu_metOvSqSET = llnunu_l2_pt/llnunu_l2_sumEt;
 
       Float_t et1 = TMath::Sqrt(llnunu_l1_mass*llnunu_l1_mass + llnunu_l1_pt*llnunu_l1_pt);
       Float_t et2 = TMath::Sqrt(llnunu_l1_mass*llnunu_l1_mass + llnunu_l2_pt*llnunu_l2_pt);
       llnunu_mt = TMath::Sqrt(2.0*llnunu_l1_mass*llnunu_l1_mass + 2.0* (et1*et2 - llnunu_l1_pt*cos(llnunu_l1_phi)*llnunu_l2_px - llnunu_l1_pt*sin(llnunu_l1_phi)*llnunu_l2_py));
 
-      et1 = TMath::Sqrt(llnunu_l1_TuneP_mass*llnunu_l1_TuneP_mass + llnunu_l1_TuneP_pt*llnunu_l1_TuneP_pt);
-      et2 = TMath::Sqrt(llnunu_l1_TuneP_mass*llnunu_l1_TuneP_mass + llnunu_l2_pt*llnunu_l2_pt);
-      llnunu_TuneP_mt = TMath::Sqrt(2.0*llnunu_l1_TuneP_mass*llnunu_l1_TuneP_mass + 2.0* (et1*et2 - llnunu_l1_TuneP_pt*cos(llnunu_l1_TuneP_phi)*llnunu_l2_px - llnunu_l1_TuneP_pt*sin(llnunu_l1_TuneP_phi)*llnunu_l2_py));
+      //et1 = TMath::Sqrt(llnunu_l1_TuneP_mass*llnunu_l1_TuneP_mass + llnunu_l1_TuneP_pt*llnunu_l1_TuneP_pt);
+      //et2 = TMath::Sqrt(llnunu_l1_TuneP_mass*llnunu_l1_TuneP_mass + llnunu_l2_pt*llnunu_l2_pt);
+      //llnunu_TuneP_mt = TMath::Sqrt(2.0*llnunu_l1_TuneP_mass*llnunu_l1_TuneP_mass + 2.0* (et1*et2 - llnunu_l1_TuneP_pt*cos(llnunu_l1_TuneP_phi)*llnunu_l2_px - llnunu_l1_TuneP_pt*sin(llnunu_l1_TuneP_phi)*llnunu_l2_py));
     }
 
     if (!isData) {
@@ -662,22 +663,22 @@ int main(int argc, char** argv) {
       llnunu_l2_phi = TVector2::Phi_mpi_pi(vec_met.Phi());
       
       llnunu_deltaPhi = TVector2::Phi_mpi_pi(llnunu_l2_phi-llnunu_l1_phi);
-      llnunu_TuneP_deltaPhi = TVector2::Phi_mpi_pi(llnunu_l2_phi-llnunu_l1_TuneP_phi);
-      llnunu_CosdphiZMet = TMath::Cos(llnunu_deltaPhi);
+      //llnunu_TuneP_deltaPhi = TVector2::Phi_mpi_pi(llnunu_l2_phi-llnunu_l1_TuneP_phi);
+      //llnunu_CosdphiZMet = TMath::Cos(llnunu_deltaPhi);
           
-      llnunu_dPTPara = fabs(llnunu_l1_pt+llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi)); 
-      llnunu_dPTParaRel = llnunu_dPTPara/llnunu_l1_pt;
-      llnunu_dPTPerp = fabs(llnunu_l1_pt+llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi));
-      llnunu_dPTPerpRel = llnunu_dPTPerp/llnunu_l1_pt;
-      llnunu_metOvSqSET = llnunu_l2_pt/llnunu_l2_sumEt;
+      //llnunu_dPTPara = fabs(llnunu_l1_pt+llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi)); 
+      //llnunu_dPTParaRel = llnunu_dPTPara/llnunu_l1_pt;
+      //llnunu_dPTPerp = fabs(llnunu_l1_pt+llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi));
+      //llnunu_dPTPerpRel = llnunu_dPTPerp/llnunu_l1_pt;
+      //llnunu_metOvSqSET = llnunu_l2_pt/llnunu_l2_sumEt;
 
       Float_t et1 = TMath::Sqrt(llnunu_l1_mass*llnunu_l1_mass + llnunu_l1_pt*llnunu_l1_pt);
       Float_t et2 = TMath::Sqrt(llnunu_l1_mass*llnunu_l1_mass + llnunu_l2_pt*llnunu_l2_pt);
       llnunu_mt = TMath::Sqrt(2.0*llnunu_l1_mass*llnunu_l1_mass + 2.0* (et1*et2 - llnunu_l1_pt*cos(llnunu_l1_phi)*llnunu_l2_px - llnunu_l1_pt*sin(llnunu_l1_phi)*llnunu_l2_py));
 
-      et1 = TMath::Sqrt(llnunu_l1_TuneP_mass*llnunu_l1_TuneP_mass + llnunu_l1_TuneP_pt*llnunu_l1_TuneP_pt);
-      et2 = TMath::Sqrt(llnunu_l1_TuneP_mass*llnunu_l1_TuneP_mass + llnunu_l2_pt*llnunu_l2_pt);
-      llnunu_TuneP_mt = TMath::Sqrt(2.0*llnunu_l1_TuneP_mass*llnunu_l1_TuneP_mass + 2.0* (et1*et2 - llnunu_l1_TuneP_pt*cos(llnunu_l1_TuneP_phi)*llnunu_l2_px - llnunu_l1_TuneP_pt*sin(llnunu_l1_TuneP_phi)*llnunu_l2_py));
+      //et1 = TMath::Sqrt(llnunu_l1_TuneP_mass*llnunu_l1_TuneP_mass + llnunu_l1_TuneP_pt*llnunu_l1_TuneP_pt);
+      //et2 = TMath::Sqrt(llnunu_l1_TuneP_mass*llnunu_l1_TuneP_mass + llnunu_l2_pt*llnunu_l2_pt);
+      //llnunu_TuneP_mt = TMath::Sqrt(2.0*llnunu_l1_TuneP_mass*llnunu_l1_TuneP_mass + 2.0* (et1*et2 - llnunu_l1_TuneP_pt*cos(llnunu_l1_TuneP_phi)*llnunu_l2_px - llnunu_l1_TuneP_pt*sin(llnunu_l1_TuneP_phi)*llnunu_l2_py));
 
     }
 
