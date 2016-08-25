@@ -90,12 +90,17 @@ Instructions for package development.
 
 6.1.  MuonRecalibrator: 
    
-    Must add it to use muon recalbration in XZZLeptonAnalyzer.py,
     Please see instructions in 
 
     ``` 
       CMGTools/XZZ2l2nu/tools/MuonCalib/readme
     ```
+
+    for updating this part of codes. 
+
+  Note, NO extra preparation is needed to configure this package, since 2016-08-25 it 
+  is included in https://github.com/mmhy/cmg-cmssw.git in xzz2l2nu_heppy_80X branch already.
+
 
 7. Compile the package together with Heppy Framework:
    Note, do this in CMSSWxxx/src instead of your CMSSWxxx/src/CMSTools/ directory.
