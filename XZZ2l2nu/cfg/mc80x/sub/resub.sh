@@ -1,12 +1,12 @@
 #!/bin/sh
 
-dir="mc2"
+dir="mc"
 queue="2nd"
 
 # need to check your jobs with the expected n root files and n pck files
 # to verify if the job is finished sucessfully.
-n_root_files="4"
-n_pck_files="16"
+n_root_files="3"
+n_pck_files="14"
 
 cd $dir
 
