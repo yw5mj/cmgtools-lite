@@ -131,7 +131,7 @@ class XZZLeptonAnalyzer( Analyzer ):
         event.otherLeptons = []
         
 
-        self.IsolationComputer.setPackedCandidates(self.handles['packedCandidates'].product())
+        #self.IsolationComputer.setPackedCandidates(self.handles['packedCandidates'].product())
         #for lep in self.handles['muons'].product():
         #    self.IsolationComputer.addVetos(lep)
         #for lep in self.handles['electrons'].product():
@@ -164,9 +164,11 @@ class XZZLeptonAnalyzer( Analyzer ):
             else:
                 event.otherLeptons.append(mu)
         for ele in allelectrons:
-            if ( (self.electronIDVersion=='HEEPv6' and ele.heepV60_noISO) or (self.electronIDVersion=='looseID' and ele.loose_nonISO)) or not self.applyID:
+            #if ( (self.electronIDVersion=='HEEPv6' and ele.heepV60_noISO) or (self.electronIDVersion=='looseID' and ele.loose_nonISO)) or not self.applyID:
+            if  ele.loose_nonISO or not self.applyID:
                 self.n_el_passId += 1
-                if ((self.electronIsoVersion=='miniISO' and ele.miniRelIso<0.1) or (self.electronIsoVersion=='pfISO' and ele.looseiso)) or not self.applyIso:
+                #if ((self.electronIsoVersion=='miniISO' and ele.miniRelIso<0.1) or (self.electronIsoVersion=='pfISO' and ele.looseiso)) or not self.applyIso:
+                if ele.looseiso or not self.applyIso:
                     event.selectedLeptons.append(ele)
                     event.selectedElectrons.append(ele)
                     self.n_el_passIso += 1
@@ -244,7 +246,7 @@ class XZZLeptonAnalyzer( Analyzer ):
  
         # calculate miniIso
         for mu in allmuons:
-            self.attachMiniIsolation(mu)
+            #self.attachMiniIsolation(mu)
             mu.trackerIso=mu.physObj.isolationR03().sumPt
             
         # Attach the vertex to them, for dxy/dz calculation
@@ -295,8 +297,8 @@ class XZZLeptonAnalyzer( Analyzer ):
 
         # calculate miniIso and pfIso
         for ele in allelectrons:
-            ele.rho = float(self.handles['rhoEleMiniIso'].product()[0])
-            self.attachMiniIsolation(ele)
+            #ele.rho = float(self.handles['rhoEleMiniIso'].product()[0])
+            #self.attachMiniIsolation(ele)
             ele.rho = float(self.handles['rhoElePfIso'].product()[0])
             ele.relIsoea03=ele.absIsoWithFSR(0.3)/ele.pt()
             if abs(ele.physObj.superCluster().eta())<1.479:

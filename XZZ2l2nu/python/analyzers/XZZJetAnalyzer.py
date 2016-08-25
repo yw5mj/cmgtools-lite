@@ -445,7 +445,7 @@ class XZZJetAnalyzer( Analyzer ):
 
     def testJetID(self, jet):
         jet.puJetIdPassed = jet.puJetId() 
-        jet.pfJetIdPassed = jet.jetID('POG_PFID_Loose') 
+        jet.pfJetIdPassed = jet.jetID('POG_PFID_Loose') if jet.isPFJet() else False
         if self.cfg_ana.relaxJetId:
             return True
         else:

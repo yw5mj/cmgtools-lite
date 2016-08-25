@@ -20,7 +20,7 @@ do
   then
     echo "job is done with ${n1} root files and ${n2} pck files.";
   else
-    rr=`bjobs -o "name" | grep -v JOB_NAME | grep ${dd}`;
+    rr=`bjobs -o "name" -J ${dd} | grep -v JOB_NAME | grep ${dd}`;
     if [ "$rr" == "$dd" ]; 
     then
       echo "  job $dd is still running";
@@ -28,7 +28,7 @@ do
       echo " submit $dd";
       cd $dd ;
       echo "  bsub -q $queue -J $dd  < batchScript.sh" ;
-      bsub -q $queue -J $dd  < batchScript.sh ;
+#      bsub -q $queue -J $dd  < batchScript.sh ;
       cd ../ ;
     fi;
   fi;
