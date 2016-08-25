@@ -147,7 +147,7 @@ class XZZJetAnalyzer( Analyzer ):
         super(XZZJetAnalyzer, self).declareHandles()
         self.handles['jets']   = AutoHandle( self.cfg_ana.jetCol, 'std::vector<pat::Jet>' )
         #self.handles['jets_raw']   = AutoHandle( self.cfg_ana.jetCol, 'std::vector<pat::Jet>' )
-        self.handles['genJet'] = AutoHandle( self.cfg_ana.genJetCol, 'vector<reco::GenJet>' )
+        self.handles['genJet'] = AutoHandle( self.cfg_ana.genJetCol, 'std::vector<reco::GenJet>' )
         self.shiftJER = self.cfg_ana.shiftJER if hasattr(self.cfg_ana, 'shiftJER') else 0
         self.addJERShifts = self.cfg_ana.addJERShifts if hasattr(self.cfg_ana, 'addJERShifts') else 0
         self.handles['rho'] = AutoHandle( self.cfg_ana.rho[0], 'double' )

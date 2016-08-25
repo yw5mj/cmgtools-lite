@@ -74,6 +74,7 @@ lepAna = cfg.Analyzer(
     muons='slimmedMuons',
     electrons='slimmedElectrons',
     packedCandidates = 'packedPFCandidates',
+    muonUseTuneP = True,
     rhoMuon= 'fixedGridRhoFastjetCentralNeutral',
     rhoElectronMiniIso = 'fixedGridRhoFastjetCentralNeutral',
     rhoElectronPfIso = 'fixedGridRhoFastjetAll',
@@ -89,6 +90,12 @@ lepAna = cfg.Analyzer(
     miniIsolationPUCorr = None, # Allowed options: 'rhoArea' (EAs for 03 cone scaled by R^2), 'deltaBeta', 
                                      # 'raw' (uncorrected), 'weights' (delta beta weights; not validated)
                                      # Choose None to just use the individual object's PU correction
+    doMuonScaleCorrections = ( 'Kalman', {
+        'MC': 'MC_80X_13TeV',
+        'Data': 'DATA_80X_13TeV',
+        'isSync': False,
+        'smearMode': 'ebe'
+    }),
     doElectronScaleCorrections = {
         'data' : 'EgammaAnalysis/ElectronTools/data/ScalesSmearings/80X_ichepV1_2016_ele',
         'GBRForest': ('$CMSSW_BASE/src/CMGTools/XZZ2l2nu/data/GBRForest_data_ICHEP16_combined.root',

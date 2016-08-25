@@ -77,11 +77,11 @@ leptonType = NTupleObjectType("lepton", baseObjectTypes = [ particleType ], vari
     NTupleVariable("edz",   lambda x : x.edz() if hasattr(x,'edz') else -999, help="#sigma(d_{z}) with respect to PV, in cm"),
     NTupleVariable("ip3d",  lambda x : x.ip3D() if hasattr(x,'ip3D') else -999, help="d_{3d} with respect to PV, in cm (absolute value)"),
     # Conversion rejection
-    NTupleVariable("miniRelIso",  lambda x : x.miniRelIso if hasattr(x,'miniRelIso') else  -999, help="PF Rel miniRel, pile-up corrected"),
+    #NTupleVariable("miniRelIso",  lambda x : x.miniRelIso if hasattr(x,'miniRelIso') else  -999, help="PF Rel miniRel, pile-up corrected"),
     NTupleVariable("muonincore03",  lambda x : getattr(x,"nminc",-999), help="number of other muons in core0.3 "),
     NTupleVariable("trackerIso",  lambda x : getattr(x,"trackerIso",-999), help="muon tracker isolation"),
     # id and iso
-    NTupleVariable("heepV60_noISO",  lambda x : x.heepV60_noISO if hasattr(x,'heepV60_noISO') else  -999, help="heepV60_noISO"),
+    #NTupleVariable("heepV60_noISO",  lambda x : x.heepV60_noISO if hasattr(x,'heepV60_noISO') else  -999, help="heepV60_noISO"),
     NTupleVariable("highPtID",  lambda x : x.highPtID if hasattr(x,'highPtID') else  -999, help="highPtID"),
     NTupleVariable("trackerHighPtID",  lambda x : x.trackerHighPtID if hasattr(x,'trackerHighPtID') else  -999, help="trackerHighPtID"),
     NTupleVariable("isfromX", lambda x : x.xdaughter if hasattr(x,'xdaughter') else -100, help="is from X"),
@@ -91,9 +91,9 @@ leptonType = NTupleObjectType("lepton", baseObjectTypes = [ particleType ], vari
     NTupleVariable("looseelectronnoiso",   lambda x : x.loose_nonISO if abs(x.pdgId())==11 else -999, int, help="electron POG Loose id no iso"),
     NTupleVariable("looseisoelectron",   lambda x : x.looseiso if abs(x.pdgId())==11 else -999, int, help="electron POG Loose id default iso"),
     NTupleVariable("electronrelIsoea03",   lambda x : x.relIsoea03 if abs(x.pdgId())==11 else -999, float, help="electron relisoea03"),
-    NTupleVariable("lepsf",  lambda x : getattr(x,'lepsf',1), help="lepton sf"),
-    NTupleVariable("lepsfUp",  lambda x : getattr(x,'lepsfUp',1), help="lepton sf upper"),
-    NTupleVariable("lepsfLo",  lambda x : getattr(x,'lepsfLo',1), help="lepton sf lower"),
+    #NTupleVariable("lepsf",  lambda x : getattr(x,'lepsf',1), help="lepton sf"),
+    #NTupleVariable("lepsfUp",  lambda x : getattr(x,'lepsfUp',1), help="lepton sf upper"),
+    #NTupleVariable("lepsfLo",  lambda x : getattr(x,'lepsfLo',1), help="lepton sf lower"),
     # PF candidates info
     #NTupleVariable("npf",  lambda x : x.numberOfSourceCandidatePtrs(), help="n pfparticles"),
     #NTupleVariable("pf0_pt",  lambda x : x.sourceCandidatePtr(0).pt() if x.numberOfSourceCandidatePtrs()>0 else -999 , help="lepton pf0 pt"),
@@ -210,16 +210,8 @@ photonType = NTupleObjectType("gamma", baseObjectTypes = [ particleType ], varia
 ##------------------------------------------  
 
 jetType = NTupleObjectType("jet",  baseObjectTypes = [ fourVectorType ], variables = [
-    NTupleVariable("id",    lambda x : x.jetID("POG_PFID") , int, mcOnly=False,help="POG Loose jet ID"),
     NTupleVariable("puId", lambda x : getattr(x, 'puJetIdPassed', -99), int,     mcOnly=False, help="puId (full MVA, loose WP, 5.3.X training on AK5PFchs: the only thing that is available now)"),
-    NTupleVariable("btagCSV",   lambda x : x.btag('pfCombinedInclusiveSecondaryVertexV2BJetTags'), help="CSV-IVF v2 discriminator"),
-    NTupleVariable("btagCMVA",  lambda x : x.btag('pfCombinedMVABJetTags'), help="CMVA discriminator"),
     NTupleVariable("rawPt",  lambda x : x.pt() * x.rawFactor(), help="p_{T} before JEC"),
-    NTupleVariable("mcPt",   lambda x : x.matchedGenJet.pt() if getattr(x,"matchedGenJet",None) else 0., mcOnly=True, help="p_{T} of associated gen jet"),
-    NTupleVariable("mcEta",   lambda x : x.matchedGenJet.eta() if getattr(x,"matchedGenJet",None) else 0., mcOnly=True, help="eta of associated gen jet"),
-    NTupleVariable("mcPhi",   lambda x : x.matchedGenJet.phi() if getattr(x,"matchedGenJet",None) else 0., mcOnly=True, help="phi of associated gen jet"),
-    NTupleVariable("mcMass",   lambda x : x.matchedGenJet.mass() if getattr(x,"matchedGenJet",None) else 0., mcOnly=True, help="mass of associated gen jet"),
-    NTupleVariable("mcFlavour", lambda x : x.partonFlavour(), int,     mcOnly=True, help="parton flavour (physics definition, i.e. including b's from shower)"),
     NTupleVariable("hadronFlavour", lambda x : x.hadronFlavour(), int,     mcOnly=True, help="hadron flavour (ghost matching to B/C hadrons)"),
     NTupleVariable("mcMatchId",  lambda x : getattr(x, 'matchedGenJetIdx', -99), int, mcOnly=True, help="Match to source from hard scatter (pdgId of heaviest particle in chain, 25 for H, 6 for t, 23/24 for W/Z), zero if non-prompt or fake"),
     NTupleVariable("corr_JECUp",  lambda x : getattr(x, 'corrJECUp', -99), float, mcOnly=True, help="JEC correction factor up"),
@@ -227,6 +219,14 @@ jetType = NTupleObjectType("jet",  baseObjectTypes = [ fourVectorType ], variabl
     NTupleVariable("corr",  lambda x : getattr(x, 'corr', -99), float, mcOnly=True, help="JEC correction factor"),
 ])
 
+genJetType = NTupleObjectType("genJetType",  baseObjectTypes = [ fourVectorType ], variables = [
+    NTupleVariable("emEnergy", lambda x : x.emEnergy(), float, mcOnly=True, help="xxx"),
+    NTupleVariable("hadEnergy", lambda x : x.hadEnergy(), float, mcOnly=True, help="xxx"),
+    NTupleVariable("invisibleEnergy", lambda x : x.invisibleEnergy(), float, mcOnly=True, help="xxx"),
+    NTupleVariable("auxiliaryEnergy", lambda x : x.auxiliaryEnergy(), float, mcOnly=True, help="xxx"),
+    NTupleVariable("nGenConstituents", lambda x : x.numberOfDaughters(), int, mcOnly=True, help="xxx"),
+
+])
 jetTypeExtra = NTupleObjectType("jetExtra",  baseObjectTypes = [ jetType ], variables = [
     NTupleVariable("area",   lambda x : x.jetArea(), help="Catchment area of jet"),
     # QG variables:
