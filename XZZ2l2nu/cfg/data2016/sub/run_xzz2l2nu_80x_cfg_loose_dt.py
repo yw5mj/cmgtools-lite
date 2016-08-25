@@ -43,7 +43,6 @@ leptonicVAna.selectVBoson = (lambda x: x.mass()>50.0 and x.mass()<180.0)
 multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>50.0 and x.leg1.mass()<180.0)
 
 #-------- SEQUENCE
-#sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
 coreSequence = [
     skimAnalyzer,
     genAna,
@@ -54,7 +53,7 @@ coreSequence = [
     lepAna,
     jetAna,
     metAna,
-    #photonAna,
+#    photonAna,
     leptonicVAna,
     multiStateAna,
     eventFlagsAna,
@@ -76,21 +75,26 @@ if test==1:
     #selectedComponents = [SingleMuon_Run2015C_25ns_16Dec]
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2] 
     #selectedComponents = [SingleMuon_Run2016D_PromptReco_v2] 
-    selectedComponents = SingleMuon+SingleElectron
+    #selectedComponents = [SingleElectron_Run2016D_PromptReco_v2] 
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2,SingleElectron_Run2016B_PromptReco_v2] 
-    #selectedComponents = [SingleMuon_Run2016D_PromptReco_v2,SingleElectron_Run2016D_PromptReco_v2] 
     #selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
     #selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
-    #selectedComponents = [BulkGravToZZToZlepZinv_narrow_600] 
+    #selectedComponents = [DY1JetsToLL_M50_MGMLM]
+    #selectedComponents = [DY1JetsToLL_M50_MGMLM, DY2JetsToLL_M50_MGMLM, DY3JetsToLL_M50_MGMLM, DY4JetsToLL_M50_MGMLM, DYBJetsToLL_M50_MGMLM]
+    #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1600] 
     #selectedComponents = signalSamples
+    #selectedComponents = signalSamples+backgroundSamples
+    #selectedComponents = backgroundSamples
+    selectedComponents = SingleMuon+SingleElectron
     #selectedComponents = [TTTo2L2Nu]
+    #selectedComponents = [ZZTo2L2Nu]
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        #c.files = c.files[3]
-        c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
+        #c.files = c.files[:1]
+        c.splitFactor = (len(c.files)/15 if len(c.files)>15 else 1)
         #c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso

@@ -74,6 +74,7 @@ lepAna = cfg.Analyzer(
     muons='slimmedMuons',
     electrons='slimmedElectrons',
     packedCandidates = 'packedPFCandidates',
+    muonUseTuneP = True,
     rhoMuon= 'fixedGridRhoFastjetCentralNeutral',
     rhoElectronMiniIso = 'fixedGridRhoFastjetCentralNeutral',
     rhoElectronPfIso = 'fixedGridRhoFastjetAll',
@@ -89,6 +90,12 @@ lepAna = cfg.Analyzer(
     miniIsolationPUCorr = None, # Allowed options: 'rhoArea' (EAs for 03 cone scaled by R^2), 'deltaBeta', 
                                      # 'raw' (uncorrected), 'weights' (delta beta weights; not validated)
                                      # Choose None to just use the individual object's PU correction
+    doMuonScaleCorrections = ( 'Kalman', {
+        'MC': 'MC_80X_13TeV',
+        'Data': 'DATA_80X_13TeV',
+        'isSync': False,
+        'smearMode': 'ebe'
+    }),
     doElectronScaleCorrections = {
         'data' : 'EgammaAnalysis/ElectronTools/data/ScalesSmearings/80X_ichepV1_2016_ele',
         'GBRForest': ('$CMSSW_BASE/src/CMGTools/XZZ2l2nu/data/GBRForest_data_ICHEP16_combined.root',
@@ -155,12 +162,12 @@ jetAna = cfg.Analyzer(
     recalibrateJets = False, #'MC', # True, False, 'MC', 'Data'
     applyL2L3Residual = False, # Switch to 'Data' when they will become available for Data
     recalibrationType = "AK4PFchs",
-    mcGT     = "Fall15_25nsV2_MC", # txt file pattern used in 74X: 'Summer15_25nsV6_MC'
-    dataGT   = "Fall15_25nsV2_DATA", #Summer15_25nsV6_DATA
-    mcGT_jer    = "Summer15_25nsV6_MC", 
-    dataGT_jer  = "Summer15_25nsV6_DATA", 
-    jecPath = "${CMSSW_BASE}/src/CMGTools/XZZ2l2nu/data/jec/", #${CMSSW_BASE}/src/CMGTools/RootTools/data/jec/
-    jerPath = "${CMSSW_BASE}/src/CMGTools/XZZ2l2nu/data/jer/", #${CMSSW_BASE}/src/CMGTools/RootTools/data/jec/
+    mcGT     = "Spring16_25nsV6_MC", # txt file pattern used in 74X: 'Summer15_25nsV6_MC'
+    dataGT   = "Spring16_25nsV6_DATA", #Summer15_25nsV6_DATA
+    mcGT_jer    = "Spring16_25nsV6_MC", 
+    dataGT_jer  = "Spring16_25nsV6_DATA", 
+    jecPath = "${CMSSW_BASE}/src/CMGTools/XZZ2l2nu/data/jec2016/", #${CMSSW_BASE}/src/CMGTools/RootTools/data/jec/
+    jerPath = "${CMSSW_BASE}/src/CMGTools/XZZ2l2nu/data/jer2016/", #${CMSSW_BASE}/src/CMGTools/RootTools/data/jec/
     shiftJEC = 0, # set to +1 or -1 to apply +/-1 sigma shift to the nominal jet energies
     addJECShifts = False, # if true, add  "corr", "corrJECUp", and "corrJECDown" for each jet (requires uncertainties to be available!)
     smearJets = False,

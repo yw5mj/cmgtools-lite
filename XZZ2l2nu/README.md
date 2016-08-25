@@ -88,6 +88,15 @@ Instructions for package development.
   git clone -o mmhy https://github.com/mmhy/cmgtools-lite.git -b xzz2l2nu_80x CMGTools
   ```
 
+6.1.  MuonRecalibrator: 
+   
+    Must add it to use muon recalbration in XZZLeptonAnalyzer.py,
+    Please see instructions in 
+
+    ``` 
+      CMGTools/XZZ2l2nu/tools/MuonCalib/readme
+    ```
+
 7. Compile the package together with Heppy Framework:
    Note, do this in CMSSWxxx/src instead of your CMSSWxxx/src/CMSTools/ directory.
 
