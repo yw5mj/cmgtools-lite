@@ -16,12 +16,13 @@
 #include <set>
 #include <utility>
 
-
+// Hengne.Li@cern.ch
+ 
 int main(int argc, char** argv) {
 
   if( argc<3 ) {
      std::cout << argv[0] << ":  " << std::endl ;
-     std::cout << " Functionality: skimming... "  << std::endl;
+     std::cout << " Functionality: very fast algorithm to remove duplicated events.... "  << std::endl;
      std::cout << "                 "  << std::endl;
      std::cout << " usage: " << argv[0] << " inputfile.root outputfile.root  " << std::endl ;
      exit(1) ;
@@ -36,9 +37,6 @@ int main(int argc, char** argv) {
   // root files
   TFile* finput = new TFile(inputfile.c_str());
   TFile* foutput = new TFile(outputfile.c_str(), "recreate");
-
-//  char name[3000];
-//  char name1[3000];
 
   // tree
   TTree* tree = (TTree*)finput->Get("tree");
