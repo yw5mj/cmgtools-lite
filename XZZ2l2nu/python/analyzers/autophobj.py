@@ -25,9 +25,9 @@ threeVectorType = NTupleObjectType("threeVector", variables = [
 
 fourVectorType = NTupleObjectType("fourVector", variables = [
     NTupleVariable("pt",    lambda x : x.pt()),
-    NTupleVariable("px",    lambda x : x.px()),
-    NTupleVariable("py",    lambda x : x.py()),
-    NTupleVariable("pz",    lambda x : x.pz()),
+    #NTupleVariable("px",    lambda x : x.px()),
+    #NTupleVariable("py",    lambda x : x.py()),
+    #NTupleVariable("pz",    lambda x : x.pz()),
     NTupleVariable("eta",   lambda x : x.eta()),
     NTupleVariable("rapidity",   lambda x : x.rapidity()),
     NTupleVariable("phi",   lambda x : x.phi()),
@@ -37,9 +37,9 @@ fourVectorType = NTupleObjectType("fourVector", variables = [
 ])
 tlorentzFourVectorType = NTupleObjectType("tlorentzFourVectorType", variables = [
     NTupleVariable("pt",    lambda x : x.Pt()),
-    NTupleVariable("px",    lambda x : x.Px()),
-    NTupleVariable("py",    lambda x : x.Py()),
-    NTupleVariable("pz",    lambda x : x.Pz()),
+    #NTupleVariable("px",    lambda x : x.Px()),
+    #NTupleVariable("py",    lambda x : x.Py()),
+    #NTupleVariable("pz",    lambda x : x.Pz()),
     NTupleVariable("eta",   lambda x : x.Eta()),
     NTupleVariable("rapidity",   lambda x : x.Rapidity()),
     NTupleVariable("phi",   lambda x : x.Phi()),
@@ -65,11 +65,11 @@ leptonType = NTupleObjectType("lepton", baseObjectTypes = [ particleType ], vari
     NTupleVariable("charge",   lambda x : x.charge(), int),
     NTupleVariable("hasgen",  lambda x : getattr(x,"hasgen",-1), int, help="has gen particle"),
     NTupleVariable("ptErr",  lambda x : x.ptErr() if abs(x.pdgId())==13 else -999, help="pt Error"),
-    NTupleVariable("TuneP_pt",  lambda x : x.TuneP_pt() if abs(x.pdgId())==13 else x.pt(), help="TuneP Pt for muon"),
-    NTupleVariable("TuneP_ptErr",  lambda x : x.physObj.tunePMuonBestTrack().ptError() if abs(x.pdgId())==13 else -999, help="TuneP Pt error for muon"),
-    NTupleVariable("TuneP_eta",  lambda x : x.TuneP_eta() if abs(x.pdgId())==13 else x.eta(), help="TuneP eta for muon"),
-    NTupleVariable("TuneP_phi",  lambda x : x.TuneP_phi() if abs(x.pdgId())==13 else x.phi(), help="TuneP phi for muon"),
-    NTupleVariable("TuneP_type",  lambda x : x.physObj.tunePMuonBestTrackType() if abs(x.pdgId())==13 else -999, help="TuneP type for muon, https://cmssdt.cern.ch/SDT/doxygen/CMSSW_7_6_3_patch2/doc/html/df/de3/classreco_1_1Muon.html#afceb985a23ee1d456e4dc91391f2e7fe"),
+    #NTupleVariable("TuneP_pt",  lambda x : x.TuneP_pt() if abs(x.pdgId())==13 else x.pt(), help="TuneP Pt for muon"),
+    #NTupleVariable("TuneP_ptErr",  lambda x : x.physObj.tunePMuonBestTrack().ptError() if abs(x.pdgId())==13 else -999, help="TuneP Pt error for muon"),
+    #NTupleVariable("TuneP_eta",  lambda x : x.TuneP_eta() if abs(x.pdgId())==13 else x.eta(), help="TuneP eta for muon"),
+    #NTupleVariable("TuneP_phi",  lambda x : x.TuneP_phi() if abs(x.pdgId())==13 else x.phi(), help="TuneP phi for muon"),
+    #NTupleVariable("TuneP_type",  lambda x : x.physObj.tunePMuonBestTrackType() if abs(x.pdgId())==13 else -999, help="TuneP type for muon, https://cmssdt.cern.ch/SDT/doxygen/CMSSW_7_6_3_patch2/doc/html/df/de3/classreco_1_1Muon.html#afceb985a23ee1d456e4dc91391f2e7fe"),
     # Impact parameter
     NTupleVariable("dxy",   lambda x : x.dxy(), help="d_{xy} with respect to PV, in cm (with sign)"),
     NTupleVariable("dz",    lambda x : x.dz() , help="d_{z} with respect to PV, in cm (with sign)"),
@@ -214,9 +214,9 @@ jetType = NTupleObjectType("jet",  baseObjectTypes = [ fourVectorType ], variabl
     NTupleVariable("rawPt",  lambda x : x.pt() * x.rawFactor(), help="p_{T} before JEC"),
     NTupleVariable("hadronFlavour", lambda x : x.hadronFlavour(), int,     mcOnly=True, help="hadron flavour (ghost matching to B/C hadrons)"),
     NTupleVariable("mcMatchId",  lambda x : getattr(x, 'matchedGenJetIdx', -99), int, mcOnly=True, help="Match to source from hard scatter (pdgId of heaviest particle in chain, 25 for H, 6 for t, 23/24 for W/Z), zero if non-prompt or fake"),
-    NTupleVariable("corr_JECUp",  lambda x : getattr(x, 'corrJECUp', -99), float, mcOnly=True, help="JEC correction factor up"),
-    NTupleVariable("corr_JECDown",  lambda x : getattr(x, 'corrJECDown', -99), float, mcOnly=True, help="JEC correction factor down"),
-    NTupleVariable("corr",  lambda x : getattr(x, 'corr', -99), float, mcOnly=True, help="JEC correction factor"),
+    #NTupleVariable("corr_JECUp",  lambda x : getattr(x, 'corrJECUp', -99), float, mcOnly=True, help="JEC correction factor up"),
+    #NTupleVariable("corr_JECDown",  lambda x : getattr(x, 'corrJECDown', -99), float, mcOnly=True, help="JEC correction factor down"),
+    #NTupleVariable("corr",  lambda x : getattr(x, 'corr', -99), float, mcOnly=True, help="JEC correction factor"),
 ])
 
 genJetType = NTupleObjectType("genJetType",  baseObjectTypes = [ fourVectorType ], variables = [
@@ -252,7 +252,7 @@ metType = NTupleObjectType("met", baseObjectTypes = [ fourVectorType ], variable
     NTupleVariable("genPt",  lambda x : x.genMET().pt() if x.genMET() else 0 , mcOnly=True ),
     NTupleVariable("genPhi", lambda x : x.genMET().phi() if x.genMET() else 0, mcOnly=True ),
     NTupleVariable("genEta", lambda x : x.genMET().eta() if x.genMET() else 0, mcOnly=True ),
-    NTupleVariable("metSig", lambda x : x.metSignificance() ),
+    #NTupleVariable("metSig", lambda x : x.metSignificance() ),
     #NTupleSubObject("metNoJet",  lambda x : x.metNoJet, fourVectorType),
 ])
 
