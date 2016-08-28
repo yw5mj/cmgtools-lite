@@ -25,4 +25,90 @@
 
 
 
+#====================================================================
+# general paramters
+#====================================================================
+
+# debug
+debug: false
+
+# starting entry number 
+n_start: 0
+
+# number of entries to be run, -1 means all entries
+n_test: 100
+
+# n entries interval between which print once entry number
+n_interval: 5000
+
+# use slimmed tree or not
+useLightTree: true
+
+# tree selection string
+selection: (1)
+
+# store old branches 
+storeOldBranches: false
+
+
+
+
+# add PU weight
+
+#=========================
+addPUWeights: true
+
+# PU input files directory
+PUInputDir: data/pileup
+
+# PU input tags, "puWeight<tag>" branches will be added
+PUTags: 67921, 68075, 69200 
+
+# PU input root files, one-to-one correspnding to the tags above
+PUInputFileNames: pileup_MC_80x_271036-276811_67921.root, pileup_MC_80x_271036-276811_68075.root, pileup_MC_80x_271036-276811_69200.root
+
+# PU weight hist name
+PUWeightHistName: puweight_dtmc
+
+
+# recalibrate muon pt
+
+doMuonPtRecalib: false
+
+
+#========================
+# Add DYJet gen reweight 
+#========================
+# Add DYJet gen reweight according to 
+# unfolded 2015 data precision measurement results 
+# will also reweight LO to NLO MC samples to gain statistics.
+
+# default will use histograms for both NLO and LO reweight
+addDyZPtWeight: true
+
+# for NLO MC use function parametrization instead of hist.
+addDyZPtWeightUseFunction: true
+
+# for LO MC to NLO, also use function  
+addDyZPtWeightLOUseFunction: true
+
+# add new DY jets gen-weights for mergeing NLO and LO
+# to gain statistics
+addDyNewGenWeight: true
+
+
+
+#==============================================
+# Do simple version of the MET recoil tuning
+#==============================================
+
+# default use histogram
+doRecoil: false
+
+# use smoothed hist
+doRecoilUseSmooth: true
+
+# use graph from smoothed hist
+doRecoilUseSmoothGraph: true
+
 
