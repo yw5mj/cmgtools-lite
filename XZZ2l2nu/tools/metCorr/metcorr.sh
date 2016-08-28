@@ -7,6 +7,8 @@ config=config/parameters_light
 
 mkdir -p ${outputdir}
 
+gmake all
+
 njob="0"
 
 #for infile in $inputdir/*/vvTreeProducer/tree.root ; 

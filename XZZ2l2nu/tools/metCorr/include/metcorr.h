@@ -177,7 +177,7 @@ bool _doRecoilUseSmoothGraph = true;
 Double_t _SumEvents, _SumWeights;
 
 // isData
-Bool_t _isData;
+Int_t _isData;
 
 // run, lumi, evt
 UInt_t _run, _lumi;
@@ -232,14 +232,14 @@ void readConfigFile();
 // prepare the trees, if no entries in _tree_in, stop the program.
 bool prepareTrees();
 
+// store Old Branches
+void storeOldBranches();
+
 // prepare inputs for pu weights
 void preparePUWeights();
 
 // add more pileup weights
 void addPUWeights();
-
-
-
 
 // prepare inputs for muon re-calib
 void prepareMuonPtRecalib();

@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
   readConfigFile();
 
   // prepare the trees
-  if (!prepareTrees()) return 1;
+  prepareTrees();
 
   // prepare inputs for pu weights
   if (_addPUWeights && !_isData) preparePUWeights();
@@ -82,6 +82,8 @@ int main(int argc, char** argv) {
       std::cout << "#############################################" << std::endl;
     }
 
+    // _storeOldBranches
+    if (_storeOldBranches) storeOldBranches();
 
     // add pu weights
     if (_addPUWeights && !_isData) addPUWeights();
@@ -285,8 +287,6 @@ bool  prepareTrees()
   _tree_out->Branch("SumEvents", &_SumEvents, "SumEvents/D");
   _tree_out->Branch("SumWeights", &_SumWeights, "SumWeights/D");
 
-
-
   // keep a copy of old branches
   if (_storeOldBranches) {
     _tree_out->Branch("llnunu_mt_old", &_llnunu_mt_old, "llnunu_mt_old/F");
@@ -310,12 +310,29 @@ bool  prepareTrees()
   return true;
 }
 
-
+// store Old Branches
+void storeOldBranches()
+{
+  _llnunu_mt_old = _llnunu_mt;
+  _llnunu_l1_mass_old = _llnunu_l1_mass;
+  _llnunu_l1_pt_old = _llnunu_l1_pt;
+  _llnunu_l1_phi_old = _llnunu_l1_phi;
+  _llnunu_l1_eta_old = _llnunu_l1_eta;
+  _llnunu_l2_pt_old = _llnunu_l2_pt;
+  _llnunu_l2_phi_old = _llnunu_l2_phi;
+  _llnunu_l1_l1_pt_old = _llnunu_l1_l1_pt;
+  _llnunu_l1_l1_eta_old = _llnunu_l1_l1_eta;
+  _llnunu_l1_l1_phi_old = _llnunu_l1_l1_phi;
+  _llnunu_l1_l1_ptErr_old = _llnunu_l1_l1_ptErr;
+  _llnunu_l1_l2_pt_old = _llnunu_l1_l2_pt;
+  _llnunu_l1_l2_eta_old = _llnunu_l1_l2_eta;
+  _llnunu_l1_l2_phi_old = _llnunu_l1_l2_phi;
+  _llnunu_l1_l2_ptErr_old = _llnunu_l1_l2_ptErr;
+}
 
 // prepare inputs for pu weights
 void preparePUWeights()
 {
-  
   // for each puWeight, read input weight hist and create branch
   for (int i=0; i<(int)_PUTags.size(); i++) {
     sprintf(name, "%s/%s", _PUInputDir.c_str(), _PUInputFileNames.at(i).c_str());
