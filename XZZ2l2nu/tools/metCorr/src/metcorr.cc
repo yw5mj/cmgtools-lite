@@ -175,6 +175,8 @@ void readConfigFile()
   // muon pT recalibration
   //==========================
   _doMuonPtRecalib = parm.GetBool("doMuonPtRecalib", kFALSE);
+  _MuonPtRecalibInputForData = parm.GetString("MuonPtRecalibInputForData", "data/kalman/DATA_80X_13TeV.root");
+  _MuonPtRecalibInputForMC = parm.GetString("MuonPtRecalibInputForMC", "data/kalman/MC_80X_13TeV.root");
 
 
   //========================
@@ -359,14 +361,46 @@ void addPUWeights()
 // prepare inputs for muon re-calib
 void prepareMuonPtRecalib()
 {
-  std::cout << "addPileupWeights:: to be implemented" << std::endl;
+  if (_isData) _muCalib = new KalmanMuonCalibrator(_MuonPtRecalibInputForData.c_str());
+  else _muCalib = new KalmanMuonCalibrator(_MuonPtRecalibInputForMC.c_str());
 }
 
 
 // do muon re-calib
 void doMuonPtRecalib()
 {
-  std::cout << "addPileupWeights:: to be implemented" << std::endl;
+  if (abs(_llnunu_l1_l1_pdgId)==13&&abs(_llnunu_l1_l2_pdgId)==13 && _llnunu_l1_l1_pt>2. && _llnunu_l1_l1_pt<200. ) {
+    _llnunu_l1_l1_pt = (Float_t)_muCalib->getCorrectedPt(double(_llnunu_l1_l1_pt), double(_llnunu_l1_l1_eta), double(_llnunu_l1_l1_phi), double(_llnunu_l1_l1_charge));
+    _llnunu_l1_l2_pt = (Float_t)_muCalib->getCorrectedPt(double(_llnunu_l1_l2_pt), double(_llnunu_l1_l2_eta), double(_llnunu_l1_l2_phi), double(_llnunu_l1_l2_charge));
+    if (!_isData) {
+      _llnunu_l1_l1_pt = (Float_t)_muCalib->smear(double(_llnunu_l1_l1_pt), double(_llnunu_l1_l1_eta));
+      _llnunu_l1_l2_pt = (Float_t)_muCalib->smear(double(_llnunu_l1_l2_pt), double(_llnunu_l1_l2_eta));
+    }
+    _llnunu_l1_l1_ptErr = _llnunu_l1_l1_pt*(Float_t)_muCalib->getCorrectedError(double(_llnunu_l1_l1_pt), double(_llnunu_l1_l1_eta), double(_llnunu_l1_l1_ptErr/_llnunu_l1_l1_pt));
+    _llnunu_l1_l2_ptErr = _llnunu_l1_l2_pt*(Float_t)_muCalib->getCorrectedError(double(_llnunu_l1_l2_pt), double(_llnunu_l1_l2_eta), double(_llnunu_l1_l2_ptErr/_llnunu_l1_l2_pt));
+    TLorentzVector l1v, l2v;
+    l1v.SetPtEtaPhiM(_llnunu_l1_l1_pt, _llnunu_l1_l1_eta, _llnunu_l1_l1_phi, _llnunu_l1_l1_mass);
+    l2v.SetPtEtaPhiM(_llnunu_l1_l2_pt, _llnunu_l1_l2_eta, _llnunu_l1_l2_phi, _llnunu_l1_l2_mass);
+    TLorentzVector zv = l1v+l2v;
+    _llnunu_l1_l1_rapidity = (Float_t)l1v.Rapidity(); 
+    _llnunu_l1_l2_rapidity = (Float_t)l2v.Rapidity();
+    _llnunu_l1_pt = (Float_t)zv.Pt();
+    _llnunu_l1_eta = (Float_t)zv.Eta();
+    _llnunu_l1_phi = (Float_t)zv.Phi();
+    _llnunu_l1_rapidity = (Float_t)zv.Rapidity();
+    _llnunu_l1_deltaPhi = (Float_t)l1v.DeltaPhi(l2v);
+    _llnunu_l1_deltaR = (Float_t)l1v.DeltaR(l2v);
+    _llnunu_l1_mt = (Float_t)zv.Mt();
+    _llnunu_l1_mass = (Float_t)zv.M();
+
+    TVector2 vec_met(_llnunu_l2_pt*cos(_llnunu_l2_phi), _llnunu_l2_pt*sin(_llnunu_l2_phi));
+
+    Float_t et1 = TMath::Sqrt(_llnunu_l1_mass*_llnunu_l1_mass + _llnunu_l1_pt*_llnunu_l1_pt);
+    Float_t et2 = TMath::Sqrt(_llnunu_l1_mass*_llnunu_l1_mass + _llnunu_l2_pt*_llnunu_l2_pt);
+    _llnunu_mt = TMath::Sqrt(2.0*_llnunu_l1_mass*_llnunu_l1_mass+2.0*(et1*et2
+               -_llnunu_l1_pt*cos(_llnunu_l1_phi)*_llnunu_l2_pt*cos(_llnunu_l2_phi)
+               -_llnunu_l1_pt*sin(_llnunu_l1_phi)*_llnunu_l2_pt*sin(_llnunu_l2_phi)));
+  }
 }
 
 

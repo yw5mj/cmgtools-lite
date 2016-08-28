@@ -19,6 +19,8 @@
 #include "TProfile.h"
 #include "TGraphErrors.h"
 #include "TEntryList.h"
+#include "TLorentzVector.h"
+
 
 // std
 #include <iostream>
@@ -32,6 +34,7 @@
 // other
 #include "tdrstyle.h"
 #include "PParameterReader.h"
+#include "KalmanMuonCalibrator.h"
 
 
 
@@ -125,6 +128,13 @@ std::vector<Float_t*> _PUWeights;
 // recalibrate muon pt
 //==========================
 bool _doMuonPtRecalib = false;
+
+// read from config file
+std::string _MuonPtRecalibInputForData, _MuonPtRecalibInputForMC;
+
+
+// not from config file
+KalmanMuonCalibrator* _muCalib;
 
 
 //========================

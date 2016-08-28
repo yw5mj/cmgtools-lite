@@ -72,7 +72,8 @@ PUWeightHistName: puweight_dtmc
 # recalibrate muon pt
 #====================================================================
 doMuonPtRecalib: false
-
+MuonPtRecalibInputForData: data/kalman/DATA_80X_13TeV.root
+MuonPtRecalibInputForMC: data/kalman/MC_80X_13TeV.root
 
 #====================================================================
 # Add DYJet gen reweight 
