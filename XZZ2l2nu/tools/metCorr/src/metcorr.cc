@@ -105,7 +105,7 @@ int main(int argc, char** argv) {
   // store output tree
   _file_out->cd();
   _tree_out->Write();
-
+  _file_out->Close();
 
   return 0;
 
@@ -172,7 +172,7 @@ void readConfigFile()
   //==========================
   // muon pT recalibration
   //==========================
-  _doMuonPtRecalib = parm.GetBool("", kFALSE);
+  _doMuonPtRecalib = parm.GetBool("doMuonPtRecalib", kFALSE);
 
 
   //========================
@@ -278,6 +278,7 @@ bool  prepareTrees()
   // 2.) Output tree
 
   // output tree
+  _file_out->cd();
   _tree_out = _tree_in->CloneTree(0);
 
   // sum of events and weights
@@ -317,7 +318,8 @@ void preparePUWeights()
   
   // for each puWeight, read input weight hist and create branch
   for (int i=0; i<(int)_PUTags.size(); i++) {
-    _PUFiles.push_back(new TFile(_PUInputFileNames.at(i).c_str()));
+    sprintf(name, "%s/%s", _PUInputDir.c_str(), _PUInputFileNames.at(i).c_str());
+    _PUFiles.push_back(new TFile(name));
     _PUHists.push_back((TH1D*)_PUFiles.at(i)->Get(_PUWeightHistName.c_str()));
     _PUWeights.push_back(new Float_t(1.0));
     sprintf(name, "puWeight%s", _PUTags.at(i).c_str());

@@ -48,7 +48,7 @@ useLightTree: true
 selection: (1)
 
 # store old branches 
-storeOldBranches: false
+storeOldBranches: true
 
 
 
@@ -71,8 +71,9 @@ PUInputFileNames: pileup_MC_80x_271036-276811_67921.root, pileup_MC_80x_271036-2
 PUWeightHistName: puweight_dtmc
 
 
+#========================
 # recalibrate muon pt
-
+#========================
 doMuonPtRecalib: false
 
 
@@ -84,7 +85,7 @@ doMuonPtRecalib: false
 # will also reweight LO to NLO MC samples to gain statistics.
 
 # default will use histograms for both NLO and LO reweight
-addDyZPtWeight: true
+addDyZPtWeight: false
 
 # for NLO MC use function parametrization instead of hist.
 addDyZPtWeightUseFunction: true
