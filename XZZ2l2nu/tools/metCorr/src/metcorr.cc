@@ -89,9 +89,9 @@ int main(int argc, char** argv) {
 
     //
     if (_debug || i%_n_interval == 0) {
-      std::cout << "#############################################" << std::endl;
+      if (_debug) std::cout << "#############################################" << std::endl;
       std::cout << "##  Entry " << i << ", Run " << _run << ", Event " << _evt << std::endl;
-      std::cout << "#############################################" << std::endl;
+      if (_debug) std::cout << "#############################################" << std::endl;
     }
 
     // _storeOldBranches

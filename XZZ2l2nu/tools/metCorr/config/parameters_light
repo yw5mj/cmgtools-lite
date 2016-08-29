@@ -32,7 +32,7 @@ debug: false
 n_start: 0
 
 # number of entries to be run, -1 means all entries
-n_test: 100
+n_test: -1
 
 # n entries interval between which print once entry number
 n_interval: 5000
@@ -94,10 +94,10 @@ MuonPtRecalibInputForMC: data/kalman/MC_80X_13TeV.root
 addDyZPtWeight: true
 
 # for NLO MC use function parametrization instead of hist.
-addDyZPtWeightUseFunction: false
+addDyZPtWeightUseFunction: true
 
 # for LO MC to NLO, also use function  
-addDyZPtWeightLOUseFunction: false
+addDyZPtWeightLOUseFunction: true
 
 # add new DY jets gen-weights for mergeing NLO and LO
 # to gain statistics
