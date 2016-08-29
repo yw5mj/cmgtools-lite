@@ -7,9 +7,12 @@ from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
+tag="NewRecoil_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
+#tag="ElEscale_LOZJets_NewPuMuSf_MuPtScale_MCRecoilGraph_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
+#tag="ElEscale_MergedBigZJets_NewPuMuSf_MuPtScale_MCRecoilGraph_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="TkHptId_NewPuMuSf_MuPtScale_MCRecoilGraph_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="HptId_NewPuMuSf_MuPtScale_MCRecoilGraph_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
-tag="BigZJets_NewPuMuSf_MuPtScale_MCRecoilGraph_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
+#tag="BigZJets_NewPuMuSf_MuPtScale_MCRecoilGraph_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="Test_MCRecoilSmooth_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="BigZJetsMC_NewRecoil_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="BigZJetsMC_MCRecoilSmooth_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
@@ -26,9 +29,9 @@ cutChain='tight'
 #cutChain='tightzpt100met100'
 #cutChain='tightzpt100met200'
 
-channel='el' # can be el or mu or both
+channel='mu' # can be el or mu or both
 LogY=False
-test=False
+test=True
 DrawLeptons=True
 doRhoScale=True
 
@@ -51,7 +54,8 @@ if doRhoScale:
 
 outdir='plots'
 
-indir='/home/heli/XZZ/80X_20160818_light_Skim_EffSkim'
+indir='/home/heli/XZZ/80X_20160825_light_Skim'
+#indir='/home/heli/XZZ/80X_20160818_light_Skim_EffSkim'
 #indir='root://eoscms//store/caf/user/heli/XZZ/80X_20160721_EffSkim_v2'
 #indir='/home/heli/XZZ/80X_20160721_SkimV2_EffSkim'
 #indir='/home/heli/XZZ/80X_20160721_SkimV2_EffSkim'
@@ -235,8 +239,9 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 
 zjetsPlotters=[]
+#zjetsSamples = ['DYJetsToLL_M50','DYJetsToLL_M50_MGMLM_Ext1']
+zjetsSamples = ['DYJetsToLL_M50'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_HT100to200','DYJetsToLL_M50_HT200to400','DYJetsToLL_M50_HT400to600','DYJetsToLL_M50_HT600toInf']
-#zjetsSamples = ['DYJetsToLL_M50'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_noRecoil'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_newRecoil'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth'] # M50
@@ -247,20 +252,20 @@ zjetsPlotters=[]
 #zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_BIG'] # M50_BIG = M50 + M50_Ext
 #zjetsSamples = ['DYJetsToLL_M50_BIG_ZPt'] 
-zjetsSamples = ['DYJetsToLL_M50_BIG_RecoilGraph'] # M50
+#zjetsSamples = ['DYJetsToLL_M50_BIG_RecoilGraph'] # M50
 
 
 for sample in zjetsSamples:
     zjetsPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
-    #zjetsPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
-    zjetsPlotters[-1].addCorrectionFactor('(1)','norm')
+    zjetsPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
+    #zjetsPlotters[-1].addCorrectionFactor('(1)','norm')
     if ZJetsZPtWeight: zjetsPlotters[-1].addCorrectionFactor('ZPtWeight','ZPtWeight')
     #zjetsPlotters[-1].addCorrectionFactor('PhiStarWeight','PhiStarWeight')
     #zjetsPlotters[-1].addCorrectionFactor('xsec','xsec')
     zjetsPlotters[-1].addCorrectionFactor('(1921.8*3)','xsec') # FEWZ NNLO.results_z_m50_nnlo_inclusive_NNPDF30_nlo_as_0118
     #zjetsPlotters[-1].addCorrectionFactor('(1907.0*3)','xsec') # FEWZ NNLO.results_z_m50_nnlo_fsrOn_lowstat_inclusive_NNPDF30_nlo_as_0118
-    #zjetsPlotters[-1].addCorrectionFactor('genWeight','genWeight')
-    zjetsPlotters[-1].addCorrectionFactor('ZJetsGenWeight','genWeight')
+    zjetsPlotters[-1].addCorrectionFactor('genWeight','genWeight')
+    #zjetsPlotters[-1].addCorrectionFactor('ZJetsGenWeight','genWeight')
     zjetsPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     zjetsPlotters[-1].addCorrectionFactor(lepsf,'lepsf')
     allPlotters[sample] = zjetsPlotters[-1]
@@ -425,7 +430,7 @@ Stack.doRatio(doRatio)
 tag+='_'
 
 if test: 
-    #Stack.drawStack('llnunu_l1_mass', cuts, str(lumi*1000), 50, 50, 150, titlex = "M(Z)", units = "GeV",output=tag+'zmass',outDir=outdir,separateSignal=sepSig)
+    Stack.drawStack('llnunu_l1_mass', cuts, str(lumi*1000), 50, 50, 150, titlex = "M(Z)", units = "GeV",output=tag+'zmass',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 100, 0.0, 500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt_low',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('llnunu_l1_l1_pt', cuts, str(lumi*1000), 200, 0.0, 1000.0, titlex = "P_{T}(l_{1})", units = "GeV",output=tag+'pTlep1',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('llnunu_l1_l2_pt', cuts, str(lumi*1000), 200, 0.0, 500.0, titlex = "P_{T}(l_{2})", units = "GeV",output=tag+'pTlep2',outDir=outdir,separateSignal=sepSig)

@@ -1,24 +1,41 @@
 
 
-std::string filename=
-   "skim/DYJetsToLL_M50.root"
-  //"skim2/SingleEMU_Run2015_16Dec_V4_doJetsCorrUseLepResPtErrSel8JetLepSigProtectV2MetShift"
-  //"skim2/DYJetsToLL_M50_BIG_ZPt_V4_doJetsCorrUseLepResPtErrSel8JetLepSigProtectV2MetShift"
-  //"skim2/DYJetsToLL_M50_V4_doJetsCorrUseLepResPtErrSel8JetLepSigProtectV2"
-  //"skim2/SingleEMU_Run2015_16Dec_V4_doJetsCorrUseLepResPtErrSel8JetLepSigProtectV2"
-  //"skim2/SingleEMU_Run2015_16Dec_V4_doJetsCorrUseLepResPtErrSel8JetLepSigProtect"
-  //"skim2/DYJetsToLL_M50_V4_doJetsCorrUseLepResPtErrSel8JetLepSigProtect"
-   //"skim2/DYJetsToLL_M50_V4_doJetsCorrUseLepResPtErrSel8JetLepHardOnlyZpT250"
+std::string inputdir = 
+  "/home/heli/XZZ/80X_20160825_light_Skim"
+  //"./"
   ;
+std::string filename =
+  //"DYJetsToLL_M50_NoRecoil"
+  "DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
+  //"SingleEMU_Run2016BCD_PromptReco"
+  ;
+
+std::string base_selec = 
+  "(llnunu_l1_mass>50&&llnunu_l1_mass<180)"
+  //"(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11&&llnunu_l1_mass>50&&llnunu_l1_mass<180)"
+  //"(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_mass>50&&llnunu_l1_mass<180)"
+  ;
+
 std::string tag = 
-  "_met_para_study";
+  "_met_para_study"
+  //"_met_para_study_el"
+  //"_met_para_study_mu"
+;
 
 std::string lumiTag = 
-  "CMS 13 TeV 2015 L=6.26 fb^{-1}"
+  "CMS 13 TeV 2016 L=12.9 fb^{-1}"
   //"CMS 13 TeV Simulation for 2016 Data"
-  //"CMS 13 TeV 2015 L=2.32 fb^{-1}"
-  //"CMS 13 TeV Simulation for 2015 Data"
   ;
+
+
+// add weight
+std::string weight_selec = std::string("*(genWeight*ZPtWeight*puWeight68075/SumWeights*1921.8*3*12900.0)");
+
+// rho weight
+std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
+
+//std::string selec = base_selec;
+std::string selec = base_selec + weight_selec + rhoweight_selec;
 
 char name[1000];
 std::string histname;
@@ -49,8 +66,9 @@ int fit_slice_gaus(TH2D* h2d, TH1D** h1d);
 void fit_met_para(){
 
   gROOT->ProcessLine(".x tdrstyle.C");
+  gStyle->SetOptTitle(0);
 
-  lumipt = new TPaveText(0.45,0.9,0.9,0.98,"brNDC");
+  lumipt = new TPaveText(0.2,0.9,0.8,0.98,"brNDC");
   lumipt->SetBorderSize(0);
   lumipt->SetTextAlign(12);
   lumipt->SetFillStyle(0);
@@ -58,50 +76,56 @@ void fit_met_para(){
   lumipt->SetTextSize(0.03);
   lumipt->AddText(0.15,0.3, lumiTag.c_str());
 
-  sprintf(name, "%s.root", filename.c_str());
+  sprintf(name, "%s/%s.root", inputdir.c_str(), filename.c_str());
   fin = new TFile(name);
+
 
   sprintf(name, "%s%s.root", filename.c_str(), tag.c_str());
   fout = new TFile(name, "recreate");
+
+  TTree* tree = (TTree*)fin->Get("tree");
 
   plots = new TCanvas("plots", "plots");
 
   sprintf(name, "%s%s.ps[", filename.c_str(), tag.c_str());
   plots->Print(name);
+
+
+  // other control plots
+  Double_t ZPtBins[] = {0,2,4,6,8,10,12,14,16,18,20,22,24,26,28, 30, 35, 40, 50, 60, 80, 100, 150, 250, 5000 };
+  Int_t NZPtBins = sizeof(ZPtBins)/sizeof(ZPtBins[0]) - 1;
+  const Int_t NMetParaBins=500;
+  Double_t MetParaBins[NMetParaBins+1];
+  for (int i=0; i<=NMetParaBins; i++) { MetParaBins[i] = -100.0+200.0/NMetParaBins*i; };
+  const Int_t NMetPerpBins=500;
+  Double_t MetPerpBins[NMetPerpBins+1];
+  for (int i=0; i<=NMetPerpBins; i++) { MetPerpBins[i] = -100.0+200.0/NMetPerpBins*i; };
+
+  h2d1 = new TH2D("h_met_para_vs_zpt", "h_met_para_vs_zpt", NZPtBins, ZPtBins, NMetParaBins, MetParaBins);
+  h2d2 = new TH2D("h_met_perp_vs_zpt", "h_met_perp_vs_zpt", NZPtBins, ZPtBins, NMetPerpBins, MetPerpBins);
+  h2d1->Sumw2();
+  h2d2->Sumw2();
+  tree->Draw("llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi):llnunu_l1_pt>>h_met_para_vs_zpt", selec.c_str(), "colz");
+  tree->Draw("llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi):llnunu_l1_pt>>h_met_perp_vs_zpt", selec.c_str(), "colz");
   
-  histname="h_met_para_vs_zpt_new";
-  h2d1 = (TH2D*)fin->Get(histname.c_str());
   h2d1->GetXaxis()->SetTitle("P_{T}(Z) (GeV)");
   h2d1->GetYaxis()->SetTitle("MET para (GeV)");
+  h2d2->GetXaxis()->SetTitle("P_{T}(Z) (GeV)");
+  h2d2->GetYaxis()->SetTitle("MET para (GeV)");
 
-  Nbins = h2d1->GetNbinsX();
+  Nbins = NZPtBins;
   fit_min = { -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -25  };
   fit_max = { +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20  };
   fit_rebin = {  4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4  };
-
-
-  histname="h_met_para_vs_zpt_old";
-  h2d2 = (TH2D*)fin->Get(histname.c_str());
-  h2d2->GetXaxis()->SetTitle("P_{T}(Z) (GeV)");
-  h2d2->GetYaxis()->SetTitle("MET para (GeV)");
+  for (int ii=0; ii<Nbins; ii++) fit_rebin[ii] = 5;
+  for (int ii=0; ii<Nbins; ii++) fit_min[ii] = -16;
+  for (int ii=0; ii<Nbins; ii++) fit_max[ii] = 16;
 
   fit_min = { -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -30, -30, -30, -30  };
   fit_max = { +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +30, +30, +30, +30  };
 
-  histname="h_met_perp_vs_zpt_new";
-  h2d3 = (TH2D*)fin->Get(histname.c_str());
-  h2d3->GetXaxis()->SetTitle("P_{T}(Z) (GeV)");
-  h2d3->GetYaxis()->SetTitle("MET perp (GeV)");
-
-  histname="h_met_perp_vs_zpt_old";
-  h2d4 = (TH2D*)fin->Get(histname.c_str());
-  h2d4->GetXaxis()->SetTitle("P_{T}(Z) (GeV)");
-  h2d4->GetYaxis()->SetTitle("MET perp (GeV)");
-
   fit_slice_gaus(h2d1, h1d1);
   fit_slice_gaus(h2d2, h1d2);
-  fit_slice_gaus(h2d3, h1d3);
-  fit_slice_gaus(h2d4, h1d4);
 
 
 
