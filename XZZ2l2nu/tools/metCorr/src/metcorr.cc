@@ -35,7 +35,16 @@ int main(int argc, char** argv) {
   // output file 
   _file_out = TFile::Open(_file_out_name.c_str(), "recreate");
 
-
+  // special for DYJets MC samples,
+  //  decide if this is the DYJets samples, and LO or NLO, 
+  //  based on the output file names. So...note below:
+  // ATTENTION: 
+  //   Makes sure output NLO DYJets MC output file name has string
+  //   "DYJets" but does not have "MGMLM", and LO DYJets one has 
+  //   both strings "DYJets" and "MGMLM". 
+  _isDyJets = (_file_out_name.find("DYJets")!=std::string::npos);
+  _isDyJetsLO = (_file_out_name.find("DYJets")!=std::string::npos && _file_out_name.find("MGMLM")!=std::string::npos);
+  
 
   // read config file
   readConfigFile();
@@ -51,7 +60,7 @@ int main(int argc, char** argv) {
 
 
   // prepare inputs for addDyZPtWeight
-  if (_addDyZPtWeight && !_isData) prepareDyZPtWeight();
+  if (_addDyZPtWeight && !_isData && _isDyJets) prepareDyZPtWeight();
 
   // prepare inputs for simple met recoil tune.
   if (_doRecoil && !_isData) prepareRecoil();
@@ -185,8 +194,8 @@ void readConfigFile()
   _addDyZPtWeight = parm.GetBool("addDyZPtWeight", kTRUE);
   _addDyZPtWeightUseFunction = parm.GetBool("addDyZPtWeightUseFunction", kTRUE);
   _addDyZPtWeightLOUseFunction = parm.GetBool("addDyZPtWeightLOUseFunction", kTRUE);
+  _DyZPtWeightInputFileName = parm.GetString("DyZPtWeightInputFileName", "data/zptweight/dyjets_zpt_weight_lo_nlo_sel.root");
   _addDyNewGenWeight = parm.GetBool("addDyNewGenWeight", kTRUE);;
-
 
   //==============================================
   // Do simple version of the MET recoil tuning
@@ -412,14 +421,80 @@ void prepareDyZPtWeight()
   _tree_out->Branch("ZPtWeight", &_ZPtWeight, "ZPtWeight/F");
   _tree_out->Branch("ZPtWeight_up", &_ZPtWeight_up, "ZPtWeight_up/F");
   _tree_out->Branch("ZPtWeight_dn", &_ZPtWeight_dn, "ZPtWeight_dn/F");
-  _tree_out->Branch("ZJetsGenWeight", &_ZJetsGenWeight, "ZJetsGenWeight/F");
+  if (_addDyNewGenWeight) {
+    _tree_out->Branch("ZJetsGenWeight", &_ZJetsGenWeight, "ZJetsGenWeight/F");
+  }
 
+  // get input file and building materials
+  _fdyzpt = new TFile(_DyZPtWeightInputFileName.c_str());
+  _hdyzpt_dtmc_ratio = (TH1D*)_fdyzpt->Get("hdyzpt_dtmc_ratio");
+  _fcdyzpt_dtmc_ratio = (TF1*)_fdyzpt->Get("fcdyzpt_dtmc_ratio");
+  _hdyzpt_mc_nlo_lo_ratio = (TH1D*)_fdyzpt->Get("hdyzpt_mc_nlo_lo_ratio");
+  _fcdyzpt_mc_nlo_lo_ratio = (TF1*)_fdyzpt->Get("fcdyzpt_mc_nlo_lo_ratio");
+  
 }
 
 // addDyZPtWeight
 void addDyZPtWeight()
 {
-  std::cout << "addDyZPtWeight:: to be implemented" << std::endl;
+  if (_addDyZPtWeight && !_isData && _isDyJets) {
+    Int_t zptBin=0;
+    if (_ngenZ>0) {
+      zptBin = _hdyzpt_dtmc_ratio->FindBin(_genZ_pt[0]);
+      if (_genZ_pt[0]>1000) zptBin = _hdyzpt_dtmc_ratio->FindBin(999);
+    }
+    else {
+      zptBin = _hdyzpt_dtmc_ratio->FindBin(_llnunu_l1_pt);
+      if (_llnunu_l1_pt>1000) zptBin = _hdyzpt_dtmc_ratio->FindBin(999);
+    }
+    if (_addDyZPtWeightUseFunction) {
+      if (_ngenZ>0) _ZPtWeight = _fcdyzpt_dtmc_ratio->Eval(_genZ_pt[0]);
+      else _ZPtWeight = _fcdyzpt_dtmc_ratio->Eval(_llnunu_l1_pt);
+    }
+    else {
+      _ZPtWeight = _hdyzpt_dtmc_ratio->GetBinContent(zptBin);
+    }
+    _ZPtWeight_up = _ZPtWeight+0.5*_hdyzpt_dtmc_ratio->GetBinError(zptBin);
+    _ZPtWeight_dn = _ZPtWeight-0.5*_hdyzpt_dtmc_ratio->GetBinError(zptBin);
+
+    if (_isDyJetsLO) {
+      // for LO ZJets samples
+      zptBin=0;
+      if (_ngenZ>0) {
+        zptBin = _hdyzpt_mc_nlo_lo_ratio->FindBin(_genZ_pt[0]);
+        if (_genZ_pt[0]>1000) zptBin = _hdyzpt_mc_nlo_lo_ratio->FindBin(999);
+      }
+      else {
+        zptBin = _hdyzpt_mc_nlo_lo_ratio->FindBin(_llnunu_l1_pt);
+        if (_llnunu_l1_pt>1000) zptBin = _hdyzpt_mc_nlo_lo_ratio->FindBin(999);
+      }
+      if (_addDyZPtWeightLOUseFunction) {
+        if (_ngenZ>0) _ZPtWeight *= _fcdyzpt_mc_nlo_lo_ratio->Eval(_genZ_pt[0]);
+        else _ZPtWeight *= _fcdyzpt_mc_nlo_lo_ratio->Eval(_llnunu_l1_pt);
+      }
+      else {
+        _ZPtWeight *= _hdyzpt_mc_nlo_lo_ratio->GetBinContent(zptBin);
+      }
+
+      _ZPtWeight_up = _ZPtWeight+0.5*_hdyzpt_dtmc_ratio->GetBinError(zptBin);
+      _ZPtWeight_dn = _ZPtWeight-0.5*_hdyzpt_dtmc_ratio->GetBinError(zptBin);
+
+    }
+  }
+
+  if (_addDyNewGenWeight && !_isData && _isDyJets) {
+    Float_t ZJetsLOSumWeights(49877138);
+    Float_t ZJetsNLOSumWeights(450670522117);
+    Float_t ZJetsLOSumEvents(49877138);
+    Float_t ZJetsNLOSumEvents(28696958);
+    if (!_isDyJetsLO) {
+      _ZJetsGenWeight = _genWeight/ZJetsNLOSumWeights*ZJetsNLOSumEvents/(ZJetsNLOSumEvents+ZJetsLOSumEvents);
+    }
+    else {
+      _ZJetsGenWeight = _genWeight/ZJetsLOSumWeights*ZJetsLOSumEvents/(ZJetsNLOSumEvents+ZJetsLOSumEvents);
+    }
+  }
+
 }
 
 // prepare inputs for simple met recoil tune.

@@ -65,6 +65,9 @@ TEntryList* _selected_entries;
 // output plots file
 std::string _plots_out_name;
 
+// if DYJets samples
+bool _isDyJets, _isDyJetsLO;
+
 // strings for temporary usage
 char name[3000], name1[3000], name2[3000];
 
@@ -106,9 +109,6 @@ bool _storeOldBranches = false;
 // add PU weights
 //=========================
 bool _addPUWeights = true;
-
-// From config file:
-
 // PU input files directory
 std::string _PUInputDir;
 // PU input tags, "puWeight<tag>" branches will be added
@@ -128,12 +128,10 @@ std::vector<Float_t*> _PUWeights;
 // recalibrate muon pt
 //==========================
 bool _doMuonPtRecalib = false;
-
-// read from config file
+// recalibrator input files
 std::string _MuonPtRecalibInputForData, _MuonPtRecalibInputForMC;
 
-
-// not from config file
+// not from config file:
 KalmanMuonCalibrator* _muCalib;
 
 
@@ -153,9 +151,22 @@ bool _addDyZPtWeightUseFunction = true;
 // for LO MC to NLO, also use function  
 bool _addDyZPtWeightLOUseFunction = true;
 
+// Input root file
+std::string _DyZPtWeightInputFileName = "data/zptweight/dyjets_zpt_weight_lo_nlo_sel.root";
+
 // add new DY jets gen-weights for mergeing NLO and LO
 // to gain statistics
 bool _addDyNewGenWeight = true;
+
+
+
+// not from config file
+TFile* _fdyzpt;
+TH1D*  _hdyzpt_dtmc_ratio;
+TF1*   _fcdyzpt_dtmc_ratio;
+TH1D*  _hdyzpt_mc_nlo_lo_ratio;
+TF1*   _fcdyzpt_mc_nlo_lo_ratio;
+
 
 
 //==============================================
@@ -171,6 +182,18 @@ bool _doRecoilUseSmooth = true;
 // use graph from smoothed hist
 bool _doRecoilUseSmoothGraph = true;
 
+// not from config file
+TFile* _file_dt_sigma[10];
+TFile* _file_mc_sigma[10];
+TH1D* _h_dt_met_para_shift[10];
+TH1D* _h_mc_met_para_shift[10];
+TH1D* _h_met_para_shift_dtmc[10];
+TH1D* _h_dt_met_para_sigma[10];
+TH1D* _h_dt_met_perp_sigma[10];
+TH1D* _h_mc_met_para_sigma[10];
+TH1D* _h_mc_met_perp_sigma[10];
+TH1D* _h_ratio_met_para_sigma_dtmc[10];
+TH1D* _h_ratio_met_perp_sigma_dtmc[10];
 
 
 

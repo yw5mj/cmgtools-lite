@@ -83,19 +83,20 @@ MuonPtRecalibInputForMC: data/kalman/MC_80X_13TeV.root
 # will also reweight LO to NLO MC samples to gain statistics.
 
 # default will use histograms for both NLO and LO reweight
-addDyZPtWeight: false
+addDyZPtWeight: true
 
 # for NLO MC use function parametrization instead of hist.
-addDyZPtWeightUseFunction: true
+addDyZPtWeightUseFunction: false
 
 # for LO MC to NLO, also use function  
-addDyZPtWeightLOUseFunction: true
+addDyZPtWeightLOUseFunction: false
 
 # add new DY jets gen-weights for mergeing NLO and LO
 # to gain statistics
 addDyNewGenWeight: true
 
-
+# input root file
+DyZPtWeightInputFileName: data/zptweight/dyjets_zpt_weight_lo_nlo_sel.root
 
 #====================================================================
 # Do simple version of the MET recoil tuning
