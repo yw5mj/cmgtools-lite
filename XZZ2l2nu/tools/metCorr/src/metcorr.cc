@@ -530,7 +530,7 @@ void prepareRecoil()
     _file_dt_sigma[0] = new TFile(_RecoilInputFileNameData_all.c_str());
     _file_dt_sigma[1] = new TFile(_RecoilInputFileNameData_mu.c_str());
     _file_dt_sigma[2] = new TFile(_RecoilInputFileNameData_el.c_str());
-    if (_isDyJetsLO) {
+    if (!_isDyJetsLO) {
       _file_mc_sigma[0] = new TFile(_RecoilInputFileNameMC_all.c_str());
       _file_mc_sigma[1] = new TFile(_RecoilInputFileNameMC_mu.c_str());
       _file_mc_sigma[2] = new TFile(_RecoilInputFileNameMC_el.c_str());

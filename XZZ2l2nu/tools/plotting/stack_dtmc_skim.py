@@ -7,7 +7,8 @@ from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
-tag="NewRecoil_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
+tag="NoRecoil_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
+#tag="LODY_NewRecoil_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="ElEscale_LOZJets_NewPuMuSf_MuPtScale_MCRecoilGraph_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="ElEscale_MergedBigZJets_NewPuMuSf_MuPtScale_MCRecoilGraph_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="TkHptId_NewPuMuSf_MuPtScale_MCRecoilGraph_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
@@ -29,7 +30,7 @@ cutChain='tight'
 #cutChain='tightzpt100met100'
 #cutChain='tightzpt100met200'
 
-channel='mu' # can be el or mu or both
+channel='all' # can be el or mu or both
 LogY=False
 test=True
 DrawLeptons=True
@@ -240,9 +241,9 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 zjetsPlotters=[]
 #zjetsSamples = ['DYJetsToLL_M50','DYJetsToLL_M50_MGMLM_Ext1']
-zjetsSamples = ['DYJetsToLL_M50'] # M50
+#zjetsSamples = ['DYJetsToLL_M50'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_HT100to200','DYJetsToLL_M50_HT200to400','DYJetsToLL_M50_HT400to600','DYJetsToLL_M50_HT600toInf']
-#zjetsSamples = ['DYJetsToLL_M50_noRecoil'] # M50
+zjetsSamples = ['DYJetsToLL_M50_NoRecoil'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_newRecoil'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1_RecoilGraph'] # M50
@@ -430,7 +431,7 @@ Stack.doRatio(doRatio)
 tag+='_'
 
 if test: 
-    Stack.drawStack('llnunu_l1_mass', cuts, str(lumi*1000), 50, 50, 150, titlex = "M(Z)", units = "GeV",output=tag+'zmass',outDir=outdir,separateSignal=sepSig)
+    #Stack.drawStack('llnunu_l1_mass', cuts, str(lumi*1000), 50, 50, 150, titlex = "M(Z)", units = "GeV",output=tag+'zmass',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 100, 0.0, 500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt_low',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('llnunu_l1_l1_pt', cuts, str(lumi*1000), 200, 0.0, 1000.0, titlex = "P_{T}(l_{1})", units = "GeV",output=tag+'pTlep1',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('llnunu_l1_l2_pt', cuts, str(lumi*1000), 200, 0.0, 500.0, titlex = "P_{T}(l_{2})", units = "GeV",output=tag+'pTlep2',outDir=outdir,separateSignal=sepSig)
