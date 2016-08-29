@@ -103,12 +103,23 @@ DyZPtWeightInputFileName: data/zptweight/dyjets_zpt_weight_lo_nlo_sel.root
 #====================================================================
 
 # default use histogram
-doRecoil: false
+doRecoil: true
 
 # use smoothed hist
 doRecoilUseSmooth: true
 
 # use graph from smoothed hist
 doRecoilUseSmoothGraph: true
+
+# Input files
+RecoilInputFileNameData_all: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study.root
+RecoilInputFileNameData_mu: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_el.root
+RecoilInputFileNameData_el: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_mu.root
+RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study.root
+RecoilInputFileNameMC_mu: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_mu.root
+RecoilInputFileNameMC_el: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_el.root
+RecoilInputFileNameMCLO_all: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study.root
+RecoilInputFileNameMCLO_mu: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_mu.root
+RecoilInputFileNameMCLO_el: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_el.root
 
 

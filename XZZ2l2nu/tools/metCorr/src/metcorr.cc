@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
   if (_addDyZPtWeight && !_isData && _isDyJets) prepareDyZPtWeight();
 
   // prepare inputs for simple met recoil tune.
-  if (_doRecoil && !_isData) prepareRecoil();
+  if (_doRecoil && !_isData && _isDyJets) prepareRecoil();
 
 
   // loop
@@ -101,10 +101,10 @@ int main(int argc, char** argv) {
     if (_doMuonPtRecalib) doMuonPtRecalib(); 
 
     //  addDyZPtWeight
-    if (_addDyZPtWeight && !_isData) addDyZPtWeight();
+    if (_addDyZPtWeight && !_isData && _isDyJets) addDyZPtWeight();
 
     // simple met recoil tune.
-    if (_doRecoil && !_isData) doRecoil();
+    if (_doRecoil && !_isData && _isDyJets) doRecoil();
 
 
 
@@ -203,7 +203,15 @@ void readConfigFile()
   _doRecoil = parm.GetBool("doRecoil", kFALSE);
   _doRecoilUseSmooth = parm.GetBool("doRecoilUseSmooth", kTRUE);
   _doRecoilUseSmoothGraph = parm.GetBool("doRecoilUseSmoothGraph", kTRUE);
-
+  _RecoilInputFileNameData_all = parm.GetString("RecoilInputFileNameData_all", "data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study.root"); 
+  _RecoilInputFileNameData_mu = parm.GetString("RecoilInputFileNameData_mu", "data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_el.root"); 
+  _RecoilInputFileNameData_el = parm.GetString("RecoilInputFileNameData_el", "data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_mu.root"); 
+  _RecoilInputFileNameMC_all = parm.GetString("RecoilInputFileNameMC_all", "data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study.root"); 
+  _RecoilInputFileNameMC_mu = parm.GetString("RecoilInputFileNameMC_mu", "data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_mu.root"); 
+  _RecoilInputFileNameMC_el = parm.GetString("RecoilInputFileNameMC_el", "data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_el.root"); 
+  _RecoilInputFileNameMCLO_all = parm.GetString("RecoilInputFileNameMCLO_all", "data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study.root"); 
+  _RecoilInputFileNameMCLO_mu = parm.GetString("RecoilInputFileNameMCLO_mu", "data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_mu.root"); 
+  _RecoilInputFileNameMCLO_el = parm.GetString("RecoilInputFileNameMCLO_el", "data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_el.root"); 
 
 
 }
@@ -500,13 +508,212 @@ void addDyZPtWeight()
 // prepare inputs for simple met recoil tune.
 void prepareRecoil()
 {
-  std::cout << "prepareRecoil:: to be implemented" << std::endl;
+  if (_doRecoil && _isDyJets) {
+    // met shift  sigma
+    _file_dt_sigma[0] = new TFile(_RecoilInputFileNameData_all.c_str());
+    _file_dt_sigma[1] = new TFile(_RecoilInputFileNameData_mu.c_str());
+    _file_dt_sigma[2] = new TFile(_RecoilInputFileNameData_el.c_str());
+    if (_isDyJetsLO) {
+      _file_mc_sigma[0] = new TFile(_RecoilInputFileNameMC_all.c_str());
+      _file_mc_sigma[1] = new TFile(_RecoilInputFileNameMC_mu.c_str());
+      _file_mc_sigma[2] = new TFile(_RecoilInputFileNameMC_el.c_str());
+    }
+    else {
+      _file_mc_sigma[0] = new TFile(_RecoilInputFileNameMCLO_all.c_str());
+      _file_mc_sigma[1] = new TFile(_RecoilInputFileNameMCLO_mu.c_str());
+      _file_mc_sigma[2] = new TFile(_RecoilInputFileNameMCLO_el.c_str());
+    }
+    _h_dt_met_para_shift[0] = (TH1D*)_file_dt_sigma[0]->Get("h_met_para_vs_zpt_mean");
+    _h_mc_met_para_shift[0] = (TH1D*)_file_mc_sigma[0]->Get("h_met_para_vs_zpt_mean");
+    _h_met_para_shift_dtmc[0] = (TH1D*)_h_dt_met_para_shift[0]->Clone("h_met_para_shift_dtmc_all");
+    _h_met_para_shift_dtmc[0]->Add(_h_mc_met_para_shift[0], -1);
+
+    _h_dt_met_para_sigma[0] = (TH1D*)_file_dt_sigma[0]->Get("h_met_para_vs_zpt_sigma");
+    _h_dt_met_perp_sigma[0] = (TH1D*)_file_dt_sigma[0]->Get("h_met_perp_vs_zpt_sigma");
+    _h_mc_met_para_sigma[0] = (TH1D*)_file_mc_sigma[0]->Get("h_met_para_vs_zpt_sigma");
+    _h_mc_met_perp_sigma[0] = (TH1D*)_file_mc_sigma[0]->Get("h_met_perp_vs_zpt_sigma");
+
+    _h_ratio_met_para_sigma_dtmc[0] = (TH1D*)_h_dt_met_para_sigma[0]->Clone("h_ratio_met_para_sigma_dtmc_all");
+    _h_ratio_met_perp_sigma_dtmc[0] = (TH1D*)_h_dt_met_perp_sigma[0]->Clone("h_ratio_met_perp_sigma_dtmc_all");
+    _h_ratio_met_para_sigma_dtmc[0]->Divide(_h_mc_met_para_sigma[0]);
+    _h_ratio_met_perp_sigma_dtmc[0]->Divide(_h_mc_met_perp_sigma[0]);
+
+    _h_dt_met_para_shift[1] = (TH1D*)_file_dt_sigma[1]->Get("h_met_para_vs_zpt_mean");
+    _h_mc_met_para_shift[1] = (TH1D*)_file_mc_sigma[1]->Get("h_met_para_vs_zpt_mean");
+    _h_met_para_shift_dtmc[1] = (TH1D*)_h_dt_met_para_shift[1]->Clone("h_met_para_shift_dtmc_mu");
+    _h_met_para_shift_dtmc[1]->Add(_h_mc_met_para_shift[1], -1);
+
+    _h_dt_met_para_sigma[1] = (TH1D*)_file_dt_sigma[1]->Get("h_met_para_vs_zpt_sigma");
+    _h_dt_met_perp_sigma[1] = (TH1D*)_file_dt_sigma[1]->Get("h_met_perp_vs_zpt_sigma");
+    _h_mc_met_para_sigma[1] = (TH1D*)_file_mc_sigma[1]->Get("h_met_para_vs_zpt_sigma");
+    _h_mc_met_perp_sigma[1] = (TH1D*)_file_mc_sigma[1]->Get("h_met_perp_vs_zpt_sigma");
+
+    _h_ratio_met_para_sigma_dtmc[1] = (TH1D*)_h_dt_met_para_sigma[1]->Clone("h_ratio_met_para_sigma_dtmc_mu");
+    _h_ratio_met_perp_sigma_dtmc[1] = (TH1D*)_h_dt_met_perp_sigma[1]->Clone("h_ratio_met_perp_sigma_dtmc_mu");
+    _h_ratio_met_para_sigma_dtmc[1]->Divide(_h_mc_met_para_sigma[1]);
+    _h_ratio_met_perp_sigma_dtmc[1]->Divide(_h_mc_met_perp_sigma[1]);
+
+    _h_dt_met_para_shift[2] = (TH1D*)_file_dt_sigma[2]->Get("h_met_para_vs_zpt_mean");
+    _h_mc_met_para_shift[2] = (TH1D*)_file_mc_sigma[2]->Get("h_met_para_vs_zpt_mean");
+    _h_met_para_shift_dtmc[2] = (TH1D*)_h_dt_met_para_shift[2]->Clone("h_met_para_shift_dtmc_el");
+    _h_met_para_shift_dtmc[2]->Add(_h_mc_met_para_shift[2], -1);
+
+    _h_dt_met_para_sigma[2] = (TH1D*)_file_dt_sigma[2]->Get("h_met_para_vs_zpt_sigma");
+    _h_dt_met_perp_sigma[2] = (TH1D*)_file_dt_sigma[2]->Get("h_met_perp_vs_zpt_sigma");
+    _h_mc_met_para_sigma[2] = (TH1D*)_file_mc_sigma[2]->Get("h_met_para_vs_zpt_sigma");
+    _h_mc_met_perp_sigma[2] = (TH1D*)_file_mc_sigma[2]->Get("h_met_perp_vs_zpt_sigma");
+
+    _h_ratio_met_para_sigma_dtmc[2] = (TH1D*)_h_dt_met_para_sigma[2]->Clone("h_ratio_met_para_sigma_dtmc_el");
+    _h_ratio_met_perp_sigma_dtmc[2] = (TH1D*)_h_dt_met_perp_sigma[2]->Clone("h_ratio_met_perp_sigma_dtmc_el");
+    _h_ratio_met_para_sigma_dtmc[2]->Divide(_h_mc_met_para_sigma[2]);
+    _h_ratio_met_perp_sigma_dtmc[2]->Divide(_h_mc_met_perp_sigma[2]);
+
+    // smooth functions
+    _h_dt_met_para_shift[0]->SetName("h_dt_met_para_shift_all");
+    _h_mc_met_para_shift[0]->SetName("h_mc_met_para_shift_all");
+    _h_dt_met_para_shift[1]->SetName("h_dt_met_para_shift_mu");
+    _h_mc_met_para_shift[1]->SetName("h_mc_met_para_shift_mu");
+    _h_dt_met_para_shift[2]->SetName("h_dt_met_para_shift_el");
+    _h_mc_met_para_shift[2]->SetName("h_mc_met_para_shift_el");
+    _h_dt_met_para_shift[3] = (TH1D*)_h_dt_met_para_shift[0]->Clone("h_dt_met_para_shift_all_smooth");
+    _h_mc_met_para_shift[3] = (TH1D*)_h_mc_met_para_shift[0]->Clone("h_mc_met_para_shift_all_smooth");
+    _h_dt_met_para_shift[4] = (TH1D*)_h_dt_met_para_shift[1]->Clone("h_dt_met_para_shift_mu_smooth");
+    _h_mc_met_para_shift[4] = (TH1D*)_h_mc_met_para_shift[1]->Clone("h_mc_met_para_shift_mu_smooth");
+    _h_dt_met_para_shift[5] = (TH1D*)_h_dt_met_para_shift[2]->Clone("h_dt_met_para_shift_el_smooth");
+    _h_mc_met_para_shift[5] = (TH1D*)_h_mc_met_para_shift[2]->Clone("h_mc_met_para_shift_el_smooth");
+    _h_dt_met_para_shift[3]->Smooth();
+    _h_mc_met_para_shift[3]->Smooth();
+    _h_dt_met_para_shift[4]->Smooth();
+    _h_mc_met_para_shift[4]->Smooth();
+    _h_dt_met_para_shift[5]->Smooth();
+    _h_mc_met_para_shift[5]->Smooth();
+
+    _gr_dt_met_para_shift[3] = new TGraphErrors(_h_dt_met_para_shift[3]);
+    _gr_mc_met_para_shift[3] = new TGraphErrors(_h_mc_met_para_shift[3]);
+    _gr_dt_met_para_shift[4] = new TGraphErrors(_h_dt_met_para_shift[4]);
+    _gr_mc_met_para_shift[4] = new TGraphErrors(_h_mc_met_para_shift[4]);
+    _gr_dt_met_para_shift[5] = new TGraphErrors(_h_dt_met_para_shift[5]);
+    _gr_mc_met_para_shift[5] = new TGraphErrors(_h_mc_met_para_shift[5]);
+
+    _h_met_para_shift_dtmc[3] = (TH1D*)_h_met_para_shift_dtmc[0]->Clone("h_met_para_shift_dtmc_all_smooth");
+    _h_met_para_shift_dtmc[4] = (TH1D*)_h_met_para_shift_dtmc[1]->Clone("h_met_para_shift_dtmc_mu_smooth");
+    _h_met_para_shift_dtmc[5] = (TH1D*)_h_met_para_shift_dtmc[2]->Clone("h_met_para_shift_dtmc_el_smooth");
+    _h_met_para_shift_dtmc[3]->Smooth();
+    _h_met_para_shift_dtmc[4]->Smooth();
+    _h_met_para_shift_dtmc[5]->Smooth();
+
+    _gr_met_para_shift_dtmc[3] = new TGraphErrors(_h_met_para_shift_dtmc[3]);
+    _gr_met_para_shift_dtmc[4] = new TGraphErrors(_h_met_para_shift_dtmc[4]);
+    _gr_met_para_shift_dtmc[5] = new TGraphErrors(_h_met_para_shift_dtmc[5]);
+
+    _h_ratio_met_para_sigma_dtmc[3] = (TH1D*)_h_ratio_met_para_sigma_dtmc[0]->Clone("h_ratio_met_para_sigma_dtmc_all_smooth");
+    _h_ratio_met_para_sigma_dtmc[4] = (TH1D*)_h_ratio_met_para_sigma_dtmc[1]->Clone("h_ratio_met_para_sigma_dtmc_mu_smooth");
+    _h_ratio_met_para_sigma_dtmc[5] = (TH1D*)_h_ratio_met_para_sigma_dtmc[2]->Clone("h_ratio_met_para_sigma_dtmc_el_smooth");
+    _h_ratio_met_para_sigma_dtmc[3]->Smooth();
+    _h_ratio_met_para_sigma_dtmc[4]->Smooth();
+    _h_ratio_met_para_sigma_dtmc[5]->Smooth();
+
+    _h_ratio_met_perp_sigma_dtmc[3] = (TH1D*)_h_ratio_met_perp_sigma_dtmc[0]->Clone("h_ratio_met_perp_sigma_dtmc_all_smooth");
+    _h_ratio_met_perp_sigma_dtmc[4] = (TH1D*)_h_ratio_met_perp_sigma_dtmc[1]->Clone("h_ratio_met_perp_sigma_dtmc_mu_smooth");
+    _h_ratio_met_perp_sigma_dtmc[5] = (TH1D*)_h_ratio_met_perp_sigma_dtmc[2]->Clone("h_ratio_met_perp_sigma_dtmc_el_smooth");
+    _h_ratio_met_perp_sigma_dtmc[3]->Smooth();
+    _h_ratio_met_perp_sigma_dtmc[4]->Smooth();
+    _h_ratio_met_perp_sigma_dtmc[5]->Smooth();
+
+    _gr_ratio_met_para_sigma_dtmc[3] = new TGraphErrors(_h_ratio_met_para_sigma_dtmc[3]);
+    _gr_ratio_met_para_sigma_dtmc[4] = new TGraphErrors(_h_ratio_met_para_sigma_dtmc[4]);
+    _gr_ratio_met_para_sigma_dtmc[5] = new TGraphErrors(_h_ratio_met_para_sigma_dtmc[5]);
+    _gr_ratio_met_perp_sigma_dtmc[3] = new TGraphErrors(_h_ratio_met_perp_sigma_dtmc[3]);
+    _gr_ratio_met_perp_sigma_dtmc[4] = new TGraphErrors(_h_ratio_met_perp_sigma_dtmc[4]);
+    _gr_ratio_met_perp_sigma_dtmc[5] = new TGraphErrors(_h_ratio_met_perp_sigma_dtmc[5]);
+  }
+  
+  
+
 }
 
 // do simple met recoil fine tuning
 void doRecoil()
 {
-  std::cout << "addPileupWeights:: to be implemented" << std::endl;
+  if ( _doRecoil && !_isData && _isDyJets) {
+    Float_t met_para = _llnunu_l2_pt*cos(_llnunu_l2_phi-_llnunu_l1_phi);
+    Float_t met_perp = _llnunu_l2_pt*sin(_llnunu_l2_phi-_llnunu_l1_phi);
+    if (abs(_llnunu_l1_l1_pdgId)==13&&abs(_llnunu_l1_l2_pdgId)==13) {
+      Int_t idd=1;
+      if (_doRecoilUseSmooth) idd=4;
+      _h_dt_met_para_shift[6] = _h_dt_met_para_shift[idd];
+      _h_mc_met_para_shift[6] = _h_mc_met_para_shift[idd];
+      _h_met_para_shift_dtmc[6] = _h_met_para_shift_dtmc[idd];
+      _h_ratio_met_para_sigma_dtmc[6] = _h_ratio_met_para_sigma_dtmc[idd];
+      _h_ratio_met_perp_sigma_dtmc[6] = _h_ratio_met_perp_sigma_dtmc[idd];
+      _gr_dt_met_para_shift[6] = _gr_dt_met_para_shift[4];
+      _gr_mc_met_para_shift[6] = _gr_mc_met_para_shift[4];
+      _gr_met_para_shift_dtmc[6] = _gr_met_para_shift_dtmc[4];
+      _gr_ratio_met_para_sigma_dtmc[6] = _gr_ratio_met_para_sigma_dtmc[4];
+      _gr_ratio_met_perp_sigma_dtmc[6] = _gr_ratio_met_perp_sigma_dtmc[4];
+    }
+    else if (abs(_llnunu_l1_l1_pdgId)==11&&abs(_llnunu_l1_l2_pdgId)==11) {
+      Int_t idd=2;
+      if (_doRecoilUseSmooth) idd=5;
+      _h_dt_met_para_shift[6] = _h_dt_met_para_shift[idd];
+      _h_mc_met_para_shift[6] = _h_mc_met_para_shift[idd];
+      _h_met_para_shift_dtmc[6] = _h_met_para_shift_dtmc[idd];
+      _h_ratio_met_para_sigma_dtmc[6] = _h_ratio_met_para_sigma_dtmc[idd];
+      _h_ratio_met_perp_sigma_dtmc[6] = _h_ratio_met_perp_sigma_dtmc[idd];
+      _gr_dt_met_para_shift[6] = _gr_dt_met_para_shift[5];
+      _gr_mc_met_para_shift[6] = _gr_mc_met_para_shift[5];
+      _gr_met_para_shift_dtmc[6] = _gr_met_para_shift_dtmc[5];
+      _gr_ratio_met_para_sigma_dtmc[6] = _gr_ratio_met_para_sigma_dtmc[5];
+      _gr_ratio_met_perp_sigma_dtmc[6] = _gr_ratio_met_perp_sigma_dtmc[5];
+    }
+    else {
+      Int_t idd=0;
+      if (_doRecoilUseSmooth) idd=3;
+      _h_dt_met_para_shift[6] = _h_dt_met_para_shift[idd];
+      _h_mc_met_para_shift[6] = _h_mc_met_para_shift[idd];
+      _h_met_para_shift_dtmc[6] = _h_met_para_shift_dtmc[idd];
+      _h_ratio_met_para_sigma_dtmc[6] = _h_ratio_met_para_sigma_dtmc[idd];
+      _h_ratio_met_perp_sigma_dtmc[6] = _h_ratio_met_perp_sigma_dtmc[idd];
+      _gr_dt_met_para_shift[6] = _gr_dt_met_para_shift[3];
+      _gr_mc_met_para_shift[6] = _gr_mc_met_para_shift[3];
+      _gr_met_para_shift_dtmc[6] = _gr_met_para_shift_dtmc[3];
+      _gr_ratio_met_para_sigma_dtmc[6] = _gr_ratio_met_para_sigma_dtmc[3];
+      _gr_ratio_met_perp_sigma_dtmc[6] = _gr_ratio_met_perp_sigma_dtmc[3];
+    }
+
+    // peak shift
+    if (_doRecoilUseSmoothGraph) {
+      met_para += _gr_met_para_shift_dtmc[6]->Eval(_llnunu_l1_pt);
+    }
+    else {
+      met_para += _h_met_para_shift_dtmc[6]->GetBinContent(_h_met_para_shift_dtmc[6]->FindBin(_llnunu_l1_pt));
+    }
+
+    // smearing
+    if (_doRecoilUseSmoothGraph) {
+      met_para = (met_para-_gr_dt_met_para_shift[6]->Eval(_llnunu_l1_pt))*_gr_ratio_met_para_sigma_dtmc[6]->Eval(_llnunu_l1_pt) + _gr_dt_met_para_shift[6]->Eval(_llnunu_l1_pt);
+      met_perp *= _gr_ratio_met_perp_sigma_dtmc[6]->Eval(_llnunu_l1_pt);
+    } 
+    else {
+      met_para = (met_para-_h_dt_met_para_shift[6]->GetBinContent(_h_dt_met_para_shift[6]->FindBin(_llnunu_l1_pt)))
+               * _h_ratio_met_para_sigma_dtmc[6]->GetBinContent(_h_ratio_met_para_sigma_dtmc[6]->FindBin(_llnunu_l1_pt)) 
+               + _h_dt_met_para_shift[6]->GetBinContent(_h_dt_met_para_shift[6]->FindBin(_llnunu_l1_pt));
+      met_perp *= _h_ratio_met_perp_sigma_dtmc[6]->GetBinContent(_h_ratio_met_perp_sigma_dtmc[6]->FindBin(_llnunu_l1_pt));
+    }
+
+    // recalculate vars
+    Float_t met_px = met_para*cos(_llnunu_l1_phi)-met_perp*sin(_llnunu_l1_phi);
+    Float_t met_py = met_para*sin(_llnunu_l1_phi)+met_perp*cos(_llnunu_l1_phi);
+    TVector2 vec_met;
+    vec_met.Set(met_px, met_py);
+    _llnunu_l2_pt = vec_met.Mod();
+    _llnunu_l2_phi = TVector2::Phi_mpi_pi(vec_met.Phi());
+    
+    Float_t et1 = TMath::Sqrt(_llnunu_l1_mass*_llnunu_l1_mass + _llnunu_l1_pt*_llnunu_l1_pt);
+    Float_t et2 = TMath::Sqrt(_llnunu_l1_mass*_llnunu_l1_mass + _llnunu_l2_pt*_llnunu_l2_pt);
+    _llnunu_mt = TMath::Sqrt(2.0*_llnunu_l1_mass*_llnunu_l1_mass + 2.0* (et1*et2 - _llnunu_l1_pt*cos(_llnunu_l1_phi)*met_px - _llnunu_l1_pt*sin(_llnunu_l1_phi)*met_py));
+  }
+
 }
 
 

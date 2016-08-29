@@ -182,6 +182,11 @@ bool _doRecoilUseSmooth = true;
 // use graph from smoothed hist
 bool _doRecoilUseSmoothGraph = true;
 
+// input files
+std::string _RecoilInputFileNameData_all, _RecoilInputFileNameData_mu, _RecoilInputFileNameData_el;
+std::string _RecoilInputFileNameMC_all, _RecoilInputFileNameMC_mu, _RecoilInputFileNameMC_el;
+std::string _RecoilInputFileNameMCLO_all, _RecoilInputFileNameMCLO_mu, _RecoilInputFileNameMCLO_el;
+
 // not from config file
 TFile* _file_dt_sigma[10];
 TFile* _file_mc_sigma[10];
@@ -194,7 +199,11 @@ TH1D* _h_mc_met_para_sigma[10];
 TH1D* _h_mc_met_perp_sigma[10];
 TH1D* _h_ratio_met_para_sigma_dtmc[10];
 TH1D* _h_ratio_met_perp_sigma_dtmc[10];
-
+TGraphErrors* _gr_dt_met_para_shift[10];
+TGraphErrors* _gr_mc_met_para_shift[10];
+TGraphErrors* _gr_met_para_shift_dtmc[10];
+TGraphErrors* _gr_ratio_met_para_sigma_dtmc[10];
+TGraphErrors* _gr_ratio_met_perp_sigma_dtmc[10];
 
 
 
