@@ -206,6 +206,110 @@ TGraphErrors* _gr_ratio_met_para_sigma_dtmc[10];
 TGraphErrors* _gr_ratio_met_perp_sigma_dtmc[10];
 
 
+//==============================================
+// eff scale
+//==============================================
+bool _addEffScale = true;
+// Input files for:
+// - el id iso eff
+std::string _EffScaleInputFileName_IdIso_El = "data/eff/egammaEffi.txt_SF2D.root";
+// - el tracking eff
+std::string _EffScaleInputFileName_Trk_El = "data/eff/egammatracking.root";
+// - mu id iso eff
+std::string _EffScaleInputFileName_IdIso_Mu = "data/eff/muon80x12p9.root";
+// - mu tracking eff
+std::string _EffScaleInputFileName_Trk_Mu = "data/eff/muontrackingsf.root";
+// - el trigger eff
+std::string _EffScaleInputFileName_Trg_El = "data/eff/trigereff12p9.root";
+// - mu trigger eff
+std::string _EffScaleInputFileName_Trg_Mu = "data/eff/trigeff_mu.root";
+
+
+// not from config file
+// electron sf
+TFile* _file_idiso_el;
+TH2F* _h_sf_idiso_el;
+// electron tracking sf
+TFile* _file_trksf_el;
+TH2F* _h_sf_trk_el;
+
+// muon tracking sf
+TFile* _file_trksf_mu;
+TH1F* _h_sf_trk_mu;
+
+// muon id iso sf
+TFile* _file_idiso_mu;
+TH2F* _h_eff_trkhpt_mu_dt;
+TH2F* _h_eff_trkhpt_mu_mc;
+TH2F* _h_eff_hpt_mu_dt;
+TH2F* _h_eff_hpt_mu_mc;
+TH2F* _h_sf_iso_mu;
+
+// electron trigger sf
+TFile* _file_trg_el;
+TH2D* _h_sf_trg_el_l1;
+
+
+// muon trigger sf
+TFile* _file_trg_mu;
+TH2D* _h_eff_trg_mu_l1_tot;
+TH2D* _h_eff_trg_mu_l2_tot;
+TH2D* _h_eff_trg_mu_l1_l1p;
+TH2D* _h_eff_trg_mu_l2_l1p;
+TH2D* _h_eff_trg_mu_l1_l1f;
+TH2D* _h_eff_trg_mu_l2_l1f;
+TH2D* _h_eff_trg_mu_l1_l1pl2f;
+TH2D* _h_eff_trg_mu_l1_l1pl2p;
+TH2D* _h_eff_trg_mu_l1_l1fl2p;
+TH2D* _h_eff_trg_mu_l2_l1pl2f;
+TH2D* _h_eff_trg_mu_l2_l1pl2p;
+TH2D* _h_eff_trg_mu_l2_l1fl2p;
+Double_t _N_eff_trg_mu_tot;
+Double_t _N_eff_trg_mu_tot_err;
+Double_t _N_eff_trg_mu_l1pl2f;
+Double_t _N_eff_trg_mu_l1pl2f_err;
+Double_t _N_eff_trg_mu_l1pl2p;
+Double_t _N_eff_trg_mu_l1pl2p_err;
+Double_t _N_eff_trg_mu_l1fl2p;
+Double_t _N_eff_trg_mu_l1fl2p_err;
+Double_t _N_eff_trg_mu_l1p;
+Double_t _N_eff_trg_mu_l1p_err;
+Double_t _N_eff_trg_mu_l1f;
+Double_t _N_eff_trg_mu_l1f_err;
+Int_t _NPtBins_eff_trg_mu;
+Int_t _NEtaBins_eff_trg_mu;
+TH2D* _h_eff_trg_mu_l1_tot_norm;
+TH2D* _h_eff_trg_mu_l2_tot_norm;
+TH2D* _h_eff_trg_mu_l1_l1p_norm;
+TH2D* _h_eff_trg_mu_l1_l1f_norm;
+TH2D* _h_eff_trg_mu_l2_l1p_norm;
+TH2D* _h_eff_trg_mu_l2_l1f_norm;
+TH2D* _h_eff_trg_mu_l1_l1pl2f_norm;
+TH2D* _h_eff_trg_mu_l1_l1pl2p_norm;
+TH2D* _h_eff_trg_mu_l1_l1fl2p_norm;
+TH2D* _h_eff_trg_mu_l2_l1pl2f_norm;
+TH2D* _h_eff_trg_mu_l2_l1pl2p_norm;
+TH2D* _h_eff_trg_mu_l2_l1fl2p_norm;
+TH2D* _h_eff_trg_mu_l1_l1p_norm_vs_tot;
+TH2D* _h_eff_trg_mu_l1_l1f_norm_vs_tot;
+TH2D* _h_eff_trg_mu_l2_l1p_norm_vs_tot;
+TH2D* _h_eff_trg_mu_l2_l1f_norm_vs_tot;
+TH2D* _h_eff_trg_mu_l1_l1pl2f_norm_vs_tot;
+TH2D* _h_eff_trg_mu_l1_l1pl2p_norm_vs_tot;
+TH2D* _h_eff_trg_mu_l1_l1fl2p_norm_vs_tot;
+TH2D* _h_eff_trg_mu_l2_l1pl2f_norm_vs_tot;
+TH2D* _h_eff_trg_mu_l2_l1pl2p_norm_vs_tot;
+TH2D* _h_eff_trg_mu_l2_l1fl2p_norm_vs_tot;
+TH2D* _h_eff_trg_mu_l1_l1pl2f_norm_vs_l1p;
+TH2D* _h_eff_trg_mu_l1_l1pl2p_norm_vs_l1p;
+TH2D* _h_eff_trg_mu_l1_l1fl2p_norm_vs_l1f;
+TH2D* _h_eff_trg_mu_l2_l1pl2f_norm_vs_l1p;
+TH2D* _h_eff_trg_mu_l2_l1pl2p_norm_vs_l1p;
+TH2D* _h_eff_trg_mu_l2_l1fl2p_norm_vs_l1f;
+
+
+
+
 
 
 //======================================================
@@ -237,6 +341,7 @@ Int_t   _llnunu_l1_l1_pdgId, _llnunu_l1_l1_charge;
 Float_t _llnunu_l1_l2_pt, _llnunu_l1_l2_eta, _llnunu_l1_l2_phi;
 Float_t _llnunu_l1_l2_rapidity, _llnunu_l1_l2_mass, _llnunu_l1_l2_ptErr;
 Int_t   _llnunu_l1_l2_pdgId, _llnunu_l1_l2_charge;
+Float_t _llnunu_l1_l1_eSCeta, _llnunu_l1_l2_eSCeta;
 
 // MC Only
 Int_t   _nTrueInt;
@@ -246,15 +351,22 @@ Float_t _genZ_pt[10];
 
 
 // tree_out only
+
+// store old branches
 Float_t _llnunu_mt_old;
 Float_t _llnunu_l1_mass_old, _llnunu_l1_pt_old, _llnunu_l1_phi_old, _llnunu_l1_eta_old;
 Float_t _llnunu_l2_pt_old, _llnunu_l2_phi_old;
 Float_t _llnunu_l1_l1_pt_old, _llnunu_l1_l1_eta_old, _llnunu_l1_l1_phi_old, _llnunu_l1_l1_ptErr_old;
 Float_t _llnunu_l1_l2_pt_old, _llnunu_l1_l2_eta_old, _llnunu_l1_l2_phi_old, _llnunu_l1_l2_ptErr_old;
+
+// zpt gen weights
 Float_t _ZPtWeight, _ZPtWeight_up, _ZPtWeight_dn;
 Float_t _ZJetsGenWeight;
 
-
+// efficiency scale factors
+Float_t _trgsf, _isosf, _idsf, _trksf, _idisotrksf;
+Float_t _trgsf_err, _isosf_err, _idsf_err, _trksf_err;
+Float_t _trgsf_up, _trgsf_dn, _idisotrksf_up, _idisotrksf_dn;
 
 
 
@@ -264,12 +376,8 @@ Float_t _ZJetsGenWeight;
 //  ═╩╝╚═╝╚  ╩╝╚╝╚═╝  ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝╚═╝
 //======================================================
 
-
-
-
 // read configration file
 void readConfigFile();
-
 
 // prepare the trees, if no entries in _tree_in, stop the program.
 bool prepareTrees();
@@ -286,10 +394,8 @@ void addPUWeights();
 // prepare inputs for muon re-calib
 void prepareMuonPtRecalib();
 
-
 // do muon re-calib
 void doMuonPtRecalib();
-
 
 // prepare inputs for addDyZPtWeight
 void prepareDyZPtWeight();
@@ -303,7 +409,11 @@ void prepareRecoil();
 // do simple met recoil fine tuning
 void doRecoil();
 
-
+// prepare eff scale factors
+void prepareEffScale();
+    
+// add eff scale factors
+void addEffScale();
 
 // 
 
