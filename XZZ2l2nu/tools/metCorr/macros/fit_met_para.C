@@ -1,8 +1,4 @@
-;
-std::string channel = "mu";
 
-bool isMC = true;
-bool useEffSf = true;
 
 std::string inputdir = 
   "/home/heli/XZZ/80X_20160825_light_Skim"
@@ -15,13 +11,16 @@ std::string filename =
   //"DYJetsToLL_M50_NoRecoil"
   //"DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
   //"DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth"
-  "DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth"
+  //"DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth"
   //"DYJetsToLL_M50_MGMLM_Ext1"
-  //"SingleEMU_Run2016BCD_PromptReco"
+  "SingleEMU_Run2016BCD_PromptReco"
   ;
 
+std::string channel = "el";
 
-int fit_slice_gaus(TH2D* h2d, TH1D** h1d);
+bool isMC = false;
+bool useEffSf = false;
+
 
 char name[1000];
 TCanvas* plots;
@@ -34,6 +33,7 @@ std::vector<Double_t> fit_max;
 std::vector<Int_t> fit_rebin; 
 
 
+int fit_slice_gaus(TH2D* h2d, TH1D** h1d);
 
 std::string base_sele;
 
@@ -90,7 +90,7 @@ std::string selec = base_selec;
 
 if (isMC) selec +=  weight_selec + rhoweight_selec;
 
-if (useEffSf) {
+if (isMC && useEffSf) {
   selec += effsf_selec;
   tag += "_sf"; 
 }

@@ -151,7 +151,8 @@ EffScaleInputFileName_Trk_El: data/eff/egammatracking.root
 EffScaleInputFileName_IdIso_Mu: data/eff/muon80x12p9.root
 EffScaleInputFileName_Trk_Mu: data/eff/muontrackingsf.root
 EffScaleInputFileName_Trg_El: data/eff/trigereff12p9.root
-EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu.root
+#EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu.root
+EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu_20160830.root
 
 
 

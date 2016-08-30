@@ -8,7 +8,8 @@ from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
 #tag="BIGDY_NewRecoil_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
-tag="LODY_NewRecoilNoSmooth_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
+tag="NewRecoilNoSmooth_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
+#tag="LODY_NewRecoilNoSmooth_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="NoRecoil_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="LODY_NewRecoil_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="ElEscale_LOZJets_NewPuMuSf_MuPtScale_MCRecoilGraph_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
@@ -245,11 +246,11 @@ zjetsPlotters=[]
 #zjetsSamples = ['DYJetsToLL_M50','DYJetsToLL_M50_MGMLM_Ext1']
 #zjetsSamples = ['DYJetsToLL_M50'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_RecoilSmooth'] # M50
+zjetsSamples = ['DYJetsToLL_M50_RecoilNoSmooth'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_HT100to200','DYJetsToLL_M50_HT200to400','DYJetsToLL_M50_HT400to600','DYJetsToLL_M50_HT600toInf']
 #zjetsSamples = ['DYJetsToLL_M50_NoRecoil'] # M50
-#zjetsSamples = ['DYJetsToLL_M50_newRecoil'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth'] # M50
-zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth'] # M50
+#zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1_RecoilGraph'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_RecoilNoSmooth'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_RecoilGraph'] # M50
