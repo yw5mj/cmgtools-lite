@@ -1,48 +1,47 @@
+;
+std::string channel = "mu";
 
+bool isMC = true;
+bool useEffSf = true;
 
 std::string inputdir = 
   "/home/heli/XZZ/80X_20160825_light_Skim"
   //"./"
   ;
 std::string filename =
+  //"DYJetsToLL_M50_RecoilNoSmooth"
+  //"DYJetsToLL_M50_RecoilSmooth"
+  //"DYJetsToLL_M50"
   //"DYJetsToLL_M50_NoRecoil"
-  "DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
+  //"DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
+  //"DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth"
+  "DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth"
+  //"DYJetsToLL_M50_MGMLM_Ext1"
   //"SingleEMU_Run2016BCD_PromptReco"
   ;
 
-std::string base_selec = 
-  "(llnunu_l1_mass>50&&llnunu_l1_mass<180)"
-  //"(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11&&llnunu_l1_mass>50&&llnunu_l1_mass<180)"
-  //"(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_mass>50&&llnunu_l1_mass<180)"
-  ;
 
-std::string tag = 
-  "_met_para_study"
-  //"_met_para_study_el"
-  //"_met_para_study_mu"
-;
-
-std::string lumiTag = 
-  "CMS 13 TeV 2016 L=12.9 fb^{-1}"
-  //"CMS 13 TeV Simulation for 2016 Data"
-  ;
-
-
-// add weight
-std::string weight_selec = std::string("*(genWeight*ZPtWeight*puWeight68075/SumWeights*1921.8*3*12900.0)");
-
-// rho weight
-std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
-
-//std::string selec = base_selec;
-std::string selec = base_selec + weight_selec + rhoweight_selec;
+int fit_slice_gaus(TH2D* h2d, TH1D** h1d);
 
 char name[1000];
-std::string histname;
+TCanvas* plots;
+std::string tag;
+std::string base_selec;
+std::string lumiTag;
+
+std::vector<Double_t> fit_min; 
+std::vector<Double_t> fit_max; 
+std::vector<Int_t> fit_rebin; 
+
+
+
+std::string base_sele;
+
 TFile* fin;
 TFile* fout;
+
+std::string histname;
 TPaveText* lumipt;
-TCanvas* plots;
 TH2D* h2d1;
 TH2D* h2d2;
 TH2D* h2d3;
@@ -57,16 +56,49 @@ TF1* func3[1000];
 TF1* func4[1000];
 
 Int_t Nbins;
-std::vector<Double_t> fit_min; 
-std::vector<Double_t> fit_max; 
-std::vector<Int_t> fit_rebin; 
 
-int fit_slice_gaus(TH2D* h2d, TH1D** h1d);
 
 void fit_met_para(){
 
-  gROOT->ProcessLine(".x tdrstyle.C");
-  gStyle->SetOptTitle(0);
+
+
+base_selec = "(llnunu_l1_mass>50&&llnunu_l1_mass<180)";
+if (channel=="el") base_selec = "("+base_selec+"&&(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11))";
+else if (channel=="mu") base_selec = "("+base_selec+"&&(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13))";
+
+tag = "_met_para_study";
+
+if (channel=="el") tag += "_el";
+else if (channel=="mu") tag += "_mu";
+
+lumiTag = 
+  "CMS 13 TeV 2016 L=12.9 fb^{-1}"
+  //"CMS 13 TeV Simulation for 2016 Data"
+  ;
+if (isMC) lumiTag = "CMS 13 TeV Simulation for 2016 Data";
+
+// add weight
+std::string weight_selec = std::string("*(genWeight*ZPtWeight*puWeight68075/SumWeights*1921.8*3*12900.0)");
+
+// rho weight
+std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
+
+// scale factors
+std::string effsf_selec = std::string("*(trgsf*isosf*idsf*trksf)");
+
+std::string selec = base_selec;
+
+if (isMC) selec +=  weight_selec + rhoweight_selec;
+
+if (useEffSf) {
+  selec += effsf_selec;
+  tag += "_sf"; 
+}
+
+gROOT->ProcessLine(".x tdrstyle.C");
+gStyle->SetOptTitle(0);
+
+
 
   lumipt = new TPaveText(0.2,0.9,0.8,0.98,"brNDC");
   lumipt->SetBorderSize(0);

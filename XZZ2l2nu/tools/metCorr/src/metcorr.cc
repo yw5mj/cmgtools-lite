@@ -45,6 +45,8 @@ int main(int argc, char** argv) {
   _isDyJets = (_file_out_name.find("DYJets")!=std::string::npos);
   _isDyJetsLO = (_file_out_name.find("DYJets")!=std::string::npos && _file_out_name.find("MGMLM")!=std::string::npos);
   
+  std::cout << " isDyJets = " << _isDyJets << ", isDyJetsLO = " << _isDyJetsLO << std::endl;
+
 
   // read config file
   readConfigFile();
@@ -208,8 +210,8 @@ void readConfigFile()
   _doRecoilUseSmooth = parm.GetBool("doRecoilUseSmooth", kTRUE);
   _doRecoilUseSmoothGraph = parm.GetBool("doRecoilUseSmoothGraph", kTRUE);
   _RecoilInputFileNameData_all = parm.GetString("RecoilInputFileNameData_all", "data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study.root"); 
-  _RecoilInputFileNameData_mu = parm.GetString("RecoilInputFileNameData_mu", "data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_el.root"); 
-  _RecoilInputFileNameData_el = parm.GetString("RecoilInputFileNameData_el", "data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_mu.root"); 
+  _RecoilInputFileNameData_mu = parm.GetString("RecoilInputFileNameData_mu", "data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_mu.root"); 
+  _RecoilInputFileNameData_el = parm.GetString("RecoilInputFileNameData_el", "data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_el.root"); 
   _RecoilInputFileNameMC_all = parm.GetString("RecoilInputFileNameMC_all", "data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study.root"); 
   _RecoilInputFileNameMC_mu = parm.GetString("RecoilInputFileNameMC_mu", "data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_mu.root"); 
   _RecoilInputFileNameMC_el = parm.GetString("RecoilInputFileNameMC_el", "data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_el.root"); 
