@@ -5,7 +5,7 @@ std::string inputdir =
   //"./"
   ;
 std::string filename =
-  //"DYJetsToLL_M50_RecoilNoSmooth"
+  "DYJetsToLL_M50_RecoilNoSmooth"
   //"DYJetsToLL_M50_RecoilSmooth"
   //"DYJetsToLL_M50"
   //"DYJetsToLL_M50_NoRecoil"
@@ -13,12 +13,12 @@ std::string filename =
   //"DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth"
   //"DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth"
   //"DYJetsToLL_M50_MGMLM_Ext1"
-  "SingleEMU_Run2016BCD_PromptReco"
+  //"SingleEMU_Run2016BCD_PromptReco"
   ;
 
-std::string channel = "el";
+std::string channel = "all";
 
-bool isMC = false;
+bool isMC = true;
 bool useEffSf = false;
 
 
