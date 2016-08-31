@@ -158,7 +158,7 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   lumipt->SetTextSize(0.03);
   lumipt->AddText(0.15,0.3, lumiTag.c_str());
 
-  sprintf(name, "%s/%s.root", inputdir.c_str(), filename.c_str());
+  sprintf(name, "%s/%s.root", inputdir.c_str(), infilename.c_str());
   fin = new TFile(name);
 
 

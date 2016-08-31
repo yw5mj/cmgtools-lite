@@ -5,11 +5,12 @@
 //TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160822/DYJetsToLL_M50/vvTreeProducer/tree.root");
 //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160822/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
 TFile* file1 = TFile::Open("/data2/XZZ/76X_20160705/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root");
-TFile* file2 = TFile::Open("/data2/XZZ2/80X_20160822/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
+TFile* file2 = TFile::Open("/data2/XZZ/76X_20160705/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root");
+//TFile* file2 = TFile::Open("/data2/XZZ2/80X_20160822/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
 //TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160818_light/DYJetsToLL_M50/vvTreeProducer/tree.root");
 //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160818_light/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
 
-std::string tag = "study_zpt_mz70-110";
+std::string tag = "study_zpt_mzcutVSnomzcut";
 //std::string tag = "study_zpt";
 //std::string tag = "study_zpt_old";
 char name[1000];
@@ -19,7 +20,7 @@ char name[1000];
 //std::string sel1 = "(ngenZ>0)*(genWeight)";
 //std::string sel2 = "(ngenZ>0)*(genWeight)";
 std::string sel1 = "(ngenZ>0&&genZ_mass[0]>70&&genZ_mass[0]<110)*(genWeight)";
-std::string sel2 = "(ngenZ>0&&genZ_mass[0]>70&&genZ_mass[0]<110)*(genWeight)";
+std::string sel2 = "(ngenZ>0)*(genWeight)";
 TTree* tree1 = (TTree*)file1->Get("tree");
 TTree* tree2 = (TTree*)file2->Get("tree");
 
