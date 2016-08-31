@@ -4,7 +4,9 @@ std::string channel = "all";
 bool isMC = true;
 bool useEffSf = false;
 bool useFullCuts = false;
-bool noPUweight = false;
+bool mcTrgSf = false;
+bool dtTrgSf = false;
+bool dtHLT = false;
 
 std::string inputdir = 
   "/home/heli/XZZ/80X_20160825_light_Skim"
@@ -61,70 +63,55 @@ Int_t Nbins;
 
 void fit_met_para(){
 
-std::string metfilter="(Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_HBHENoiseFilter&&Flag_CSCTightHalo2015Filter&&Flag_eeBadScFilter)";
-
-std::string cuts_lepaccept="((abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_l1_pt>50&&abs(llnunu_l1_l1_eta)<2.4&&llnunu_l1_l2_pt>20&&abs(llnunu_l1_l2_eta)<2.4&&(llnunu_l1_l1_highPtID==1||llnunu_l1_l2_highPtID==1))";
-cuts_lepaccept+="||(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11&&llnunu_l1_l1_pt>115&&abs(llnunu_l1_l1_eta)<2.5&&llnunu_l1_l2_pt>35&&abs(llnunu_l1_l2_eta)<2.5))";
-std::string cuts_zmass="(llnunu_l1_mass>70&&llnunu_l1_mass<110)";
-std::string cuts_zpt100="(llnunu_l1_pt>100)";
-std::string cuts_loose_z="("+metfilter+"&&"+cuts_lepaccept+"&&"+cuts_zmass+")";
-
-
-
-
-base_selec = "(llnunu_l1_mass>50&&llnunu_l1_mass<180)";
-
-if (useFullCuts) base_selec =  cuts_loose_z;
-
-if (channel=="el") base_selec = "("+base_selec+"&&(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11))";
-else if (channel=="mu") base_selec = "("+base_selec+"&&(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13))";
-
-tag = "_met_para_study";
-
-if (useFullCuts) tag += "_fullCuts"; 
-
-if (isMC && useEffSf) tag += "_effSf";
-
-if (noPUweight) tag += "_noPUwt";
+  // tags
+  tag = "_met_para_study";
+  if (useFullCuts) tag += "_fullCuts"; 
+  if (isMC && useEffSf) tag += "_effSf";
+  if ( (isMC && mcTrgSf) || (!isMC && dtTrgSf))  tag += "_trgSf";
+  if (!isMC && dtHLT) tag += "_dtHLT";
+  if (channel=="el") tag += "_el";
+  else if (channel=="mu") tag += "_mu";
 
 
-if (channel=="el") tag += "_el";
-else if (channel=="mu") tag += "_mu";
+  // define cuts
+  std::string metfilter="(Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_HBHENoiseFilter&&Flag_CSCTightHalo2015Filter&&Flag_eeBadScFilter)";
+  std::string cuts_lepaccept="((abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_l1_pt>50&&abs(llnunu_l1_l1_eta)<2.4&&llnunu_l1_l2_pt>20&&abs(llnunu_l1_l2_eta)<2.4&&(llnunu_l1_l1_highPtID==1||llnunu_l1_l2_highPtID==1))";
+  cuts_lepaccept+="||(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11&&llnunu_l1_l1_pt>115&&abs(llnunu_l1_l1_eta)<2.5&&llnunu_l1_l2_pt>35&&abs(llnunu_l1_l2_eta)<2.5))";
+  std::string cuts_zmass="(llnunu_l1_mass>70&&llnunu_l1_mass<110)";
+  std::string cuts_zpt100="(llnunu_l1_pt>100)";
+  std::string cuts_loose_z="("+metfilter+"&&"+cuts_lepaccept+"&&"+cuts_zmass+")";
 
-lumiTag = 
-  "CMS 13 TeV 2016 L=12.9 fb^{-1}"
-  //"CMS 13 TeV Simulation for 2016 Data"
-  ;
-if (isMC) lumiTag = "CMS 13 TeV Simulation for 2016 Data";
+  base_selec = "(llnunu_l1_mass>50&&llnunu_l1_mass<180)";
 
-// data HLT
-if (!isMC && useFullCuts) base_selec = "((HLT_MUv2||HLT_ELEv2)&&"+base_selec+")";
+  if (useFullCuts) base_selec =  cuts_loose_z;
 
-// add weight
-std::string weight_selec = std::string("*(genWeight*ZPtWeight*puWeight68075/SumWeights*1921.8*3*12900.0)");
+  if (channel=="el") base_selec = "("+base_selec+"&&(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11))";
+  else if (channel=="mu") base_selec = "("+base_selec+"&&(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13))";
 
-if (noPUweight)  weight_selec = std::string("*(genWeight*ZPtWeight/SumWeights*1921.8*3*12900.0)");
-
-
-
-// rho weight
-std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
-
-// scale factors
-std::string effsf_selec = std::string("*(trgsf*isosf*idsf*trksf)");
-
-std::string selec = base_selec;
-
-if (isMC) selec +=  weight_selec + rhoweight_selec;
-
-if (isMC && useEffSf) {
-  selec += effsf_selec;
-}
-
-gROOT->ProcessLine(".x tdrstyle.C");
-gStyle->SetOptTitle(0);
+  if (!isMC && dtHLT) base_selec = "((HLT_MUv2||HLT_ELEv2)&&"+base_selec+")";
 
 
+  // add weight
+  std::string weight_selec = std::string("*(genWeight*ZPtWeight*puWeight68075/SumWeights*1921.8*3*12900.0)");
+  // rho weight
+  std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
+  // scale factors
+  std::string effsf_selec = std::string("*(isosf*idsf*trksf)");
+
+  // selec, cuts + weights
+  std::string selec = base_selec;
+  if (isMC) selec +=  weight_selec + rhoweight_selec;
+  if (isMC && useEffSf) selec += effsf_selec;
+  if ( (isMC && mcTrgSf) || (!isMC && dtTrgSf) selec += "*(trgsf)";
+  
+
+  // style
+  gROOT->ProcessLine(".x tdrstyle.C");
+  gStyle->SetOptTitle(0);
+
+  // lumiTag for plotting
+  lumiTag = "CMS 13 TeV 2016 L=12.9 fb^{-1}";
+  if (isMC) lumiTag = "CMS 13 TeV Simulation for 2016 Data";
 
   lumipt = new TPaveText(0.2,0.9,0.8,0.98,"brNDC");
   lumipt->SetBorderSize(0);

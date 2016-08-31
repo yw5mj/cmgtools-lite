@@ -137,12 +137,12 @@ RecoilInputFileNameData_el: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para
 #RecoilInputFileNameMCLO_mu: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_mu.root
 #RecoilInputFileNameMCLO_el: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_el.root
 
-RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_noPUwt.root
-RecoilInputFileNameMC_mu: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_noPUwt_mu.root
-RecoilInputFileNameMC_el: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_noPUwt_el.root
-RecoilInputFileNameMCLO_all: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_noPUwt.root
-RecoilInputFileNameMCLO_mu: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_noPUwt_mu.root
-RecoilInputFileNameMCLO_el: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_noPUwt_el.root
+RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_effSf.root
+RecoilInputFileNameMC_mu: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_effSf_mu.root
+RecoilInputFileNameMC_el: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_effSf_el.root
+RecoilInputFileNameMCLO_all: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_effSf.root
+RecoilInputFileNameMCLO_mu: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_effSf_mu.root
+RecoilInputFileNameMCLO_el: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_effSf_el.root
 
 
 #====================================================================
