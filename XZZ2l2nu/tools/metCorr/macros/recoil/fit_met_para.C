@@ -96,6 +96,10 @@ void fit_met_para(){
 }
 
 void do_fit_met_para(std::string& infilename, std::string& chan) {
+
+  filename = infilename;
+  channel = chan;
+
   // tags
   tag = "_met_para_study_MZ70-110";
   if (useFullCuts) tag += "_fullCuts"; 
@@ -158,18 +162,18 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   lumipt->SetTextSize(0.03);
   lumipt->AddText(0.15,0.3, lumiTag.c_str());
 
-  sprintf(name, "%s/%s.root", inputdir.c_str(), infilename.c_str());
+  sprintf(name, "%s/%s.root", inputdir.c_str(), filename.c_str());
   fin = new TFile(name);
 
 
-  sprintf(name, "%s/%s%s.root", outputdir.c_str(), infilename.c_str(), tag.c_str());
+  sprintf(name, "%s/%s%s.root", outputdir.c_str(), filename.c_str(), tag.c_str());
   fout = new TFile(name, "recreate");
 
   TTree* tree = (TTree*)fin->Get("tree");
 
   plots = new TCanvas("plots", "plots");
 
-  sprintf(name, "%s/%s%s.pdf[", outputdir.c_str(),infilename.c_str(), tag.c_str());
+  sprintf(name, "%s/%s%s.pdf[", outputdir.c_str(),filename.c_str(), tag.c_str());
   plots->Print(name);
 
 
@@ -206,14 +210,14 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   fit_min = { -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -30, -30, -30, -30  };
   fit_max = { +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +30, +30, +30, +30  };
 
-  sprintf(name, "%s/%s%s.pdf", outputdir.c_str(), infilename.c_str(), tag.c_str());
+  sprintf(name, "%s/%s%s.pdf", outputdir.c_str(), filename.c_str(), tag.c_str());
   std::string plotfilename(name);
   fit_slice_gaus(h2d1, h1d1, plotfilename);
   fit_slice_gaus(h2d2, h1d2, plotfilename);
 
 
 
-  sprintf(name, "%s/%s%s.pdf]", outputdir.c_str(), infilename.c_str(), tag.c_str());
+  sprintf(name, "%s/%s%s.pdf]", outputdir.c_str(), filename.c_str(), tag.c_str());
   plots->Print(name);
 
 

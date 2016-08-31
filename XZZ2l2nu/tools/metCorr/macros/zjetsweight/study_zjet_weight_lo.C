@@ -71,7 +71,7 @@
   //TFile* flotonlo = TFile::Open("study_zpt_new2.root");
   //TFile* flotonlo = TFile::Open("study_zpt_new3.root");
   //TFile* flotonlo = TFile::Open("study_zpt_old.root");
-  TFile* flotonlo = TFile::Open("study_zpt_mzlptetacutVsnocut.root");
+  TFile* flotonlo = TFile::Open("study_zpt_mzlptetacut.root");
   TH1D* hzptnlo = (TH1D*)flotonlo->Get("hzpt1");
   TH1D* hzptlo = (TH1D*)flotonlo->Get("hzpt2");
   TH1D* hzptrnlolo = (TH1D*)flotonlo->Get("hzptr12");
@@ -155,22 +155,23 @@
   //Double_t params[] = {0.960208,0.157272,9.33256,34.3082,0.0757899,20,6.1308,0.17918,125.932,63.9047,1.55286,180.682,228.41,1.0,300,177.811,0.1,400,10};
   //Double_t params[] = {0.975835,0.152064,8.0001,36.3054,0.0746964,20,6.08109,0.0902824,118.121,43.2299,1.12978,174.853,241.396,1.20754,300.073,173.306,0.488323,300,85.7321};
   //Double_t params[] = {0.264091,0.0844949,12.9514,21.9499,0.0870793,20.5089,7.43006,-3.20637,91.0083,481.45,-0.869759,179.36,210.235,1.38243,281.541,551.735,0,0,0};
-  Double_t params[] = {0.264091,0.0844949,12.9514,21.9499,0.0870793,20.5089,7.43006,-3.20637,91.0083,481.45,-0.869759,179.36,210.235,0.3,300,50,0,0,0};
+  //Double_t params[] = {0.264091,0.0844949,12.9514,21.9499,0.0870793,20.5089,7.43006,-3.20637,91.0083,481.45,-0.869759,179.36,210.235,0.3,300,50,0,0,0};
+  Double_t params[] = {0.539806,0.0857151,8,22.3768,0.0717514,20.1505,5.9762,-1.72579, 91.9239, 359.943,-1.56095, 170, 182.16,-1.42277,282.302,320.717,0.790225,326.609,-2.19448};
   fczpt4->SetParameters(params);
 
-  fczpt4->SetParLimits(2,8,16);
+  fczpt4->SetParLimits(2,5,12);
   fczpt4->SetParLimits(5,20,40);
-  fczpt4->SetParLimits(8,80,140);
-  fczpt4->SetParLimits(11,170,250);
-  fczpt4->SetParLimits(14,280,350);
-  //fczpt4->SetParLimits(17,300,600);
+  fczpt4->SetParLimits(8,80,100);
+  fczpt4->SetParLimits(11,100,160);
+  fczpt4->SetParLimits(14,160,250);
+  fczpt4->SetParLimits(17,200,500);
 
-  fczpt4->FixParameter(16,0);
-  fczpt4->FixParameter(17,0);
-  fczpt4->FixParameter(18,0);
+  //fczpt4->FixParameter(16,0);
+  //fczpt4->FixParameter(17,0);
+  //fczpt4->FixParameter(18,0);
   
   //Int_t nfit=2;
-  nfit=1;
+  nfit=100;
   for (int i=0; i<nfit; i++){
     hzpt3krnlolo->Fit(fczpt4);
   }
