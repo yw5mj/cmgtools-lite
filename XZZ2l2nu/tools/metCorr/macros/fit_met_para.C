@@ -1,6 +1,6 @@
 
 
-std::string channel = "mu";
+std::string channel = "all";
 bool isMC = true;
 bool useEffSf = true;
 bool useFullCuts = false;
@@ -38,6 +38,7 @@ std::vector<Int_t> fit_rebin;
 
 
 int fit_slice_gaus(TH2D* h2d, TH1D** h1d, std::string& plotfile);
+void do_fit_met_para(std::string& infilename, std::string& chan);
 
 std::string base_sele;
 
@@ -63,6 +64,37 @@ Int_t Nbins;
 
 void fit_met_para(){
 
+ std::vector< std::string > channels = {"all", "mu", "el"};
+ std::vector< std::string > mcfiles;
+ std::vector< std::string > dtfiles;
+
+ mcfiles = {
+    "DYJetsToLL_M50", "DYJetsToLL_M50_MGMLM_Ext1"
+ };
+ 
+ dtfiles = {
+    "SingleEMU_Run2016BCD_PromptReco"
+ };
+
+ isMC = true;
+ for (int i=0; i<(int)mcfiles.size(); i++)
+ { 
+   for (int j=0; j<(int)channels.size(); j++){
+     do_fit_met_para(mcfiles.at(i), channels.at(j));
+   }
+ }
+
+ isMC = false;
+ for (int i=0; i<(int)dtfiles.size(); i++)
+ {
+   for (int j=0; j<(int)channels.size(); j++){
+     do_fit_met_para(dtfiles.at(i), channels.at(j));
+   }
+ }
+
+}
+
+void do_fit_met_para(std::string& infilename, std::string& chan) {
   // tags
   tag = "_met_para_study";
   if (useFullCuts) tag += "_fullCuts"; 
