@@ -1,5 +1,5 @@
 {
-  TFile* fout = new TFile("dyjets_zpt_weight_lo_nlo_sel.root", "recreate");
+  TFile* fout = new TFile("dyjets_zpt_weight_lo_nlo_genAcc.root", "recreate");
 
   gROOT->ProcessLine(".x tdrstyle.C");
   
@@ -70,7 +70,8 @@
   
   //TFile* flotonlo = TFile::Open("study_zpt_new2.root");
   //TFile* flotonlo = TFile::Open("study_zpt_new3.root");
-  TFile* flotonlo = TFile::Open("study_zpt_old.root");
+  //TFile* flotonlo = TFile::Open("study_zpt_old.root");
+  TFile* flotonlo = TFile::Open("study_zpt_mzlptetacutVsnocut.root");
   TH1D* hzptnlo = (TH1D*)flotonlo->Get("hzpt1");
   TH1D* hzptlo = (TH1D*)flotonlo->Get("hzpt2");
   TH1D* hzptrnlolo = (TH1D*)flotonlo->Get("hzptr12");
@@ -169,7 +170,7 @@
   fczpt4->FixParameter(18,0);
   
   //Int_t nfit=2;
-  nfit=100;
+  nfit=1;
   for (int i=0; i<nfit; i++){
     hzpt3krnlolo->Fit(fczpt4);
   }
