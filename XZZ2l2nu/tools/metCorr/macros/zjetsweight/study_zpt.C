@@ -1,16 +1,20 @@
 {
 
 
+TFile* file1 = TFile::Open("/data2/XZZ/76X_20160705/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root");
+TFile* file2 = TFile::Open("/data2/XZZ2/80X_20160822/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
 //TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160822/DYJetsToLL_M50_Ext/vvTreeProducer/tree.root");
 //TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160822/DYJetsToLL_M50/vvTreeProducer/tree.root");
 //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160822/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
-TFile* file1 = TFile::Open("/data2/XZZ/76X_20160705/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root");
-TFile* file2 = TFile::Open("/data2/XZZ/76X_20160705/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root");
+//TFile* file1 = TFile::Open("/data2/XZZ/76X_20160705/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root");
+//TFile* file2;// = TFile::Open("/data2/XZZ/76X_20160705/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root");
 //TFile* file2 = TFile::Open("/data2/XZZ2/80X_20160822/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
 //TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160818_light/DYJetsToLL_M50/vvTreeProducer/tree.root");
 //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160818_light/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root");
 
-std::string tag = "study_zpt_mzcutVSnomzcut";
+bool samefile = true;
+
+std::string tag = "study_zpt_mzlptetacut";
 //std::string tag = "study_zpt";
 //std::string tag = "study_zpt_old";
 char name[1000];
@@ -19,10 +23,18 @@ char name[1000];
 //std::string sel2 = "(ngenZ>0&&abs(genLep_pdgId[0])!=15)*(genWeight)";
 //std::string sel1 = "(ngenZ>0)*(genWeight)";
 //std::string sel2 = "(ngenZ>0)*(genWeight)";
-std::string sel1 = "(ngenZ>0&&genZ_mass[0]>70&&genZ_mass[0]<110)*(genWeight)";
+//std::string sel1 = "(ngenZ>0&&genZ_mass[0]>70&&genZ_mass[0]<110)*(genWeight)";
+//std::string sel2 = "(ngenZ>0)*(genWeight)";
+//std::string sel1 = "(ngenZ>0&&genZ_mass[0]>70&&genZ_mass[0]<110&&genLep_pt[0]>20&&genLep_pt[1]>20)*(genWeight)";
+//std::string sel2 = "(ngenZ>0&&genZ_mass[0]>70&&genZ_mass[0]<110)*(genWeight)";
+//std::string sel1 = "(ngenZ>0&&genZ_mass[0]>70&&genZ_mass[0]<110&&genLep_pt[0]>20&&genLep_pt[1]>20&&fabs(genLep_eta[0])<2.4&&fabs(genLep_eta[1])<2.4)*(genWeight)";
+//std::string sel2 = "(ngenZ>0&&genZ_mass[0]>70&&genZ_mass[0]<110&&genLep_pt[0]>20&&genLep_pt[1]>20)*(genWeight)";
+std::string sel1 = "(ngenZ>0&&genZ_mass[0]>70&&genZ_mass[0]<110&&genLep_pt[0]>20&&genLep_pt[1]>20&&fabs(genLep_eta[0])<2.4&&fabs(genLep_eta[1])<2.4)*(genWeight)";
 std::string sel2 = "(ngenZ>0)*(genWeight)";
 TTree* tree1 = (TTree*)file1->Get("tree");
-TTree* tree2 = (TTree*)file2->Get("tree");
+TTree* tree2; 
+if (samefile) tree2 = tree1;
+else tree2 = (TTree*)file2->Get("tree");
 
 //Double_t ZPtBins[] = {0,1.25,2.5,3.75,5,6.25,7.5,8.75,10,11.25,12.5,15,17.5,20,25,30,35,40,45,50,60,70,80,90,100,110,130,150,170,190,220,250,300,500,1000};
 Double_t ZPtBins[] = {0, 1.25, 2.5, 3.75, 5, 6.25, 7.5, 8.75, 10, 11.25, 12.5, 15, 17.5, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 110, 130, 150, 170, 190, 220, 250, 400, 1000};

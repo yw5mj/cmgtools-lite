@@ -162,14 +162,14 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   fin = new TFile(name);
 
 
-  sprintf(name, "%s/%s%s.root", outputdir.c_str(), filename.c_str(), tag.c_str());
+  sprintf(name, "%s/%s%s.root", outputdir.c_str(), infilename.c_str(), tag.c_str());
   fout = new TFile(name, "recreate");
 
   TTree* tree = (TTree*)fin->Get("tree");
 
   plots = new TCanvas("plots", "plots");
 
-  sprintf(name, "%s/%s%s.pdf[", outputdir.c_str(),filename.c_str(), tag.c_str());
+  sprintf(name, "%s/%s%s.pdf[", outputdir.c_str(),infilename.c_str(), tag.c_str());
   plots->Print(name);
 
 
@@ -206,14 +206,14 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   fit_min = { -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -30, -30, -30, -30  };
   fit_max = { +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +30, +30, +30, +30  };
 
-  sprintf(name, "%s/%s%s.pdf", outputdir.c_str(), filename.c_str(), tag.c_str());
+  sprintf(name, "%s/%s%s.pdf", outputdir.c_str(), infilename.c_str(), tag.c_str());
   std::string plotfilename(name);
   fit_slice_gaus(h2d1, h1d1, plotfilename);
   fit_slice_gaus(h2d2, h1d2, plotfilename);
 
 
 
-  sprintf(name, "%s/%s%s.pdf]", outputdir.c_str(), filename.c_str(), tag.c_str());
+  sprintf(name, "%s/%s%s.pdf]", outputdir.c_str(), infilename.c_str(), tag.c_str());
   plots->Print(name);
 
 
@@ -230,7 +230,6 @@ int fit_slice_gaus(TH2D* h2d, TH1D** h1d, std::string& plotfile){
   plots->SetLogx(1);
   h2d->Draw("colz");
   lumipt->Draw();
-  //sprintf(name, "%s%s.ps", filename.c_str(), tag.c_str());
   plots->Print(plotfile.c_str());
   plots->SetLogx(0);
   plots->Clear();
@@ -279,7 +278,6 @@ int fit_slice_gaus(TH2D* h2d, TH1D** h1d, std::string& plotfile){
     plots->Clear();
     ahist->Draw();
     lumipt->Draw();
-    //sprintf(name, "%s%s.ps", filename.c_str(), tag.c_str());
     plots->Print(plotfile.c_str());    
     plots->Clear();    
    
@@ -294,7 +292,6 @@ int fit_slice_gaus(TH2D* h2d, TH1D** h1d, std::string& plotfile){
   plots->SetLogx(1);
   h_mean->Draw();
   lumipt->Draw();
-  //sprintf(name, "%s%s.ps", filename.c_str(), tag.c_str());
   plots->Print(plotfile.c_str());
   plots->SetLogx(0);
   plots->Clear();
@@ -304,7 +301,6 @@ int fit_slice_gaus(TH2D* h2d, TH1D** h1d, std::string& plotfile){
   plots->SetLogx(1);
   h_sigma->Draw();
   lumipt->Draw();
-  //sprintf(name, "%s%s.ps", filename.c_str(), tag.c_str());
   plots->Print(plotfile.c_str());
   plots->SetLogx(0);
   plots->Clear();
