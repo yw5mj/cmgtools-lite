@@ -6,16 +6,17 @@ std::string _RecoilInputFileNameData_all, _RecoilInputFileNameData_mu, _RecoilIn
 std::string _RecoilInputFileNameMC_all, _RecoilInputFileNameMC_mu, _RecoilInputFileNameMC_el;
 std::string _RecoilInputFileNameMCLO_all, _RecoilInputFileNameMCLO_mu, _RecoilInputFileNameMCLO_el;
 
-std::string _dir = "./";
+std::string _dir = "./recoil_out/";
 
-//std::string _dt_tag = "met_para_study";
+std::string _dt_tag = "met_para_study";
 //std::string _mc_tag = "RecoilNoSmooth_met_para_study";
 //std::string _dt_tag = "met_para_study_fullCuts";
 //std::string _mc_tag = "RecoilNoSmooth_met_para_study_fullCuts_effSf";
 //std::string _dt_tag = "met_para_study";
 //std::string _mc_tag = "RecoilNoPUWtNoSmooth_met_para_study";
-std::string _dt_tag = "met_para_study_fullCuts";
-std::string _mc_tag = "RecoilNoPUWtNoSmooth_met_para_study_fullCuts_effSf";
+//std::string _dt_tag = "met_para_study_fullCuts";
+//std::string _mc_tag = "RecoilNoPUWtNoSmooth_met_para_study_fullCuts_effSf";
+std::string _mc_tag = "met_para_study_effSf";
 
 _RecoilInputFileNameData_all = _dir+"SingleEMU_Run2016BCD_PromptReco_"+_dt_tag+".root";
 _RecoilInputFileNameData_mu = _dir+"SingleEMU_Run2016BCD_PromptReco_"+_dt_tag+"_mu.root";

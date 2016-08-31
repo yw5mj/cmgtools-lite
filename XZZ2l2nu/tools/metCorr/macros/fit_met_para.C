@@ -69,7 +69,8 @@ void fit_met_para(){
  std::vector< std::string > dtfiles;
 
  mcfiles = {
-    "DYJetsToLL_M50", "DYJetsToLL_M50_MGMLM_Ext1"
+    //"DYJetsToLL_M50", "DYJetsToLL_M50_MGMLM_Ext1"
+    "DYJetsToLL_M50_NoRecoil", "DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
  };
  
  dtfiles = {
@@ -96,7 +97,7 @@ void fit_met_para(){
 
 void do_fit_met_para(std::string& infilename, std::string& chan) {
   // tags
-  tag = "_met_para_study";
+  tag = "_met_para_study_MZ70-110";
   if (useFullCuts) tag += "_fullCuts"; 
   if (isMC && useEffSf) tag += "_effSf";
   if ( (isMC && mcTrgSf) || (!isMC && dtTrgSf))  tag += "_trgSf";
@@ -113,7 +114,8 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   std::string cuts_zpt100="(llnunu_l1_pt>100)";
   std::string cuts_loose_z="("+metfilter+"&&"+cuts_lepaccept+"&&"+cuts_zmass+")";
 
-  base_selec = "(llnunu_l1_mass>50&&llnunu_l1_mass<180)";
+  //base_selec = "(llnunu_l1_mass>50&&llnunu_l1_mass<180)";
+  base_selec = "(llnunu_l1_mass>70&&llnunu_l1_mass<110)";
 
   if (useFullCuts) base_selec =  cuts_loose_z;
 
