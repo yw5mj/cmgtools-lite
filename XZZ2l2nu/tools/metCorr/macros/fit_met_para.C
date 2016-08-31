@@ -1,8 +1,8 @@
 
 
-std::string channel = "all";
+std::string channel = "mu";
 bool isMC = true;
-bool useEffSf = false;
+bool useEffSf = true;
 bool useFullCuts = false;
 bool mcTrgSf = false;
 bool dtTrgSf = false;
@@ -13,10 +13,9 @@ std::string inputdir =
   //"./"
   ;
 std::string filename =
-  "DYJetsToLL_M50_RecoilNoPUWtNoSmooth"
   //"DYJetsToLL_M50_RecoilNoSmooth"
   //"DYJetsToLL_M50_RecoilSmooth"
-  //"DYJetsToLL_M50"
+  "DYJetsToLL_M50"
   //"DYJetsToLL_M50_NoRecoil"
   //"DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
   //"DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth"
@@ -25,6 +24,7 @@ std::string filename =
   //"SingleEMU_Run2016BCD_PromptReco"
   ;
 
+std::string outputdir = "./recoil_out";
 
 char name[1000];
 TCanvas* plots;
@@ -37,7 +37,7 @@ std::vector<Double_t> fit_max;
 std::vector<Int_t> fit_rebin; 
 
 
-int fit_slice_gaus(TH2D* h2d, TH1D** h1d);
+int fit_slice_gaus(TH2D* h2d, TH1D** h1d, std::string& plotfile);
 
 std::string base_sele;
 
@@ -102,12 +102,15 @@ void fit_met_para(){
   std::string selec = base_selec;
   if (isMC) selec +=  weight_selec + rhoweight_selec;
   if (isMC && useEffSf) selec += effsf_selec;
-  if ( (isMC && mcTrgSf) || (!isMC && dtTrgSf) selec += "*(trgsf)";
+  if ( (isMC && mcTrgSf) || (!isMC && dtTrgSf) ) selec += "*(trgsf)";
   
 
   // style
   gROOT->ProcessLine(".x tdrstyle.C");
   gStyle->SetOptTitle(0);
+
+  sprintf(name, ".! mkdir -p %s", outputdir.c_str());
+  gROOT->ProcessLine(name);
 
   // lumiTag for plotting
   lumiTag = "CMS 13 TeV 2016 L=12.9 fb^{-1}";
@@ -125,14 +128,14 @@ void fit_met_para(){
   fin = new TFile(name);
 
 
-  sprintf(name, "%s%s.root", filename.c_str(), tag.c_str());
+  sprintf(name, "%s/%s%s.root", outputdir.c_str(), filename.c_str(), tag.c_str());
   fout = new TFile(name, "recreate");
 
   TTree* tree = (TTree*)fin->Get("tree");
 
   plots = new TCanvas("plots", "plots");
 
-  sprintf(name, "%s%s.ps[", filename.c_str(), tag.c_str());
+  sprintf(name, "%s/%s%s.pdf[", outputdir.c_str(),filename.c_str(), tag.c_str());
   plots->Print(name);
 
 
@@ -169,22 +172,21 @@ void fit_met_para(){
   fit_min = { -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -30, -30, -30, -30  };
   fit_max = { +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +30, +30, +30, +30  };
 
-  fit_slice_gaus(h2d1, h1d1);
-  fit_slice_gaus(h2d2, h1d2);
+  sprintf(name, "%s/%s%s.pdf", outputdir.c_str(), filename.c_str(), tag.c_str());
+  std::string plotfilename(name);
+  fit_slice_gaus(h2d1, h1d1, plotfilename);
+  fit_slice_gaus(h2d2, h1d2, plotfilename);
 
 
 
-  sprintf(name, "%s%s.ps]", filename.c_str(), tag.c_str());
+  sprintf(name, "%s/%s%s.pdf]", outputdir.c_str(), filename.c_str(), tag.c_str());
   plots->Print(name);
 
-
-  sprintf(name, ".! ps2pdf %s%s.ps %s%s.pdf", filename.c_str(), tag.c_str(), filename.c_str(), tag.c_str());
-  gROOT->ProcessLine(name);
 
   fout->Close();
 }
 
-int fit_slice_gaus(TH2D* h2d, TH1D** h1d){ 
+int fit_slice_gaus(TH2D* h2d, TH1D** h1d, std::string& plotfile){ 
 
   std::string hname = h2d->GetName();
   Double_t* xbins = (Double_t*)h2d->GetXaxis()->GetXbins()->GetArray();
@@ -194,8 +196,8 @@ int fit_slice_gaus(TH2D* h2d, TH1D** h1d){
   plots->SetLogx(1);
   h2d->Draw("colz");
   lumipt->Draw();
-  sprintf(name, "%s%s.ps", filename.c_str(), tag.c_str());
-  plots->Print(name);
+  //sprintf(name, "%s%s.ps", filename.c_str(), tag.c_str());
+  plots->Print(plotfile.c_str());
   plots->SetLogx(0);
   plots->Clear();
   
@@ -243,8 +245,8 @@ int fit_slice_gaus(TH2D* h2d, TH1D** h1d){
     plots->Clear();
     ahist->Draw();
     lumipt->Draw();
-    sprintf(name, "%s%s.ps", filename.c_str(), tag.c_str());
-    plots->Print(name);    
+    //sprintf(name, "%s%s.ps", filename.c_str(), tag.c_str());
+    plots->Print(plotfile.c_str());    
     plots->Clear();    
    
     fout->cd();
@@ -258,8 +260,8 @@ int fit_slice_gaus(TH2D* h2d, TH1D** h1d){
   plots->SetLogx(1);
   h_mean->Draw();
   lumipt->Draw();
-  sprintf(name, "%s%s.ps", filename.c_str(), tag.c_str());
-  plots->Print(name);
+  //sprintf(name, "%s%s.ps", filename.c_str(), tag.c_str());
+  plots->Print(plotfile.c_str());
   plots->SetLogx(0);
   plots->Clear();
 
@@ -268,8 +270,8 @@ int fit_slice_gaus(TH2D* h2d, TH1D** h1d){
   plots->SetLogx(1);
   h_sigma->Draw();
   lumipt->Draw();
-  sprintf(name, "%s%s.ps", filename.c_str(), tag.c_str());
-  plots->Print(name);
+  //sprintf(name, "%s%s.ps", filename.c_str(), tag.c_str());
+  plots->Print(plotfile.c_str());
   plots->SetLogx(0);
   plots->Clear();
 
