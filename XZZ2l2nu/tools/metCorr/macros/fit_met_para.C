@@ -1,11 +1,18 @@
 
 
+std::string channel = "all";
+bool isMC = true;
+bool useEffSf = false;
+bool useFullCuts = false;
+bool noPUweight = false;
+
 std::string inputdir = 
   "/home/heli/XZZ/80X_20160825_light_Skim"
   //"./"
   ;
 std::string filename =
-  "DYJetsToLL_M50_RecoilNoSmooth"
+  "DYJetsToLL_M50_RecoilNoPUWtNoSmooth"
+  //"DYJetsToLL_M50_RecoilNoSmooth"
   //"DYJetsToLL_M50_RecoilSmooth"
   //"DYJetsToLL_M50"
   //"DYJetsToLL_M50_NoRecoil"
@@ -15,11 +22,6 @@ std::string filename =
   //"DYJetsToLL_M50_MGMLM_Ext1"
   //"SingleEMU_Run2016BCD_PromptReco"
   ;
-
-std::string channel = "all";
-
-bool isMC = true;
-bool useEffSf = false;
 
 
 char name[1000];
@@ -57,16 +59,34 @@ TF1* func4[1000];
 
 Int_t Nbins;
 
-
 void fit_met_para(){
+
+std::string metfilter="(Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_HBHENoiseFilter&&Flag_CSCTightHalo2015Filter&&Flag_eeBadScFilter)";
+
+std::string cuts_lepaccept="((abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_l1_pt>50&&abs(llnunu_l1_l1_eta)<2.4&&llnunu_l1_l2_pt>20&&abs(llnunu_l1_l2_eta)<2.4&&(llnunu_l1_l1_highPtID==1||llnunu_l1_l2_highPtID==1))";
+cuts_lepaccept+="||(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11&&llnunu_l1_l1_pt>115&&abs(llnunu_l1_l1_eta)<2.5&&llnunu_l1_l2_pt>35&&abs(llnunu_l1_l2_eta)<2.5))";
+std::string cuts_zmass="(llnunu_l1_mass>70&&llnunu_l1_mass<110)";
+std::string cuts_zpt100="(llnunu_l1_pt>100)";
+std::string cuts_loose_z="("+metfilter+"&&"+cuts_lepaccept+"&&"+cuts_zmass+")";
+
 
 
 
 base_selec = "(llnunu_l1_mass>50&&llnunu_l1_mass<180)";
+
+if (useFullCuts) base_selec =  cuts_loose_z;
+
 if (channel=="el") base_selec = "("+base_selec+"&&(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11))";
 else if (channel=="mu") base_selec = "("+base_selec+"&&(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13))";
 
 tag = "_met_para_study";
+
+if (useFullCuts) tag += "_fullCuts"; 
+
+if (isMC && useEffSf) tag += "_effSf";
+
+if (noPUweight) tag += "_noPUwt";
+
 
 if (channel=="el") tag += "_el";
 else if (channel=="mu") tag += "_mu";
@@ -77,8 +97,15 @@ lumiTag =
   ;
 if (isMC) lumiTag = "CMS 13 TeV Simulation for 2016 Data";
 
+// data HLT
+if (!isMC && useFullCuts) base_selec = "((HLT_MUv2||HLT_ELEv2)&&"+base_selec+")";
+
 // add weight
 std::string weight_selec = std::string("*(genWeight*ZPtWeight*puWeight68075/SumWeights*1921.8*3*12900.0)");
+
+if (noPUweight)  weight_selec = std::string("*(genWeight*ZPtWeight/SumWeights*1921.8*3*12900.0)");
+
+
 
 // rho weight
 std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
@@ -92,7 +119,6 @@ if (isMC) selec +=  weight_selec + rhoweight_selec;
 
 if (isMC && useEffSf) {
   selec += effsf_selec;
-  tag += "_sf"; 
 }
 
 gROOT->ProcessLine(".x tdrstyle.C");

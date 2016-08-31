@@ -210,6 +210,7 @@ TGraphErrors* _gr_ratio_met_perp_sigma_dtmc[10];
 // eff scale
 //==============================================
 bool _addEffScale = true;
+bool _addEffScaleOnData = false;
 // Input files for:
 // - el id iso eff
 std::string _EffScaleInputFileName_IdIso_El = "data/eff/egammaEffi.txt_SF2D.root";

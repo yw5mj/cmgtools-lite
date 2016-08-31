@@ -8,15 +8,24 @@ std::string _RecoilInputFileNameMCLO_all, _RecoilInputFileNameMCLO_mu, _RecoilIn
 
 std::string _dir = "./";
 
-_RecoilInputFileNameData_all = _dir+"SingleEMU_Run2016BCD_PromptReco_met_para_study.root";
-_RecoilInputFileNameData_mu = _dir+"SingleEMU_Run2016BCD_PromptReco_met_para_study_mu.root";
-_RecoilInputFileNameData_el = _dir+"SingleEMU_Run2016BCD_PromptReco_met_para_study_el.root";
-_RecoilInputFileNameMC_all = _dir+"DYJetsToLL_M50_RecoilNoSmooth_met_para_study.root";
-_RecoilInputFileNameMC_mu = _dir+"DYJetsToLL_M50_RecoilNoSmooth_met_para_study_mu.root";
-_RecoilInputFileNameMC_el = _dir+"DYJetsToLL_M50_RecoilNoSmooth_met_para_study_el.root";
-_RecoilInputFileNameMCLO_all = _dir+"DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth_met_para_study.root";
-_RecoilInputFileNameMCLO_mu = _dir+"DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth_met_para_study_mu.root";
-_RecoilInputFileNameMCLO_el = _dir+"DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth_met_para_study_el.root";
+//std::string _dt_tag = "met_para_study";
+//std::string _mc_tag = "RecoilNoSmooth_met_para_study";
+//std::string _dt_tag = "met_para_study_fullCuts";
+//std::string _mc_tag = "RecoilNoSmooth_met_para_study_fullCuts_effSf";
+//std::string _dt_tag = "met_para_study";
+//std::string _mc_tag = "RecoilNoPUWtNoSmooth_met_para_study";
+std::string _dt_tag = "met_para_study_fullCuts";
+std::string _mc_tag = "RecoilNoPUWtNoSmooth_met_para_study_fullCuts_effSf";
+
+_RecoilInputFileNameData_all = _dir+"SingleEMU_Run2016BCD_PromptReco_"+_dt_tag+".root";
+_RecoilInputFileNameData_mu = _dir+"SingleEMU_Run2016BCD_PromptReco_"+_dt_tag+"_mu.root";
+_RecoilInputFileNameData_el = _dir+"SingleEMU_Run2016BCD_PromptReco_"+_dt_tag+"_el.root";
+_RecoilInputFileNameMC_all = _dir+"DYJetsToLL_M50_"+_mc_tag+".root";
+_RecoilInputFileNameMC_mu = _dir+"DYJetsToLL_M50_"+_mc_tag+"_mu.root";
+_RecoilInputFileNameMC_el = _dir+"DYJetsToLL_M50_"+_mc_tag+"_el.root";
+_RecoilInputFileNameMCLO_all = _dir+"DYJetsToLL_M50_MGMLM_Ext1_"+_mc_tag+".root";
+_RecoilInputFileNameMCLO_mu = _dir+"DYJetsToLL_M50_MGMLM_Ext1_"+_mc_tag+"_mu.root";
+_RecoilInputFileNameMCLO_el = _dir+"DYJetsToLL_M50_MGMLM_Ext1_"+_mc_tag+"_el.root";
 
 
 TFile* _file_dt_sigma[10];
