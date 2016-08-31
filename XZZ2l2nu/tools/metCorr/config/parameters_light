@@ -104,7 +104,8 @@ addDyZPtWeightLOUseFunction: true
 addDyNewGenWeight: true
 
 # input root file
-DyZPtWeightInputFileName: data/zptweight/dyjets_zpt_weight_lo_nlo_sel.root
+#DyZPtWeightInputFileName: data/zptweight/dyjets_zpt_weight_lo_nlo_sel.root
+DyZPtWeightInputFileName: data/zptweight/dyjets_zpt_weight_lo_nlo_genAcc.root
 
 
 
