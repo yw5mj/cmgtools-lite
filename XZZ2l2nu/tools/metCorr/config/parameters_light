@@ -45,6 +45,7 @@ selection: (1)
 
 # store old branches 
 storeOldBranches: true
+#storeOldBranches: false
 
 
 
