@@ -2,11 +2,13 @@
 
 std::string channel = "all";
 bool isMC = true;
-bool useEffSf = true;
-bool useFullCuts = false;
+bool useMzCut = false;
+bool useZSelec = false;
+bool useZSelecLowLPt = true;
+bool useEffSf = false;
 bool mcTrgSf = false;
 bool dtTrgSf = false;
-bool dtHLT = false;
+bool dtHLT = true;
 
 std::string inputdir = 
   "/home/heli/XZZ/80X_20160825_light_Skim"
@@ -24,7 +26,7 @@ std::string filename =
   //"SingleEMU_Run2016BCD_PromptReco"
   ;
 
-std::string outputdir = "./recoil_out";
+std::string outputdir = "./recoil_out2";
 
 char name[1000];
 TCanvas* plots;
@@ -101,8 +103,10 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   channel = chan;
 
   // tags
-  tag = "_met_para_study_MZ70-110";
-  if (useFullCuts) tag += "_fullCuts"; 
+  tag = "_met_para_study";
+  if (useMzCut) tag += "_MzCut";
+  if (useZSelec) tag += "_ZSelec"; 
+  if (useZSelecLowLPt) tag += "_ZSelecLowLPt";
   if (isMC && useEffSf) tag += "_effSf";
   if ( (isMC && mcTrgSf) || (!isMC && dtTrgSf))  tag += "_trgSf";
   if (!isMC && dtHLT) tag += "_dtHLT";
@@ -114,14 +118,17 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   std::string metfilter="(Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_HBHENoiseFilter&&Flag_CSCTightHalo2015Filter&&Flag_eeBadScFilter)";
   std::string cuts_lepaccept="((abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_l1_pt>50&&abs(llnunu_l1_l1_eta)<2.4&&llnunu_l1_l2_pt>20&&abs(llnunu_l1_l2_eta)<2.4&&(llnunu_l1_l1_highPtID==1||llnunu_l1_l2_highPtID==1))";
   cuts_lepaccept+="||(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11&&llnunu_l1_l1_pt>115&&abs(llnunu_l1_l1_eta)<2.5&&llnunu_l1_l2_pt>35&&abs(llnunu_l1_l2_eta)<2.5))";
+  std::string cuts_lepaccept_lowlpt="((abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_l1_pt>20&&abs(llnunu_l1_l1_eta)<2.4&&llnunu_l1_l2_pt>20&&abs(llnunu_l1_l2_eta)<2.4&&(llnunu_l1_l1_highPtID==1||llnunu_l1_l2_highPtID==1))";
+  cuts_lepaccept_lowlpt+="||(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11&&llnunu_l1_l1_pt>20&&abs(llnunu_l1_l1_eta)<2.5&&llnunu_l1_l2_pt>20&&abs(llnunu_l1_l2_eta)<2.5))";
   std::string cuts_zmass="(llnunu_l1_mass>70&&llnunu_l1_mass<110)";
-  std::string cuts_zpt100="(llnunu_l1_pt>100)";
   std::string cuts_loose_z="("+metfilter+"&&"+cuts_lepaccept+"&&"+cuts_zmass+")";
+  std::string cuts_loose_z_lowlpt="("+metfilter+"&&"+cuts_lepaccept_lowlpt+"&&"+cuts_zmass+")";
 
-  //base_selec = "(llnunu_l1_mass>50&&llnunu_l1_mass<180)";
-  base_selec = "(llnunu_l1_mass>70&&llnunu_l1_mass<110)";
+  base_selec = "(llnunu_l1_mass>50&&llnunu_l1_mass<180)";
+  if (useMzCut)  base_selec = "(llnunu_l1_mass>70&&llnunu_l1_mass<110)";
 
-  if (useFullCuts) base_selec =  cuts_loose_z;
+  if (useZSelec) base_selec =  cuts_loose_z;
+  if (useZSelecLowLPt) base_selec =  cuts_loose_z_lowlpt;
 
   if (channel=="el") base_selec = "("+base_selec+"&&(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11))";
   else if (channel=="mu") base_selec = "("+base_selec+"&&(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13))";

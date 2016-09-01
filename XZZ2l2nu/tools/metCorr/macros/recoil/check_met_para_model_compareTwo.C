@@ -1,9 +1,22 @@
 {
 
-std::string  name_file1 = "recoil_out/DYJetsToLL_M50_NoRecoil_met_para_study_effSf_mu.root";
-std::string  name_file2 = "recoil_out/DYJetsToLL_M50_NoRecoil_met_para_study_mu.root";
+std::string  name_file1 = 
+//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_MzCut_mu.root"
+//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelec_mu.root"
+//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_mu.root"
+//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_dtHLT_mu.root"
+//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelec_el.root"
+"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_dtHLT_el.root"
+;
+std::string  name_file2 = 
+//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_mu.root"
+//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_mu.root"
+"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_el.root"
+
+;
 
 
+gROOT->ProcessLine(".x tdrstyle.C");
 
 TFile* _file_dt_sigma[10];
 TFile* _file_mc_sigma[10];
@@ -64,6 +77,31 @@ TGraphErrors* _gr_ratio_met_perp_sigma_dtmc[10];
 
     _gr_ratio_met_para_sigma_dtmc[3] = new TGraphErrors(_h_ratio_met_para_sigma_dtmc[3]);
     _gr_ratio_met_perp_sigma_dtmc[3] = new TGraphErrors(_h_ratio_met_perp_sigma_dtmc[3]);
+
+
+_h_ratio_met_para_sigma_dtmc[0]->GetYaxis()->SetTitle("Sigma Ratio");
+_h_ratio_met_para_sigma_dtmc[0]->Draw();
+
+
+  TH2D* h_dt_met_para_vs_zpt = (TH2D*)_file_dt_sigma[0]->Get("h_met_para_vs_zpt");
+  TH2D* h_mc_met_para_vs_zpt = (TH2D*)_file_mc_sigma[0]->Get("h_met_para_vs_zpt");
+
+  TH1D* h_dt_zpt = (TH1D*)h_dt_met_para_vs_zpt->ProjectionX("h_dt_zpt");
+  TH1D* h_mc_zpt = (TH1D*)h_mc_met_para_vs_zpt->ProjectionX("h_mc_zpt");
+
+  h_dt_zpt->Scale(1./h_dt_zpt->Integral("width"));
+  h_mc_zpt->Scale(1./h_mc_zpt->Integral("width"));
+
+  h_dt_zpt->SetLineColor(2);
+  h_dt_zpt->SetMarkerColor(2);
+  h_mc_zpt->SetLineColor(4);
+  h_mc_zpt->SetMarkerColor(4);
+
+  TH1D* h_zpt_dtmc = (TH1D*)h_dt_zpt->Clone("h_zpt_dtmc");
+  h_zpt_dtmc->Divide(h_mc_zpt);
+
+//  h_zpt_dtmc->Draw();
+
 
 
 

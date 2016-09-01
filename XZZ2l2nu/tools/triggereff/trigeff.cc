@@ -42,7 +42,8 @@ int main(){
   std::string sel_l1_l1f = sel_l2_base+"&&((llnunu_l1_l1_trigerob_HLTbit&12)==0)";
 
   std::string sel_base = sel_l1_base+"&&(llnunu_l1_l1_pt>50)";
-  std::string sel_pass = sel_base+"&&(HLT_MUv2||HLT_ELEv2)";
+  //std::string sel_pass = sel_base+"&&(HLT_MUv2||HLT_ELEv2)";
+  std::string sel_pass = sel_base+"&&(HLT_MUv2)";
 
   TTree* tree= (TTree*)fin->Get("tree");
 
