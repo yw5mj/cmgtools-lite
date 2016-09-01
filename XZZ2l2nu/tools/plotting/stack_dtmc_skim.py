@@ -7,7 +7,13 @@ from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
-tag="NewRecoilEffSfSmooth_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
+#tag="LODY_Sept1RecoilNoSmooth_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+#tag="LODY_Sept1RecoilSmooth_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+tag="Sept1RecoilNoSmooth_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+#tag="Sept1RecoilSmooth_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+#tag="LODY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+#tag="BigDY_Sept1RecoilNoSmooth_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+#tag="BigDY_Sept1RecoilSmooth_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="NewRecoilNoPUWtNoSmooth_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="BIGDY_NewRecoil_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
 #tag="NewRecoilNoSmooth_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_ZPTwt_allSF_"
@@ -35,9 +41,10 @@ cutChain='tight'
 #cutChain='tightzpt100met100'
 #cutChain='tightzpt100met200'
 
-channel='mu' # can be el or mu or both
+# can be el or mu or both
+channel='el' 
 LogY=True
-test=True
+test=False
 DrawLeptons=True
 doRhoScale=True
 
@@ -245,35 +252,29 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 
 zjetsPlotters=[]
+#zjetsSamples = ['DYJetsToLL_M50_RecoilNoSmooth','DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth']
+#zjetsSamples = ['DYJetsToLL_M50_RecoilSmooth','DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth']
 #zjetsSamples = ['DYJetsToLL_M50','DYJetsToLL_M50_MGMLM_Ext1']
 #zjetsSamples = ['DYJetsToLL_M50'] # M50
-zjetsSamples = ['DYJetsToLL_M50_RecoilSmooth'] # M50
-#zjetsSamples = ['DYJetsToLL_M50_RecoilNoSmooth'] # M50
-#zjetsSamples = ['DYJetsToLL_M50_RecoilNoPUWtNoSmooth'] # M50
-#zjetsSamples = ['DYJetsToLL_M50_HT100to200','DYJetsToLL_M50_HT200to400','DYJetsToLL_M50_HT400to600','DYJetsToLL_M50_HT600toInf']
-#zjetsSamples = ['DYJetsToLL_M50_NoRecoil'] # M50
+#zjetsSamples = ['DYJetsToLL_M50_RecoilSmooth'] # M50
+zjetsSamples = ['DYJetsToLL_M50_RecoilNoSmooth'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth'] # M50
-#zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1_RecoilGraph'] # M50
-#zjetsSamples = ['DYJetsToLL_M50_RecoilNoSmooth'] # M50
-#zjetsSamples = ['DYJetsToLL_M50_RecoilGraph'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1'] # M50
-#zjetsSamples = ['DYJetsToLL_M50_BIG'] # M50_BIG = M50 + M50_Ext
-#zjetsSamples = ['DYJetsToLL_M50_BIG_ZPt'] 
-#zjetsSamples = ['DYJetsToLL_M50_BIG_RecoilGraph'] # M50
+#zjetsSamples = ['DYJetsToLL_M50_NoRecoil'] # M50
 
 
 for sample in zjetsSamples:
     zjetsPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
-    zjetsPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
-    #zjetsPlotters[-1].addCorrectionFactor('(1)','norm')
+    #zjetsPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
+    zjetsPlotters[-1].addCorrectionFactor('(1)','norm')
     if ZJetsZPtWeight: zjetsPlotters[-1].addCorrectionFactor('ZPtWeight','ZPtWeight')
     #zjetsPlotters[-1].addCorrectionFactor('PhiStarWeight','PhiStarWeight')
     #zjetsPlotters[-1].addCorrectionFactor('xsec','xsec')
     zjetsPlotters[-1].addCorrectionFactor('(1921.8*3)','xsec') # FEWZ NNLO.results_z_m50_nnlo_inclusive_NNPDF30_nlo_as_0118
     #zjetsPlotters[-1].addCorrectionFactor('(1907.0*3)','xsec') # FEWZ NNLO.results_z_m50_nnlo_fsrOn_lowstat_inclusive_NNPDF30_nlo_as_0118
-    zjetsPlotters[-1].addCorrectionFactor('genWeight','genWeight')
-    #zjetsPlotters[-1].addCorrectionFactor('ZJetsGenWeight','genWeight')
+    #zjetsPlotters[-1].addCorrectionFactor('genWeight','genWeight')
+    zjetsPlotters[-1].addCorrectionFactor('ZJetsGenWeight','genWeight')
     zjetsPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     zjetsPlotters[-1].addCorrectionFactor(lepsf,'lepsf')
     allPlotters[sample] = zjetsPlotters[-1]

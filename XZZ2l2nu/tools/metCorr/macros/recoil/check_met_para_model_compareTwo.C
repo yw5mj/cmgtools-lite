@@ -7,13 +7,16 @@ std::string  name_file1 =
 //"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_dtHLT_mu.root"
 //"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelec_el.root"
 //"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_dtHLT_el.root"
-"recoil_out2/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt_effSf.root"
+//"recoil_out2/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt_effSf.root"
+//"recoil_out2/DYJetsToLL_M50_met_para_study_ZSelecLowLPt_effSf.root"
+//"recoil_out2/DYJetsToLL_M50_RecoilSmooth_met_para_study_ZSelecLowLPt_effSf.root"
+"recoil_out2/DYJetsToLL_M50_RecoilNoSmooth_met_para_study_ZSelecLowLPt_effSf.root"
 ;
 std::string  name_file2 =
 //"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_mu.root"
-//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_mu.root"
+"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_mu.root"
 //"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_el.root"
-"recoil_out2/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt.root"
+//"recoil_out2/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt.root"
 
 ;
 

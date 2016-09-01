@@ -8,7 +8,7 @@ bool useZSelecLowLPt = true;
 bool useEffSf = true;
 bool mcTrgSf = false;
 bool dtTrgSf = false;
-bool dtHLT = true;
+bool dtHLT = false;
 
 // recipe:
 // 1.) useZSelecLowLPt can well reproduce the results with full cuts (useZSelec) + HLT (dtHLT or dtTrgSf or mcTrgSf) 
@@ -78,7 +78,9 @@ void fit_met_para(){
 
  mcfiles = {
     //"DYJetsToLL_M50", "DYJetsToLL_M50_MGMLM_Ext1"
-    "DYJetsToLL_M50_NoRecoil", "DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
+    //"DYJetsToLL_M50_NoRecoil", "DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
+    //"DYJetsToLL_M50_RecoilSmooth", "DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth"
+    "DYJetsToLL_M50_RecoilNoSmooth", "DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth"
  };
  
  dtfiles = {
