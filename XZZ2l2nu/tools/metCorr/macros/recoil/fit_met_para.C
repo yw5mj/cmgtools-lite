@@ -1,14 +1,20 @@
 
 
 std::string channel = "all";
-bool isMC = true;
+bool doMC = true;
 bool useMzCut = false;
 bool useZSelec = false;
 bool useZSelecLowLPt = true;
-bool useEffSf = false;
+bool useEffSf = true;
 bool mcTrgSf = false;
 bool dtTrgSf = false;
 bool dtHLT = true;
+
+// recipe:
+// 1.) useZSelecLowLPt can well reproduce the results with full cuts (useZSelec) + HLT (dtHLT or dtTrgSf or mcTrgSf) 
+// 2.) for Data:  useZSelecLowLPt
+// 3.) for MC : useZSelecLowLPt + useEffSf
+
 
 std::string inputdir = 
   "/home/heli/XZZ/80X_20160825_light_Skim"
@@ -79,22 +85,24 @@ void fit_met_para(){
     "SingleEMU_Run2016BCD_PromptReco"
  };
 
- isMC = true;
- for (int i=0; i<(int)mcfiles.size(); i++)
- { 
-   for (int j=0; j<(int)channels.size(); j++){
-     do_fit_met_para(mcfiles.at(i), channels.at(j));
-   }
- }
-
- isMC = false;
- for (int i=0; i<(int)dtfiles.size(); i++)
+ if (doMC) 
  {
-   for (int j=0; j<(int)channels.size(); j++){
-     do_fit_met_para(dtfiles.at(i), channels.at(j));
+   for (int i=0; i<(int)mcfiles.size(); i++)
+   {   
+     for (int j=0; j<(int)channels.size(); j++){
+       do_fit_met_para(mcfiles.at(i), channels.at(j));
+     }
    }
  }
-
+ else 
+ {
+   for (int i=0; i<(int)dtfiles.size(); i++)
+   {
+     for (int j=0; j<(int)channels.size(); j++){
+       do_fit_met_para(dtfiles.at(i), channels.at(j));
+     }
+   }
+ }
 }
 
 void do_fit_met_para(std::string& infilename, std::string& chan) {
@@ -107,9 +115,9 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   if (useMzCut) tag += "_MzCut";
   if (useZSelec) tag += "_ZSelec"; 
   if (useZSelecLowLPt) tag += "_ZSelecLowLPt";
-  if (isMC && useEffSf) tag += "_effSf";
-  if ( (isMC && mcTrgSf) || (!isMC && dtTrgSf))  tag += "_trgSf";
-  if (!isMC && dtHLT) tag += "_dtHLT";
+  if (doMC && useEffSf) tag += "_effSf";
+  if ( (doMC && mcTrgSf) || (!doMC && dtTrgSf))  tag += "_trgSf";
+  if (!doMC && dtHLT) tag += "_dtHLT";
   if (channel=="el") tag += "_el";
   else if (channel=="mu") tag += "_mu";
 
@@ -133,7 +141,7 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   if (channel=="el") base_selec = "("+base_selec+"&&(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11))";
   else if (channel=="mu") base_selec = "("+base_selec+"&&(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13))";
 
-  if (!isMC && dtHLT) base_selec = "((HLT_MUv2||HLT_ELEv2)&&"+base_selec+")";
+  if (!doMC && dtHLT) base_selec = "((HLT_MUv2||HLT_ELEv2)&&"+base_selec+")";
 
 
   // add weight
@@ -145,9 +153,9 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
 
   // selec, cuts + weights
   std::string selec = base_selec;
-  if (isMC) selec +=  weight_selec + rhoweight_selec;
-  if (isMC && useEffSf) selec += effsf_selec;
-  if ( (isMC && mcTrgSf) || (!isMC && dtTrgSf) ) selec += "*(trgsf)";
+  if (doMC) selec +=  weight_selec + rhoweight_selec;
+  if (doMC && useEffSf) selec += effsf_selec;
+  if ( (doMC && mcTrgSf) || (!doMC && dtTrgSf) ) selec += "*(trgsf)";
   
 
   // style
@@ -159,7 +167,7 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
 
   // lumiTag for plotting
   lumiTag = "CMS 13 TeV 2016 L=12.9 fb^{-1}";
-  if (isMC) lumiTag = "CMS 13 TeV Simulation for 2016 Data";
+  if (doMC) lumiTag = "CMS 13 TeV Simulation for 2016 Data";
 
   lumipt = new TPaveText(0.2,0.9,0.8,0.98,"brNDC");
   lumipt->SetBorderSize(0);
