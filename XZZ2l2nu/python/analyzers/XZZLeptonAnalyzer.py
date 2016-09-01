@@ -4,6 +4,10 @@ from PhysicsTools.Heppy.physicsobjects.Electron import Electron
 from PhysicsTools.Heppy.physicsobjects.Muon import Muon
 from PhysicsTools.HeppyCore.utils.deltar import deltaR
 import PhysicsTools.HeppyCore.framework.config as cfg
+from PhysicsTools.Heppy.physicsutils.RochesterCorrections import rochcor
+from PhysicsTools.Heppy.physicsutils.MuScleFitCorrector   import MuScleFitCorr
+from PhysicsTools.Heppy.physicsutils.KalmanMuonCorrector   import KalmanMuonCorrector
+from PhysicsTools.Heppy.physicsutils.ElectronCalibrator import Run2ElectronCalibrator
 from PhysicsTools.HeppyCore.utils.deltar import * 
 from PhysicsTools.Heppy.physicsutils.genutils import *
 import ROOT
@@ -16,6 +20,40 @@ class XZZLeptonAnalyzer( Analyzer ):
     
     def __init__(self, cfg_ana, cfg_comp, looperName ):
         super(XZZLeptonAnalyzer,self).__init__(cfg_ana,cfg_comp,looperName)
+
+        self.muonUseTuneP = self.cfg_ana.muonUseTuneP if hasattr(self.cfg_ana,'muonUseTuneP') else False
+
+        if self.cfg_ana.doMuonScaleCorrections:
+            algo, options = self.cfg_ana.doMuonScaleCorrections
+            if algo == "Kalman":
+                corr = options['MC' if self.cfg_comp.isMC else 'Data']
+                self.muonScaleCorrector = KalmanMuonCorrector(corr,
+                                                    self.cfg_comp.isMC,
+                                                    options['isSync'] if 'isSync' in options else False,
+                                                    options['smearMode'] if 'smearMode' in options else "ebe")
+            elif algo == "Rochester":
+                print "WARNING: the Rochester correction in heppy is still from Run 1"
+                self.muonScaleCorrector = RochesterCorrections()
+            elif algo == "MuScleFit":
+                print "WARNING: the MuScleFit correction in heppy is still from Run 1 (and probably no longer functional)"
+                if options not in [ "prompt", "prompt-sync", "rereco", "rereco-sync" ]:
+                    raise RuntimeError, 'MuScleFit correction name must be one of [ "prompt", "prompt-sync", "rereco", "rereco-sync" ] '
+                    rereco = ("prompt" not in self.cfg_ana.doMuScleFitCorrections)
+                    sync   = ("sync"       in self.cfg_ana.doMuScleFitCorrections)
+                    self.muonScaleCorrector = MuScleFitCorr(cfg_comp.isMC, rereco, sync)
+            else: raise RuntimeError, "Unknown muon scale correction algorithm"
+        else:
+            self.muonScaleCorrector = None
+
+        if self.cfg_ana.doElectronScaleCorrections:
+            conf = cfg_ana.doElectronScaleCorrections
+            self.electronEnergyCalibrator = Run2ElectronCalibrator(
+                conf['data'],
+                conf['GBRForest'],
+                cfg_comp.isMC,
+                conf['isSync'] if 'isSync' in conf else False,
+            )
+
     #----------------------------------------
     # DECLARATION OF HANDLES OF LEPTONS STUFF   
     #----------------------------------------
@@ -93,7 +131,7 @@ class XZZLeptonAnalyzer( Analyzer ):
         event.otherLeptons = []
         
 
-        self.IsolationComputer.setPackedCandidates(self.handles['packedCandidates'].product())
+        #self.IsolationComputer.setPackedCandidates(self.handles['packedCandidates'].product())
         #for lep in self.handles['muons'].product():
         #    self.IsolationComputer.addVetos(lep)
         #for lep in self.handles['electrons'].product():
@@ -118,7 +156,7 @@ class XZZLeptonAnalyzer( Analyzer ):
                 for i in minc: 
                     if i.physObj.innerTrack().isNonnull():mu.trackerIso-=i.physObj.innerTrack().pt()
                 mu.trackerIso/=mu.pt()
-#                if mu.miniRelIso<0.2 or not self.applyIso:
+                #if mu.miniRelIso<0.2 or not self.applyIso:
                 if mu.trackerIso<0.1 or not self.applyIso:
                     event.selectedLeptons.append(mu)
                     event.selectedMuons.append(mu)
@@ -126,9 +164,11 @@ class XZZLeptonAnalyzer( Analyzer ):
             else:
                 event.otherLeptons.append(mu)
         for ele in allelectrons:
-            if ( (self.electronIDVersion=='HEEPv6' and ele.heepV60_noISO) or (self.electronIDVersion=='looseID' and ele.loose_nonISO)) or not self.applyID:
+            #if ( (self.electronIDVersion=='HEEPv6' and ele.heepV60_noISO) or (self.electronIDVersion=='looseID' and ele.loose_nonISO)) or not self.applyID:
+            if  ele.loose_nonISO or not self.applyID:
                 self.n_el_passId += 1
-                if ((self.electronIsoVersion=='miniISO' and ele.miniRelIso<0.1) or (self.electronIsoVersion=='pfISO' and ele.looseiso)) or not self.applyIso:
+                #if ((self.electronIsoVersion=='miniISO' and ele.miniRelIso<0.1) or (self.electronIsoVersion=='pfISO' and ele.looseiso)) or not self.applyIso:
+                if ele.looseiso or not self.applyIso:
                     event.selectedLeptons.append(ele)
                     event.selectedElectrons.append(ele)
                     self.n_el_passIso += 1
@@ -147,9 +187,48 @@ class XZZLeptonAnalyzer( Analyzer ):
                make a list of all muons, and apply basic corrections to them
         """
         allmuons = map( Muon, self.handles['muons'].product() )
+ 
+        # set options for muons to use default pt or TuneP pt
+        for mu in allmuons: mu.setMuonUseTuneP(self.muonUseTuneP)
+        
+        # debug codes
+        #if len(allmuons)>0: 
+        #    mu = allmuons[0]
+        #    print 'LeptonAnalyzer:: ######## begin test'
+        #    mu.setMuonUseTuneP(True)
+        #    print 'LeptonAnalyzer::mu.setMuonUseTuneP(True) : pz=',mu.pz() 
+        #    #mu.setPz(1.0)
+        #    mu.setP4(ROOT.math.XYZTLorentzVector(mu.px(),mu.py(),1.0,mu.energy()))
+        #    print 'LeptonAnalyzer::mu.setPz(1.0)            : pz=',mu.pz() 
+        #    mu.setMuonUseTuneP(True)
+        #    print 'LeptonAnalyzer::mu.setMuonUseTuneP(True) : pz=',mu.pz()
+        #    mu.setMuonUseTuneP(False)
+        #    print 'LeptonAnalyzer::mu.setMuonUseTuneP(False): pz=',mu.pz() 
+        #    #mu.setPz(1.0)
+        #    mu.setP4(ROOT.math.XYZTLorentzVector(mu.px(),mu.py(),1.0,mu.energy()))
+        #    print 'LeptonAnalyzer::mu.setPz(1.0)            : pz=',mu.pz()
+        #    mu.setMuonUseTuneP(False)
+        #    print 'LeptonAnalyzer::mu.setMuonUseTuneP(False): pz=',mu.pz() 
+        #    mu.setMuonUseTuneP(True)
+        #    print 'LeptonAnalyzer::mu.setMuonUseTuneP(True) : pz=',mu.pz()   
+        #    #mu.setPz(1.0)
+        #    mu.setP4(ROOT.math.XYZTLorentzVector(mu.px(),mu.py(),1.0,mu.energy()))
+        #    print 'LeptonAnalyzer::mu.setPz(1.0)            : pz=',mu.pz() 
+        #    mu.setMuonUseTuneP(False)
+        #    print 'LeptonAnalyzer::mu.setMuonUseTuneP(False): pz=',mu.pz()  
+        #    #mu.setPz(1.0)
+        #    mu.setP4(ROOT.math.XYZTLorentzVector(mu.px(),mu.py(),1.0,mu.energy()))
+        #    print 'LeptonAnalyzer::mu.setPz(1.0)            : pz=',mu.pz() 
+        #    mu.setMuonUseTuneP(True)
+        #    print 'LeptonAnalyzer::mu.setMuonUseTuneP(True) : pz=',mu.pz()   
+        #    print 'LeptonAnalyzer:: ######## end test'
+           
 
-        # pre-selection with kinematic cut
-        allmuons = [mu for mu in allmuons if mu.pt()>20.0 and abs(mu.eta())<2.4]
+        # Muon scale and resolution corrections (if enabled)
+        if self.muonScaleCorrector:
+            #for idx,mu in enumerate(allmuons): print 'LeptonAnalyzer:: mu(',idx,'): before Corr, pT(mu) =',mu.pt() 
+            self.muonScaleCorrector.correct_all(allmuons, event.run)
+            #for idx,mu in enumerate(allmuons): print 'LeptonAnalyzer:: mu(',idx,'):  after Corr, pT(mu) =',mu.pt() 
        
         # Attach EAs for isolation:
         for mu in allmuons:
@@ -167,7 +246,7 @@ class XZZLeptonAnalyzer( Analyzer ):
  
         # calculate miniIso
         for mu in allmuons:
-            self.attachMiniIsolation(mu)
+            #self.attachMiniIsolation(mu)
             mu.trackerIso=mu.physObj.isolationR03().sumPt
             
         # Attach the vertex to them, for dxy/dz calculation
@@ -218,14 +297,21 @@ class XZZLeptonAnalyzer( Analyzer ):
 
         # calculate miniIso and pfIso
         for ele in allelectrons:
-            ele.rho = float(self.handles['rhoEleMiniIso'].product()[0])
-            self.attachMiniIsolation(ele)
+            #ele.rho = float(self.handles['rhoEleMiniIso'].product()[0])
+            #self.attachMiniIsolation(ele)
             ele.rho = float(self.handles['rhoElePfIso'].product()[0])
             ele.relIsoea03=ele.absIsoWithFSR(0.3)/ele.pt()
             if abs(ele.physObj.superCluster().eta())<1.479:
                 ele.looseiso=True if ele.relIsoea03<0.0893 else False
             else:
                 ele.looseiso=True if ele.relIsoea03<0.121 else False
+
+        # Electron scale calibrations
+        if self.cfg_ana.doElectronScaleCorrections:
+            for idx,ele in enumerate(allelectrons):
+                #print 'LeptonAnalyzer:: ele(',idx,'): before Corr, pT(e) =',ele.pt()
+                self.electronEnergyCalibrator.correct(ele, event.run)
+                #print 'LeptonAnalyzer:: ele(',idx,'):  after Corr, pT(e) =',ele.pt()
 
         # Attach the vertex
         for ele in allelectrons:
@@ -375,6 +461,7 @@ setattr(XZZLeptonAnalyzer,"defaultConfig",cfg.Analyzer(
     muons='slimmedMuons',
     electrons='slimmedElectrons',
     packedCandidates = 'packedPFCandidates',
+    muonUseTuneP= False,
     rhoMuon= 'fixedGridRhoFastjetCentralNeutral',
     rhoElectronMiniIso = 'fixedGridRhoFastjetCentralNeutral',
     rhoElectronPfIso = 'fixedGridRhoFastjetAll',
@@ -389,6 +476,18 @@ setattr(XZZLeptonAnalyzer,"defaultConfig",cfg.Analyzer(
     miniIsolationPUCorr = None, # Allowed options: 'rhoArea' (EAs for 03 cone scaled by R^2), 'deltaBeta', 
                                      # 'raw' (uncorrected), 'weights' (delta beta weights; not validated)
                                      # Choose None to just use the individual object's PU correction
+    doMuonScaleCorrections = ( 'Kalman', {
+        'MC': 'MC_80X_13TeV',
+        'Data': 'DATA_80X_13TeV',
+        'isSync': False,
+        'smearMode': 'ebe'
+    }), 
+    doElectronScaleCorrections = {
+        'data' : 'EgammaAnalysis/ElectronTools/data/ScalesSmearings/80X_ichepV1_2016_ele',
+        'GBRForest': ('$CMSSW_BASE/src/CMGTools/XZZ2l2nu/data/GBRForest_data_ICHEP16_combined.root',
+                      'gedelectron_p4combination_25ns'),
+        'isSync': False
+    },
     do_filter=True,
     )
 )

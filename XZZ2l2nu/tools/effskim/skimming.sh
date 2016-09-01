@@ -64,9 +64,10 @@ njob="0"
 #for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth.root;
 #for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1_RecoilGraph.root;
 #for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth.root;
-#for infile in $(ls $inputdir/*.root|grep -v Single | grep -v DYJets);
+#for infile in $inputdir/DYJetsToLL_M50_RecoilGraph.root;
 #for infile in $inputdir/SingleEMU_Run2016BCD_PromptReco.root;
-for infile in $inputdir/DYJetsToLL_M50_RecoilGraph.root;
+#for infile in $(ls $inputdir/*.root|grep -v Single | grep -v DYJets);
+for infile in $inputdir/DYJetsToLL_*_RecoilGraph.root;
 do
 #  echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"

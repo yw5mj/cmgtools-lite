@@ -38,7 +38,7 @@ WWToLNuQQ,
 WWToLNuQQ_Ext1,
 WZTo1L1Nu2Q,
 WZTo2L2Q,
-WZTo3LNu,
+#WZTo3LNu,
 WZTo3LNu_AMCNLO,
 TTZToLLNuNu,
 TTWJetsToLNu,
@@ -55,6 +55,12 @@ WW,
 WZ,
 ZZ,
 TT,
+DY1JetsToLL_M50_MGMLM,
+DY2JetsToLL_M50_MGMLM,
+DY3JetsToLL_M50_MGMLM,
+DY4JetsToLL_M50_MGMLM,
+DYBJetsToLL_M50_MGMLM,
+DYJetsToLL_M50_Ext,
 ]
 
 # signals
@@ -141,7 +147,7 @@ silverJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/1
 #goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON.txt'
 #goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276097_13TeV_PromptReco_Collisions16_JSON_NoL1T_v2.txt'
 #goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276384_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
-goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
+goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt'
 run_range = (271036,276811)
 
 jsonFile = goldenJson
@@ -154,8 +160,8 @@ for comp in mcSamples+otherMcSamples:
     comp.isMC = True
     comp.isData = False
     comp.splitFactor = 250
-    comp.puFileMC=dataDir+"/pileup_DATA_80x_271036-275783_62525.root"
-    comp.puFileData=dataDir+"/pileup_DATA_80x_271036-275783_62525.root"
+    comp.puFileMC=dataDir+"/pileup_MC_80x_271036-276811_68075.root"
+    comp.puFileData=dataDir+"/pileup_DATA_80x_271036-276811_68075.root"
     comp.eSFinput=dataDir+"/CutBasedID_LooseWP_76X_18Feb.txt_SF2D.root"
     comp.efficiency = eff2012
     #comp.triggers=triggers_1mu_noniso+triggers_1e_noniso

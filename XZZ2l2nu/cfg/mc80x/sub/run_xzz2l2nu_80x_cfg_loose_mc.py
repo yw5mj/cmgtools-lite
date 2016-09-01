@@ -10,7 +10,7 @@ from PhysicsTools.HeppyCore.framework.heppy_loop import getHeppyOption
 
 #Load all common analyzers
 from CMGTools.XZZ2l2nu.analyzers.coreXZZ_cff import *
-from CMGTools.XZZ2l2nu.analyzers.XZZTrgEff import *
+
 #-------- SAMPLES AND TRIGGERS -----------
 from CMGTools.XZZ2l2nu.samples.loadSamples80x import *
 selectedComponents = mcSamples+dataSamples
@@ -43,13 +43,6 @@ leptonicVAna.selectVBoson = (lambda x: x.mass()>50.0 and x.mass()<180.0)
 multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>50.0 and x.leg1.mass()<180.0)
 
 #-------- SEQUENCE
-#sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
-trgEffAna = cfg.Analyzer(
-    XZZTrgEff, name="TriggerEfficiencyAnalyzer",
-    eleHLT='HLT_Ele105_CaloIdVT_GsfTrkIdT',
-    muHLT='HLT_Mu45_eta2p1'
-    )
-
 coreSequence = [
     skimAnalyzer,
     genAna,
@@ -60,7 +53,7 @@ coreSequence = [
     lepAna,
     jetAna,
     metAna,
-    photonAna,
+#    photonAna,
     leptonicVAna,
     multiStateAna,
     eventFlagsAna,
@@ -68,7 +61,7 @@ coreSequence = [
 ]
     
 #sequence = cfg.Sequence(coreSequence)
-sequence = cfg.Sequence(coreSequence+[vvSkimmer,trgEffAna,vvTreeProducer])
+sequence = cfg.Sequence(coreSequence+[vvSkimmer,multtrg,vvTreeProducer])
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,fullTreeProducer])
  
 
@@ -81,20 +74,25 @@ if test==1:
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #selectedComponents = [SingleMuon_Run2015C_25ns_16Dec]
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2] 
+    #selectedComponents = [SingleMuon_Run2016D_PromptReco_v2] 
+    #selectedComponents = [SingleElectron_Run2016D_PromptReco_v2] 
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2,SingleElectron_Run2016B_PromptReco_v2] 
     #selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
     #selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
+    #selectedComponents = [DY1JetsToLL_M50_MGMLM]
+    #selectedComponents = [DY1JetsToLL_M50_MGMLM, DY2JetsToLL_M50_MGMLM, DY3JetsToLL_M50_MGMLM, DY4JetsToLL_M50_MGMLM, DYBJetsToLL_M50_MGMLM]
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1600] 
     #selectedComponents = signalSamples
-    selectedComponents = signalSamples+backgroundSamples
-    #selectedComponents = backgroundSamples[1:4]
+    #selectedComponents = signalSamples+backgroundSamples
+    selectedComponents = backgroundSamples
     #selectedComponents = [TTTo2L2Nu]
+    #selectedComponents = [ZZTo2L2Nu]
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        #c.files = c.files[1]
+        #c.files = c.files[:1]
         c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
         #c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso

@@ -9,14 +9,16 @@
 # privide chunks running directory, 
 # and directory to copy jobs out
 
-dir=mc2
-out=/home/heli/80X_20160816_Chunks
-#out=/data2/XZZ2/80X_20160810_Chunks/resub
+dir=mc1
+#out=/home/heli/80X_20160825_Chunks
+out=/data2/XZZ2/80X_20160825_Chunks
+
+mkdir -p $out
 
 # need to check your jobs with the expected n root files and n pck files
 # to verify if the job is finished sucessfully.
-n_root_files="4"
-n_pck_files="16"
+n_root_files="3"
+n_pck_files="14"
 
 
 if [ ! -e "$out" ]; then

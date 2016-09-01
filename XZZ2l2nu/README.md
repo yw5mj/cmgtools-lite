@@ -21,7 +21,7 @@ Instructions for package development.
 2. Setup Environment
 
   ```
-  release=CMSSW_8_0_10
+  release=CMSSW_8_0_11
   tag=""
   export SCRAM_ARCH=slc6_amd64_gcc530
   alias cmsenv='eval `scramv1 runtime -sh`'
@@ -87,6 +87,20 @@ Instructions for package development.
   ```
   git clone -o mmhy https://github.com/mmhy/cmgtools-lite.git -b xzz2l2nu_80x CMGTools
   ```
+
+6.1.  MuonRecalibrator: 
+   
+    Please see instructions in 
+
+    ``` 
+      CMGTools/XZZ2l2nu/tools/MuonCalib/readme
+    ```
+
+    for updating this part of codes. 
+
+  Note, NO extra preparation is needed to configure this package, since 2016-08-25 it 
+  is included in https://github.com/mmhy/cmg-cmssw.git in xzz2l2nu_heppy_80X branch already.
+
 
 7. Compile the package together with Heppy Framework:
    Note, do this in CMSSWxxx/src instead of your CMSSWxxx/src/CMSTools/ directory.
