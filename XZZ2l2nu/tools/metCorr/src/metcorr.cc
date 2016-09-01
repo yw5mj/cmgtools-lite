@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
   _isDyJets = (_file_out_name.find("DYJets")!=std::string::npos);
   _isDyJetsLO = (_file_out_name.find("DYJets")!=std::string::npos && _file_out_name.find("MGMLM")!=std::string::npos);
   
-  std::cout << " isDyJets = " << _isDyJets << ", isDyJetsLO = " << _isDyJetsLO << std::endl;
+  if (_debug) std::cout << "DEBUG: isDyJets = " << _isDyJets << ", isDyJetsLO = " << _isDyJetsLO << std::endl;
 
 
   // read config file
