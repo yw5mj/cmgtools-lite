@@ -27,9 +27,9 @@ do
   outfile="${outputdir}/${infile/$inputdir\//}"
 
   # options for outputs
-  outfile="${outfile/\/vvTreeProducer\/tree/}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_test}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_Resbos}"
+  outfile="${outfile/\/vvTreeProducer\/tree/_TgEfElFineBin}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilNoPUWtNoSmooth}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_NoRecoil}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilNoSmooth}"
