@@ -214,7 +214,7 @@
   hdyzpt_dtmc_ratio->Write(); 
   hdyzpt_dtmc_ratio_smooth->Write(); 
   gdyzpt_dtmc_ratio->Write(); 
-  fczpt1->Write(); 
+  fczpt1->Write("fcdyzpt_dtmc_ratio_resbos"); 
   fczpt2->Write("fcdyzpt_dtmc_ratio"); 
  
   hzptnlo->Write();
