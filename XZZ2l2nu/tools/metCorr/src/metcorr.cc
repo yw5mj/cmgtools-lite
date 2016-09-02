@@ -199,6 +199,7 @@ void readConfigFile()
   //========================
   _addDyZPtWeight = parm.GetBool("addDyZPtWeight", kTRUE);
   _addDyZPtWeightUseFunction = parm.GetBool("addDyZPtWeightUseFunction", kTRUE);
+  _addDyZPtWeightUseResummationFunction = parm.GetBool("addDyZPtWeightUseResummationFunction", kFALSE);
   _addDyZPtWeightLOUseFunction = parm.GetBool("addDyZPtWeightLOUseFunction", kTRUE);
   _DyZPtWeightInputFileName = parm.GetString("DyZPtWeightInputFileName", "data/zptweight/dyjets_zpt_weight_lo_nlo_sel.root");
   _addDyNewGenWeight = parm.GetBool("addDyNewGenWeight", kTRUE);;
@@ -457,6 +458,7 @@ void prepareDyZPtWeight()
   _fdyzpt = new TFile(_DyZPtWeightInputFileName.c_str());
   _hdyzpt_dtmc_ratio = (TH1D*)_fdyzpt->Get("hdyzpt_dtmc_ratio");
   _fcdyzpt_dtmc_ratio = (TF1*)_fdyzpt->Get("fcdyzpt_dtmc_ratio");
+  _fcdyzpt_dtmc_ratio_resbos = (TF1*)_fdyzpt->Get("fcdyzpt_dtmc_ratio_resbos");
   _hdyzpt_mc_nlo_lo_ratio = (TH1D*)_fdyzpt->Get("hdyzpt_mc_nlo_lo_ratio");
   _fcdyzpt_mc_nlo_lo_ratio = (TF1*)_fdyzpt->Get("fcdyzpt_mc_nlo_lo_ratio");
   
@@ -475,9 +477,13 @@ void addDyZPtWeight()
       zptBin = _hdyzpt_dtmc_ratio->FindBin(_llnunu_l1_pt);
       if (_llnunu_l1_pt>1000) zptBin = _hdyzpt_dtmc_ratio->FindBin(999);
     }
-    if (_addDyZPtWeightUseFunction) {
+    if (_addDyZPtWeightUseFunction && !_addDyZPtWeightUseResummationFunction) {
       if (_ngenZ>0) _ZPtWeight = _fcdyzpt_dtmc_ratio->Eval(_genZ_pt[0]);
       else _ZPtWeight = _fcdyzpt_dtmc_ratio->Eval(_llnunu_l1_pt);
+    }
+    else if (_addDyZPtWeightUseFunction && _addDyZPtWeightUseResummationFunction) {
+      if (_ngenZ>0) _ZPtWeight = _fcdyzpt_dtmc_ratio_resbos->Eval(_genZ_pt[0]);
+      else _ZPtWeight = _fcdyzpt_dtmc_ratio_resbos->Eval(_llnunu_l1_pt);
     }
     else {
       _ZPtWeight = _hdyzpt_dtmc_ratio->GetBinContent(zptBin);

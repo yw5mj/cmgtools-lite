@@ -148,6 +148,9 @@ bool _addDyZPtWeight = true;
 // for NLO MC use function parametrization instead of hist.
 bool _addDyZPtWeightUseFunction = true;
 
+// for NLO MC use function from resbos nnlo gluon resummation
+bool _addDyZPtWeightUseResummationFunction = true;
+
 // for LO MC to NLO, also use function  
 bool _addDyZPtWeightLOUseFunction = true;
 
@@ -164,6 +167,7 @@ bool _addDyNewGenWeight = true;
 TFile* _fdyzpt;
 TH1D*  _hdyzpt_dtmc_ratio;
 TF1*   _fcdyzpt_dtmc_ratio;
+TF1*   _fcdyzpt_dtmc_ratio_resbos;
 TH1D*  _hdyzpt_mc_nlo_lo_ratio;
 TF1*   _fcdyzpt_mc_nlo_lo_ratio;
 

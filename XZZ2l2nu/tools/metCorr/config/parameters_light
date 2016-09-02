@@ -97,6 +97,9 @@ addDyZPtWeight: true
 # for NLO MC use function parametrization instead of hist.
 addDyZPtWeightUseFunction: true
 
+# for NLO MC use Resummation function from Resbos instead of from data.
+addDyZPtWeightUseResummationFunction: false
+
 # for LO MC to NLO, also use function  
 addDyZPtWeightLOUseFunction: true
 
