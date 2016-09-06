@@ -245,6 +245,16 @@ void readConfigFile()
     _EffScaleInputFileName_Trg_Mu = parm.GetString("EffScaleInputFileName_Trg_Mu", "data/eff/trigeff_mu.root");
   }
 
+
+  //==============================================
+  // Do GJets skimming
+  //==============================================  
+  _doGJetsSkim = parm.GetBool("doGJetsSkim", kFALSE);
+
+  if (_doGJetsSkim) {
+    _GJetsSkimInputFileName = parm.GetString("GJetsSkimInputFileName", "data/gjets/study_gjets.root");
+  }
+
 }
 
 
@@ -280,39 +290,59 @@ bool  prepareTrees()
   _tree_in->SetBranchAddress("lumi", &_lumi);
   _tree_in->SetBranchAddress("evt", &_evt);
 
-  _tree_in->SetBranchAddress("llnunu_mt", &_llnunu_mt);
-  _tree_in->SetBranchAddress("llnunu_l1_mass",&_llnunu_l1_mass);
-  _tree_in->SetBranchAddress("llnunu_l1_mt", &_llnunu_l1_mt);
-  _tree_in->SetBranchAddress("llnunu_l1_pt", &_llnunu_l1_pt);
-  _tree_in->SetBranchAddress("llnunu_l1_phi", &_llnunu_l1_phi);
-  _tree_in->SetBranchAddress("llnunu_l1_eta", &_llnunu_l1_eta);
-  _tree_in->SetBranchAddress("llnunu_l1_deltaPhi", &_llnunu_l1_deltaPhi);
-  _tree_in->SetBranchAddress("llnunu_l1_deltaR", &_llnunu_l1_deltaR);
-  _tree_in->SetBranchAddress("llnunu_l1_rapidity", &_llnunu_l1_rapidity);
+  if (_doGJetsSkim) {
+    _tree_in->SetBranchAddress("gjet_mt", &_gjet_mt);
+    _tree_in->SetBranchAddress("gjet_l1_pt", &_gjet_l1_pt);
+    _tree_in->SetBranchAddress("gjet_l1_eta", &_gjet_l1_eta);
+    _tree_in->SetBranchAddress("gjet_l1_rapidity", &_gjet_l1_rapidity);
+    _tree_in->SetBranchAddress("gjet_l1_phi", &_gjet_l1_phi);
+    _tree_in->SetBranchAddress("gjet_l1_idCutBased", &_gjet_l1_idCutBased);
+    _tree_in->SetBranchAddress("gjet_l2_pt", &_gjet_l2_pt);
+    _tree_in->SetBranchAddress("gjet_l2_phi", &_gjet_l2_phi);
+    _tree_in->SetBranchAddress("gjet_l2_sumEt", &_gjet_l2_sumEt);
+    _tree_in->SetBranchAddress("gjet_l2_rawPt", &_gjet_l2_rawPt);
+    _tree_in->SetBranchAddress("gjet_l2_rawPhi", &_gjet_l2_rawPhi);
+    _tree_in->SetBranchAddress("gjet_l2_rawSumEt", &_gjet_l2_rawSumEt);
+    if (!_isData) {
+      _tree_in->SetBranchAddress("gjet_l2_genPhi", &_gjet_l2_genPhi);
+      _tree_in->SetBranchAddress("gjet_l2_genEta", &_gjet_l2_genEta);
+    }
+  } 
+  else {
+    _tree_in->SetBranchAddress("llnunu_mt", &_llnunu_mt);
+    _tree_in->SetBranchAddress("llnunu_l1_mass",&_llnunu_l1_mass);
+    _tree_in->SetBranchAddress("llnunu_l1_mt", &_llnunu_l1_mt);
+    _tree_in->SetBranchAddress("llnunu_l1_pt", &_llnunu_l1_pt);
+    _tree_in->SetBranchAddress("llnunu_l1_phi", &_llnunu_l1_phi);
+    _tree_in->SetBranchAddress("llnunu_l1_eta", &_llnunu_l1_eta);
+    _tree_in->SetBranchAddress("llnunu_l1_deltaPhi", &_llnunu_l1_deltaPhi);
+    _tree_in->SetBranchAddress("llnunu_l1_deltaR", &_llnunu_l1_deltaR);
+    _tree_in->SetBranchAddress("llnunu_l1_rapidity", &_llnunu_l1_rapidity);
 
-  _tree_in->SetBranchAddress("llnunu_l2_pt", &_llnunu_l2_pt);
-  _tree_in->SetBranchAddress("llnunu_l2_phi", &_llnunu_l2_phi);
+    _tree_in->SetBranchAddress("llnunu_l2_pt", &_llnunu_l2_pt);
+    _tree_in->SetBranchAddress("llnunu_l2_phi", &_llnunu_l2_phi);
 
-  _tree_in->SetBranchAddress("llnunu_l1_l1_pt", &_llnunu_l1_l1_pt);
-  _tree_in->SetBranchAddress("llnunu_l1_l1_eta", &_llnunu_l1_l1_eta);
-  _tree_in->SetBranchAddress("llnunu_l1_l1_phi", &_llnunu_l1_l1_phi);
-  _tree_in->SetBranchAddress("llnunu_l1_l1_rapidity", &_llnunu_l1_l1_rapidity);
-  _tree_in->SetBranchAddress("llnunu_l1_l1_mass", &_llnunu_l1_l1_mass);
-  _tree_in->SetBranchAddress("llnunu_l1_l1_pdgId", &_llnunu_l1_l1_pdgId);
-  _tree_in->SetBranchAddress("llnunu_l1_l1_charge", &_llnunu_l1_l1_charge);
-  _tree_in->SetBranchAddress("llnunu_l1_l1_ptErr", &_llnunu_l1_l1_ptErr);
-  _tree_in->SetBranchAddress("llnunu_l1_l1_eSCeta", &_llnunu_l1_l1_eSCeta);
+    _tree_in->SetBranchAddress("llnunu_l1_l1_pt", &_llnunu_l1_l1_pt);
+    _tree_in->SetBranchAddress("llnunu_l1_l1_eta", &_llnunu_l1_l1_eta);
+    _tree_in->SetBranchAddress("llnunu_l1_l1_phi", &_llnunu_l1_l1_phi);
+    _tree_in->SetBranchAddress("llnunu_l1_l1_rapidity", &_llnunu_l1_l1_rapidity);
+    _tree_in->SetBranchAddress("llnunu_l1_l1_mass", &_llnunu_l1_l1_mass);
+    _tree_in->SetBranchAddress("llnunu_l1_l1_pdgId", &_llnunu_l1_l1_pdgId);
+    _tree_in->SetBranchAddress("llnunu_l1_l1_charge", &_llnunu_l1_l1_charge);
+    _tree_in->SetBranchAddress("llnunu_l1_l1_ptErr", &_llnunu_l1_l1_ptErr);
+    _tree_in->SetBranchAddress("llnunu_l1_l1_eSCeta", &_llnunu_l1_l1_eSCeta);
 
-  _tree_in->SetBranchAddress("llnunu_l1_l2_pt", &_llnunu_l1_l2_pt);
-  _tree_in->SetBranchAddress("llnunu_l1_l2_eta", &_llnunu_l1_l2_eta);
-  _tree_in->SetBranchAddress("llnunu_l1_l2_phi", &_llnunu_l1_l2_phi);
-  _tree_in->SetBranchAddress("llnunu_l1_l2_rapidity", &_llnunu_l1_l2_rapidity);
-  _tree_in->SetBranchAddress("llnunu_l1_l2_mass", &_llnunu_l1_l2_mass);
-  _tree_in->SetBranchAddress("llnunu_l1_l2_pdgId", &_llnunu_l1_l2_pdgId);
-  _tree_in->SetBranchAddress("llnunu_l1_l2_charge", &_llnunu_l1_l2_charge);
-  _tree_in->SetBranchAddress("llnunu_l1_l2_ptErr", &_llnunu_l1_l2_ptErr);
-  _tree_in->SetBranchAddress("llnunu_l1_l2_eSCeta", &_llnunu_l1_l2_eSCeta);
+    _tree_in->SetBranchAddress("llnunu_l1_l2_pt", &_llnunu_l1_l2_pt);
+    _tree_in->SetBranchAddress("llnunu_l1_l2_eta", &_llnunu_l1_l2_eta);
+    _tree_in->SetBranchAddress("llnunu_l1_l2_phi", &_llnunu_l1_l2_phi);
+    _tree_in->SetBranchAddress("llnunu_l1_l2_rapidity", &_llnunu_l1_l2_rapidity);
+    _tree_in->SetBranchAddress("llnunu_l1_l2_mass", &_llnunu_l1_l2_mass);
+    _tree_in->SetBranchAddress("llnunu_l1_l2_pdgId", &_llnunu_l1_l2_pdgId);
+    _tree_in->SetBranchAddress("llnunu_l1_l2_charge", &_llnunu_l1_l2_charge);
+    _tree_in->SetBranchAddress("llnunu_l1_l2_ptErr", &_llnunu_l1_l2_ptErr);
+    _tree_in->SetBranchAddress("llnunu_l1_l2_eSCeta", &_llnunu_l1_l2_eSCeta);
 
+  }
 
   // other branches for not light weight tree   
   if (!_useLightTree) {
@@ -324,6 +354,9 @@ bool  prepareTrees()
   if (!_isData) {
     _tree_in->SetBranchAddress("nTrueInt", &_nTrueInt );
     _tree_in->SetBranchAddress("genWeight",&_genWeight);
+  }
+
+  if (!_isData&&!_doGJetsSkim) {
     _tree_in->SetBranchAddress("ngenZ", &_ngenZ);
     _tree_in->SetBranchAddress("genZ_pt", _genZ_pt);
   }
@@ -340,7 +373,7 @@ bool  prepareTrees()
   _tree_out->Branch("SumWeights", &_SumWeights, "SumWeights/D");
 
   // keep a copy of old branches
-  if (_storeOldBranches) {
+  if (_storeOldBranches && !_doGJetsSkim) {
     _tree_out->Branch("llnunu_mt_old", &_llnunu_mt_old, "llnunu_mt_old/F");
     _tree_out->Branch("llnunu_l1_mass_old", &_llnunu_l1_mass_old, "llnunu_l1_mass_old/F");
     _tree_out->Branch("llnunu_l1_pt_old", &_llnunu_l1_pt_old, "llnunu_l1_pt_old/F");
@@ -358,8 +391,28 @@ bool  prepareTrees()
     _tree_out->Branch("llnunu_l1_l2_ptErr_old", &_llnunu_l1_l2_ptErr_old, "llnunu_l1_l2_ptErr_old/F");
   }
 
+  // GJets Skim
+  if (_doGJetsSkim){
+    _tree_out->Branch("llnunu_mt", &_llnunu_mt, "llnunu_mt/F");
+    _tree_out->Branch("llnunu_l1_mass", &_llnunu_l1_mass, "llnunu_l1_mass/F");
+    _tree_out->Branch("llnunu_l1_pt", &_llnunu_l1_pt, "llnunu_l1_pt/F");
+    _tree_out->Branch("llnunu_l1_phi", &_llnunu_l1_phi, "llnunu_l1_phi/F");
+    _tree_out->Branch("llnunu_l1_eta", &_llnunu_l1_eta, "llnunu_l1_eta/F");
+    _tree_out->Branch("llnunu_l1_rapidity", &_llnunu_l1_rapidity, "llnunu_l1_rapidity/F");
+    _tree_out->Branch("llnunu_l2_pt", &_llnunu_l2_pt, "llnunu_l2_pt/F");
+    _tree_out->Branch("llnunu_l2_phi", &_llnunu_l2_phi, "llnunu_l2_phi/F");
+    _tree_out->Branch("llnunu_l2_sumEt", &_llnunu_l2_sumEt, "llnunu_l2_sumEt/F");
+    _tree_out->Branch("llnunu_l2_rawPt", &_llnunu_l2_rawPt, "llnunu_l2_rawPt/F");
+    _tree_out->Branch("llnunu_l2_rawPhi", &_llnunu_l2_rawPhi, "llnunu_l2_rawPhi/F");
+    _tree_out->Branch("llnunu_l2_rawSumEt", &_llnunu_l2_rawSumEt, "llnunu_l2_rawSumEt/F");
+    if (!_isData) {
+      _tree_out->Branch("llnunu_l2_genPhi", &_llnunu_l2_genPhi, "llnunu_l2_genPhi/F");
+      _tree_out->Branch("llnunu_l2_genEta", &_llnunu_l2_genEta, "llnunu_l2_genEta/F");
+    }
+  }
 
   return true;
+
 }
 
 // store Old Branches
