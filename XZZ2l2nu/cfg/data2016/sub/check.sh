@@ -10,8 +10,7 @@
 # and directory to copy jobs out
 
 dir=dt1
-#out=/home/heli/80X_20160825_Chunks
-out=/data2/XZZ2/80X_20160825_Chunks
+out=/data2/XZZ2/80X_20160905_Chunks
 
 mkdir -p $out
 
@@ -47,7 +46,7 @@ do
     echo " > rsync -var $job $out/$dir/"
     rsync -var $job $out/$dir/
     echo " > rm -rf $job"
-    rm -rf $job
+#    rm -rf $job
   else
     echo "- job is not finished or has problem to be resubmitted .. "
   fi
