@@ -58,18 +58,21 @@ int main(int argc, char** argv) {
   if (_addPUWeights && !_isData) preparePUWeights();
 
   // prepare inputs for muon re-calib
-  if (_doMuonPtRecalib) prepareMuonPtRecalib();
+  if (_doMuonPtRecalib && !_doGJetsSkim) prepareMuonPtRecalib();
 
 
   // prepare inputs for addDyZPtWeight
-  if (_addDyZPtWeight && !_isData && _isDyJets) prepareDyZPtWeight();
+  if (_addDyZPtWeight && !_isData && _isDyJets && !_doGJetsSkim) prepareDyZPtWeight();
 
   // prepare inputs for simple met recoil tune.
   if (_doRecoil && !_isData && _isDyJets) prepareRecoil();
 
 
   // prepare eff scale factors
-  if (_addEffScale && (!_isData || _addEffScaleOnData) ) prepareEffScale();
+  if (_addEffScale && (!_isData || _addEffScaleOnData) && !_doGJetsSkim ) prepareEffScale();
+
+  // GJets skim
+  if (_doGJetsSkim) prepareGJetsSkim();
 
   // loop
   int n_pass = 0;
@@ -97,22 +100,25 @@ int main(int argc, char** argv) {
     }
 
     // _storeOldBranches
-    if (_storeOldBranches) storeOldBranches();
+    if (_storeOldBranches && !_doGJetsSkim) storeOldBranches();
 
     // add pu weights
     if (_addPUWeights && !_isData) addPUWeights();
 
     // do muon re-calib
-    if (_doMuonPtRecalib) doMuonPtRecalib(); 
+    if (_doMuonPtRecalib && !_doGJetsSkim) doMuonPtRecalib(); 
 
     //  addDyZPtWeight
-    if (_addDyZPtWeight && !_isData && _isDyJets) addDyZPtWeight();
+    if (_addDyZPtWeight && !_isData && _isDyJets && !_doGJetsSkim) addDyZPtWeight();
 
     // simple met recoil tune.
     if (_doRecoil && !_isData && _isDyJets) doRecoil();
 
     // add eff scale factors
-    if (_addEffScale && (!_isData || _addEffScaleOnData) ) addEffScale();
+    if (_addEffScale && (!_isData || _addEffScaleOnData) && !_doGJetsSkim ) addEffScale();
+
+    // GJets skim
+    if (_doGJetsSkim) doGJetsSkim();
 
     // fill output tree
     _tree_out->Fill(); 
@@ -393,6 +399,7 @@ bool  prepareTrees()
 
   // GJets Skim
   if (_doGJetsSkim){
+    _tree_out->Branch("GJetsWeight", &_GJetsWeight, "GJetsWeight/F");
     _tree_out->Branch("llnunu_mt", &_llnunu_mt, "llnunu_mt/F");
     _tree_out->Branch("llnunu_l1_mass", &_llnunu_l1_mass, "llnunu_l1_mass/F");
     _tree_out->Branch("llnunu_l1_pt", &_llnunu_l1_pt, "llnunu_l1_pt/F");
@@ -405,6 +412,14 @@ bool  prepareTrees()
     _tree_out->Branch("llnunu_l2_rawPt", &_llnunu_l2_rawPt, "llnunu_l2_rawPt/F");
     _tree_out->Branch("llnunu_l2_rawPhi", &_llnunu_l2_rawPhi, "llnunu_l2_rawPhi/F");
     _tree_out->Branch("llnunu_l2_rawSumEt", &_llnunu_l2_rawSumEt, "llnunu_l2_rawSumEt/F");
+    _tree_out->Branch("llnunu_l1_l1_pt", &_llnunu_l1_l1_pt, "llnunu_l1_l1_pt/F");
+    _tree_out->Branch("llnunu_l1_l1_eta", &_llnunu_l1_l1_eta, "llnunu_l1_l1_eta/F");
+    _tree_out->Branch("llnunu_l1_l1_pdgId", &_llnunu_l1_l1_pdgId, "llnunu_l1_l1_pdgId/I");
+    _tree_out->Branch("llnunu_l1_l2_pt", &_llnunu_l1_l2_pt, "llnunu_l1_l2_pt/F");
+    _tree_out->Branch("llnunu_l1_l2_eta", &_llnunu_l1_l2_eta, "llnunu_l1_l2_eta/F");
+    _tree_out->Branch("llnunu_l1_l2_pdgId", &_llnunu_l1_l2_pdgId, "llnunu_l1_l2_pdgId/I");
+    _tree_out->Branch("llnunu_l1_l1_highPtID", &_llnunu_l1_l1_highPtID, "llnunu_l1_l1_highPtID/F");
+    _tree_out->Branch("llnunu_l1_l2_highPtID", &_llnunu_l1_l2_highPtID, "llnunu_l1_l2_highPtID/F");
     if (!_isData) {
       _tree_out->Branch("llnunu_l2_genPhi", &_llnunu_l2_genPhi, "llnunu_l2_genPhi/F");
       _tree_out->Branch("llnunu_l2_genEta", &_llnunu_l2_genEta, "llnunu_l2_genEta/F");
@@ -1121,6 +1136,77 @@ void addEffScale()
 
 }
 
+
+
+// prepare gjets skimming
+void prepareGJetsSkim() 
+{
+  if (_doGJetsSkim) {
+    _gjets_input_file = TFile::Open(_GJetsSkimInputFileName.c_str());
+    _gjets_h_zmass_zpt_zrap = (TH3D*)_gjets_input_file->Get("h_zmass_zpt_zrap");
+    _gjets_h_zpt_zrap_ratio = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio");
+
+    for (int iy=0; iy<(int)_gjets_h_zmass_zpt_zrap->GetNbinsY(); iy++){
+      std::vector<TH1D*> h_zmass_zpt;
+      for (int iz=0; iz<(int)_gjets_h_zmass_zpt_zrap->GetNbinsZ(); iz++){
+        sprintf(name, "h_zmass_zpt%i_zrap%i", iy+1, iz+1);
+        TH1D* htmp = (TH1D*)_gjets_h_zmass_zpt_zrap->ProjectionX(name, iy+1, iy+1, iz+1, iz+1, "e");
+        h_zmass_zpt.push_back(htmp); 
+      }
+      _gjets_h_zmass_zpt_zrap_1d_vec.push_back(h_zmass_zpt);
+    } 
+  }
+
+}
+
+// do gjets skim
+void doGJetsSkim()
+{
+
+  // copy branches
+  _llnunu_mt = _gjet_mt;
+  _llnunu_l1_pt = _gjet_l1_pt;
+  _llnunu_l1_eta = _gjet_l1_eta;
+  _llnunu_l1_rapidity = _gjet_l1_rapidity;
+  _llnunu_l1_phi = _gjet_l1_phi;
+  _llnunu_l2_pt = _gjet_l2_pt;
+  _llnunu_l2_phi = _gjet_l2_phi;
+  _llnunu_l2_sumEt = _gjet_l2_sumEt;
+  _llnunu_l2_rawPt = _gjet_l2_rawPt;
+  _llnunu_l2_rawPhi = _gjet_l2_rawPhi;
+  _llnunu_l2_rawSumEt = _gjet_l2_rawSumEt;
+  _llnunu_l1_l1_pt = 10000;
+  _llnunu_l1_l1_eta = 0;
+  _llnunu_l1_l1_pdgId = 13;
+  _llnunu_l1_l2_pt = 10000;
+  _llnunu_l1_l2_eta = 0;
+  _llnunu_l1_l2_pdgId = 13;
+  _llnunu_l1_l1_highPtID = 1.0;
+  _llnunu_l1_l2_highPtID = 1.0;
+
+  if (!_isData){
+    _llnunu_l2_genPhi = _gjet_l2_genPhi;
+    _llnunu_l2_genEta = _gjet_l2_genEta;  
+  }
+
+  // generate z mass
+  int ipt = _gjets_h_zmass_zpt_zrap->GetYaxis()->FindBin(_llnunu_l1_pt) - 1; 
+  int irap = _gjets_h_zmass_zpt_zrap->GetZaxis()->FindBin(_llnunu_l1_rapidity) - 1; 
+  _llnunu_l1_mass = _gjets_h_zmass_zpt_zrap_1d_vec.at(ipt).at(irap)->GetRandom();
+
+  // calculate mt
+  Float_t et1 = TMath::Sqrt(_llnunu_l1_mass*_llnunu_l1_mass + _llnunu_l1_pt*_llnunu_l1_pt);
+  Float_t et2 = TMath::Sqrt(_llnunu_l1_mass*_llnunu_l1_mass + _llnunu_l2_pt*_llnunu_l2_pt);
+  _llnunu_mt = TMath::Sqrt(2.0*_llnunu_l1_mass*_llnunu_l1_mass+2.0*(et1*et2
+             -_llnunu_l1_pt*cos(_llnunu_l1_phi)*_llnunu_l2_pt*cos(_llnunu_l2_phi)
+             -_llnunu_l1_pt*sin(_llnunu_l1_phi)*_llnunu_l2_pt*sin(_llnunu_l2_phi)));
+
+  // get zpt zrap weight
+  ipt = _gjets_h_zpt_zrap_ratio->GetXaxis()->FindBin(_llnunu_l1_pt) - 1;
+  irap = _gjets_h_zpt_zrap_ratio->GetYaxis()->FindBin(_llnunu_l1_rapidity) - 1;
+  _GJetsWeight = _gjets_h_zpt_zrap_ratio->GetBinContent(ipt, irap);
+
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  ,.  .:;::;@;,;;:,::...@;,@,                                                                                                                 
