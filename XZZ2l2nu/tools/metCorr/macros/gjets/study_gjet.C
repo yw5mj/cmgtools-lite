@@ -4,8 +4,8 @@ TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160825_light_Skim/DYJetsToLL_M5
 TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/GJet_Pt_20toInf_DoubleEMEnriched/vvTreeProducer/tree.root");
 //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
 
-//std::string outtag="study_gjets";
-std::string outtag="study_gjets_data";
+std::string outtag="study_gjets_tight";
+//std::string outtag="study_gjets_data";
 
 char name[1000];
 
@@ -30,8 +30,8 @@ TTree* tree2 = (TTree*)file2->Get("tree");
   std::string cuts_loose_z_lowlpt="("+metfilter+"&&"+cuts_lepaccept_lowlpt+"&&"+cuts_zmass+")";
 
 
-  //std::string base_selec =  cuts_loose_z;
-  std::string base_selec =  cuts_loose_z_lowlpt;
+  std::string base_selec =  cuts_loose_z;
+  //std::string base_selec =  cuts_loose_z_lowlpt;
 
   // add weight
   //std::string weight_selec = std::string("*(ZJetsGenWeight*ZPtWeight*puWeight68075*1921.8*3*12900.0)");
