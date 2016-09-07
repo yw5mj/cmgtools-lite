@@ -162,6 +162,13 @@ EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu_20160830.root
 
 
 
+#====================================================================
+# skimming gjets
+#====================================================================
+doGJetsSkim: false
+GJetsSkimInputFileName: data/gjets/study_gjets.root
+
+
 
 
 #==========================================================================================

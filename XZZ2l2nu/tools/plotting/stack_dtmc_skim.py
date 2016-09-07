@@ -7,7 +7,8 @@ from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
-tag="TgEfElFineBin_TightZPt100_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+tag="test_TgEfElFineBin_TightZPt100_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+#tag="TgEfElFineBin_TightZPt100_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="ResBos_TightZPt100_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="LODY_Sept1RecoilNoSmooth_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="LODY_Sept1RecoilSmooth_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
@@ -45,7 +46,7 @@ cutChain='tightzpt100'
 #cutChain='tightzpt100met200'
 
 # can be el or mu or both
-channel='el' 
+channel='all' 
 LogY=False
 test=False
 DrawLeptons=True
@@ -269,6 +270,7 @@ zjetsSamples = ['DYJetsToLL_M50_TgEfElFineBin','DYJetsToLL_M50_MGMLM_Ext1_TgEfEl
 #zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_NoRecoil'] # M50
+#zjetsSamples = ['GJet_Pt_20toInf_DoubleEMEnriched'] 
 
 
 for sample in zjetsSamples:

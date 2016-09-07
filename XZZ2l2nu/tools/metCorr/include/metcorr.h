@@ -315,6 +315,17 @@ TH2D* _h_eff_trg_mu_l2_l1fl2p_norm_vs_l1f;
 
 
 
+//==================================================
+// GJets Skimming
+//==================================================
+bool _doGJetsSkim = false;
+std::string _GJetsSkimInputFileName;
+
+TFile* _gjets_input_file;
+TH3D* _gjets_h_zmass_zpt_zrap;
+TH2D* _gjets_h_zpt_zrap_ratio;
+std::vector< std::vector< TH1D* > > _gjets_h_zmass_zpt_zrap_1d_vec;
+
 
 
 //======================================================
@@ -340,6 +351,8 @@ Float_t _llnunu_l1_mass, _llnunu_l1_mt;
 Float_t _llnunu_l1_pt, _llnunu_l1_phi, _llnunu_l1_eta;
 Float_t _llnunu_l1_deltaPhi, _llnunu_l1_deltaR, _llnunu_l1_rapidity;
 Float_t _llnunu_l2_pt, _llnunu_l2_phi;
+Float_t _llnunu_l2_sumEt, _llnunu_l2_rawPt, _llnunu_l2_rawPhi, _llnunu_l2_rawSumEt;
+Float_t _llnunu_l2_genPhi, _llnunu_l2_genEta;
 Float_t _llnunu_l1_l1_pt, _llnunu_l1_l1_eta, _llnunu_l1_l1_phi;
 Float_t _llnunu_l1_l1_rapidity, _llnunu_l1_l1_mass, _llnunu_l1_l1_ptErr;
 Int_t   _llnunu_l1_l1_pdgId, _llnunu_l1_l1_charge;
@@ -347,6 +360,7 @@ Float_t _llnunu_l1_l2_pt, _llnunu_l1_l2_eta, _llnunu_l1_l2_phi;
 Float_t _llnunu_l1_l2_rapidity, _llnunu_l1_l2_mass, _llnunu_l1_l2_ptErr;
 Int_t   _llnunu_l1_l2_pdgId, _llnunu_l1_l2_charge;
 Float_t _llnunu_l1_l1_eSCeta, _llnunu_l1_l2_eSCeta;
+Float_t _llnunu_l1_l1_highPtID, _llnunu_l1_l2_highPtID;
 
 // MC Only
 Int_t   _nTrueInt;
@@ -372,6 +386,14 @@ Float_t _ZJetsGenWeight;
 Float_t _trgsf, _isosf, _idsf, _trksf, _idisotrksf;
 Float_t _trgsf_err, _isosf_err, _idsf_err, _trksf_err;
 Float_t _trgsf_up, _trgsf_dn, _idisotrksf_up, _idisotrksf_dn;
+
+
+// for GJets samples
+Float_t _GJetsWeight;
+Float_t _gjet_mt, _gjet_l1_pt, _gjet_l1_eta, _gjet_l1_rapidity, _gjet_l1_phi;
+Int_t _gjet_l1_idCutBased;
+Float_t _gjet_l2_pt, _gjet_l2_phi, _gjet_l2_sumEt, _gjet_l2_rawPt, _gjet_l2_rawPhi, _gjet_l2_rawSumEt;
+Float_t _gjet_l2_genPhi, _gjet_l2_genEta;
 
 
 
@@ -419,6 +441,13 @@ void prepareEffScale();
     
 // add eff scale factors
 void addEffScale();
+
+
+// prepare gjets skimming
+void prepareGJetsSkim();
+
+// do gjets skim
+void doGJetsSkim();
 
 // 
 

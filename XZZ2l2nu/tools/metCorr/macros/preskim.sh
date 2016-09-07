@@ -6,9 +6,14 @@
 g++ preskim.cc -o preskim.exe `root-config --cflags` `root-config --libs`
 
 #inputs
-indir=/home/heli/XZZ/80X_20160825
-outdir=/home/heli/XZZ/80X_20160825_light
-for dd in ${indir}/*/vvTreeProducer;
+#indir=/home/heli/XZZ/80X_20160825
+#outdir=/home/heli/XZZ/80X_20160825_light
+indir=/data2/XZZ2/80X_20160905
+outdir=/data2/XZZ2/80X_20160905_light
+mkdir -p $outdir
+
+#for dd in ${indir}/*/vvTreeProducer;
+for dd in ${indir}/Single*/vvTreeProducer;
 do 
   infile="${dd}/tree.root";
   oo="${dd/$indir/$outdir}";

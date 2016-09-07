@@ -60,7 +60,7 @@ var_wts={'nVert': ["(1)", "(1)"],
           #'corrnvtx':["(1)", "((0.9760-0.0006*nTrueInt)*(1-0.000935*nTrueInt-0.00001657*nTrueInt*nTrueInt))"],
          }
 
-outtag='scan_pu_'+scanvar+'_pass3_v0'
+outtag='scan_pu_'+scanvar+'_2016G_pass0'
 
 DataHLT="DblLepHLT"
 #DataHLT="SglLepHLT"
@@ -68,10 +68,10 @@ DataHLT="DblLepHLT"
 outtag += '_'+DataHLT
 
 
-dtfileName='SingleEMU_Run2016BCD_PromptReco.root'
+dtfileName='SingleEMU_Run2016G_PromptReco.root'
 mcfileName='DYJetsToLL_M50_PUScan.root'
 
-lumiTag = 'CMS 13 TeV 2016 L=12.9 fb^{-1}'
+lumiTag = 'CMS 13 TeV 2016G L=1.89 fb^{-1}'
 
 #cuts_b2g_z='(((abs(llnunu_l1_l1_pdgId)==13&&llnunu_l1_l1_pt>50&&abs(llnunu_l1_l1_eta)<2.1&&llnunu_l1_l2_pt>20&&abs(llnunu_l1_l2_eta)<2.4)||(abs(llnunu_l1_l1_pdgId)==11&&llnunu_l1_l1_pt>115&&abs(llnunu_l1_l1_eta)<2.5&&llnunu_l1_l2_pt>35&&abs(llnunu_l1_l2_eta)<2.5))&&(llnunu_l1_mass>70&&llnunu_l1_mass<110))'
 cuts_b2g_z='(((abs(llnunu_l1_l1_pdgId)==13&&llnunu_l1_l1_pt>50&&abs(llnunu_l1_l1_eta)<2.4&&llnunu_l1_l2_pt>20&&abs(llnunu_l1_l2_eta)<2.4)||(abs(llnunu_l1_l1_pdgId)==11&&llnunu_l1_l1_pt>115&&abs(llnunu_l1_l1_eta)<2.5&&llnunu_l1_l2_pt>35&&abs(llnunu_l1_l2_eta)<2.5))&&(llnunu_l1_mass>70&&llnunu_l1_mass<110))'
@@ -94,8 +94,8 @@ mcfile = TFile(inputdir+'/'+mcfileName)
 dttree=dtfile.Get('tree')
 mctree=mcfile.Get('tree')
 
-dttree.SetAlias("corrnvtx", "nallvtx")
-mctree.SetAlias("corrnvtx", "nallvtx")
+dttree.SetAlias("corrnvtx", "nVert")
+mctree.SetAlias("corrnvtx", "nVert")
 #mctree.SetAlias("corrnvtx", "((0.9760-0.0006*nTrueInt)*(1-0.000935*nTrueInt-0.00001657*nTrueInt*nTrueInt))*nallvtx")
 
 gStyle.SetOptTitle(1)
@@ -234,7 +234,9 @@ gr_chi2ndf_pu.Sort()
 fc_chi2ndf_pu = TF1("fc_chi2ndf_pu", "pol2", min(pu_list)*0.001*0.9, max(pu_list)*0.001*1.1)
 gr_chi2ndf_pu.Fit(fc_chi2ndf_pu, "R", "",  min(pu_list)*0.001, max(pu_list)*0.001)
 x_minchi2ndf=fc_chi2ndf_pu.GetMinimumX()
-gr_chi2ndf_pu.Fit(fc_chi2ndf_pu, "R", "",  min(x_minchi2ndf-3.5,min(pu_list)*0.001*1.1), min(x_minchi2ndf+3.5, max(pu_list)*0.001*0.9))
+gr_chi2ndf_pu.Fit(fc_chi2ndf_pu, "R", "",  max(x_minchi2ndf-2,min(pu_list)*0.001), min(x_minchi2ndf+2, max(pu_list)*0.001))
+x_minchi2ndf=fc_chi2ndf_pu.GetMinimumX()
+gr_chi2ndf_pu.Fit(fc_chi2ndf_pu, "R", "",  max(x_minchi2ndf-2,min(pu_list)*0.001), min(x_minchi2ndf+2, max(pu_list)*0.001))
 #calculate minimum and uncertainty
 b=fc_chi2ndf_pu.GetParameter(1);
 c=fc_chi2ndf_pu.GetParameter(2);
