@@ -4,8 +4,8 @@ TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160825_light_Skim/DYJetsToLL_M5
 TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/GJet_Pt_20toInf_DoubleEMEnriched/vvTreeProducer/tree.root");
 //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
 
-//std::string outtag="study_gjets";
-std::string outtag="study_gjets_data";
+std::string outtag="study_gjets";
+//std::string outtag="study_gjets_data";
 
 char name[1000];
 
@@ -122,26 +122,7 @@ plots->Clear();
 TH1D* hzptr12 = (TH1D*)hzpt1->Clone("hzptr12");
 hzptr12->Divide(hzpt2);
 
-TH1D* hzeta1 = new TH1D("hzeta1", "hzeta1", 100, -10, 10);
-TH1D* hzeta2 = new TH1D("hzeta2", "hzeta2", 100, -10, 10);
 
-hzeta1->Sumw2();
-hzeta2->Sumw2();
-
-
-tree1->Draw("llnunu_l1_eta>>hzeta1", zjet_selec.c_str());
-tree2->Draw("gjet_l1_eta>>hzeta2", gjet_selec.c_str());
-
-hzeta1->SetLineColor(2);
-hzeta2->SetLineColor(4);
-
-
-hzeta1->Scale(1./hzeta1->Integral());
-hzeta2->Scale(1./hzeta2->Integral());
-
-hzeta1->Draw();
-hzeta2->Draw("same");
-*/
 TH1D* hzrap1 = new TH1D("hzrap1", "hzrap1", 60, -3, 3);
 TH1D* hzrap2 = new TH1D("hzrap2", "hzrap2", 60, -3, 3);
 
@@ -162,27 +143,6 @@ hzrap2->Scale(1./hzrap2->Integral(),"width");
 hzrap1->Draw();
 hzrap2->Draw("same");
 
-/*
-TH1D* hmt1 = new TH1D("hmt1", "hmt1", 100, 0, 200);
-TH1D* hmt2 = new TH1D("hmt2", "hmt2", 100, 0, 200);
-
-hmt1->Sumw2();
-hmt2->Sumw2();
-
-
-tree1->Draw("llnunu_mt>>hmt1", zjet_selec.c_str());
-tree2->Draw("gjet_mt>>hmt2", gjet_selec.c_str());
-
-hmt1->SetLineColor(2);
-hmt2->SetLineColor(4);
-
-
-hmt1->Scale(1./hmt1->Integral());
-hmt2->Scale(1./hmt2->Integral());
-
-hmt1->Draw();
-hmt2->Draw("same");
-*/
 TH1D* hmet1 = new TH1D("hmet1", "hmet1", 100, 0, 200);
 TH1D* hmet2 = new TH1D("hmet2", "hmet2", 100, 0, 200);
 
@@ -204,30 +164,25 @@ hmet1->Draw();
 hmet2->Draw("same");
 
 TH1D* hzmass1 = new TH1D("hzmass1", "hzmass1", 100, 50, 180);
-//TH1D* hzmass2 = new TH1D("hzmass2", "hzmass2", 100, 50, 180);
 
 hzmass1->Sumw2();
-//hzmass2->Sumw2();
 
 tree1->Draw("llnunu_l1_mass>>hzmass1", zjet_selec.c_str());
-//tree2->Draw("gjet_l1_mass>>hzmass2", gjet_selec.c_str());
 
 hzmass1->SetLineColor(2);
-//hzmass2->SetLineColor(4);
 
 
 hzmass1->Scale(1./hzmass1->Integral());
-//hzmass2->Scale(1./hzmass2->Integral());
 
 hzmass1->Draw();
-//hzmass2->Draw("same");
 
-
+*/
 // 3D ZMass
 Double_t ZMassBins[] = {50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180};
 Int_t NZMassBins = sizeof(ZMassBins)/sizeof(ZMassBins[0]) - 1;
 //Double_t ZRapBins[] = {-3.0,-2.9,-2.8,-2.7,-2.6,-2.5,-2.4,-2.3,-2.2,-2.1,-2.0,-1.9,-1.8,-1.7,-1.6,-1.5,-1.4,-1.3,-1.2,-1.1,-1.0,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,3.0};
-Double_t ZRapBins[] = {-2.5,-2.4,-2.3,-2.2,-2.1,-2.0,-1.9,-1.8,-1.7,-1.6,-1.5,-1.4,-1.3,-1.2,-1.1,-1.0,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0,2.1,2.2,2.3,2.4,2.5};
+//Double_t ZRapBins[] = {-2.5,-2.4,-2.3,-2.2,-2.1,-2.0,-1.9,-1.8,-1.7,-1.6,-1.5,-1.4,-1.3,-1.2,-1.1,-1.0,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0,2.1,2.2,2.3,2.4,2.5};
+Double_t ZRapBins[] = {-2.5,-2.3,-2.1,-1.9,-1.7,-1.5,-1.3,-1.1,-0.9,-0.7,-0.5,-0.3,-0.1,0.1,0.3,0.5,0.7,0.9,1.1,1.3,1.5,1.7,1.9,2.1,2.3,2.5};
 Int_t NZRapBins = sizeof(ZRapBins)/sizeof(ZRapBins[0]) - 1;
 
 TH3D* hzmass_zpt_zrap = new TH3D("hzmass_zpt_zrap", "hzmass_zpt_zrap", NZMassBins, ZMassBins, NZPtBins,ZPtBins,NZRapBins,ZRapBins);
@@ -255,43 +210,6 @@ hzpt_zrap_r12->Divide(hzpt_zrap2);
 
 
 
-/*
-
-TH1D* hzeta1_wt = new TH1D("hzeta1_wt", "hzeta1_wt", 100, -10, 10);
-TH1D* hzeta2_wt = new TH1D("hzeta2_wt", "hzeta2_wt", 100, -10, 10);
-
-hzeta1_wt->Sumw2();
-hzeta2_wt->Sumw2();
-
-Int_t ngenZ;
-Float_t genZ_pt;
-Float_t genZ_eta;
-Float_t genZ_mass;
-
-tree2->SetBranchAddress("ngenZ", &ngenZ);
-tree2->SetBranchAddress("genZ_pt", &genZ_pt);
-tree2->SetBranchAddress("genZ_eta", &genZ_eta);
-tree2->SetBranchAddress("genZ_mass", &genZ_mass);
-
-for (int i=0; i<(int)tree2->GetEntries(); i++){  
-  tree2->GetEntry(i);
-  if (ngenZ==0) continue;
-
-  double w= hzptr12->GetBinContent(hzptr12->FindBin(genZ_pt));
-
-  hzeta2_wt->Fill(genZ_eta, w);
-
-
-
-}
-
-
-hzeta2_wt->Scale(1./hzeta2_wt->Integral());
-
-hzeta1->Draw();
-hzeta2_wt->Draw("same");
-
-*/
 
 sprintf(name, "%s.root", outtag.c_str());
 TFile* fout = new TFile(name, "recreate");
@@ -299,23 +217,17 @@ TFile* fout = new TFile(name, "recreate");
 //hzpt1->Write();
 //hzpt2->Write();
 //hzptr12->Write();
-hzptbb1->Write();
-hzptbb2->Write();
-hzptbbr12->Write();
+hzptbb1->Write("h_zpt_1");
+hzptbb2->Write("h_zpt_2");
+hzptbbr12->Write("h_zpt_ratio");
 
-//hzeta1->Write();
-//hzeta2->Write();
-hzrap1->Write();
-hzrap2->Write();
-hmet1->Write();
-hmet2->Write();
+//hzrap1->Write();
+//hzrap2->Write();
+//hmet1->Write();
+//hmet2->Write();
 
-//hmt1->Write();
-//hmt2->Write();
-//hzeta2_wt->Write();
 
-hzmass1->Write();
-//hzmass2->Write();
+//hzmass1->Write();
 hzmass_zpt_zrap->Write("h_zmass_zpt_zrap");
 
 hzpt_zrap1->Write("h_zpt_zrap_1");
