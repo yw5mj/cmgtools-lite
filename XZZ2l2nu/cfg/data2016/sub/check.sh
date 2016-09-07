@@ -9,9 +9,8 @@
 # privide chunks running directory, 
 # and directory to copy jobs out
 
-dir=dt1
-#out=/home/heli/80X_20160825_Chunks
-out=/data2/XZZ2/80X_20160825_Chunks
+dir=dt2
+out=/data2/XZZ2/80X_20160905_Chunks
 
 mkdir -p $out
 

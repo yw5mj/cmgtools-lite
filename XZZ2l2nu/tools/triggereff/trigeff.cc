@@ -17,10 +17,11 @@ int main(){
   tdrstyle();
   //TFile* fin= new TFile("/data2/XZZ2/singlemuonnewtrg12p9.root");
   //TFile* fin= new TFile("/home/heli/XZZ/singlemuonnewtrg12p9.root");
-  TFile* fin= new TFile("/home/yanchu/singlemuonnewtrg12p9.root");
+  //TFile* fin= new TFile("/home/yanchu/singlemuonnewtrg12p9.root");
+  TFile* fin= new TFile("/home/heli/XZZ/80X_20160825_light/SingleEMU_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
 
-  TFile* fout = new TFile("trigeff_mu.root", "recreate");
-  char outputplot[] = "trigeff_mu_plots.pdf";
+  TFile* fout = new TFile("trigeff_mu_20160830.root", "recreate");
+  char outputplot[] = "trigeff_mu_20160830_plots.pdf";
   TCanvas* plots = new TCanvas("plots", "plots");
   char name[10000];
   sprintf(name, "%s[", outputplot);
@@ -41,7 +42,8 @@ int main(){
   std::string sel_l1_l1f = sel_l2_base+"&&((llnunu_l1_l1_trigerob_HLTbit&12)==0)";
 
   std::string sel_base = sel_l1_base+"&&(llnunu_l1_l1_pt>50)";
-  std::string sel_pass = sel_base+"&&(HLT_MUv2||HLT_ELEv2)";
+  //std::string sel_pass = sel_base+"&&(HLT_MUv2||HLT_ELEv2)";
+  std::string sel_pass = sel_base+"&&(HLT_MUv2)";
 
   TTree* tree= (TTree*)fin->Get("tree");
 
