@@ -34,8 +34,8 @@ pu_list=[60000, 60500, 61000, 61500, 62000, 62500, 63000, 63500, 64000, 64500, 6
 #inputdir='/data2/XZZ2/80X_20160724_Skim'
 inputdir='/home/heli/XZZ/80X_20160825_light_Skim'
 
-#scanvar="rho"
-scanvar="corrnvtx"
+scanvar="rho"
+#scanvar="corrnvtx"
 
 var_tags={
           'nVert':'N reco. vtx', 

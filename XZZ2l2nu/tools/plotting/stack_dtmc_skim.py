@@ -7,9 +7,10 @@ from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
-tag="test_TgEfElFineBin_TightZPt100_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+#tag="test_TgEfElFineBin_TightZPt100_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="TgEfElFineBin_TightZPt100_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="ResBos_TightZPt100_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+tag="TightZPt100_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="LODY_Sept1RecoilNoSmooth_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="LODY_Sept1RecoilSmooth_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="NoElTrgEff_Sept1RecoilNoSmooth_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
@@ -46,11 +47,11 @@ cutChain='tightzpt100'
 #cutChain='tightzpt100met200'
 
 # can be el or mu or both
-channel='all' 
+channel='el' 
 LogY=False
 test=False
 DrawLeptons=True
-doRhoScale=True
+doRhoScale=False
 
 if test: DrawLeptons = False
 
@@ -260,8 +261,8 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 zjetsPlotters=[]
 #zjetsSamples = ['DYJetsToLL_M50_RecoilNoSmooth','DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth']
 #zjetsSamples = ['DYJetsToLL_M50_RecoilSmooth','DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth']
-#zjetsSamples = ['DYJetsToLL_M50','DYJetsToLL_M50_MGMLM_Ext1']
-zjetsSamples = ['DYJetsToLL_M50_TgEfElFineBin','DYJetsToLL_M50_MGMLM_Ext1_TgEfElFineBin']
+zjetsSamples = ['DYJetsToLL_M50','DYJetsToLL_M50_MGMLM_Ext1']
+#zjetsSamples = ['DYJetsToLL_M50_TgEfElFineBin','DYJetsToLL_M50_MGMLM_Ext1_TgEfElFineBin']
 #zjetsSamples = ['DYJetsToLL_M50_Resbos','DYJetsToLL_M50_MGMLM_Ext1_Resbos']
 #zjetsSamples = ['DYJetsToLL_M50'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_RecoilSmooth'] # M50

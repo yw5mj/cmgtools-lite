@@ -424,6 +424,9 @@ bool  prepareTrees()
       _tree_out->Branch("llnunu_l2_genPhi", &_llnunu_l2_genPhi, "llnunu_l2_genPhi/F");
       _tree_out->Branch("llnunu_l2_genEta", &_llnunu_l2_genEta, "llnunu_l2_genEta/F");
     }
+    if (!_storeOldBranches) {
+      _tree_out->SetBranchStatus("gjet_*", 0);
+    }
   }
 
   return true;
@@ -1146,6 +1149,16 @@ void prepareGJetsSkim()
     _gjets_h_zmass_zpt_zrap = (TH3D*)_gjets_input_file->Get("h_zmass_zpt_zrap");
     _gjets_h_zpt_zrap_ratio = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio");
 
+    for (int ix=0; ix<(int)_gjets_h_zmass_zpt_zrap->GetNbinsX(); ix++) {
+      for (int iy=0; iy<(int)_gjets_h_zmass_zpt_zrap->GetNbinsY(); iy++) {
+        for (int iz=0; iz<(int)_gjets_h_zmass_zpt_zrap->GetNbinsZ(); iz++) {
+          if (_gjets_h_zmass_zpt_zrap->GetBinContent(ix+1, iy+1, iz+1)<0) {
+            _gjets_h_zmass_zpt_zrap->SetBinContent(ix+1, iy+1, iz+1, 0.0);
+          }    
+        }
+      }
+    }
+
     for (int iy=0; iy<(int)_gjets_h_zmass_zpt_zrap->GetNbinsY(); iy++){
       std::vector<TH1D*> h_zmass_zpt;
       for (int iz=0; iz<(int)_gjets_h_zmass_zpt_zrap->GetNbinsZ(); iz++){
@@ -1158,6 +1171,7 @@ void prepareGJetsSkim()
   }
 
 }
+
 
 // do gjets skim
 void doGJetsSkim()
@@ -1191,7 +1205,11 @@ void doGJetsSkim()
 
   // generate z mass
   int ipt = _gjets_h_zmass_zpt_zrap->GetYaxis()->FindBin(_llnunu_l1_pt) - 1; 
-  int irap = _gjets_h_zmass_zpt_zrap->GetZaxis()->FindBin(_llnunu_l1_rapidity) - 1; 
+  int irap = _gjets_h_zmass_zpt_zrap->GetZaxis()->FindBin(_llnunu_l1_rapidity) - 1;
+  if (ipt<=0) ipt=0;
+  if (ipt>=_gjets_h_zmass_zpt_zrap->GetNbinsY()) ipt=_gjets_h_zmass_zpt_zrap->GetNbinsY()-1;
+  if (irap<=0) irap=0;
+  if (irap>=_gjets_h_zmass_zpt_zrap->GetNbinsZ()) irap=_gjets_h_zmass_zpt_zrap->GetNbinsZ()-1; 
   _llnunu_l1_mass = _gjets_h_zmass_zpt_zrap_1d_vec.at(ipt).at(irap)->GetRandom();
 
   // calculate mt
@@ -1202,8 +1220,8 @@ void doGJetsSkim()
              -_llnunu_l1_pt*sin(_llnunu_l1_phi)*_llnunu_l2_pt*sin(_llnunu_l2_phi)));
 
   // get zpt zrap weight
-  ipt = _gjets_h_zpt_zrap_ratio->GetXaxis()->FindBin(_llnunu_l1_pt) - 1;
-  irap = _gjets_h_zpt_zrap_ratio->GetYaxis()->FindBin(_llnunu_l1_rapidity) - 1;
+  ipt = _gjets_h_zpt_zrap_ratio->GetXaxis()->FindBin(_llnunu_l1_pt) ;
+  irap = _gjets_h_zpt_zrap_ratio->GetYaxis()->FindBin(_llnunu_l1_rapidity) ;
   _GJetsWeight = _gjets_h_zpt_zrap_ratio->GetBinContent(ipt, irap);
 
 }
