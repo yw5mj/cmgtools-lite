@@ -1,7 +1,8 @@
 
 
 std::string channel = "all";
-bool doMC = true;
+bool doMC = false;
+bool doGJets = true;
 bool useMzCut = false;
 bool useZSelec = false;
 bool useZSelecLowLPt = true;
@@ -14,7 +15,7 @@ bool dtHLT = false;
 // 1.) useZSelecLowLPt can well reproduce the results with full cuts (useZSelec) + HLT (dtHLT or dtTrgSf or mcTrgSf) 
 // 2.) for Data:  useZSelecLowLPt
 // 3.) for MC : useZSelecLowLPt + useEffSf
-
+// 4.) for GJets: doGJets=true, doMC=false,
 
 std::string inputdir = 
   "/home/heli/XZZ/80X_20160825_light_Skim"
@@ -75,6 +76,7 @@ void fit_met_para(){
  std::vector< std::string > channels = {"all", "mu", "el"};
  std::vector< std::string > mcfiles;
  std::vector< std::string > dtfiles;
+ std::vector< std::string > gjfiles;
 
  mcfiles = {
     //"DYJetsToLL_M50", "DYJetsToLL_M50_MGMLM_Ext1"
@@ -87,6 +89,10 @@ void fit_met_para(){
     "SingleEMU_Run2016BCD_PromptReco"
  };
 
+ gjfiles = {
+    "SinglePhoton_Run2016BCD_PromptReco"
+ };
+
  if (doMC) 
  {
    for (int i=0; i<(int)mcfiles.size(); i++)
@@ -96,7 +102,7 @@ void fit_met_para(){
      }
    }
  }
- else 
+ else if (!doMC && !doGJets)  
  {
    for (int i=0; i<(int)dtfiles.size(); i++)
    {
@@ -104,6 +110,16 @@ void fit_met_para(){
        do_fit_met_para(dtfiles.at(i), channels.at(j));
      }
    }
+ }
+ else if (!doMC && doGJets)
+ {
+   channels = {"all"};
+   for (int i=0; i<(int)gjfiles.size(); i++)
+   {
+     for (int j=0; j<(int)channels.size(); j++){
+       do_fit_met_para(gjfiles.at(i), channels.at(j));
+     }
+   }  
  }
 }
 
@@ -159,6 +175,7 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   if (doMC && useEffSf) selec += effsf_selec;
   if ( (doMC && mcTrgSf) || (!doMC && dtTrgSf) ) selec += "*(trgsf)";
   
+  if (doGJets) selec = "(1)*(GJetsWeight)";
 
   // style
   gROOT->ProcessLine(".x tdrstyle.C");
