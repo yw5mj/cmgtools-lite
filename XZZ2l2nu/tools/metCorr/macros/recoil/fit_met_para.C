@@ -17,23 +17,26 @@ bool dtHLT = false;
 // 3.) for MC : useZSelecLowLPt + useEffSf
 // 4.) for GJets: doGJets=true, doMC=false,
 
-std::string inputdir = 
-  "/home/heli/XZZ/80X_20160825_light_Skim"
-  //"./"
-  ;
-std::string filename =
-  //"DYJetsToLL_M50_RecoilNoSmooth"
-  //"DYJetsToLL_M50_RecoilSmooth"
-  "DYJetsToLL_M50"
-  //"DYJetsToLL_M50_NoRecoil"
-  //"DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
-  //"DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth"
-  //"DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth"
-  //"DYJetsToLL_M50_MGMLM_Ext1"
-  //"SingleEMU_Run2016BCD_PromptReco"
-  ;
+std::string inputdir = "/home/heli/XZZ/80X_20160810_light_Skim";
+std::string filename;
 
 std::string outputdir = "./recoil_out2";
+std::vector< std::string > channels = {"all", "mu", "el"};
+std::vector< std::string > mcfiles = {
+    //"DYJetsToLL_M50", "DYJetsToLL_M50_MGMLM_Ext1"
+    //"DYJetsToLL_M50_NoRecoil", "DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
+    //"DYJetsToLL_M50_RecoilSmooth", "DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth"
+    "DYJetsToLL_M50_RecoilNoSmooth", "DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth"
+ };
+
+std::vector< std::string > dtfiles = {
+    "SingleEMU_Run2016BCD_PromptReco"
+ };
+
+std::vector< std::string > gjfiles = {
+    "SinglePhoton_Run2016BCD_PromptReco_NoRecoil"
+ };
+
 
 char name[1000];
 TCanvas* plots;
@@ -73,26 +76,6 @@ Int_t Nbins;
 
 void fit_met_para(){
 
- std::vector< std::string > channels = {"all", "mu", "el"};
- std::vector< std::string > mcfiles;
- std::vector< std::string > dtfiles;
- std::vector< std::string > gjfiles;
-
- mcfiles = {
-    //"DYJetsToLL_M50", "DYJetsToLL_M50_MGMLM_Ext1"
-    //"DYJetsToLL_M50_NoRecoil", "DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
-    //"DYJetsToLL_M50_RecoilSmooth", "DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth"
-    "DYJetsToLL_M50_RecoilNoSmooth", "DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth"
- };
- 
- dtfiles = {
-    "SingleEMU_Run2016BCD_PromptReco"
- };
-
- gjfiles = {
-    "SinglePhoton_Run2016BCD_PromptReco"
- };
-
  if (doMC) 
  {
    for (int i=0; i<(int)mcfiles.size(); i++)
@@ -113,7 +96,6 @@ void fit_met_para(){
  }
  else if (!doMC && doGJets)
  {
-   channels = {"all"};
    for (int i=0; i<(int)gjfiles.size(); i++)
    {
      for (int j=0; j<(int)channels.size(); j++){
@@ -175,8 +157,11 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   if (doMC && useEffSf) selec += effsf_selec;
   if ( (doMC && mcTrgSf) || (!doMC && dtTrgSf) ) selec += "*(trgsf)";
   
-  if (doGJets) selec = "(1)*(GJetsWeight)";
-
+  if (doGJets) {
+    if (channel=="el")  selec = "(1)*(GJetsWeightLowLPtEl)";
+    else if (channel=="mu") selec = "(1)*(GJetsWeightLowLPtMu)";
+    else  selec = "(1)*(GJetsWeightLowLPt)";
+  }
   // style
   gROOT->ProcessLine(".x tdrstyle.C");
   gStyle->SetOptTitle(0);

@@ -234,6 +234,9 @@ void readConfigFile()
     _RecoilInputFileNameMCLO_all = parm.GetString("RecoilInputFileNameMCLO_all", "data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study.root"); 
     _RecoilInputFileNameMCLO_mu = parm.GetString("RecoilInputFileNameMCLO_mu", "data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_mu.root"); 
     _RecoilInputFileNameMCLO_el = parm.GetString("RecoilInputFileNameMCLO_el", "data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_el.root"); 
+    _RecoilInputFileNameGJets_all = parm.GetString("RecoilInputFileNameGJets_all", "data/recoil/SinglePhoton_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt.root"); 
+    _RecoilInputFileNameGJets_mu = parm.GetString("RecoilInputFileNameGJets_mu", "data/recoil/SinglePhoton_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_mu.root"); 
+    _RecoilInputFileNameGJets_el = parm.GetString("RecoilInputFileNameGJets_el", "data/recoil/SinglePhoton_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_el.root"); 
   }
 
   //==============================================
@@ -316,7 +319,13 @@ bool  prepareTrees()
   } 
   else {
     _tree_in->SetBranchAddress("llnunu_mt", &_llnunu_mt);
+    _tree_in->SetBranchAddress("llnunu_mt_lowlpt", &_llnunu_mt_lowlpt);
+    _tree_in->SetBranchAddress("llnunu_mt_lowlpt_el", &_llnunu_mt_lowlpt_el);
+    _tree_in->SetBranchAddress("llnunu_mt_lowlpt_mu", &_llnunu_mt_lowlpt_mu);
     _tree_in->SetBranchAddress("llnunu_l1_mass",&_llnunu_l1_mass);
+    _tree_in->SetBranchAddress("llnunu_l1_mass_lowlpt",&_llnunu_l1_mass_lowlpt);
+    _tree_in->SetBranchAddress("llnunu_l1_mass_lowlpt_el",&_llnunu_l1_mass_lowlpt_el);
+    _tree_in->SetBranchAddress("llnunu_l1_mass_lowlpt_mu",&_llnunu_l1_mass_lowlpt_mu);
     _tree_in->SetBranchAddress("llnunu_l1_mt", &_llnunu_l1_mt);
     _tree_in->SetBranchAddress("llnunu_l1_pt", &_llnunu_l1_pt);
     _tree_in->SetBranchAddress("llnunu_l1_phi", &_llnunu_l1_phi);
@@ -327,6 +336,7 @@ bool  prepareTrees()
 
     _tree_in->SetBranchAddress("llnunu_l2_pt", &_llnunu_l2_pt);
     _tree_in->SetBranchAddress("llnunu_l2_phi", &_llnunu_l2_phi);
+// Hengne: need to add MET recoil fit for electron and muon separately!!!
 
     _tree_in->SetBranchAddress("llnunu_l1_l1_pt", &_llnunu_l1_l1_pt);
     _tree_in->SetBranchAddress("llnunu_l1_l1_eta", &_llnunu_l1_l1_eta);
@@ -402,6 +412,9 @@ bool  prepareTrees()
     _tree_out->Branch("GJetsWeight", &_GJetsWeight, "GJetsWeight/F");
     _tree_out->Branch("GJetsWeightEl", &_GJetsWeightEl, "GJetsWeightEl/F");
     _tree_out->Branch("GJetsWeightMu", &_GJetsWeightMu, "GJetsWeightMu/F");
+    _tree_out->Branch("GJetsWeightLowLPt", &_GJetsWeightLowLPt, "GJetsWeightLowLPt/F");
+    _tree_out->Branch("GJetsWeightLowLPtEl", &_GJetsWeightLowLPtEl, "GJetsWeightLowLPtEl/F");
+    _tree_out->Branch("GJetsWeightLowLPtMu", &_GJetsWeightLowLPtMu, "GJetsWeightLowLPtMu/F");
     _tree_out->Branch("llnunu_mt", &_llnunu_mt, "llnunu_mt/F");
     _tree_out->Branch("llnunu_l1_mass", &_llnunu_l1_mass, "llnunu_l1_mass/F");
     _tree_out->Branch("llnunu_l1_pt", &_llnunu_l1_pt, "llnunu_l1_pt/F");
@@ -619,12 +632,17 @@ void addDyZPtWeight()
 // prepare inputs for simple met recoil tune.
 void prepareRecoil()
 {
-  if (_doRecoil && _isDyJets) {
+  if (_doRecoil && (_isDyJets||_doGJetsSkim)) {
     // met shift  sigma
     _file_dt_sigma[0] = new TFile(_RecoilInputFileNameData_all.c_str());
     _file_dt_sigma[1] = new TFile(_RecoilInputFileNameData_mu.c_str());
     _file_dt_sigma[2] = new TFile(_RecoilInputFileNameData_el.c_str());
-    if (!_isDyJetsLO) {
+    if (_doGJetsSkim){
+      _file_mc_sigma[0] = new TFile(_RecoilInputFileNameGJets_all.c_str());
+      _file_mc_sigma[1] = new TFile(_RecoilInputFileNameGJets_mu.c_str());
+      _file_mc_sigma[2] = new TFile(_RecoilInputFileNameGJets_el.c_str());
+    }
+    else if (!_isDyJetsLO) {
       _file_mc_sigma[0] = new TFile(_RecoilInputFileNameMC_all.c_str());
       _file_mc_sigma[1] = new TFile(_RecoilInputFileNameMC_mu.c_str());
       _file_mc_sigma[2] = new TFile(_RecoilInputFileNameMC_el.c_str());
@@ -746,7 +764,7 @@ void prepareRecoil()
 // do simple met recoil fine tuning
 void doRecoil()
 {
-  if ( _doRecoil && !_isData && _isDyJets) {
+  if ( _doRecoil && ((!_isData && _isDyJets)||(_doGJetsSkim)) ) {
     Float_t met_para = _llnunu_l2_pt*cos(_llnunu_l2_phi-_llnunu_l1_phi);
     Float_t met_perp = _llnunu_l2_pt*sin(_llnunu_l2_phi-_llnunu_l1_phi);
     if (abs(_llnunu_l1_l1_pdgId)==13&&abs(_llnunu_l1_l2_pdgId)==13) {
@@ -1149,9 +1167,15 @@ void prepareGJetsSkim()
   if (_doGJetsSkim) {
     _gjets_input_file = TFile::Open(_GJetsSkimInputFileName.c_str());
     _gjets_h_zmass_zpt_zrap = (TH3D*)_gjets_input_file->Get("h_zmass_zpt_zrap");
+    _gjets_h_zmass_zpt_zrap_lowlpt = (TH3D*)_gjets_input_file->Get("h_zmass_zpt_zrap_lowlpt");
+    _gjets_h_zmass_zpt_zrap_lowlpt_el = (TH3D*)_gjets_input_file->Get("h_zmass_zpt_zrap_lowlpt_el");
+    _gjets_h_zmass_zpt_zrap_lowlpt_mu = (TH3D*)_gjets_input_file->Get("h_zmass_zpt_zrap_lowlpt_mu");
     _gjets_h_zpt_zrap_ratio = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio");
     _gjets_h_zpt_zrap_ratio_el = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio_el");
     _gjets_h_zpt_zrap_ratio_mu = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio_mu");
+    _gjets_h_zpt_zrap_lowlpt_ratio = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_lowlpt_ratio");
+    _gjets_h_zpt_zrap_lowlpt_ratio_el = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_lowlpt_ratio_el");
+    _gjets_h_zpt_zrap_lowlpt_ratio_mu = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_lowlpt_ratio_mu");
 
     for (int ix=0; ix<(int)_gjets_h_zmass_zpt_zrap->GetNbinsX(); ix++) {
       for (int iy=0; iy<(int)_gjets_h_zmass_zpt_zrap->GetNbinsY(); iy++) {
@@ -1163,6 +1187,38 @@ void prepareGJetsSkim()
       }
     }
 
+
+    for (int ix=0; ix<(int)_gjets_h_zmass_zpt_zrap_lowlpt->GetNbinsX(); ix++) {
+      for (int iy=0; iy<(int)_gjets_h_zmass_zpt_zrap_lowlpt->GetNbinsY(); iy++) {
+        for (int iz=0; iz<(int)_gjets_h_zmass_zpt_zrap_lowlpt->GetNbinsZ(); iz++) {
+          if (_gjets_h_zmass_zpt_zrap_lowlpt->GetBinContent(ix+1, iy+1, iz+1)<0) {
+            _gjets_h_zmass_zpt_zrap_lowlpt->SetBinContent(ix+1, iy+1, iz+1, 0.0);
+          }
+        }
+      }
+    }
+
+    for (int ix=0; ix<(int)_gjets_h_zmass_zpt_zrap_lowlpt_el->GetNbinsX(); ix++) {
+      for (int iy=0; iy<(int)_gjets_h_zmass_zpt_zrap_lowlpt_el->GetNbinsY(); iy++) {
+        for (int iz=0; iz<(int)_gjets_h_zmass_zpt_zrap_lowlpt_el->GetNbinsZ(); iz++) {
+          if (_gjets_h_zmass_zpt_zrap_lowlpt_el->GetBinContent(ix+1, iy+1, iz+1)<0) {
+            _gjets_h_zmass_zpt_zrap_lowlpt_el->SetBinContent(ix+1, iy+1, iz+1, 0.0);
+          }
+        }
+      }
+    }
+
+    for (int ix=0; ix<(int)_gjets_h_zmass_zpt_zrap_lowlpt_mu->GetNbinsX(); ix++) {
+      for (int iy=0; iy<(int)_gjets_h_zmass_zpt_zrap_lowlpt_mu->GetNbinsY(); iy++) {
+        for (int iz=0; iz<(int)_gjets_h_zmass_zpt_zrap_lowlpt_mu->GetNbinsZ(); iz++) {
+          if (_gjets_h_zmass_zpt_zrap_lowlpt_mu->GetBinContent(ix+1, iy+1, iz+1)<0) {
+            _gjets_h_zmass_zpt_zrap_lowlpt_mu->SetBinContent(ix+1, iy+1, iz+1, 0.0);
+          }
+        }
+      }
+    }
+
+
     for (int iy=0; iy<(int)_gjets_h_zmass_zpt_zrap->GetNbinsY(); iy++){
       std::vector<TH1D*> h_zmass_zpt;
       for (int iz=0; iz<(int)_gjets_h_zmass_zpt_zrap->GetNbinsZ(); iz++){
@@ -1171,7 +1227,37 @@ void prepareGJetsSkim()
         h_zmass_zpt.push_back(htmp); 
       }
       _gjets_h_zmass_zpt_zrap_1d_vec.push_back(h_zmass_zpt);
-    } 
+    }
+ 
+    for (int iy=0; iy<(int)_gjets_h_zmass_zpt_zrap_lowlpt->GetNbinsY(); iy++){
+      std::vector<TH1D*> h_zmass_zpt_lowlpt;
+      for (int iz=0; iz<(int)_gjets_h_zmass_zpt_zrap_lowlpt->GetNbinsZ(); iz++){
+        sprintf(name, "h_zmass_zpt%i_zrap_lowlpt%i", iy+1, iz+1);
+        TH1D* htmp = (TH1D*)_gjets_h_zmass_zpt_zrap_lowlpt->ProjectionX(name, iy+1, iy+1, iz+1, iz+1, "e");
+        h_zmass_zpt_lowlpt.push_back(htmp);
+      }
+      _gjets_h_zmass_zpt_zrap_lowlpt_1d_vec.push_back(h_zmass_zpt_lowlpt);
+    }
+
+    for (int iy=0; iy<(int)_gjets_h_zmass_zpt_zrap_lowlpt_el->GetNbinsY(); iy++){
+      std::vector<TH1D*> h_zmass_zpt_lowlpt_el;
+      for (int iz=0; iz<(int)_gjets_h_zmass_zpt_zrap_lowlpt_el->GetNbinsZ(); iz++){
+        sprintf(name, "h_zmass_zpt%i_zrap_lowlpt_el%i", iy+1, iz+1);
+        TH1D* htmp = (TH1D*)_gjets_h_zmass_zpt_zrap_lowlpt_el->ProjectionX(name, iy+1, iy+1, iz+1, iz+1, "e");
+        h_zmass_zpt_lowlpt_el.push_back(htmp);
+      }
+      _gjets_h_zmass_zpt_zrap_lowlpt_el_1d_vec.push_back(h_zmass_zpt_lowlpt_el);
+    }
+
+    for (int iy=0; iy<(int)_gjets_h_zmass_zpt_zrap_lowlpt_mu->GetNbinsY(); iy++){
+      std::vector<TH1D*> h_zmass_zpt_lowlpt_mu;
+      for (int iz=0; iz<(int)_gjets_h_zmass_zpt_zrap_lowlpt_mu->GetNbinsZ(); iz++){
+        sprintf(name, "h_zmass_zpt%i_zrap_lowlpt_mu%i", iy+1, iz+1);
+        TH1D* htmp = (TH1D*)_gjets_h_zmass_zpt_zrap_lowlpt_mu->ProjectionX(name, iy+1, iy+1, iz+1, iz+1, "e");
+        h_zmass_zpt_lowlpt_mu.push_back(htmp);
+      }
+      _gjets_h_zmass_zpt_zrap_lowlpt_mu_1d_vec.push_back(h_zmass_zpt_lowlpt_mu);
+    }
   }
 
 }
@@ -1193,12 +1279,12 @@ void doGJetsSkim()
   _llnunu_l2_rawPt = _gjet_l2_rawPt;
   _llnunu_l2_rawPhi = _gjet_l2_rawPhi;
   _llnunu_l2_rawSumEt = _gjet_l2_rawSumEt;
-  _llnunu_l1_l1_pt = 10000;
+  _llnunu_l1_l1_pt = 19801117;
   _llnunu_l1_l1_eta = 0;
-  _llnunu_l1_l1_pdgId = 13;
-  _llnunu_l1_l2_pt = 10000;
+  _llnunu_l1_l1_pdgId = 19801117;
+  _llnunu_l1_l2_pt = 19801117;
   _llnunu_l1_l2_eta = 0;
-  _llnunu_l1_l2_pdgId = 13;
+  _llnunu_l1_l2_pdgId = 19801117;
   _llnunu_l1_l1_highPtID = 1.0;
   _llnunu_l1_l2_highPtID = 1.0;
 
@@ -1208,6 +1294,7 @@ void doGJetsSkim()
   }
 
   // generate z mass
+  // default all, known to be wrong
   int ipt = _gjets_h_zmass_zpt_zrap->GetYaxis()->FindBin(_llnunu_l1_pt) - 1; 
   int irap = _gjets_h_zmass_zpt_zrap->GetZaxis()->FindBin(_llnunu_l1_rapidity) - 1;
   if (ipt<=0) ipt=0;
@@ -1223,12 +1310,63 @@ void doGJetsSkim()
              -_llnunu_l1_pt*cos(_llnunu_l1_phi)*_llnunu_l2_pt*cos(_llnunu_l2_phi)
              -_llnunu_l1_pt*sin(_llnunu_l1_phi)*_llnunu_l2_pt*sin(_llnunu_l2_phi)));
 
+  // lowlpt all
+  ipt = _gjets_h_zmass_zpt_zrap_lowlpt->GetYaxis()->FindBin(_llnunu_l1_pt) - 1;
+  irap = _gjets_h_zmass_zpt_zrap_lowlpt->GetZaxis()->FindBin(_llnunu_l1_rapidity) - 1;
+  if (ipt<=0) ipt=0;
+  if (ipt>=_gjets_h_zmass_zpt_zrap_lowlpt->GetNbinsY()) ipt=_gjets_h_zmass_zpt_zrap_lowlpt->GetNbinsY()-1;
+  if (irap<=0) irap=0;
+  if (irap>=_gjets_h_zmass_zpt_zrap_lowlpt->GetNbinsZ()) irap=_gjets_h_zmass_zpt_zrap_lowlpt->GetNbinsZ()-1;
+  _llnunu_l1_mass_lowlpt = _gjets_h_zmass_zpt_zrap_lowlpt_1d_vec.at(ipt).at(irap)->GetRandom();
+
+  // calculate mt
+  et1 = TMath::Sqrt(_llnunu_l1_mass_lowlpt*_llnunu_l1_mass_lowlpt + _llnunu_l1_pt*_llnunu_l1_pt);
+  et2 = TMath::Sqrt(_llnunu_l1_mass_lowlpt*_llnunu_l1_mass_lowlpt + _llnunu_l2_pt*_llnunu_l2_pt);
+  _llnunu_mt_lowlpt = TMath::Sqrt(2.0*_llnunu_l1_mass_lowlpt*_llnunu_l1_mass_lowlpt+2.0*(et1*et2
+                 -_llnunu_l1_pt*cos(_llnunu_l1_phi)*_llnunu_l2_pt*cos(_llnunu_l2_phi)
+                 -_llnunu_l1_pt*sin(_llnunu_l1_phi)*_llnunu_l2_pt*sin(_llnunu_l2_phi)));
+
+  // lowlpt el
+  ipt = _gjets_h_zmass_zpt_zrap_lowlpt_el->GetYaxis()->FindBin(_llnunu_l1_pt) - 1;
+  irap = _gjets_h_zmass_zpt_zrap_lowlpt_el->GetZaxis()->FindBin(_llnunu_l1_rapidity) - 1;
+  if (ipt<=0) ipt=0;
+  if (ipt>=_gjets_h_zmass_zpt_zrap_lowlpt_el->GetNbinsY()) ipt=_gjets_h_zmass_zpt_zrap_lowlpt_el->GetNbinsY()-1;
+  if (irap<=0) irap=0;
+  if (irap>=_gjets_h_zmass_zpt_zrap_lowlpt_el->GetNbinsZ()) irap=_gjets_h_zmass_zpt_zrap_lowlpt_el->GetNbinsZ()-1;
+  _llnunu_l1_mass_lowlpt_el = _gjets_h_zmass_zpt_zrap_lowlpt_el_1d_vec.at(ipt).at(irap)->GetRandom();
+  
+  // calculate mt
+  et1 = TMath::Sqrt(_llnunu_l1_mass_lowlpt_el*_llnunu_l1_mass_lowlpt_el + _llnunu_l1_pt*_llnunu_l1_pt);
+  et2 = TMath::Sqrt(_llnunu_l1_mass_lowlpt_el*_llnunu_l1_mass_lowlpt_el + _llnunu_l2_pt*_llnunu_l2_pt);
+  _llnunu_mt_lowlpt_el = TMath::Sqrt(2.0*_llnunu_l1_mass_lowlpt_el*_llnunu_l1_mass_lowlpt_el+2.0*(et1*et2
+                 -_llnunu_l1_pt*cos(_llnunu_l1_phi)*_llnunu_l2_pt*cos(_llnunu_l2_phi)
+                 -_llnunu_l1_pt*sin(_llnunu_l1_phi)*_llnunu_l2_pt*sin(_llnunu_l2_phi)));
+
+  // lowlpt el
+  ipt = _gjets_h_zmass_zpt_zrap_lowlpt_mu->GetYaxis()->FindBin(_llnunu_l1_pt) - 1;
+  irap = _gjets_h_zmass_zpt_zrap_lowlpt_mu->GetZaxis()->FindBin(_llnunu_l1_rapidity) - 1;
+  if (ipt<=0) ipt=0;
+  if (ipt>=_gjets_h_zmass_zpt_zrap_lowlpt_mu->GetNbinsY()) ipt=_gjets_h_zmass_zpt_zrap_lowlpt_mu->GetNbinsY()-1;
+  if (irap<=0) irap=0;
+  if (irap>=_gjets_h_zmass_zpt_zrap_lowlpt_mu->GetNbinsZ()) irap=_gjets_h_zmass_zpt_zrap_lowlpt_mu->GetNbinsZ()-1;
+  _llnunu_l1_mass_lowlpt_mu = _gjets_h_zmass_zpt_zrap_lowlpt_mu_1d_vec.at(ipt).at(irap)->GetRandom();
+
+  // calculate mt
+  et1 = TMath::Sqrt(_llnunu_l1_mass_lowlpt_mu*_llnunu_l1_mass_lowlpt_mu + _llnunu_l1_pt*_llnunu_l1_pt);
+  et2 = TMath::Sqrt(_llnunu_l1_mass_lowlpt_mu*_llnunu_l1_mass_lowlpt_mu + _llnunu_l2_pt*_llnunu_l2_pt);
+  _llnunu_mt_lowlpt_mu = TMath::Sqrt(2.0*_llnunu_l1_mass_lowlpt_mu*_llnunu_l1_mass_lowlpt_mu+2.0*(et1*et2
+                 -_llnunu_l1_pt*cos(_llnunu_l1_phi)*_llnunu_l2_pt*cos(_llnunu_l2_phi)
+                 -_llnunu_l1_pt*sin(_llnunu_l1_phi)*_llnunu_l2_pt*sin(_llnunu_l2_phi)));
+
   // get zpt zrap weight
   ipt = _gjets_h_zpt_zrap_ratio->GetXaxis()->FindBin(_llnunu_l1_pt) ;
   irap = _gjets_h_zpt_zrap_ratio->GetYaxis()->FindBin(_llnunu_l1_rapidity) ;
   _GJetsWeight = _gjets_h_zpt_zrap_ratio->GetBinContent(ipt, irap);
   _GJetsWeightEl = _gjets_h_zpt_zrap_ratio_el->GetBinContent(ipt, irap);
   _GJetsWeightMu = _gjets_h_zpt_zrap_ratio_mu->GetBinContent(ipt, irap);
+  _GJetsWeightLowLPt = _gjets_h_zpt_zrap_lowlpt_ratio->GetBinContent(ipt, irap);
+  _GJetsWeightLowLPtEl = _gjets_h_zpt_zrap_lowlpt_ratio_el->GetBinContent(ipt, irap);
+  _GJetsWeightLowLPtMu = _gjets_h_zpt_zrap_lowlpt_ratio_mu->GetBinContent(ipt, irap);
 
 }
 

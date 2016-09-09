@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
   std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
   // scale factors
   //std::string effsf_selec = std::string("*(trgsf*isosf*idsf*trksf)");
-  std::string effsf_selec = std::string("*(trgsf*isosf*idsf*trksf)");
+  std::string effsf_selec = std::string("*(trgsf*isosf*idsf*trksf*(1*(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13)+1.06*(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11)))");
 
   // selec, cuts + weights
   std::string zjet_selec = base_selec + weight_selec + rhoweight_selec + effsf_selec;
@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
   std::string gjet_selec = metfilter;
 
   //Double_t ZPtBins[] = {0,1.25,2.5,3.75,5,6.25,7.5,8.75,10,11.25,12.5,15,17.5,20,25,30,35,40,45,50,60,70,80,90,100,110,130,150,170,190,220,250,400,1000};
-  Double_t ZPtBins[] = {20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,65,70,75,80,85,90,95,100,105,110,120,130,140,150,160,170,180,190,200,220,240,260,300,400,500,1000};
+  Double_t ZPtBins[] = {20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,215,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300,350,400,500,700,3000};
   Int_t NZPtBins = sizeof(ZPtBins)/sizeof(ZPtBins[0]) - 1;
   Double_t ZMassBins[] = {50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180};
   Int_t NZMassBins = sizeof(ZMassBins)/sizeof(ZMassBins[0]) - 1;
@@ -209,8 +209,23 @@ int main(int argc, char** argv) {
   // 3D ZMass
 
   TH3D* hzmass_zpt_zrap = new TH3D("hzmass_zpt_zrap", "hzmass_zpt_zrap", NZMassBins, ZMassBins, NZPtBins,ZPtBins,NZRapBins,ZRapBins);
+  TH3D* hzmass_zpt_zrap_el = new TH3D("hzmass_zpt_zrap_el", "hzmass_zpt_zrap_el", NZMassBins, ZMassBins, NZPtBins,ZPtBins,NZRapBins,ZRapBins);
+  TH3D* hzmass_zpt_zrap_mu = new TH3D("hzmass_zpt_zrap_mu", "hzmass_zpt_zrap_mu", NZMassBins, ZMassBins, NZPtBins,ZPtBins,NZRapBins,ZRapBins);
+  TH3D* hzmass_zpt_zrap_lowlpt = new TH3D("hzmass_zpt_zrap_lowlpt", "hzmass_zpt_zrap_lowlpt", NZMassBins, ZMassBins, NZPtBins,ZPtBins,NZRapBins,ZRapBins);
+  TH3D* hzmass_zpt_zrap_lowlpt_el = new TH3D("hzmass_zpt_zrap_lowlpt_el", "hzmass_zpt_zrap_lowlpt_el", NZMassBins, ZMassBins, NZPtBins,ZPtBins,NZRapBins,ZRapBins);
+  TH3D* hzmass_zpt_zrap_lowlpt_mu = new TH3D("hzmass_zpt_zrap_lowlpt_mu", "hzmass_zpt_zrap_lowlpt_mu", NZMassBins, ZMassBins, NZPtBins,ZPtBins,NZRapBins,ZRapBins);
   hzmass_zpt_zrap->Sumw2();
+  hzmass_zpt_zrap_el->Sumw2();
+  hzmass_zpt_zrap_mu->Sumw2();
+  hzmass_zpt_zrap_lowlpt->Sumw2();
+  hzmass_zpt_zrap_lowlpt_el->Sumw2();
+  hzmass_zpt_zrap_lowlpt_mu->Sumw2();
   tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt:llnunu_l1_mass>>hzmass_zpt_zrap", zjet_selec.c_str());
+  tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt:llnunu_l1_mass>>hzmass_zpt_zrap_el", zjet_selec_el.c_str());
+  tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt:llnunu_l1_mass>>hzmass_zpt_zrap_mu", zjet_selec_mu.c_str());
+  tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt:llnunu_l1_mass>>hzmass_zpt_zrap_lowlpt", zjet_selec_lowlpt.c_str());
+  tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt:llnunu_l1_mass>>hzmass_zpt_zrap_lowlpt_el", zjet_selec_lowlpt_el.c_str());
+  tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt:llnunu_l1_mass>>hzmass_zpt_zrap_lowlpt_mu", zjet_selec_lowlpt_mu.c_str());
 
 
   // 2D zpt zrap
@@ -372,6 +387,11 @@ int main(int argc, char** argv) {
   hzptbbr12_mu->Write("h_zpt_ratio_mu");
 
   hzmass_zpt_zrap->Write("h_zmass_zpt_zrap");
+  hzmass_zpt_zrap_el->Write("h_zmass_zpt_zrap_el");
+  hzmass_zpt_zrap_mu->Write("h_zmass_zpt_zrap_mu");
+  hzmass_zpt_zrap_lowlpt->Write("h_zmass_zpt_zrap_lowlpt");
+  hzmass_zpt_zrap_lowlpt_el->Write("h_zmass_zpt_zrap_lowlpt_el");
+  hzmass_zpt_zrap_lowlpt_mu->Write("h_zmass_zpt_zrap_lowlpt_mu");
 
   hzpt_zrap1->Write("h_zpt_zrap_1");
   hzpt_zrap2->Write("h_zpt_zrap_2");
