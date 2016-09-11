@@ -410,7 +410,8 @@ Float_t _gjet_l2_genPhi, _gjet_l2_genEta;
 Float_t _llnunu_mt_lowlpt, _llnunu_l1_mass_lowlpt;
 Float_t _llnunu_mt_lowlpt_el, _llnunu_l1_mass_lowlpt_el;
 Float_t _llnunu_mt_lowlpt_mu, _llnunu_l1_mass_lowlpt_mu;
-
+Float_t _llnunu_l2_pt_el, _llnunu_l2_pt_mu;
+Float_t _llnunu_l2_phi_el, _llnunu_l2_phi_mu;
 
 //======================================================
 //  ╔╦╗╔═╗╔═╗╦╔╗╔╔═╗  ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔╔═╗

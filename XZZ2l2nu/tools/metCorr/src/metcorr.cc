@@ -336,7 +336,6 @@ bool  prepareTrees()
 
     _tree_in->SetBranchAddress("llnunu_l2_pt", &_llnunu_l2_pt);
     _tree_in->SetBranchAddress("llnunu_l2_phi", &_llnunu_l2_phi);
-// Hengne: need to add MET recoil fit for electron and muon separately!!!
 
     _tree_in->SetBranchAddress("llnunu_l1_l1_pt", &_llnunu_l1_l1_pt);
     _tree_in->SetBranchAddress("llnunu_l1_l1_eta", &_llnunu_l1_l1_eta);
@@ -435,6 +434,10 @@ bool  prepareTrees()
     _tree_out->Branch("llnunu_l1_l2_pdgId", &_llnunu_l1_l2_pdgId, "llnunu_l1_l2_pdgId/I");
     _tree_out->Branch("llnunu_l1_l1_highPtID", &_llnunu_l1_l1_highPtID, "llnunu_l1_l1_highPtID/F");
     _tree_out->Branch("llnunu_l1_l2_highPtID", &_llnunu_l1_l2_highPtID, "llnunu_l1_l2_highPtID/F");
+    _tree_out->Branch("llnunu_l2_pt_el", &_llnunu_l2_pt_el, "llnunu_l2_pt_el/F");
+    _tree_out->Branch("llnunu_l2_phi_el", &_llnunu_l2_phi_el, "llnunu_l2_phi_el/F");
+    _tree_out->Branch("llnunu_l2_pt_mu", &_llnunu_l2_pt_mu, "llnunu_l2_pt_mu/F");
+    _tree_out->Branch("llnunu_l2_phi_mu", &_llnunu_l2_phi_mu, "llnunu_l2_phi_mu/F");
     if (!_isData) {
       _tree_out->Branch("llnunu_l2_genPhi", &_llnunu_l2_genPhi, "llnunu_l2_genPhi/F");
       _tree_out->Branch("llnunu_l2_genEta", &_llnunu_l2_genEta, "llnunu_l2_genEta/F");
@@ -767,7 +770,23 @@ void doRecoil()
   if ( _doRecoil && ((!_isData && _isDyJets)||(_doGJetsSkim)) ) {
     Float_t met_para = _llnunu_l2_pt*cos(_llnunu_l2_phi-_llnunu_l1_phi);
     Float_t met_perp = _llnunu_l2_pt*sin(_llnunu_l2_phi-_llnunu_l1_phi);
-    if (abs(_llnunu_l1_l1_pdgId)==13&&abs(_llnunu_l1_l2_pdgId)==13) {
+    if (_doGJetsSkim) {//GJets
+      Int_t idd0=0;
+      if (_doRecoilUseSmooth) idd0=3;
+      for (int idd=0; idd<3; idd++){
+        _h_dt_met_para_shift[6+idd] = _h_dt_met_para_shift[idd+idd0];
+        _h_mc_met_para_shift[6+idd] = _h_mc_met_para_shift[idd+idd0];
+        _h_met_para_shift_dtmc[6+idd] = _h_met_para_shift_dtmc[idd+idd0];
+        _h_ratio_met_para_sigma_dtmc[6+idd] = _h_ratio_met_para_sigma_dtmc[idd+idd0];
+        _h_ratio_met_perp_sigma_dtmc[6+idd] = _h_ratio_met_perp_sigma_dtmc[idd+idd0];
+        _gr_dt_met_para_shift[6+idd] = _gr_dt_met_para_shift[3+idd];
+        _gr_mc_met_para_shift[6+idd] = _gr_mc_met_para_shift[3+idd];
+        _gr_met_para_shift_dtmc[6+idd] = _gr_met_para_shift_dtmc[3+idd];
+        _gr_ratio_met_para_sigma_dtmc[6+idd] = _gr_ratio_met_para_sigma_dtmc[3+idd];
+        _gr_ratio_met_perp_sigma_dtmc[6+idd] = _gr_ratio_met_perp_sigma_dtmc[3+idd];
+      }
+    }
+    else if (!_doGJetsSkim&&abs(_llnunu_l1_l1_pdgId)==13&&abs(_llnunu_l1_l2_pdgId)==13) {
       Int_t idd=1;
       if (_doRecoilUseSmooth) idd=4;
       _h_dt_met_para_shift[6] = _h_dt_met_para_shift[idd];
@@ -781,7 +800,7 @@ void doRecoil()
       _gr_ratio_met_para_sigma_dtmc[6] = _gr_ratio_met_para_sigma_dtmc[4];
       _gr_ratio_met_perp_sigma_dtmc[6] = _gr_ratio_met_perp_sigma_dtmc[4];
     }
-    else if (abs(_llnunu_l1_l1_pdgId)==11&&abs(_llnunu_l1_l2_pdgId)==11) {
+    else if (!_doGJetsSkim&&abs(_llnunu_l1_l1_pdgId)==11&&abs(_llnunu_l1_l2_pdgId)==11) {
       Int_t idd=2;
       if (_doRecoilUseSmooth) idd=5;
       _h_dt_met_para_shift[6] = _h_dt_met_para_shift[idd];
@@ -813,21 +832,46 @@ void doRecoil()
     // peak shift
     if (_doRecoilUseSmoothGraph) {
       met_para += _gr_met_para_shift_dtmc[6]->Eval(_llnunu_l1_pt);
+      if (_doGJetsSkim) {
+        met_para_mu += _gr_met_para_shift_dtmc[7]->Eval(_llnunu_l1_pt);
+        met_para_el += _gr_met_para_shift_dtmc[8]->Eval(_llnunu_l1_pt);
+      }
     }
     else {
       met_para += _h_met_para_shift_dtmc[6]->GetBinContent(_h_met_para_shift_dtmc[6]->FindBin(_llnunu_l1_pt));
+      if (_doGJetsSkim) {
+        met_para_mu += _h_met_para_shift_dtmc[7]->GetBinContent(_h_met_para_shift_dtmc[7]->FindBin(_llnunu_l1_pt));
+        met_para_el += _h_met_para_shift_dtmc[8]->GetBinContent(_h_met_para_shift_dtmc[8]->FindBin(_llnunu_l1_pt));
+      }
     }
 
     // smearing
     if (_doRecoilUseSmoothGraph) {
       met_para = (met_para-_gr_dt_met_para_shift[6]->Eval(_llnunu_l1_pt))*_gr_ratio_met_para_sigma_dtmc[6]->Eval(_llnunu_l1_pt) + _gr_dt_met_para_shift[6]->Eval(_llnunu_l1_pt);
       met_perp *= _gr_ratio_met_perp_sigma_dtmc[6]->Eval(_llnunu_l1_pt);
+      if (_doGJetsSkim) {
+        met_para_mu = (met_para_mu-_gr_dt_met_para_shift[7]->Eval(_llnunu_l1_pt))*_gr_ratio_met_para_sigma_dtmc[7]->Eval(_llnunu_l1_pt) + _gr_dt_met_para_shift[7]->Eval(_llnunu_l1_pt);
+        met_perp_mu *= _gr_ratio_met_perp_sigma_dtmc[7]->Eval(_llnunu_l1_pt);
+        met_para_el = (met_para_el-_gr_dt_met_para_shift[8]->Eval(_llnunu_l1_pt))*_gr_ratio_met_para_sigma_dtmc[8]->Eval(_llnunu_l1_pt) + _gr_dt_met_para_shift[8]->Eval(_llnunu_l1_pt);
+        met_perp_el *= _gr_ratio_met_perp_sigma_dtmc[8]->Eval(_llnunu_l1_pt);
+
+      }
     } 
     else {
       met_para = (met_para-_h_dt_met_para_shift[6]->GetBinContent(_h_dt_met_para_shift[6]->FindBin(_llnunu_l1_pt)))
                * _h_ratio_met_para_sigma_dtmc[6]->GetBinContent(_h_ratio_met_para_sigma_dtmc[6]->FindBin(_llnunu_l1_pt)) 
                + _h_dt_met_para_shift[6]->GetBinContent(_h_dt_met_para_shift[6]->FindBin(_llnunu_l1_pt));
       met_perp *= _h_ratio_met_perp_sigma_dtmc[6]->GetBinContent(_h_ratio_met_perp_sigma_dtmc[6]->FindBin(_llnunu_l1_pt));
+      if (_doGJetsSkim) {
+        met_para_mu = (met_para_mu-_h_dt_met_para_shift[7]->GetBinContent(_h_dt_met_para_shift[7]->FindBin(_llnunu_l1_pt)))
+                    * _h_ratio_met_para_sigma_dtmc[7]->GetBinContent(_h_ratio_met_para_sigma_dtmc[7]->FindBin(_llnunu_l1_pt))
+                    + _h_dt_met_para_shift[7]->GetBinContent(_h_dt_met_para_shift[7]->FindBin(_llnunu_l1_pt));
+        met_perp_mu *= _h_ratio_met_perp_sigma_dtmc[7]->GetBinContent(_h_ratio_met_perp_sigma_dtmc[7]->FindBin(_llnunu_l1_pt));
+        met_para_el = (met_para_el-_h_dt_met_para_shift[8]->GetBinContent(_h_dt_met_para_shift[8]->FindBin(_llnunu_l1_pt)))
+                    * _h_ratio_met_para_sigma_dtmc[8]->GetBinContent(_h_ratio_met_para_sigma_dtmc[8]->FindBin(_llnunu_l1_pt))
+                    + _h_dt_met_para_shift[8]->GetBinContent(_h_dt_met_para_shift[8]->FindBin(_llnunu_l1_pt));
+        met_perp_el *= _h_ratio_met_perp_sigma_dtmc[8]->GetBinContent(_h_ratio_met_perp_sigma_dtmc[8]->FindBin(_llnunu_l1_pt));
+      }
     }
 
     // recalculate vars
@@ -841,6 +885,27 @@ void doRecoil()
     Float_t et1 = TMath::Sqrt(_llnunu_l1_mass*_llnunu_l1_mass + _llnunu_l1_pt*_llnunu_l1_pt);
     Float_t et2 = TMath::Sqrt(_llnunu_l1_mass*_llnunu_l1_mass + _llnunu_l2_pt*_llnunu_l2_pt);
     _llnunu_mt = TMath::Sqrt(2.0*_llnunu_l1_mass*_llnunu_l1_mass + 2.0* (et1*et2 - _llnunu_l1_pt*cos(_llnunu_l1_phi)*met_px - _llnunu_l1_pt*sin(_llnunu_l1_phi)*met_py));
+    if (_doGJetsSkim){
+      //mu
+      Float_t met_px = met_para*cos(_llnunu_l1_phi)-met_perp*sin(_llnunu_l1_phi);
+      Float_t met_py = met_para*sin(_llnunu_l1_phi)+met_perp*cos(_llnunu_l1_phi);
+      TVector2 vec_met;
+      vec_met.Set(met_px, met_py);
+      _llnunu_l2_pt = vec_met.Mod();
+      _llnunu_l2_phi = TVector2::Phi_mpi_pi(vec_met.Phi());
+      Float_t et1 = TMath::Sqrt(_llnunu_l1_mass*_llnunu_l1_mass + _llnunu_l1_pt*_llnunu_l1_pt);
+      Float_t et2 = TMath::Sqrt(_llnunu_l1_mass*_llnunu_l1_mass + _llnunu_l2_pt*_llnunu_l2_pt);
+      _llnunu_mt = TMath::Sqrt(2.0*_llnunu_l1_mass*_llnunu_l1_mass + 2.0* (et1*et2 - _llnunu_l1_pt*cos(_llnunu_l1_phi)*met_px - _llnunu_l1_pt*sin(_llnunu_l1_phi)*met_py));
+      //el
+      met_px = met_para*cos(_llnunu_l1_phi)-met_perp*sin(_llnunu_l1_phi);
+      met_py = met_para*sin(_llnunu_l1_phi)+met_perp*cos(_llnunu_l1_phi);
+      vec_met.Set(met_px, met_py);
+      _llnunu_l2_pt_el = vec_met.Mod();
+      _llnunu_l2_phi_el = TVector2::Phi_mpi_pi(vec_met.Phi());
+      et1 = TMath::Sqrt(_llnunu_l1_mass_el*_llnunu_l1_mass_el + _llnunu_l1_pt_el*_llnunu_l1_pt_el);
+      et2 = TMath::Sqrt(_llnunu_l1_mass_el*_llnunu_l1_mass_el + _llnunu_l2_pt_el*_llnunu_l2_pt_el);
+      _llnunu_mt_el = TMath::Sqrt(2.0*_llnunu_l1_mass_el*_llnunu_l1_mass_el + 2.0* (et1*et2 - _llnunu_l1_pt_el*cos(_llnunu_l1_phi_el)*met_px - _llnunu_l1_pt_el*sin(_llnunu_l1_phi_el)*met_py));
+    }
   }
 
 }
