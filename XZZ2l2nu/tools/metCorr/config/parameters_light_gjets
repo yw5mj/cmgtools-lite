@@ -69,6 +69,16 @@ PUInputFileNames: pileup_MC_80x_271036-276811_67921.root, pileup_MC_80x_271036-2
 PUWeightHistName: puweight_dtmc
 
 
+#====================================================================
+#  ╔═╗ ╦╔═╗╔╦╗╔═╗  ╔═╗╦╔═╦╔╦╗
+#  ║ ╦ ║║╣  ║ ╚═╗  ╚═╗╠╩╗║║║║
+#  ╚═╝╚╝╚═╝ ╩ ╚═╝  ╚═╝╩ ╩╩╩ ╩
+#====================================================================
+doGJetsSkim: true
+#GJetsSkimInputFileName: data/gjets/study_gjets.root
+#GJetsSkimInputFileName: data/gjets/study_gjets_tight.root
+GJetsSkimInputFileName: data/gjets/study_gjets_data.root
+
 
 
 #====================================================================
@@ -164,14 +174,6 @@ EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu_20160830.root
 
 
 
-
-#====================================================================
-# skimming gjets
-#====================================================================
-doGJetsSkim: true
-#GJetsSkimInputFileName: data/gjets/study_gjets.root
-#GJetsSkimInputFileName: data/gjets/study_gjets_tight.root
-GJetsSkimInputFileName: data/gjets/study_gjets_data.root
 
 
 
