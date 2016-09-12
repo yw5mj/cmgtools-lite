@@ -887,24 +887,23 @@ void doRecoil()
     _llnunu_mt = TMath::Sqrt(2.0*_llnunu_l1_mass*_llnunu_l1_mass + 2.0* (et1*et2 - _llnunu_l1_pt*cos(_llnunu_l1_phi)*met_px - _llnunu_l1_pt*sin(_llnunu_l1_phi)*met_py));
     if (_doGJetsSkim){
       //mu
-      Float_t met_px = met_para*cos(_llnunu_l1_phi)-met_perp*sin(_llnunu_l1_phi);
-      Float_t met_py = met_para*sin(_llnunu_l1_phi)+met_perp*cos(_llnunu_l1_phi);
-      TVector2 vec_met;
+      met_px = met_para_mu*cos(_llnunu_l1_phi)-met_perp_mu*sin(_llnunu_l1_phi);
+      met_py = met_para_mu*sin(_llnunu_l1_phi)+met_perp_mu*cos(_llnunu_l1_phi);
       vec_met.Set(met_px, met_py);
-      _llnunu_l2_pt = vec_met.Mod();
-      _llnunu_l2_phi = TVector2::Phi_mpi_pi(vec_met.Phi());
-      Float_t et1 = TMath::Sqrt(_llnunu_l1_mass*_llnunu_l1_mass + _llnunu_l1_pt*_llnunu_l1_pt);
-      Float_t et2 = TMath::Sqrt(_llnunu_l1_mass*_llnunu_l1_mass + _llnunu_l2_pt*_llnunu_l2_pt);
-      _llnunu_mt = TMath::Sqrt(2.0*_llnunu_l1_mass*_llnunu_l1_mass + 2.0* (et1*et2 - _llnunu_l1_pt*cos(_llnunu_l1_phi)*met_px - _llnunu_l1_pt*sin(_llnunu_l1_phi)*met_py));
+      _llnunu_l2_pt_mu = vec_met.Mod();
+      _llnunu_l2_phi_mu = TVector2::Phi_mpi_pi(vec_met.Phi());
+      et1 = TMath::Sqrt(_llnunu_l1_mass_mu*_llnunu_l1_mass_mu + _llnunu_l1_pt*_llnunu_l1_pt);
+      et2 = TMath::Sqrt(_llnunu_l1_mass_mu*_llnunu_l1_mass_mu + _llnunu_l2_pt_mu*_llnunu_l2_pt_mu);
+      _llnunu_mt_mu = TMath::Sqrt(2.0*_llnunu_l1_mass_mu*_llnunu_l1_mass_mu + 2.0* (et1*et2 - _llnunu_l1_pt*cos(_llnunu_l1_phi)*met_px - _llnunu_l1_pt*sin(_llnunu_l1_phi)*met_py));
       //el
-      met_px = met_para*cos(_llnunu_l1_phi)-met_perp*sin(_llnunu_l1_phi);
-      met_py = met_para*sin(_llnunu_l1_phi)+met_perp*cos(_llnunu_l1_phi);
+      met_px = met_para_el*cos(_llnunu_l1_phi)-met_perp_el*sin(_llnunu_l1_phi);
+      met_py = met_para_el*sin(_llnunu_l1_phi)+met_perp_el*cos(_llnunu_l1_phi);
       vec_met.Set(met_px, met_py);
       _llnunu_l2_pt_el = vec_met.Mod();
       _llnunu_l2_phi_el = TVector2::Phi_mpi_pi(vec_met.Phi());
-      et1 = TMath::Sqrt(_llnunu_l1_mass_el*_llnunu_l1_mass_el + _llnunu_l1_pt_el*_llnunu_l1_pt_el);
+      et1 = TMath::Sqrt(_llnunu_l1_mass_el*_llnunu_l1_mass_el + _llnunu_l1_pt*_llnunu_l1_pt);
       et2 = TMath::Sqrt(_llnunu_l1_mass_el*_llnunu_l1_mass_el + _llnunu_l2_pt_el*_llnunu_l2_pt_el);
-      _llnunu_mt_el = TMath::Sqrt(2.0*_llnunu_l1_mass_el*_llnunu_l1_mass_el + 2.0* (et1*et2 - _llnunu_l1_pt_el*cos(_llnunu_l1_phi_el)*met_px - _llnunu_l1_pt_el*sin(_llnunu_l1_phi_el)*met_py));
+      _llnunu_mt_el = TMath::Sqrt(2.0*_llnunu_l1_mass_el*_llnunu_l1_mass_el + 2.0* (et1*et2 - _llnunu_l1_pt*cos(_llnunu_l1_phi)*met_px - _llnunu_l1_pt*sin(_llnunu_l1_phi)*met_py));
     }
   }
 
