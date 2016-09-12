@@ -7,8 +7,9 @@ from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
+tag="test_GJRc_DtGJets_TgEfElFineBin_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="DtGJets_TgEfElFineBin_TightZPt50_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
-tag="test_DtGJets_TgEfElFineBin_TightZPt50_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+#tag="test_DtGJets_TgEfElFineBin_TightZPt50_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="test_DtGJets_TgEfElFineBin_TightZPt20_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="test_dt_TgEfElFineBin_TightZPt20_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="test_TgEfElFineBin_TightZPt100_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
@@ -285,7 +286,8 @@ zjetsPlotters=[]
 #zjetsSamples = ['DYJetsToLL_M50_MGMLM_Ext1'] # M50
 #zjetsSamples = ['DYJetsToLL_M50_NoRecoil'] # M50
 #zjetsSamples = ['GJet_Pt_20toInf_DoubleEMEnriched'] 
-zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco'] 
+#zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco'] 
+zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_RcSmBin'] 
 
 
 for sample in zjetsSamples:

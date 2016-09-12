@@ -1,23 +1,24 @@
 
 
 std::string channel = "all";
-bool doMC = false;
-bool doGJets = true;
+bool doMC = true;
+bool doGJets = false;
 bool useMzCut = false;
 bool useZSelec = false;
 bool useZSelecLowLPt = true;
-bool useEffSf = true;
+bool useEffSf = false;
 bool mcTrgSf = false;
 bool dtTrgSf = false;
 bool dtHLT = false;
 
 // recipe:
 // 1.) useZSelecLowLPt can well reproduce the results with full cuts (useZSelec) + HLT (dtHLT or dtTrgSf or mcTrgSf) 
-// 2.) for Data:  useZSelecLowLPt
-// 3.) for MC : useZSelecLowLPt + useEffSf
-// 4.) for GJets: doGJets=true, doMC=false,
+// 2.) for Data:  doMC=false, dGJets=false, useZSelecLowLPt=true, useEffSf=false
+// 3.) for MC : doMC=false, doGJets=false, useZSelecLowLPt=true, useEffSf=false
+// 4.) for GJets: doGJets=true, doMC=false, useZSelecLowLPt=true, useEffSf=false
 
-std::string inputdir = "/home/heli/XZZ/80X_20160810_light_Skim";
+//std::string inputdir = "/home/heli/XZZ/80X_20160810_light_Skim";
+std::string inputdir = "/home/heli/XZZ/80X_20160825_light_Skim";
 std::string filename;
 
 std::string outputdir = "./recoil_out2";
@@ -40,7 +41,8 @@ std::vector< std::string > gjfiles = {
 
 char name[1000];
 TCanvas* plots;
-std::string tag;
+//std::string tag0 = "";
+std::string tag0 = "_smbin";
 std::string base_selec;
 std::string lumiTag;
 
@@ -59,6 +61,7 @@ TFile* fout;
 
 std::string histname;
 TPaveText* lumipt;
+TPaveText* pvtxt;
 TH2D* h2d1;
 TH2D* h2d2;
 TH2D* h2d3;
@@ -111,7 +114,7 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   channel = chan;
 
   // tags
-  tag = "_met_para_study";
+  std::string tag = tag0+"_met_para_study";
   if (useMzCut) tag += "_MzCut";
   if (useZSelec) tag += "_ZSelec"; 
   if (useZSelecLowLPt) tag += "_ZSelecLowLPt";
@@ -158,9 +161,9 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   if ( (doMC && mcTrgSf) || (!doMC && dtTrgSf) ) selec += "*(trgsf)";
   
   if (doGJets) {
-    if (channel=="el")  selec = "(1)*(GJetsWeightLowLPtEl)";
-    else if (channel=="mu") selec = "(1)*(GJetsWeightLowLPtMu)";
-    else  selec = "(1)*(GJetsWeightLowLPt)";
+    if (channel=="el")  selec = "(1)*(GJetsZPtWeightLowLPtEl)";
+    else if (channel=="mu") selec = "(1)*(GJetsZPtWeightLowLPtMu)";
+    else  selec = "(1)*(GJetsZPtWeightLowLPt)";
   }
   // style
   gROOT->ProcessLine(".x tdrstyle.C");
@@ -181,6 +184,13 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   lumipt->SetTextSize(0.03);
   lumipt->AddText(0.15,0.3, lumiTag.c_str());
 
+  pvtxt = new TPaveText(0.6,0.8,0.9,0.9,"brNDC");
+  pvtxt->SetBorderSize(0);
+  pvtxt->SetTextAlign(12);
+  pvtxt->SetFillStyle(0);
+  pvtxt->SetTextFont(42);
+  pvtxt->SetTextSize(0.03);
+
   sprintf(name, "%s/%s.root", inputdir.c_str(), filename.c_str());
   fin = new TFile(name);
 
@@ -197,7 +207,8 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
 
 
   // other control plots
-  Double_t ZPtBins[] = {0,2,4,6,8,10,12,14,16,18,20,22,24,26,28, 30, 35, 40, 50, 60, 80, 100, 150, 250, 5000 };
+  //Double_t ZPtBins[] = {0,2,4,6,8,10,12,14,16,18,20,22,24,26,28, 30, 35, 40, 50, 60, 80, 100, 150, 250, 5000 };
+  Double_t ZPtBins[] = {0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,35,36,36.5,37,37.5,38,38.5,39,39.5,40,41,42,43,44,45,46,47,48,49,50,55,60,65,70,75,80,85,90,95,100,105, 110,120,125, 130,140,150,160,180,200,300,5000 };
   Int_t NZPtBins = sizeof(ZPtBins)/sizeof(ZPtBins[0]) - 1;
   const Int_t NMetParaBins=500;
   Double_t MetParaBins[NMetParaBins+1];
@@ -210,8 +221,11 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   h2d2 = new TH2D("h_met_perp_vs_zpt", "h_met_perp_vs_zpt", NZPtBins, ZPtBins, NMetPerpBins, MetPerpBins);
   h2d1->Sumw2();
   h2d2->Sumw2();
+  std::cout << "start draw" << std::endl;
   tree->Draw("llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi):llnunu_l1_pt>>h_met_para_vs_zpt", selec.c_str(), "colz");
+  std::cout << "end draw1" << std::endl;
   tree->Draw("llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi):llnunu_l1_pt>>h_met_perp_vs_zpt", selec.c_str(), "colz");
+  std::cout << "end draw2" << std::endl;
   
   h2d1->GetXaxis()->SetTitle("P_{T}(Z) (GeV)");
   h2d1->GetYaxis()->SetTitle("MET para (GeV)");
@@ -219,15 +233,9 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   h2d2->GetYaxis()->SetTitle("MET para (GeV)");
 
   Nbins = NZPtBins;
-  fit_min = { -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -25  };
-  fit_max = { +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20  };
-  fit_rebin = {  4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4  };
-  for (int ii=0; ii<Nbins; ii++) fit_rebin[ii] = 5;
-  for (int ii=0; ii<Nbins; ii++) fit_min[ii] = -16;
-  for (int ii=0; ii<Nbins; ii++) fit_max[ii] = 16;
-
-  fit_min = { -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -20, -30, -30, -30, -30  };
-  fit_max = { +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +20, +30, +30, +30, +30  };
+  for (int ii=0; ii<Nbins; ii++) fit_rebin.push_back(5);
+  for (int ii=0; ii<Nbins; ii++) fit_min.push_back(-50);
+  for (int ii=0; ii<Nbins; ii++) fit_max.push_back(20);
 
   sprintf(name, "%s/%s%s.pdf", outputdir.c_str(), filename.c_str(), tag.c_str());
   std::string plotfilename(name);
@@ -247,7 +255,6 @@ int fit_slice_gaus(TH2D* h2d, TH1D** h1d, std::string& plotfile){
 
   std::string hname = h2d->GetName();
   Double_t* xbins = (Double_t*)h2d->GetXaxis()->GetXbins()->GetArray();
-
   plots->cd();
   plots->Clear();
   plots->SetLogx(1);
@@ -287,7 +294,12 @@ int fit_slice_gaus(TH2D* h2d, TH1D** h1d, std::string& plotfile){
     ahist->Fit(afunc, "R", "", fit_min[i], fit_max[i]);
     double mean = afunc->GetParameter(1);
     double sigma = afunc->GetParameter(2);
-    ahist->Fit(afunc, "R", "", mean-1.5*sigma, mean+1.5*sigma); 
+    ahist->Fit(afunc, "R", "", mean-2*sigma, mean+2*sigma); 
+    for (int ifit=0; ifit<2; ifit++){
+      mean = afunc->GetParameter(1);
+      sigma = afunc->GetParameter(2);
+      ahist->Fit(afunc, "R", "", mean-1*sigma, mean+1*sigma);
+    }
     func1[i] = afunc;
     h1d1[i] = ahist;
 
@@ -301,6 +313,10 @@ int fit_slice_gaus(TH2D* h2d, TH1D** h1d, std::string& plotfile){
     plots->Clear();
     ahist->Draw();
     lumipt->Draw();
+    pvtxt->Clear();
+    sprintf(name, "%.2f < P_{T}(Z) < %.2f", xbins[i], xbins[i+1]);
+    pvtxt->AddText(0.15,0.3, name);
+    pvtxt->Draw();
     plots->Print(plotfile.c_str());    
     plots->Clear();    
    

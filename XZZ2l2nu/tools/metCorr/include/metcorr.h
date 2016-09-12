@@ -329,9 +329,12 @@ TH3D* _gjets_h_zmass_zpt_zrap_mu;
 TH2D* _gjets_h_zpt_zrap_ratio;
 TH2D* _gjets_h_zpt_zrap_ratio_el;
 TH2D* _gjets_h_zpt_zrap_ratio_mu;
-TH2D* _gjets_h_zpt_zrap_lowlpt_ratio;
-TH2D* _gjets_h_zpt_zrap_lowlpt_ratio_el;
-TH2D* _gjets_h_zpt_zrap_lowlpt_ratio_mu;
+//TH2D* _gjets_h_zpt_zrap_lowlpt_ratio;
+//TH2D* _gjets_h_zpt_zrap_lowlpt_ratio_el;
+//TH2D* _gjets_h_zpt_zrap_lowlpt_ratio_mu;
+TH1D* _gjets_h_zpt_lowlpt_ratio;
+TH1D* _gjets_h_zpt_lowlpt_ratio_el;
+TH1D* _gjets_h_zpt_lowlpt_ratio_mu;
 std::vector< std::vector< TH1D* > > _gjets_h_zmass_zpt_zrap_1d_vec;
 std::vector< std::vector< TH1D* > > _gjets_h_zmass_zpt_zrap_el_1d_vec;
 std::vector< std::vector< TH1D* > > _gjets_h_zmass_zpt_zrap_mu_1d_vec;
@@ -400,7 +403,8 @@ Float_t _trgsf_up, _trgsf_dn, _idisotrksf_up, _idisotrksf_dn;
 
 // for GJets samples
 Float_t _GJetsWeight, _GJetsWeightEl, _GJetsWeightMu;
-Float_t _GJetsWeightLowLPt, _GJetsWeightLowLPtEl, _GJetsWeightLowLPtMu;
+//Float_t _GJetsWeightLowLPt, _GJetsWeightLowLPtEl, _GJetsWeightLowLPtMu;
+Float_t _GJetsZPtWeightLowLPt, _GJetsZPtWeightLowLPtEl, _GJetsZPtWeightLowLPtMu;
 Float_t _gjet_mt, _gjet_l1_pt, _gjet_l1_eta, _gjet_l1_rapidity, _gjet_l1_phi;
 Int_t _gjet_l1_idCutBased;
 Float_t _gjet_l2_pt, _gjet_l2_phi, _gjet_l2_sumEt, _gjet_l2_rawPt, _gjet_l2_rawPhi, _gjet_l2_rawSumEt;

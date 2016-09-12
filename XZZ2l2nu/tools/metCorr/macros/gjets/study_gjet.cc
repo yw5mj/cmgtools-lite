@@ -205,6 +205,111 @@ int main(int argc, char** argv) {
   plots->Clear();
 
 
+  // all
+  TH1D* hzptbb1_lowlpt = new TH1D("hzptbb1_lowlpt", "hzptbb1_lowlpt", NZPtBins, ZPtBins);
+
+  hzptbb1_lowlpt->Sumw2();
+
+
+  tree1->Draw("llnunu_l1_pt>>hzptbb1_lowlpt", zjet_selec_lowlpt.c_str());
+
+  hzptbb1_lowlpt->SetMarkerColor(2);
+  hzptbb1_lowlpt->SetLineColor(2);
+
+  TLegend* lgzptbb_lowlpt = new TLegend(0.5,0.6,0.8,0.8);
+  lgzptbb_lowlpt->SetName("lgzptbb_lowlpt");
+  lgzptbb_lowlpt->AddEntry(hzptbb1_lowlpt, "ZJets", "pl");
+  lgzptbb_lowlpt->AddEntry(hzptbb2, "GJets", "pl");
+
+  plots->Clear();
+
+  hzptbb1_lowlpt->Draw();
+  hzptbb2->Draw("same");
+  lgzptbb_lowlpt->Draw();
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+  TH1D* hzptbbr12_lowlpt = (TH1D*)hzptbb1_lowlpt->Clone("hzptbbr12_lowlpt");
+  hzptbbr12_lowlpt->Divide(hzptbb2);
+
+  plots->Clear();
+  hzptbbr12_lowlpt->Draw();
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+  // lowlpt el
+  TH1D* hzptbb1_lowlpt_el = new TH1D("hzptbb1_lowlpt_el", "hzptbb1_lowlpt_el", NZPtBins, ZPtBins);
+
+  hzptbb1_lowlpt_el->Sumw2();
+
+
+  tree1->Draw("llnunu_l1_pt>>hzptbb1_lowlpt_el", zjet_selec_lowlpt_el.c_str());
+
+  hzptbb1_lowlpt_el->SetMarkerColor(2);
+  hzptbb1_lowlpt_el->SetLineColor(2);
+
+
+  TLegend* lgzptbb_lowlpt_el = new TLegend(0.5,0.6,0.8,0.8);
+  lgzptbb_lowlpt_el->SetName("lgzptbb_lowlpt_el");
+  lgzptbb_lowlpt_el->AddEntry(hzptbb1_lowlpt_el, "ZJets", "pl");
+  lgzptbb_lowlpt_el->AddEntry(hzptbb2, "GJets", "pl");
+
+  plots->Clear();
+
+  hzptbb1_lowlpt_el->Draw();
+  hzptbb2->Draw("same");
+  lgzptbb_lowlpt_el->Draw();
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+  TH1D* hzptbbr12_lowlpt_el = (TH1D*)hzptbb1_lowlpt_el->Clone("hzptbbr12_lowlpt_el");
+  hzptbbr12_lowlpt_el->Divide(hzptbb2);
+
+  plots->Clear();
+  hzptbbr12_lowlpt_el->Draw();
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+
+  // lowlpt  mu
+  TH1D* hzptbb1_lowlpt_mu = new TH1D("hzptbb1_lowlpt_mu", "hzptbb1_lowlpt_mu", NZPtBins, ZPtBins);
+
+  hzptbb1_lowlpt_mu->Sumw2();
+
+
+  tree1->Draw("llnunu_l1_pt>>hzptbb1_lowlpt_mu", zjet_selec_lowlpt_mu.c_str());
+
+  hzptbb1_lowlpt_mu->SetMarkerColor(2);
+  hzptbb1_lowlpt_mu->SetLineColor(2);
+
+
+  TLegend* lgzptbb_lowlpt_mu = new TLegend(0.5,0.6,0.8,0.8);
+  lgzptbb_lowlpt_mu->SetName("lgzptbb_lowlpt_mu");
+  lgzptbb_lowlpt_mu->AddEntry(hzptbb1_lowlpt_mu, "ZJets", "pl");
+  lgzptbb_lowlpt_mu->AddEntry(hzptbb2, "GJets", "pl");
+
+  plots->Clear();
+
+  hzptbb1_lowlpt_mu->Draw();
+  hzptbb2->Draw("same");
+  lgzptbb_lowlpt_mu->Draw();
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+  TH1D* hzptbbr12_lowlpt_mu = (TH1D*)hzptbb1_lowlpt_mu->Clone("hzptbbr12_lowlpt_mu");
+  hzptbbr12_lowlpt_mu->Divide(hzptbb2);
+
+  plots->Clear();
+  hzptbbr12_lowlpt_mu->Draw();
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
 
   // 3D ZMass
 
@@ -385,6 +490,15 @@ int main(int argc, char** argv) {
 
   hzptbb1_mu->Write("h_zpt_1_mu");
   hzptbbr12_mu->Write("h_zpt_ratio_mu");
+
+  hzptbb1_lowlpt->Write("h_zpt_lowlpt_1");
+  hzptbbr12_lowlpt->Write("h_zpt_lowlpt_ratio");
+
+  hzptbb1_lowlpt_el->Write("h_zpt_lowlpt_1_el");
+  hzptbbr12_lowlpt_el->Write("h_zpt_lowlpt_ratio_el");
+
+  hzptbb1_lowlpt_mu->Write("h_zpt_lowlpt_1_mu");
+  hzptbbr12_lowlpt_mu->Write("h_zpt_lowlpt_ratio_mu");
 
   hzmass_zpt_zrap->Write("h_zmass_zpt_zrap");
   hzmass_zpt_zrap_el->Write("h_zmass_zpt_zrap_el");
