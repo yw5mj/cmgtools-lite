@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
   if (_addDyZPtWeight && !_isData && _isDyJets && !_doGJetsSkim) prepareDyZPtWeight();
 
   // prepare inputs for simple met recoil tune.
-  if (_doRecoil && !_isData && _isDyJets) prepareRecoil();
+  if (_doRecoil && ((!_isData && _isDyJets) || (_isData && _doGJetsSkim)) ) prepareRecoil();
 
 
   // prepare eff scale factors
@@ -116,7 +116,7 @@ int main(int argc, char** argv) {
     if (_addDyZPtWeight && !_isData && _isDyJets && !_doGJetsSkim) addDyZPtWeight();
 
     // simple met recoil tune.
-    if (_doRecoil && !_isData && _isDyJets) doRecoil();
+    if (_doRecoil && ((!_isData && _isDyJets) || (_isData && _doGJetsSkim))) doRecoil();
 
     // add eff scale factors
     if (_addEffScale && (!_isData || _addEffScaleOnData) && !_doGJetsSkim ) addEffScale();
@@ -1358,7 +1358,9 @@ void doGJetsSkim()
   if (ipt>=_gjets_h_zmass_zpt_zrap->GetNbinsY()) ipt=_gjets_h_zmass_zpt_zrap->GetNbinsY()-1;
   if (irap<=0) irap=0;
   if (irap>=_gjets_h_zmass_zpt_zrap->GetNbinsZ()) irap=_gjets_h_zmass_zpt_zrap->GetNbinsZ()-1; 
+  if (_debug) std::cout << "doGJetsSkim:: begin all zmass random " << std::endl;
   _llnunu_l1_mass = _gjets_h_zmass_zpt_zrap_1d_vec.at(ipt).at(irap)->GetRandom();
+  if (_debug) std::cout << "doGJetsSkim:: end all zmass random " << std::endl;
 
   // calculate mt
   Float_t et1 = TMath::Sqrt(_llnunu_l1_mass*_llnunu_l1_mass + _llnunu_l1_pt*_llnunu_l1_pt);
@@ -1374,7 +1376,9 @@ void doGJetsSkim()
   if (ipt>=_gjets_h_zmass_zpt_zrap_el->GetNbinsY()) ipt=_gjets_h_zmass_zpt_zrap_el->GetNbinsY()-1;
   if (irap<=0) irap=0;
   if (irap>=_gjets_h_zmass_zpt_zrap_el->GetNbinsZ()) irap=_gjets_h_zmass_zpt_zrap_el->GetNbinsZ()-1;
+  if (_debug) std::cout << "doGJetsSkim:: begin el zmass random " << std::endl;
   _llnunu_l1_mass_el = _gjets_h_zmass_zpt_zrap_el_1d_vec.at(ipt).at(irap)->GetRandom();
+  if (_debug) std::cout << "doGJetsSkim:: end el zmass random " << std::endl;
   
   // calculate mt
   et1 = TMath::Sqrt(_llnunu_l1_mass_el*_llnunu_l1_mass_el + _llnunu_l1_pt*_llnunu_l1_pt);
@@ -1390,7 +1394,9 @@ void doGJetsSkim()
   if (ipt>=_gjets_h_zmass_zpt_zrap_mu->GetNbinsY()) ipt=_gjets_h_zmass_zpt_zrap_mu->GetNbinsY()-1;
   if (irap<=0) irap=0;
   if (irap>=_gjets_h_zmass_zpt_zrap_mu->GetNbinsZ()) irap=_gjets_h_zmass_zpt_zrap_mu->GetNbinsZ()-1;
+  if (_debug) std::cout << "doGJetsSkim:: begin mu zmass random " << std::endl;
   _llnunu_l1_mass_mu = _gjets_h_zmass_zpt_zrap_mu_1d_vec.at(ipt).at(irap)->GetRandom();
+  if (_debug) std::cout << "doGJetsSkim:: end mu zmass random " << std::endl;
 
   // calculate mt
   et1 = TMath::Sqrt(_llnunu_l1_mass_mu*_llnunu_l1_mass_mu + _llnunu_l1_pt*_llnunu_l1_pt);

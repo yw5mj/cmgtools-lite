@@ -35,7 +35,7 @@ n_start: 0
 n_test: -1
 
 # n entries interval between which print once entry number
-n_interval: 5000
+n_interval: 20000
 
 # use slimmed tree or not
 useLightTree: true
@@ -139,7 +139,7 @@ doRecoil: true
 doRecoilUseSmooth: true
 
 # use graph from smoothed hist
-doRecoilUseSmoothGraph: true
+doRecoilUseSmoothGraph: false
 
 # Input files
 #RecoilInputFileNameData_all: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt.root

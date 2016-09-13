@@ -1,8 +1,8 @@
 
 
 std::string channel = "all";
-bool doMC = true;
-bool doGJets = false;
+bool doMC = false;
+bool doGJets = true;
 bool useMzCut = false;
 bool useZSelec = false;
 bool useZSelecLowLPt = true;
@@ -17,8 +17,8 @@ bool dtHLT = false;
 // 3.) for MC : doMC=false, doGJets=false, useZSelecLowLPt=true, useEffSf=false
 // 4.) for GJets: doGJets=true, doMC=false, useZSelecLowLPt=true, useEffSf=false
 
-//std::string inputdir = "/home/heli/XZZ/80X_20160810_light_Skim";
-std::string inputdir = "/home/heli/XZZ/80X_20160825_light_Skim";
+std::string inputdir = "/home/heli/XZZ/80X_20160810_light_Skim";
+//std::string inputdir = "/home/heli/XZZ/80X_20160825_light_Skim";
 std::string filename;
 
 std::string outputdir = "./recoil_out2";
@@ -35,7 +35,8 @@ std::vector< std::string > dtfiles = {
  };
 
 std::vector< std::string > gjfiles = {
-    "SinglePhoton_Run2016BCD_PromptReco_NoRecoil"
+    //"SinglePhoton_Run2016BCD_PromptReco_NoRecoil"
+    "SinglePhoton_Run2016BCD_PromptReco_RcSmBin"
  };
 
 
