@@ -32,7 +32,46 @@ int main(int argc, char** argv) {
 
   //std::string outtag="study_gjets_tight";
   //std::string outtag="study_gjets";
-  std::string outtag="study_gjets_data";
+  //std::string outtag="study_gjets_data";
+  //std::string outtag="study_gjets_data_hlt";
+  std::string outtag="study_gjets_data_hlt_dtscale";
+
+
+  // yields:
+
+  // all:
+  //Data : 648231.000000
+  //WW/WZ/WJets non-reson. : 617.417435
+  //TT : 10075.407445
+  //ZZ WZ reson. : 6728.956797
+  //ZJets : 639478.277092
+  //ZJets Data-xxx : 630809 = 648231.0-617.417435-10075.407445-6728.956797
+  // GJets weight integral: 4805.009858
+  // scale =  630809/4805.009858 = 131.282
+  Double_t Norm_All = 131.282;
+
+  // mu: zpt [50,200]
+  //Data : 633430.000000
+  //WW/WZ/WJets non-reson. : 604.878487
+  //TT : 9929.086077
+  //ZZ WZ reson. : 6438.827293
+  //ZJets : 624855.012393
+  //ZJets Data-xxx : 616457. = 633430.000000-604.878487-9929.086077-6438.827293
+  //GJets denorminator: 2785982708649.094238
+  // GJets weight integral: 4771.470601
+  // scale = 616457./4771.470601 = 129.196
+  Double_t Norm_Mu = 129.196;
+
+  // el:
+  //Data : 14801.000000
+  //WW/WZ/WJets non-reson. : 12.538947
+  //TT : 146.321369
+  //ZZ WZ reson. : 290.129504
+  //ZJets : 14623.264525
+  //ZJets Data-xxx : 14352.0 = 14801.000000-12.538947-146.321369-290.129504
+  // GJets weight integral: 6865.677331
+  // scale = 14352.0/6865.677331 = 2.09040
+  Double_t Norm_El = 2.09040;
 
   char name[1000];
 
@@ -82,7 +121,7 @@ int main(int argc, char** argv) {
   std::string zjet_selec_lowlpt_mu = base_selec_lowlpt_mu + weight_selec + rhoweight_selec + effsf_selec;
 
   //std::string gjet_selec = metfilter + rhoweight_selec;
-  std::string gjet_selec = metfilter;
+  std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONHZZ)";
 
   //Double_t ZPtBins[] = {0,1.25,2.5,3.75,5,6.25,7.5,8.75,10,11.25,12.5,15,17.5,20,25,30,35,40,45,50,60,70,80,90,100,110,130,150,170,190,220,250,400,1000};
   Double_t ZPtBins[] = {20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,215,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300,350,400,500,700,3000};
@@ -105,6 +144,10 @@ int main(int argc, char** argv) {
   tree1->Draw("llnunu_l1_pt>>hzptbb1", zjet_selec.c_str());
   tree2->Draw("gjet_l1_pt>>hzptbb2",gjet_selec.c_str());
 
+  hzptbb1->Scale(1./hzptbb1->Integral(), "width");
+  //hzptbb2->Scale(1./hzptbb2->Integral(), "width");
+  hzptbb2->Scale(1., "width");
+
   hzptbb1->SetMarkerColor(2);
   hzptbb2->SetMarkerColor(4);
   hzptbb1->SetLineColor(2);
@@ -126,6 +169,7 @@ int main(int argc, char** argv) {
 
   TH1D* hzptbbr12 = (TH1D*)hzptbb1->Clone("hzptbbr12");
   hzptbbr12->Divide(hzptbb2);
+  hzptbbr12->Scale(Norm_All);
 
   plots->Clear();
   hzptbbr12->Draw();
@@ -135,15 +179,12 @@ int main(int argc, char** argv) {
 
   // el
   TH1D* hzptbb1_el = new TH1D("hzptbb1_el", "hzptbb1_el", NZPtBins, ZPtBins);
-
   hzptbb1_el->Sumw2();
-
-
   tree1->Draw("llnunu_l1_pt>>hzptbb1_el", zjet_selec_el.c_str());
+  hzptbb1_el->Scale(1./hzptbb1_el->Integral(), "width");
 
   hzptbb1_el->SetMarkerColor(2);
   hzptbb1_el->SetLineColor(2);
-
 
   TLegend* lgzptbb_el = new TLegend(0.5,0.6,0.8,0.8);
   lgzptbb_el->SetName("lgzptbb_el");
@@ -161,6 +202,7 @@ int main(int argc, char** argv) {
 
   TH1D* hzptbbr12_el = (TH1D*)hzptbb1_el->Clone("hzptbbr12_el");
   hzptbbr12_el->Divide(hzptbb2);
+  hzptbbr12_el->Scale(Norm_El);
 
   plots->Clear();
   hzptbbr12_el->Draw();
@@ -171,15 +213,12 @@ int main(int argc, char** argv) {
 
   // mu
   TH1D* hzptbb1_mu = new TH1D("hzptbb1_mu", "hzptbb1_mu", NZPtBins, ZPtBins);
-
   hzptbb1_mu->Sumw2();
-
-
   tree1->Draw("llnunu_l1_pt>>hzptbb1_mu", zjet_selec_mu.c_str());
+  hzptbb1_mu->Scale(1./hzptbb1_mu->Integral(), "width");
 
   hzptbb1_mu->SetMarkerColor(2);
   hzptbb1_mu->SetLineColor(2);
-
 
   TLegend* lgzptbb_mu = new TLegend(0.5,0.6,0.8,0.8);
   lgzptbb_mu->SetName("lgzptbb_mu");
@@ -197,6 +236,7 @@ int main(int argc, char** argv) {
 
   TH1D* hzptbbr12_mu = (TH1D*)hzptbb1_mu->Clone("hzptbbr12_mu");
   hzptbbr12_mu->Divide(hzptbb2);
+  hzptbbr12_mu->Scale(Norm_Mu);
 
   plots->Clear();
   hzptbbr12_mu->Draw();
@@ -207,11 +247,9 @@ int main(int argc, char** argv) {
 
   // all
   TH1D* hzptbb1_lowlpt = new TH1D("hzptbb1_lowlpt", "hzptbb1_lowlpt", NZPtBins, ZPtBins);
-
   hzptbb1_lowlpt->Sumw2();
-
-
   tree1->Draw("llnunu_l1_pt>>hzptbb1_lowlpt", zjet_selec_lowlpt.c_str());
+  hzptbb1_lowlpt->Scale(1./hzptbb1_lowlpt->Integral(), "width");
 
   hzptbb1_lowlpt->SetMarkerColor(2);
   hzptbb1_lowlpt->SetLineColor(2);
@@ -232,6 +270,7 @@ int main(int argc, char** argv) {
 
   TH1D* hzptbbr12_lowlpt = (TH1D*)hzptbb1_lowlpt->Clone("hzptbbr12_lowlpt");
   hzptbbr12_lowlpt->Divide(hzptbb2);
+  hzptbbr12_lowlpt->Scale(Norm_All);
 
   plots->Clear();
   hzptbbr12_lowlpt->Draw();
@@ -241,15 +280,12 @@ int main(int argc, char** argv) {
 
   // lowlpt el
   TH1D* hzptbb1_lowlpt_el = new TH1D("hzptbb1_lowlpt_el", "hzptbb1_lowlpt_el", NZPtBins, ZPtBins);
-
   hzptbb1_lowlpt_el->Sumw2();
-
-
   tree1->Draw("llnunu_l1_pt>>hzptbb1_lowlpt_el", zjet_selec_lowlpt_el.c_str());
+  hzptbb1_lowlpt_el->Scale(1./hzptbb1_lowlpt_el->Integral(), "width");
 
   hzptbb1_lowlpt_el->SetMarkerColor(2);
   hzptbb1_lowlpt_el->SetLineColor(2);
-
 
   TLegend* lgzptbb_lowlpt_el = new TLegend(0.5,0.6,0.8,0.8);
   lgzptbb_lowlpt_el->SetName("lgzptbb_lowlpt_el");
@@ -267,6 +303,7 @@ int main(int argc, char** argv) {
 
   TH1D* hzptbbr12_lowlpt_el = (TH1D*)hzptbb1_lowlpt_el->Clone("hzptbbr12_lowlpt_el");
   hzptbbr12_lowlpt_el->Divide(hzptbb2);
+  hzptbbr12_lowlpt_el->Scale(Norm_El);
 
   plots->Clear();
   hzptbbr12_lowlpt_el->Draw();
@@ -277,15 +314,12 @@ int main(int argc, char** argv) {
 
   // lowlpt  mu
   TH1D* hzptbb1_lowlpt_mu = new TH1D("hzptbb1_lowlpt_mu", "hzptbb1_lowlpt_mu", NZPtBins, ZPtBins);
-
   hzptbb1_lowlpt_mu->Sumw2();
-
-
   tree1->Draw("llnunu_l1_pt>>hzptbb1_lowlpt_mu", zjet_selec_lowlpt_mu.c_str());
+  hzptbb1_lowlpt_mu->Scale(1./hzptbb1_lowlpt_mu->Integral(), "width");
 
   hzptbb1_lowlpt_mu->SetMarkerColor(2);
   hzptbb1_lowlpt_mu->SetLineColor(2);
-
 
   TLegend* lgzptbb_lowlpt_mu = new TLegend(0.5,0.6,0.8,0.8);
   lgzptbb_lowlpt_mu->SetName("lgzptbb_lowlpt_mu");
@@ -303,6 +337,7 @@ int main(int argc, char** argv) {
 
   TH1D* hzptbbr12_lowlpt_mu = (TH1D*)hzptbb1_lowlpt_mu->Clone("hzptbbr12_lowlpt_mu");
   hzptbbr12_lowlpt_mu->Divide(hzptbb2);
+  hzptbbr12_lowlpt_mu->Scale(Norm_Mu);
 
   plots->Clear();
   hzptbbr12_lowlpt_mu->Draw();
@@ -344,12 +379,14 @@ int main(int argc, char** argv) {
   tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt>>hzpt_zrap1", zjet_selec.c_str());
   tree2->Draw("gjet_l1_rapidity:gjet_l1_pt>>hzpt_zrap2", gjet_selec.c_str());
 
-  //hzpt_zrap1->Scale(1.0/hzpt_zrap1->Integral(),"width");
+  hzpt_zrap1->Scale(1.0/hzpt_zrap1->Integral(),"width");
   //hzpt_zrap2->Scale(1.0/hzpt_zrap2->Integral(),"width");
+  hzpt_zrap2->Scale(1.0,"width");
 
 
   TH2D* hzpt_zrap_r12 = (TH2D*)hzpt_zrap1->Clone("hzpt_zrap_r12");
   hzpt_zrap_r12->Divide(hzpt_zrap2);
+  hzpt_zrap_r12->Scale(Norm_All);
 
 
   plots->Clear();
@@ -376,8 +413,10 @@ int main(int argc, char** argv) {
   TH2D* hzpt_zrap1_el = new TH2D("hzpt_zrap1_el", "hzpt_zrap1_el", NZPtBins,ZPtBins,NZRapBins,ZRapBins);
   hzpt_zrap1_el->Sumw2();
   tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt>>hzpt_zrap1_el", zjet_selec_el.c_str());
+  hzpt_zrap1_el->Scale(1.0/hzpt_zrap1_el->Integral(),"width");
   TH2D* hzpt_zrap_r12_el = (TH2D*)hzpt_zrap1_el->Clone("hzpt_zrap_r12_el");
   hzpt_zrap_r12_el->Divide(hzpt_zrap2);
+  hzpt_zrap_r12_el->Scale(Norm_El);
 
   plots->Clear();
   hzpt_zrap1_el->Draw("colz");
@@ -396,8 +435,10 @@ int main(int argc, char** argv) {
   TH2D* hzpt_zrap1_mu = new TH2D("hzpt_zrap1_mu", "hzpt_zrap1_mu", NZPtBins,ZPtBins,NZRapBins,ZRapBins);
   hzpt_zrap1_mu->Sumw2();
   tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt>>hzpt_zrap1_mu", zjet_selec_mu.c_str());
+  hzpt_zrap1_mu->Scale(1.0/hzpt_zrap1_mu->Integral(),"width");
   TH2D* hzpt_zrap_r12_mu = (TH2D*)hzpt_zrap1_mu->Clone("hzpt_zrap_r12_mu");
   hzpt_zrap_r12_mu->Divide(hzpt_zrap2);
+  hzpt_zrap_r12_mu->Scale(Norm_Mu);
 
   plots->Clear();
   hzpt_zrap1_mu->Draw("colz");
@@ -414,13 +455,12 @@ int main(int argc, char** argv) {
 
   // 2D zpt zrap _lowlpt
   TH2D* hzpt_zrap1_lowlpt = new TH2D("hzpt_zrap1_lowlpt", "hzpt_zrap1_lowlpt", NZPtBins,ZPtBins,NZRapBins,ZRapBins);
-
   hzpt_zrap1_lowlpt->Sumw2();
-
   tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt>>hzpt_zrap1_lowlpt", zjet_selec_lowlpt.c_str());
-
+  hzpt_zrap1_lowlpt->Scale(1.0/hzpt_zrap1->Integral(),"width");
   TH2D* hzpt_zrap_lowlpt_r12 = (TH2D*)hzpt_zrap1_lowlpt->Clone("hzpt_zrap_lowlpt_r12");
   hzpt_zrap_lowlpt_r12->Divide(hzpt_zrap2);
+  hzpt_zrap_lowlpt_r12->Scale(Norm_All);
 
 
   plots->Clear();
@@ -437,12 +477,14 @@ int main(int argc, char** argv) {
 
 
 
-  // 2D zpt zrap el
+  // 2D zpt zrap lowlpt el
   TH2D* hzpt_zrap1_lowlpt_el = new TH2D("hzpt_zrap1_lowlpt_el", "hzpt_zrap1_lowlpt_el", NZPtBins,ZPtBins,NZRapBins,ZRapBins);
   hzpt_zrap1_lowlpt_el->Sumw2();
   tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt>>hzpt_zrap1_lowlpt_el", zjet_selec_lowlpt_el.c_str());
+  hzpt_zrap1_lowlpt_el->Scale(1.0/hzpt_zrap1->Integral(),"width");
   TH2D* hzpt_zrap_lowlpt_r12_el = (TH2D*)hzpt_zrap1_lowlpt_el->Clone("hzpt_zrap_lowlpt_r12_el");
   hzpt_zrap_lowlpt_r12_el->Divide(hzpt_zrap2);
+  hzpt_zrap_lowlpt_r12_el->Scale(Norm_El);
 
   plots->Clear();
   hzpt_zrap1_lowlpt_el->Draw("colz");
@@ -457,12 +499,14 @@ int main(int argc, char** argv) {
   plots->Clear();
 
 
-  // 2D zpt zrap mu
+  // 2D zpt zrap lowlpt mu
   TH2D* hzpt_zrap1_lowlpt_mu = new TH2D("hzpt_zrap1_lowlpt_mu", "hzpt_zrap1_lowlpt_mu", NZPtBins,ZPtBins,NZRapBins,ZRapBins);
   hzpt_zrap1_lowlpt_mu->Sumw2();
   tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt>>hzpt_zrap1_lowlpt_mu", zjet_selec_lowlpt_mu.c_str());
+  hzpt_zrap1_lowlpt_mu->Scale(1.0/hzpt_zrap1->Integral(),"width");
   TH2D* hzpt_zrap_lowlpt_r12_mu = (TH2D*)hzpt_zrap1_lowlpt_mu->Clone("hzpt_zrap_lowlpt_r12_mu");
   hzpt_zrap_lowlpt_r12_mu->Divide(hzpt_zrap2);
+  hzpt_zrap_lowlpt_r12_mu->Scale(Norm_Mu);
 
   plots->Clear();
   hzpt_zrap1_lowlpt_mu->Draw("colz");

@@ -46,7 +46,7 @@ do
     echo " > rsync -var $job $out/$dir/"
     rsync -var $job $out/$dir/
     echo " > rm -rf $job"
-#    rm -rf $job
+    rm -rf $job
   else
     echo "- job is not finished or has problem to be resubmitted .. "
   fi

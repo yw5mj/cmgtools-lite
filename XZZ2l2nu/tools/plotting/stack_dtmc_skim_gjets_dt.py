@@ -7,9 +7,12 @@ from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
+tag="GJRcHLTSmBin_DtGJetsHLTDtScale_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+#tag="GJRcHLT_DtGJetsHLTDtScale_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+#tag="GJRc_DtGJetsHLT_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="GJRcSmth_DtGJets_TgEfElFineBin_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="GJRcNoSmth_DtGJets_TgEfElFineBin_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
-tag="GJRc_DtGJets_TgEfElFineBin_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+#tag="GJRc_DtGJets_TgEfElFineBin_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="test_GJRc_DtGJets_TgEfElFineBin_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="DtGJets_TgEfElFineBin_TightZPt50_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="test_DtGJets_TgEfElFineBin_TightZPt50_BigDY_Sept1Recoil_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
@@ -56,9 +59,9 @@ cutChain='tightzpt50'
 #cutChain='tightzpt100met200'
 
 # can be el or mu or both
-channel='el' 
-LogY=False
-test=False
+channel='mu' 
+LogY=True
+test=True
 DrawLeptons=False
 doRhoScale=True
 
@@ -291,18 +294,34 @@ zjetsPlotters=[]
 #zjetsSamples = ['DYJetsToLL_M50_NoRecoil'] # M50
 #zjetsSamples = ['GJet_Pt_20toInf_DoubleEMEnriched'] 
 #zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco'] 
-zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_RcSmBin'] 
+#zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_RcSmBin'] 
 #zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_RcSmBinNoSmooth'] 
 #zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_RcSmBinSmooth'] 
+#zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_HLT'] 
+#zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale'] 
+zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_RcSmBin'] 
 
 
 for sample in zjetsSamples:
     zjetsPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
     if dyGJets: 
-        zjetsPlotters[-1].addCorrectionFactor('(1)','norm')
-        if channel=='el' : zjetsPlotters[-1].addCorrectionFactor('GJetsWeightEl','genWeight')
-        elif channel=='mu' : zjetsPlotters[-1].addCorrectionFactor('GJetsWeightMu','genWeight')
-        else : zjetsPlotters[-1].addCorrectionFactor('GJetsWeight','genWeight')
+        #zjetsPlotters[-1].addCorrectionFactor('(1)','norm')
+        zjetsPlotters[-1].addCorrectionFactor('(HLT_PHOTONHZZ)','hlt')
+        if channel=='el' : 
+            zjetsPlotters[-1].addCorrectionFactor('GJetsWeightEl','genWeight')
+            #zjetsPlotters[-1].addCorrectionFactor('(2.09040)','norm') #el
+            #zjetsPlotters[-1].addCorrectionFactor('(2.09040/14352.0)','norm') #el
+            #zjetsPlotters[-1].addCorrectionFactor('(1./14352.0)','norm') #el
+        elif channel=='mu' : 
+            zjetsPlotters[-1].addCorrectionFactor('GJetsWeightMu','genWeight')
+            #zjetsPlotters[-1].addCorrectionFactor('(129.196)','norm') #mu
+            #zjetsPlotters[-1].addCorrectionFactor('(129.196/616457.0)','norm') #mu
+            #zjetsPlotters[-1].addCorrectionFactor('(1./616457.0)','norm') #mu
+        else : 
+            zjetsPlotters[-1].addCorrectionFactor('GJetsWeight','genWeight')
+            #zjetsPlotters[-1].addCorrectionFactor('(131.282)','norm') #all
+            #zjetsPlotters[-1].addCorrectionFactor('(131.282/630809.0)','norm') #all
+            #zjetsPlotters[-1].addCorrectionFactor('(1./630809.0)','norm') #all
     else:
         #zjetsPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
         zjetsPlotters[-1].addCorrectionFactor('(1)','norm')
@@ -522,10 +541,10 @@ tag+='_'
 
 
 if test: 
-#    Stack.drawStack('llnunu_l1_mass_to_plot', cuts, str(lumi*1000), 50, 50, 150, titlex = "M(Z)", units = "GeV",output=tag+'zmass',outDir=outdir,separateSignal=sepSig)
+    Stack.drawStack('llnunu_l1_mass_to_plot', cuts, str(lumi*1000), 50, 50, 150, titlex = "M(Z)", units = "GeV",output=tag+'zmass',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('llnunu_l1_mass_to_plot', cuts, str(lumi*1000), 50, 50, 150, titlex = "M(Z)", units = "GeV",output=tag+'zmass',outDir=outdir,separateSignal=sepSig)
-#    Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 100, 0.0, 500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt_low',outDir=outdir,separateSignal=sepSig)
-#    Stack.drawStack('llnunu_l1_rapidity', cuts, str(lumi*1000), 60, -3.0, 3.0, titlex = "Rapidity(Z) ", units = "",output=tag+'zrapidity',outDir=outdir,separateSignal=sepSig)
+    Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 100, 0.0, 500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt_low',outDir=outdir,separateSignal=sepSig)
+    Stack.drawStack('llnunu_l1_rapidity', cuts, str(lumi*1000), 60, -3.0, 3.0, titlex = "Rapidity(Z) ", units = "",output=tag+'zrapidity',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('llnunu_l1_l1_pt', cuts, str(lumi*1000), 200, 0.0, 1000.0, titlex = "P_{T}(l_{1})", units = "GeV",output=tag+'pTlep1',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('llnunu_l1_l2_pt_to_plot', cuts, str(lumi*1000), 200, 0.0, 500.0, titlex = "P_{T}(l_{2})", units = "GeV",output=tag+'pTlep2',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('llnunu_l1_l1_trackerIso', cuts+"&&(abs(llnunu_l1_l1_pdgId)==13)", str(lumi*1000), 100, 0.0, 0.2, titlex = "trackerISO_{rel}(#mu_{1})", units = "",output=tag+'ISOlep1_mu',outDir=outdir,separateSignal=sepSig)

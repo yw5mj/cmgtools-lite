@@ -129,7 +129,10 @@ photonAna = cfg.Analyzer(
     photons='slimmedPhotons',
     ptMin = 15,
     etaMax = 2.5,
-    doPhotonScaleCorrections=False,
+    doPhotonScaleCorrections= {
+        'data' : 'EgammaAnalysis/ElectronTools/data/ScalesSmearings/80X_ichepV1_2016_pho',
+        'isSync': False
+    },
     gammaID = "POG_SPRING15_25ns_Loose",
     rhoPhoton = 'fixedGridRhoFastjetAll',
     gamma_isoCorr = 'rhoArea',
