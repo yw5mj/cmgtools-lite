@@ -34,6 +34,7 @@ int main(int argc, char** argv) {
   //std::string outtag="study_gjets";
   //std::string outtag="study_gjets_data";
   //std::string outtag="study_gjets_data_hlt";
+  //std::string outtag="study_gjets_data_hlt_dtscale_nohlt90";
   std::string outtag="study_gjets_data_hlt_dtscale";
 
 
@@ -48,7 +49,8 @@ int main(int argc, char** argv) {
   //ZJets Data-xxx : 630809 = 648231.0-617.417435-10075.407445-6728.956797
   // GJets weight integral: 4805.009858
   // scale =  630809/4805.009858 = 131.282
-  Double_t Norm_All = 131.282;
+  //Double_t Norm_All = 131.282;
+  Double_t Norm_All = 1.0;
 
   // mu: zpt [50,200]
   //Data : 633430.000000
@@ -60,7 +62,8 @@ int main(int argc, char** argv) {
   //GJets denorminator: 2785982708649.094238
   // GJets weight integral: 4771.470601
   // scale = 616457./4771.470601 = 129.196
-  Double_t Norm_Mu = 129.196;
+  //Double_t Norm_Mu = 129.196;
+  Double_t Norm_Mu = 1.0;
 
   // el:
   //Data : 14801.000000
@@ -71,7 +74,8 @@ int main(int argc, char** argv) {
   //ZJets Data-xxx : 14352.0 = 14801.000000-12.538947-146.321369-290.129504
   // GJets weight integral: 6865.677331
   // scale = 14352.0/6865.677331 = 2.09040
-  Double_t Norm_El = 2.09040;
+  //Double_t Norm_El = 2.09040;
+  Double_t Norm_El = 1.0;
 
   char name[1000];
 
@@ -83,6 +87,9 @@ int main(int argc, char** argv) {
   TTree* tree1 = (TTree*)file1->Get("tree");
   TTree* tree2 = (TTree*)file2->Get("tree");
 
+  // some gjets alias
+  tree2->SetAlias("metPara", "gjet_l2_pt*cos(gjet_l2_phi-gjet_l1_phi)");
+  tree2->SetAlias("absDeltaPhi", "fabs(TVector2::Phi_mpi_pi(gjet_l2_phi-gjet_l1_phi))");
 
   // define cuts
   std::string metfilter="(Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_HBHENoiseFilter&&Flag_CSCTightHalo2015Filter&&Flag_eeBadScFilter)";
@@ -105,6 +112,8 @@ int main(int argc, char** argv) {
 
   // add weight
   std::string weight_selec = std::string("*(ZJetsGenWeight*ZPtWeight*puWeight68075*1921.8*3)");
+  std::string weight_selec_up = std::string("*(ZJetsGenWeight*ZPtWeight_up*puWeight68075*1921.8*3)");
+  std::string weight_selec_dn = std::string("*(ZJetsGenWeight*ZPtWeight_dn*puWeight68075*1921.8*3)");
   //std::string weight_selec = std::string("*(ZJetsGenWeight*ZPtWeight*1921.8*3*12900.0)");
   // rho weight
   std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
@@ -120,8 +129,27 @@ int main(int argc, char** argv) {
   std::string zjet_selec_lowlpt_el = base_selec_lowlpt_el + weight_selec + rhoweight_selec + effsf_selec;
   std::string zjet_selec_lowlpt_mu = base_selec_lowlpt_mu + weight_selec + rhoweight_selec + effsf_selec;
 
+  std::string zjet_selec_up = base_selec + weight_selec_up + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_el_up = base_selec_el + weight_selec_up + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_mu_up = base_selec_mu + weight_selec_up + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_lowlpt_up = base_selec_lowlpt + weight_selec_up + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_lowlpt_el_up = base_selec_lowlpt_el + weight_selec_up + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_lowlpt_mu_up = base_selec_lowlpt_mu + weight_selec_up + rhoweight_selec + effsf_selec;
+
+  std::string zjet_selec_dn = base_selec + weight_selec_dn + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_el_dn = base_selec_el + weight_selec_dn + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_mu_dn = base_selec_mu + weight_selec_dn + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_lowlpt_dn = base_selec_lowlpt + weight_selec_dn + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_lowlpt_el_dn = base_selec_lowlpt_el + weight_selec_dn + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_lowlpt_mu_dn = base_selec_lowlpt_mu + weight_selec_dn + rhoweight_selec + effsf_selec;
+
+
+
   //std::string gjet_selec = metfilter + rhoweight_selec;
-  std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONHZZ)";
+  //std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONHZZ)";
+  //std::string gjet_selec = "("+metfilter+"&&(HLT_PHOTONIDISO&&!HLT_PHOTONIDISO90))";
+  //std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO)";
+  std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&(!(absDeltaPhi>3.0&&metPara/gjet_l1_pt>-1.5&&metPara/gjet_l1_pt<-0.5)))";
 
   //Double_t ZPtBins[] = {0,1.25,2.5,3.75,5,6.25,7.5,8.75,10,11.25,12.5,15,17.5,20,25,30,35,40,45,50,60,70,80,90,100,110,130,150,170,190,220,250,400,1000};
   Double_t ZPtBins[] = {20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,215,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300,350,400,500,700,3000};
@@ -521,6 +549,149 @@ int main(int argc, char** argv) {
   plots->Clear();
 
 
+
+  // 2D zpt zrap up
+  TH2D* hzpt_zrap1_up = new TH2D("hzpt_zrap1_up", "hzpt_zrap1_up", NZPtBins,ZPtBins,NZRapBins,ZRapBins);
+
+  hzpt_zrap1_up->Sumw2();
+  tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt>>hzpt_zrap1_up", zjet_selec_up.c_str());
+  hzpt_zrap1_up->Scale(1.0/hzpt_zrap1_up->Integral(),"width");
+
+  TH2D* hzpt_zrap_r12_up = (TH2D*)hzpt_zrap1_up->Clone("hzpt_zrap_r12_up");
+  hzpt_zrap_r12_up->Divide(hzpt_zrap2);
+  hzpt_zrap_r12_up->Scale(Norm_All);
+
+
+  plots->Clear();
+  hzpt_zrap1_up->Draw("colz");
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+  plots->Clear();
+  hzpt_zrap_r12_up->Draw("colz");
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+
+
+  // 2D zpt zrap el up
+  TH2D* hzpt_zrap1_el_up = new TH2D("hzpt_zrap1_el_up", "hzpt_zrap1_el_up", NZPtBins,ZPtBins,NZRapBins,ZRapBins);
+  hzpt_zrap1_el_up->Sumw2();
+  tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt>>hzpt_zrap1_el_up", zjet_selec_el_up.c_str());
+  hzpt_zrap1_el_up->Scale(1.0/hzpt_zrap1_el_up->Integral(),"width");
+  TH2D* hzpt_zrap_r12_el_up = (TH2D*)hzpt_zrap1_el_up->Clone("hzpt_zrap_r12_el_up");
+  hzpt_zrap_r12_el_up->Divide(hzpt_zrap2);
+  hzpt_zrap_r12_el_up->Scale(Norm_El);
+
+  plots->Clear();
+  hzpt_zrap1_el_up->Draw("colz");
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+  plots->Clear();
+  hzpt_zrap_r12_el_up->Draw("colz");
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+
+  // 2D zpt zrap mu
+  TH2D* hzpt_zrap1_mu_up = new TH2D("hzpt_zrap1_mu_up", "hzpt_zrap1_mu_up", NZPtBins,ZPtBins,NZRapBins,ZRapBins);
+  hzpt_zrap1_mu_up->Sumw2();
+  tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt>>hzpt_zrap1_mu_up", zjet_selec_mu_up.c_str());
+  hzpt_zrap1_mu_up->Scale(1.0/hzpt_zrap1_mu_up->Integral(),"width");
+  TH2D* hzpt_zrap_r12_mu_up = (TH2D*)hzpt_zrap1_mu_up->Clone("hzpt_zrap_r12_mu_up");
+  hzpt_zrap_r12_mu_up->Divide(hzpt_zrap2);
+  hzpt_zrap_r12_mu_up->Scale(Norm_Mu);
+
+  plots->Clear();
+  hzpt_zrap1_mu_up->Draw("colz");
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+  plots->Clear();
+  hzpt_zrap_r12_mu_up->Draw("colz");
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+
+
+  // 2D zpt zrap dn
+  TH2D* hzpt_zrap1_dn = new TH2D("hzpt_zrap1_dn", "hzpt_zrap1_dn", NZPtBins,ZPtBins,NZRapBins,ZRapBins);
+
+  hzpt_zrap1_dn->Sumw2();
+  tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt>>hzpt_zrap1_dn", zjet_selec_dn.c_str());
+  hzpt_zrap1_dn->Scale(1.0/hzpt_zrap1_dn->Integral(),"width");
+
+  TH2D* hzpt_zrap_r12_dn = (TH2D*)hzpt_zrap1_dn->Clone("hzpt_zrap_r12_dn");
+  hzpt_zrap_r12_dn->Divide(hzpt_zrap2);
+  hzpt_zrap_r12_dn->Scale(Norm_All);
+
+
+  plots->Clear();
+  hzpt_zrap1_dn->Draw("colz");
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+  plots->Clear();
+  hzpt_zrap_r12_dn->Draw("colz");
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+
+
+  // 2D zpt zrap el dn
+  TH2D* hzpt_zrap1_el_dn = new TH2D("hzpt_zrap1_el_dn", "hzpt_zrap1_el_dn", NZPtBins,ZPtBins,NZRapBins,ZRapBins);
+  hzpt_zrap1_el_dn->Sumw2();
+  tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt>>hzpt_zrap1_el_dn", zjet_selec_el_dn.c_str());
+  hzpt_zrap1_el_dn->Scale(1.0/hzpt_zrap1_el_dn->Integral(),"width");
+  TH2D* hzpt_zrap_r12_el_dn = (TH2D*)hzpt_zrap1_el_dn->Clone("hzpt_zrap_r12_el_dn");
+  hzpt_zrap_r12_el_dn->Divide(hzpt_zrap2);
+  hzpt_zrap_r12_el_dn->Scale(Norm_El);
+
+  plots->Clear();
+  hzpt_zrap1_el_dn->Draw("colz");
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+  plots->Clear();
+  hzpt_zrap_r12_el_dn->Draw("colz");
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+
+  // 2D zpt zrap mu dn
+  TH2D* hzpt_zrap1_mu_dn = new TH2D("hzpt_zrap1_mu_dn", "hzpt_zrap1_mu_dn", NZPtBins,ZPtBins,NZRapBins,ZRapBins);
+  hzpt_zrap1_mu_dn->Sumw2();
+  tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt>>hzpt_zrap1_mu_dn", zjet_selec_mu_dn.c_str());
+  hzpt_zrap1_mu_dn->Scale(1.0/hzpt_zrap1_mu_dn->Integral(),"width");
+  TH2D* hzpt_zrap_r12_mu_dn = (TH2D*)hzpt_zrap1_mu_dn->Clone("hzpt_zrap_r12_mu_dn");
+  hzpt_zrap_r12_mu_dn->Divide(hzpt_zrap2);
+  hzpt_zrap_r12_mu_dn->Scale(Norm_Mu);
+
+  plots->Clear();
+  hzpt_zrap1_mu_dn->Draw("colz");
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+  plots->Clear();
+  hzpt_zrap_r12_mu_dn->Draw("colz");
+  sprintf(name, "%s.pdf", outtag.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+
+
   //
   sprintf(name, "%s.root", outtag.c_str());
   TFile* fout = new TFile(name, "recreate");
@@ -560,6 +731,20 @@ int main(int argc, char** argv) {
 
   hzpt_zrap1_mu->Write("h_zpt_zrap_1_mu");
   hzpt_zrap_r12_mu->Write("h_zpt_zrap_ratio_mu");
+
+  hzpt_zrap1_up->Write("h_zpt_zrap_1_up");
+  hzpt_zrap_r12_up->Write("h_zpt_zrap_ratio_up");
+  hzpt_zrap1_el_up->Write("h_zpt_zrap_1_el_up");
+  hzpt_zrap_r12_el_up->Write("h_zpt_zrap_ratio_el_up");
+  hzpt_zrap1_mu_up->Write("h_zpt_zrap_1_mu_up");
+  hzpt_zrap_r12_mu_up->Write("h_zpt_zrap_ratio_mu_up");
+
+  hzpt_zrap1_dn->Write("h_zpt_zrap_1_dn");
+  hzpt_zrap_r12_dn->Write("h_zpt_zrap_ratio_dn");
+  hzpt_zrap1_el_dn->Write("h_zpt_zrap_1_el_dn");
+  hzpt_zrap_r12_el_dn->Write("h_zpt_zrap_ratio_el_dn");
+  hzpt_zrap1_mu_dn->Write("h_zpt_zrap_1_mu_dn");
+  hzpt_zrap_r12_mu_dn->Write("h_zpt_zrap_ratio_mu_dn");
 
 
   hzpt_zrap1_lowlpt->Write("h_zpt_zrap_lowlpt_1");

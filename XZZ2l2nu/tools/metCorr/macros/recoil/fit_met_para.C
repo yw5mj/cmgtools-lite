@@ -35,9 +35,11 @@ std::vector< std::string > dtfiles = {
  };
 
 std::vector< std::string > gjfiles = {
-    "SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_RcSmBin"
+    //"SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_RcSmBin"
     //"SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale"
-    //"SinglePhoton_Run2016BCD_PromptReco_HLTNoRecoil"
+    "SinglePhoton_Run2016BCD_PromptReco_HLTNoRecoil"
+    //"SinglePhoton_Run2016BCD_PromptReco_HLTNo90NoRecoil"
+    //"SinglePhoton_Run2016BCD_PromptReco_HLTNo90_DtScale"
     //"SinglePhoton_Run2016BCD_PromptReco_NoRecoil"
     //"SinglePhoton_Run2016BCD_PromptReco_RcSmBin"
  };
@@ -49,8 +51,11 @@ TCanvas* plots;
 //std::string tag0 = "_smbin_id3";
 //std::string tag0 = "_smbin_id2";
 //std::string tag0 = "_hlt";
+//std::string tag0 = "_hltno75";
+std::string tag0 = "_hlt_phvto";
+//std::string tag0 = "_hltno90";
 //std::string tag0 = "_hlt_id2";
-std::string tag0 = "_hlt_id3";
+//std::string tag0 = "_hlt_id3";
 //std::string tag0 = "_smbin_hlt";
 std::string base_selec;
 std::string lumiTag;
@@ -174,7 +179,11 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
     //base_selec = "("+metfilter+"&&gjet_l1_idCutBased>=2)";
     //base_selec = "("+metfilter+"&&gjet_l1_idCutBased>=3)";
     //base_selec = "("+metfilter+"&&HLT_PHOTONHZZ&&gjet_l1_idCutBased>=2)";
-    base_selec = "("+metfilter+"&&HLT_PHOTONHZZ&&gjet_l1_idCutBased>=3)";
+    //base_selec = "("+metfilter+"&&HLT_PHOTONHZZ&&gjet_l1_idCutBased>=3)";
+    //base_selec = "("+metfilter+"&&(HLT_PHOTONIDISO&&!HLT_PHOTONIDISO75))";
+    //base_selec = "("+metfilter+"&&(HLT_PHOTONIDISO&&!HLT_PHOTONIDISO90))";
+    //base_selec = "("+metfilter+"&&HLT_PHOTONIDISO)";
+    base_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&!(absDeltaPhi>3.0&&metPara/llnunu_l1_pt>-1.5&&metPara/llnunu_l1_pt<-0.5))";
     //if (channel=="el")  selec = base_selec+"*(GJetsZPtWeightLowLPtEl)";
     //else if (channel=="mu") selec = base_selec+"*(GJetsZPtWeightLowLPtMu)";
     //else  selec = base_selec+"*(GJetsZPtWeightLowLPt)";
@@ -216,6 +225,9 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   fout = new TFile(name, "recreate");
 
   TTree* tree = (TTree*)fin->Get("tree");
+
+  tree->SetAlias("absDeltaPhi", "fabs(TVector2::Phi_mpi_pi(llnunu_l2_phi-llnunu_l1_phi))");
+  tree->SetAlias("metPara", "llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi)");
 
   plots = new TCanvas("plots", "plots");
 

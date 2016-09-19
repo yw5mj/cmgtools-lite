@@ -7,7 +7,8 @@ from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
-tag="GJRcHLTSmBin_DtGJetsHLTDtScale_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+tag="PhVeto_GJRcHLT_DtGJetsHLTDtScale_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+#tag="GJRcHLTSmBin_DtGJetsHLTDtScale_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="GJRcHLT_DtGJetsHLTDtScale_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="GJRc_DtGJetsHLT_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="GJRcSmth_DtGJets_TgEfElFineBin_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
@@ -299,7 +300,8 @@ zjetsPlotters=[]
 #zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_RcSmBinSmooth'] 
 #zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_HLT'] 
 #zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale'] 
-zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_RcSmBin'] 
+#zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_RcSmBin'] 
+zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_PhVeto'] 
 
 
 for sample in zjetsSamples:
@@ -309,19 +311,13 @@ for sample in zjetsSamples:
         zjetsPlotters[-1].addCorrectionFactor('(HLT_PHOTONHZZ)','hlt')
         if channel=='el' : 
             zjetsPlotters[-1].addCorrectionFactor('GJetsWeightEl','genWeight')
-            #zjetsPlotters[-1].addCorrectionFactor('(2.09040)','norm') #el
-            #zjetsPlotters[-1].addCorrectionFactor('(2.09040/14352.0)','norm') #el
-            #zjetsPlotters[-1].addCorrectionFactor('(1./14352.0)','norm') #el
+            zjetsPlotters[-1].addCorrectionFactor('(14352.0/5268.361947)','norm') #el
         elif channel=='mu' : 
             zjetsPlotters[-1].addCorrectionFactor('GJetsWeightMu','genWeight')
-            #zjetsPlotters[-1].addCorrectionFactor('(129.196)','norm') #mu
-            #zjetsPlotters[-1].addCorrectionFactor('(129.196/616457.0)','norm') #mu
-            #zjetsPlotters[-1].addCorrectionFactor('(1./616457.0)','norm') #mu
+            zjetsPlotters[-1].addCorrectionFactor('(616457.0/3933.513338)','norm') #mu
         else : 
             zjetsPlotters[-1].addCorrectionFactor('GJetsWeight','genWeight')
-            #zjetsPlotters[-1].addCorrectionFactor('(131.282)','norm') #all
-            #zjetsPlotters[-1].addCorrectionFactor('(131.282/630809.0)','norm') #all
-            #zjetsPlotters[-1].addCorrectionFactor('(1./630809.0)','norm') #all
+            zjetsPlotters[-1].addCorrectionFactor('(630809.0/3954.891279)','norm') #all
     else:
         #zjetsPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
         zjetsPlotters[-1].addCorrectionFactor('(1)','norm')

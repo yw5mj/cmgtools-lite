@@ -20,9 +20,12 @@ do
   # options for outputs
   #outfile="${outfile/\/vvTreeProducer\/tree/}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_HLTNoRecoil}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_HLTNo90NoRecoil}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_HLT}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_HLT_DtScale}"
-  outfile="${outfile/\/vvTreeProducer\/tree/_HLT_DtScale_RcSmBin}"
+  outfile="${outfile/\/vvTreeProducer\/tree/_HLT_DtScale_PhVeto}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_HLTNo90_DtScale}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_HLT_DtScale_RcSmBin}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_NoRecoil}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_RcSmBin}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_RcSmBinNoSmooth}"

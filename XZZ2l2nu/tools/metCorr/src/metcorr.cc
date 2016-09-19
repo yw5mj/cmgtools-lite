@@ -407,6 +407,12 @@ bool  prepareTrees()
     _tree_out->Branch("GJetsWeight", &_GJetsWeight, "GJetsWeight/F");
     _tree_out->Branch("GJetsWeightEl", &_GJetsWeightEl, "GJetsWeightEl/F");
     _tree_out->Branch("GJetsWeightMu", &_GJetsWeightMu, "GJetsWeightMu/F");
+    _tree_out->Branch("GJetsWeight_up", &_GJetsWeight_up, "GJetsWeight_up/F");
+    _tree_out->Branch("GJetsWeightEl_up", &_GJetsWeightEl_up, "GJetsWeightEl_up/F");
+    _tree_out->Branch("GJetsWeightMu_up", &_GJetsWeightMu_up, "GJetsWeightMu_up/F");
+    _tree_out->Branch("GJetsWeight_dn", &_GJetsWeight_dn, "GJetsWeight_dn/F");
+    _tree_out->Branch("GJetsWeightEl_dn", &_GJetsWeightEl_dn, "GJetsWeightEl_dn/F");
+    _tree_out->Branch("GJetsWeightMu_dn", &_GJetsWeightMu_dn, "GJetsWeightMu_dn/F");
     _tree_out->Branch("GJetsWeightLowLPt", &_GJetsWeightLowLPt, "GJetsWeightLowLPt/F");
     _tree_out->Branch("GJetsWeightLowLPtEl", &_GJetsWeightLowLPtEl, "GJetsWeightLowLPtEl/F");
     _tree_out->Branch("GJetsWeightLowLPtMu", &_GJetsWeightLowLPtMu, "GJetsWeightLowLPtMu/F");
@@ -1247,6 +1253,12 @@ void prepareGJetsSkim()
     _gjets_h_zpt_zrap_ratio = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio");
     _gjets_h_zpt_zrap_ratio_el = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio_el");
     _gjets_h_zpt_zrap_ratio_mu = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio_mu");
+    _gjets_h_zpt_zrap_ratio_up = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio_up");
+    _gjets_h_zpt_zrap_ratio_el_up = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio_el_up");
+    _gjets_h_zpt_zrap_ratio_mu_up = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio_mu_up");
+    _gjets_h_zpt_zrap_ratio_dn = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio_dn");
+    _gjets_h_zpt_zrap_ratio_el_dn = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio_el_dn");
+    _gjets_h_zpt_zrap_ratio_mu_dn = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio_mu_dn");
     _gjets_h_zpt_zrap_lowlpt_ratio = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_lowlpt_ratio");
     _gjets_h_zpt_zrap_lowlpt_ratio_el = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_lowlpt_ratio_el");
     _gjets_h_zpt_zrap_lowlpt_ratio_mu = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_lowlpt_ratio_mu");
@@ -1415,6 +1427,12 @@ void doGJetsSkim()
   _GJetsWeight = _gjets_h_zpt_zrap_ratio->GetBinContent(ipt, irap);
   _GJetsWeightEl = _gjets_h_zpt_zrap_ratio_el->GetBinContent(ipt, irap);
   _GJetsWeightMu = _gjets_h_zpt_zrap_ratio_mu->GetBinContent(ipt, irap);
+  _GJetsWeight_up = _gjets_h_zpt_zrap_ratio_up->GetBinContent(ipt, irap);
+  _GJetsWeightEl_up = _gjets_h_zpt_zrap_ratio_el_up->GetBinContent(ipt, irap);
+  _GJetsWeightMu_up = _gjets_h_zpt_zrap_ratio_mu_up->GetBinContent(ipt, irap);
+  _GJetsWeight_dn = _gjets_h_zpt_zrap_ratio_dn->GetBinContent(ipt, irap);
+  _GJetsWeightEl_dn = _gjets_h_zpt_zrap_ratio_el_dn->GetBinContent(ipt, irap);
+  _GJetsWeightMu_dn = _gjets_h_zpt_zrap_ratio_mu_dn->GetBinContent(ipt, irap);
   _GJetsWeightLowLPt = _gjets_h_zpt_zrap_lowlpt_ratio->GetBinContent(ipt, irap);
   _GJetsWeightLowLPtEl = _gjets_h_zpt_zrap_lowlpt_ratio_el->GetBinContent(ipt, irap);
   _GJetsWeightLowLPtMu = _gjets_h_zpt_zrap_lowlpt_ratio_mu->GetBinContent(ipt, irap);
