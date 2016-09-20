@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
   //std::string outtag="study_gjets_data";
   //std::string outtag="study_gjets_data_hlt";
   //std::string outtag="study_gjets_data_hlt_dtscale_nohlt90";
-  std::string outtag="study_gjets_data_hlt_dtscale";
+  std::string outtag="study_gjets_data_hlt_dtscale_eb";
 
 
   // yields:
@@ -89,6 +89,7 @@ int main(int argc, char** argv) {
 
   // some gjets alias
   tree2->SetAlias("metPara", "gjet_l2_pt*cos(gjet_l2_phi-gjet_l1_phi)");
+  tree2->SetAlias("metPerp", "gjet_l2_pt*sin(gjet_l2_phi-gjet_l1_phi)");
   tree2->SetAlias("absDeltaPhi", "fabs(TVector2::Phi_mpi_pi(gjet_l2_phi-gjet_l1_phi))");
 
   // define cuts
@@ -149,7 +150,10 @@ int main(int argc, char** argv) {
   //std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONHZZ)";
   //std::string gjet_selec = "("+metfilter+"&&(HLT_PHOTONIDISO&&!HLT_PHOTONIDISO90))";
   //std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO)";
-  std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&(!(absDeltaPhi>3.0&&metPara/gjet_l1_pt>-1.5&&metPara/gjet_l1_pt<-0.5)))";
+  //std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&(!(absDeltaPhi>3.0&&metPara/gjet_l1_pt>-1.5&&metPara/gjet_l1_pt<-0.5)))";
+  //std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&(!(metPara/gjet_l1_pt<-0.8&&metPara/gjet_l1_pt>-1.8&&fabs(metPerp/gjet_l1_pt)<0.3)))";
+
+  std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&fabs(gjet_l1_eta)<1.47)";
 
   //Double_t ZPtBins[] = {0,1.25,2.5,3.75,5,6.25,7.5,8.75,10,11.25,12.5,15,17.5,20,25,30,35,40,45,50,60,70,80,90,100,110,130,150,170,190,220,250,400,1000};
   Double_t ZPtBins[] = {20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,215,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300,350,400,500,700,3000};
@@ -395,6 +399,26 @@ int main(int argc, char** argv) {
   tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt:llnunu_l1_mass>>hzmass_zpt_zrap_lowlpt_el", zjet_selec_lowlpt_el.c_str());
   tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt:llnunu_l1_mass>>hzmass_zpt_zrap_lowlpt_mu", zjet_selec_lowlpt_mu.c_str());
 
+  // 2D ZMass
+  TH2D* hzmass_zpt = new TH2D("hzmass_zpt", "hzmass_zpt", NZMassBins, ZMassBins, NZPtBins,ZPtBins);
+  TH2D* hzmass_zpt_el = new TH2D("hzmass_zpt_el", "hzmass_zpt_el", NZMassBins, ZMassBins, NZPtBins,ZPtBins);
+  TH2D* hzmass_zpt_mu = new TH2D("hzmass_zpt_mu", "hzmass_zpt_mu", NZMassBins, ZMassBins, NZPtBins,ZPtBins);
+  TH2D* hzmass_zpt_lowlpt = new TH2D("hzmass_zpt_lowlpt", "hzmass_zpt_lowlpt", NZMassBins, ZMassBins, NZPtBins,ZPtBins);
+  TH2D* hzmass_zpt_lowlpt_el = new TH2D("hzmass_zpt_lowlpt_el", "hzmass_zpt_lowlpt_el", NZMassBins, ZMassBins, NZPtBins,ZPtBins);
+  TH2D* hzmass_zpt_lowlpt_mu = new TH2D("hzmass_zpt_lowlpt_mu", "hzmass_zpt_lowlpt_mu", NZMassBins, ZMassBins, NZPtBins,ZPtBins);
+  hzmass_zpt->Sumw2();
+  hzmass_zpt_el->Sumw2();
+  hzmass_zpt_mu->Sumw2();
+  hzmass_zpt_lowlpt->Sumw2();
+  hzmass_zpt_lowlpt_el->Sumw2();
+  hzmass_zpt_lowlpt_mu->Sumw2();
+  tree1->Draw("llnunu_l1_pt:llnunu_l1_mass>>hzmass_zpt", zjet_selec.c_str());
+  tree1->Draw("llnunu_l1_pt:llnunu_l1_mass>>hzmass_zpt_el", zjet_selec_el.c_str());
+  tree1->Draw("llnunu_l1_pt:llnunu_l1_mass>>hzmass_zpt_mu", zjet_selec_mu.c_str());
+  tree1->Draw("llnunu_l1_pt:llnunu_l1_mass>>hzmass_zpt_lowlpt", zjet_selec_lowlpt.c_str());
+  tree1->Draw("llnunu_l1_pt:llnunu_l1_mass>>hzmass_zpt_lowlpt_el", zjet_selec_lowlpt_el.c_str());
+  tree1->Draw("llnunu_l1_pt:llnunu_l1_mass>>hzmass_zpt_lowlpt_mu", zjet_selec_lowlpt_mu.c_str());
+
 
   // 2D zpt zrap
   TH2D* hzpt_zrap1 = new TH2D("hzpt_zrap1", "hzpt_zrap1", NZPtBins,ZPtBins,NZRapBins,ZRapBins);
@@ -408,7 +432,6 @@ int main(int argc, char** argv) {
   tree2->Draw("gjet_l1_rapidity:gjet_l1_pt>>hzpt_zrap2", gjet_selec.c_str());
 
   hzpt_zrap1->Scale(1.0/hzpt_zrap1->Integral(),"width");
-  //hzpt_zrap2->Scale(1.0/hzpt_zrap2->Integral(),"width");
   hzpt_zrap2->Scale(1.0,"width");
 
 
@@ -721,6 +744,14 @@ int main(int argc, char** argv) {
   hzmass_zpt_zrap_lowlpt->Write("h_zmass_zpt_zrap_lowlpt");
   hzmass_zpt_zrap_lowlpt_el->Write("h_zmass_zpt_zrap_lowlpt_el");
   hzmass_zpt_zrap_lowlpt_mu->Write("h_zmass_zpt_zrap_lowlpt_mu");
+
+
+  hzmass_zpt->Write("h_zmass_zpt");
+  hzmass_zpt_el->Write("h_zmass_zpt_el");
+  hzmass_zpt_mu->Write("h_zmass_zpt_mu");
+  hzmass_zpt_lowlpt->Write("h_zmass_zpt_lowlpt");
+  hzmass_zpt_lowlpt_el->Write("h_zmass_zpt_lowlpt_el");
+  hzmass_zpt_lowlpt_mu->Write("h_zmass_zpt_lowlpt_mu");
 
   hzpt_zrap1->Write("h_zpt_zrap_1");
   hzpt_zrap2->Write("h_zpt_zrap_2");

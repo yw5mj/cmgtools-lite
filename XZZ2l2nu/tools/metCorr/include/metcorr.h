@@ -323,6 +323,9 @@ bool _doGJetsSkim = false;
 std::string _GJetsSkimInputFileName;
 
 TFile* _gjets_input_file;
+TH2D* _gjets_h_zmass_zpt;
+TH2D* _gjets_h_zmass_zpt_el;
+TH2D* _gjets_h_zmass_zpt_mu;
 TH3D* _gjets_h_zmass_zpt_zrap;
 TH3D* _gjets_h_zmass_zpt_zrap_el;
 TH3D* _gjets_h_zmass_zpt_zrap_mu;
@@ -338,13 +341,18 @@ TH2D* _gjets_h_zpt_zrap_ratio_mu_dn;
 TH2D* _gjets_h_zpt_zrap_lowlpt_ratio;
 TH2D* _gjets_h_zpt_zrap_lowlpt_ratio_el;
 TH2D* _gjets_h_zpt_zrap_lowlpt_ratio_mu;
+TH1D* _gjets_h_zpt_ratio;
+TH1D* _gjets_h_zpt_ratio_el;
+TH1D* _gjets_h_zpt_ratio_mu;
 TH1D* _gjets_h_zpt_lowlpt_ratio;
 TH1D* _gjets_h_zpt_lowlpt_ratio_el;
 TH1D* _gjets_h_zpt_lowlpt_ratio_mu;
 std::vector< std::vector< TH1D* > > _gjets_h_zmass_zpt_zrap_1d_vec;
 std::vector< std::vector< TH1D* > > _gjets_h_zmass_zpt_zrap_el_1d_vec;
 std::vector< std::vector< TH1D* > > _gjets_h_zmass_zpt_zrap_mu_1d_vec;
-
+std::vector< TH1D* > _gjets_h_zmass_zpt_1d_vec;
+std::vector< TH1D* > _gjets_h_zmass_zpt_el_1d_vec;
+std::vector< TH1D* > _gjets_h_zmass_zpt_mu_1d_vec;
 
 
 //======================================================
@@ -412,6 +420,7 @@ Float_t _GJetsWeight, _GJetsWeightEl, _GJetsWeightMu;
 Float_t _GJetsWeight_up, _GJetsWeightEl_up, _GJetsWeightMu_up;
 Float_t _GJetsWeight_dn, _GJetsWeightEl_dn, _GJetsWeightMu_dn;
 Float_t _GJetsWeightLowLPt, _GJetsWeightLowLPtEl, _GJetsWeightLowLPtMu;
+Float_t _GJetsZPtWeight, _GJetsZPtWeightEl, _GJetsZPtWeightMu;
 Float_t _GJetsZPtWeightLowLPt, _GJetsZPtWeightLowLPtEl, _GJetsZPtWeightLowLPtMu;
 Float_t _gjet_mt, _gjet_l1_pt, _gjet_l1_eta, _gjet_l1_rapidity, _gjet_l1_phi;
 Int_t _gjet_l1_idCutBased;

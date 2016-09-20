@@ -183,13 +183,15 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
     //base_selec = "("+metfilter+"&&(HLT_PHOTONIDISO&&!HLT_PHOTONIDISO75))";
     //base_selec = "("+metfilter+"&&(HLT_PHOTONIDISO&&!HLT_PHOTONIDISO90))";
     //base_selec = "("+metfilter+"&&HLT_PHOTONIDISO)";
-    base_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&!(absDeltaPhi>3.0&&metPara/llnunu_l1_pt>-1.5&&metPara/llnunu_l1_pt<-0.5))";
-    //if (channel=="el")  selec = base_selec+"*(GJetsZPtWeightLowLPtEl)";
-    //else if (channel=="mu") selec = base_selec+"*(GJetsZPtWeightLowLPtMu)";
-    //else  selec = base_selec+"*(GJetsZPtWeightLowLPt)";
-    if (channel=="el")  selec = base_selec+"*(GJetsWeightLowLPtEl)";
-    else if (channel=="mu") selec = base_selec+"*(GJetsWeightLowLPtMu)";
-    else  selec = base_selec+"*(GJetsWeightLowLPt)";
+    //base_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&!(absDeltaPhi>3.0&&metPara/llnunu_l1_pt>-1.5&&metPara/llnunu_l1_pt<-0.5))";
+    //base_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&!(metPara/llnunu_l1_pt<-0.8&&metPara/llnunu_l1_pt>-1.8&&fabs(metPerp/llnunu_l1_pt)<0.3))";
+    base_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&fabs(llnunu_l1_eta)<1.47)";
+    if (channel=="el")  selec = base_selec+"*(GJetsZPtWeightLowLPtEl)";
+    else if (channel=="mu") selec = base_selec+"*(GJetsZPtWeightLowLPtMu)";
+    else  selec = base_selec+"*(GJetsZPtWeightLowLPt)";
+    //if (channel=="el")  selec = base_selec+"*(GJetsWeightLowLPtEl)";
+    //else if (channel=="mu") selec = base_selec+"*(GJetsWeightLowLPtMu)";
+    //else  selec = base_selec+"*(GJetsWeightLowLPt)";
   }
   // style
   gROOT->ProcessLine(".x tdrstyle.C");
@@ -228,6 +230,7 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
 
   tree->SetAlias("absDeltaPhi", "fabs(TVector2::Phi_mpi_pi(llnunu_l2_phi-llnunu_l1_phi))");
   tree->SetAlias("metPara", "llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi)");
+  tree->SetAlias("metPerp", "llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi)");
 
   plots = new TCanvas("plots", "plots");
 
@@ -262,7 +265,7 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   h2d2->GetYaxis()->SetTitle("MET para (GeV)");
 
   Nbins = NZPtBins;
-  for (int ii=0; ii<Nbins; ii++) fit_rebin.push_back(5);
+  for (int ii=0; ii<Nbins; ii++) fit_rebin.push_back(2);
   for (int ii=0; ii<Nbins; ii++) fit_min.push_back(-50);
   for (int ii=0; ii<Nbins; ii++) fit_max.push_back(20);
 
@@ -270,8 +273,6 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   std::string plotfilename(name);
   fit_slice_gaus(h2d1, h1d1, plotfilename);
   fit_slice_gaus(h2d2, h1d2, plotfilename);
-
-
 
   sprintf(name, "%s/%s%s.pdf]", outputdir.c_str(), filename.c_str(), tag.c_str());
   plots->Print(name);
@@ -327,7 +328,7 @@ int fit_slice_gaus(TH2D* h2d, TH1D** h1d, std::string& plotfile){
     for (int ifit=0; ifit<2; ifit++){
       mean = afunc->GetParameter(1);
       sigma = afunc->GetParameter(2);
-      ahist->Fit(afunc, "R", "", mean-1*sigma, mean+1*sigma);
+      ahist->Fit(afunc, "R", "", mean-1.5*sigma, mean+1.5*sigma);
     }
     func1[i] = afunc;
     h1d1[i] = ahist;

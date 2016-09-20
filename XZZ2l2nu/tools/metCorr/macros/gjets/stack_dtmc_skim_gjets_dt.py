@@ -307,28 +307,29 @@ zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_PhVeto']
 for sample in zjetsSamples:
     zjetsPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
     zjetsPlotters[-1].setAlias("metPara", "llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi)");
+    zjetsPlotters[-1].setAlias("metPerp", "llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi)");
     zjetsPlotters[-1].setAlias("absDeltaPhi", "fabs(TVector2::Phi_mpi_pi(llnunu_l2_phi-llnunu_l1_phi))");
-    zjetsPlotters[-1].addCorrectionFactor('(!(absDeltaPhi>3.0&&metPara/llnunu_l1_pt>-1.5&&metPara/llnunu_l1_pt<-0.5))', 'photonVeto')
     if dyGJets: 
         #zjetsPlotters[-1].addCorrectionFactor('(1)','norm')
         #zjetsPlotters[-1].addCorrectionFactor('(3.58940e-13)','norm')
         #zjetsPlotters[-1].addCorrectionFactor('(HLT_PHOTONHZZ)','hlt')
-        zjetsPlotters[-1].addCorrectionFactor('(HLT_PHOTONIDISO&&!HLT_PHOTONIDISO90)','hlt')
+        zjetsPlotters[-1].addCorrectionFactor('(HLT_PHOTONIDISO)','hlt')
+        zjetsPlotters[-1].addCorrectionFactor('(!(metPara/llnunu_l1_pt>-1.8&&metPara/llnunu_l1_pt<-0.8&&fabs(metPerp/llnunu_l1_pt)<0.3))', 'photonVeto')
         if channel=='el' : 
             zjetsPlotters[-1].addCorrectionFactor('GJetsWeightEl','genWeight')
-            zjetsPlotters[-1].addCorrectionFactor('(14352.0/5268.361947)','norm') #el
+            zjetsPlotters[-1].addCorrectionFactor('(14352.0/6864.374704)','norm') #el
             #zjetsPlotters[-1].addCorrectionFactor('(14352.0/6805.623967)','norm') #el
             #zjetsPlotters[-1].addCorrectionFactor('(2.09040/14352.0)','norm') #el
             #zjetsPlotters[-1].addCorrectionFactor('(1./14352.0)','norm') #el
         elif channel=='mu' :
             zjetsPlotters[-1].addCorrectionFactor('GJetsWeightMu','genWeight')
-            zjetsPlotters[-1].addCorrectionFactor('(616457.0/3933.513338)','norm') #mu
+            zjetsPlotters[-1].addCorrectionFactor('(616457.0/4781.296346)','norm') #mu
             #zjetsPlotters[-1].addCorrectionFactor('(616457.0/4684.789496)','norm') #mu
             #zjetsPlotters[-1].addCorrectionFactor('(129.196/616457.0)','norm') #mu
             #zjetsPlotters[-1].addCorrectionFactor('(1./616457.0)','norm') #mu
         else : 
             zjetsPlotters[-1].addCorrectionFactor('GJetsWeight','genWeight')
-            zjetsPlotters[-1].addCorrectionFactor('(630809.0/3954.891279)','norm') #all
+            zjetsPlotters[-1].addCorrectionFactor('(630809.0/4814.657389)','norm') #all
             #zjetsPlotters[-1].addCorrectionFactor('(630809.0/4718.755203)','norm') #all
             #zjetsPlotters[-1].addCorrectionFactor('(131.282/630809.0)','norm') #all
             #zjetsPlotters[-1].addCorrectionFactor('(1./630809.0)','norm') #all

@@ -35,7 +35,7 @@ n_start: 0
 n_test: -1
 
 # n entries interval between which print once entry number
-n_interval: 20000
+n_interval: 1000000
 
 # use slimmed tree or not
 useLightTree: true
@@ -79,8 +79,9 @@ doGJetsSkim: true
 #GJetsSkimInputFileName: data/gjets/study_gjets_tight.root
 #GJetsSkimInputFileName: data/gjets/study_gjets_data.root
 #GJetsSkimInputFileName: data/gjets/study_gjets_data_hlt.root
-GJetsSkimInputFileName: data/gjets/study_gjets_data_hlt_dtscale.root
 #GJetsSkimInputFileName: data/gjets/study_gjets_data_hlt_dtscale_nohlt90.root
+#GJetsSkimInputFileName: data/gjets/study_gjets_data_hlt_dtscale.root
+GJetsSkimInputFileName: data/gjets/study_gjets_data_hlt_dtscale_eb.root
 
 
 
@@ -136,7 +137,7 @@ DyZPtWeightInputFileName: data/zptweight/dyjets_zpt_weight_lo_nlo_genAcc.root
 #====================================================================
 
 # default use histogram
-doRecoil: true
+doRecoil: false
 
 # use smoothed hist
 doRecoilUseSmooth: true
