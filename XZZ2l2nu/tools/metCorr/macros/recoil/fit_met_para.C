@@ -345,7 +345,11 @@ int fit_slice_gaus(TH2D* h2d, TH1D** h1d, std::string& plotfile){
     lumipt->Draw();
     pvtxt->Clear();
     sprintf(name, "%.2f < P_{T}(Z) < %.2f", xbins[i], xbins[i+1]);
+    pvtxt->AddText(0.15,0.6, name);
+    sprintf(name, "#mu = %.2f #pm %.2f", afunc->GetParameter(1), afunc->GetParError(1));
     pvtxt->AddText(0.15,0.3, name);
+    sprintf(name, "#sigma = %.2f #pm %.2f", afunc->GetParameter(2), afunc->GetParError(2));
+    pvtxt->AddText(0.15,0.0, name);
     pvtxt->Draw();
     plots->Print(plotfile.c_str());    
     plots->Clear();    

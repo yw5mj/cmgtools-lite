@@ -137,7 +137,7 @@ DyZPtWeightInputFileName: data/zptweight/dyjets_zpt_weight_lo_nlo_genAcc.root
 #====================================================================
 
 # default use histogram
-doRecoil: false
+doRecoil: true
 
 # use smoothed hist
 doRecoilUseSmooth: true
