@@ -14,7 +14,8 @@ std::string  name2 =
 //"SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_RcSmBin_hlt_id3_met_para_study_ZSelecLowLPt_mu"
 //"SinglePhoton_Run2016BCD_PromptReco_HLTNo90_DtScale_hltno90_met_para_study_ZSelecLowLPt_mu"
 //"SinglePhoton_Run2016BCD_PromptReco_HLTNo90_DtScale_hltno75_met_para_study_ZSelecLowLPt_mu"
-"SinglePhoton_Run2016BCD_PromptReco_HLTNo90_DtScale_hlt_phvto_met_para_study_ZSelecLowLPt_mu"
+//"SinglePhoton_Run2016BCD_PromptReco_HLTNo90_DtScale_hlt_phvto_met_para_study_ZSelecLowLPt_mu"
+"SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_Flag2_hlt_flag2_met_para_study_ZSelecLowLPt_mu"
 ;
 
 std::string name_file1 = indir+"/"+name1+".root";

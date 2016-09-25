@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
   //std::string outtag="study_gjets_data";
   //std::string outtag="study_gjets_data_hlt";
   //std::string outtag="study_gjets_data_hlt_dtscale_nohlt90";
-  std::string outtag="study_gjets_data_hlt_dtscale_eb";
+  std::string outtag="study_gjets_data_hlt_dtscale_flag3_f2_sIetaCut";
 
 
   // yields:
@@ -91,9 +91,12 @@ int main(int argc, char** argv) {
   tree2->SetAlias("metPara", "gjet_l2_pt*cos(gjet_l2_phi-gjet_l1_phi)");
   tree2->SetAlias("metPerp", "gjet_l2_pt*sin(gjet_l2_phi-gjet_l1_phi)");
   tree2->SetAlias("absDeltaPhi", "fabs(TVector2::Phi_mpi_pi(gjet_l2_phi-gjet_l1_phi))");
+  tree2->SetAlias("eta", "gjet_l1_eta");
+  tree2->SetAlias("phi", "gjet_l1_phi");
+  tree2->SetAlias("flag2", "(!(eta>0&&eta<0.15&&phi>0.52&&phi<0.56)&&!(eta>-2.5&&eta<-1.4&&phi>-0.5&&phi<0.5)&&!(eta>1.5&&eta<2.5&&phi>-0.5&&phi<0.5)&&!(eta>1.4&&eta<1.6&&phi>-0.8&&phi<-0.5)&&!(eta>1.4&&eta<2.5&&phi>2.5&&phi<4)&&!(eta>1.4&&eta<2.5&&phi>-4&&phi<-2.5)&&!(eta>-2.5&&eta<-1.4&&phi>2.5&&phi<4)&&!(eta>-2.5&&eta<-1.4&&phi>-4&&phi<-2.5)&&!(eta>2.3&&eta<2.6&&phi>-2.5&&phi<-2.2)&&!(eta>0.2&&eta<0.3&&phi>-2.6&&phi<-2.5)&&!(eta>0.5&&eta<0.7&&phi>-1.5&&phi<-1.2)&&!(eta>-0.85&&eta<-0.7&&phi>-1.8&&phi<-1.4)&&!(eta<-2.4&&eta>-2.5&&phi<-1.75&&phi>-1.9)&&!(eta>-2.5&&eta<-2.4&&phi>-1.2&&phi<-1.1)&&!(eta>-2.4&&eta<-2.3&&phi>-2.4&&phi<-2.3))");
 
   // define cuts
-  std::string metfilter="(Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_HBHENoiseFilter&&Flag_CSCTightHalo2015Filter&&Flag_eeBadScFilter)";
+  std::string metfilter="(Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_HBHENoiseFilter&&Flag_globalTightHalo2016Filter&&Flag_eeBadScFilter)";
   std::string cuts_lepaccept="((abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_l1_pt>50&&abs(llnunu_l1_l1_eta)<2.4&&llnunu_l1_l2_pt>20&&abs(llnunu_l1_l2_eta)<2.4&&(llnunu_l1_l1_highPtID==1||llnunu_l1_l2_highPtID==1))";
   cuts_lepaccept+="||(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11&&llnunu_l1_l1_pt>115&&abs(llnunu_l1_l1_eta)<2.5&&llnunu_l1_l2_pt>35&&abs(llnunu_l1_l2_eta)<2.5))";
   std::string cuts_lepaccept_lowlpt="((abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_l1_pt>20&&abs(llnunu_l1_l1_eta)<2.4&&llnunu_l1_l2_pt>20&&abs(llnunu_l1_l2_eta)<2.4&&(llnunu_l1_l1_highPtID==1||llnunu_l1_l2_highPtID==1))";
@@ -153,7 +156,9 @@ int main(int argc, char** argv) {
   //std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&(!(absDeltaPhi>3.0&&metPara/gjet_l1_pt>-1.5&&metPara/gjet_l1_pt<-0.5)))";
   //std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&(!(metPara/gjet_l1_pt<-0.8&&metPara/gjet_l1_pt>-1.8&&fabs(metPerp/gjet_l1_pt)<0.3)))";
 
-  std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&fabs(gjet_l1_eta)<1.47)";
+  //std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&fabs(gjet_l1_eta)<1.47)";
+  //std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&flag2)";
+  std::string gjet_selec = "(1)"; // input ntuple preselected. 
 
   //Double_t ZPtBins[] = {0,1.25,2.5,3.75,5,6.25,7.5,8.75,10,11.25,12.5,15,17.5,20,25,30,35,40,45,50,60,70,80,90,100,110,130,150,170,190,220,250,400,1000};
   Double_t ZPtBins[] = {20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,215,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300,350,400,500,700,3000};
