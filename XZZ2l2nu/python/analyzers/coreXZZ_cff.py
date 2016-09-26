@@ -127,6 +127,9 @@ multtrg = cfg.Analyzer(
 photonAna = cfg.Analyzer(
     XZZPhotonAnalyzer, name='photonAnalyzer',
     photons='slimmedPhotons',
+    ebhits=("reducedEgamma","reducedEBRecHits","RECO"),
+    eehits=("reducedEgamma","reducedEERecHits","RECO"),
+    eshits=("reducedEgamma","reducedESRecHits","RECO"),
     ptMin = 15,
     etaMax = 2.5,
     doPhotonScaleCorrections= {
@@ -248,7 +251,7 @@ eventFlagsAna = cfg.Analyzer(
     triggerBits = {
         "HBHENoiseFilter" : [ "Flag_HBHENoiseFilter" ],
         "HBHENoiseIsoFilter" : [ "Flag_HBHENoiseIsoFilter" ],
-        #"CSCTightHaloFilter" : [ "Flag_CSCTightHaloFilter" ],
+        "CSCTightHaloFilter" : [ "Flag_CSCTightHaloFilter" ],
         "CSCTightHalo2015Filter" : [ "Flag_CSCTightHalo2015Filter" ],
         #"hcalLaserEventFilter" : [ "Flag_hcalLaserEventFilter" ],
         "EcalDeadCellTriggerPrimitiveFilter" : [ "Flag_EcalDeadCellTriggerPrimitiveFilter" ],
@@ -260,6 +263,7 @@ eventFlagsAna = cfg.Analyzer(
         # "trkPOG_manystripclus53X" : [ "Flag_trkPOG_manystripclus53X" ],
         # "trkPOG_toomanystripclus53X" : [ "Flag_trkPOG_toomanystripclus53X" ],
         # "trkPOG_logErrorTooManyClusters" : [ "Flag_trkPOG_logErrorTooManyClusters" ],
+        "globalSuperTightHalo2016Filter" : [ "Flag_globalSuperTightHalo2016Filter" ],
         "globalTightHalo2016Filter" : [ "Flag_globalTightHalo2016Filter" ],
         "METFilters" : [ "Flag_METFilters" ],
     }

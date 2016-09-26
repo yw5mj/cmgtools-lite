@@ -145,6 +145,8 @@ triggers_photon_idisometeb = ["HLT_Photon%d_R9Id90_HE10_Iso40_EBOnly_PFMET40_v*"
 # id+iso+
 triggers_photon_idisovbfeb = ["HLT_Photon%d_R9Id90_HE10_Iso40_EBOnly_VBF_v*" % pt for pt in (22,30,36,50,75,90,120) ]
 
+# beam halo clean
+triggers_halo_clean = ["HLT_PFMET170_HBHECleaned_v*", "HLT_PFMET170_BeamHaloCleaned_v*", "HLT_PFMET170_HBHE_BeamHaloCleaned_v*", "HLT_PFMETTypeOne190_HBHE_BeamHaloCleaned_v*"]
 
 # monojets triggers
 #MC is NoiseCleaned but data will be JetIdCleaned
