@@ -28,14 +28,16 @@ int main(int argc, char** argv) {
 
   TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160825_light_Skim/DYJetsToLL_M50_BIG.root");
   //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/GJet_Pt_20toInf_DoubleEMEnriched/vvTreeProducer/tree.root");
-  TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
+  //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
+  TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160927_light/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
 
   //std::string outtag="study_gjets_tight";
   //std::string outtag="study_gjets";
   //std::string outtag="study_gjets_data";
   //std::string outtag="study_gjets_data_hlt";
   //std::string outtag="study_gjets_data_hlt_dtscale_nohlt90";
-  std::string outtag="study_gjets_data_hlt_dtscale_flag3_f2_sIetaCut";
+  //std::string outtag="study_gjets_data_hlt_dtscale_flag3_f2_sIetaCut";
+  std::string outtag="study_gjets_data_newFilterEtaPhiCut";
 
 
   // yields:
@@ -158,7 +160,8 @@ int main(int argc, char** argv) {
 
   //std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&fabs(gjet_l1_eta)<1.47)";
   //std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&flag2)";
-  std::string gjet_selec = "(1)"; // input ntuple preselected. 
+  //std::string gjet_selec = "(1)"; // input ntuple preselected. 
+  std::string gjet_selec = "(phi>-1&&phi<2&&fabs(eta)<1.0)"; // input ntuple preselected. 
 
   //Double_t ZPtBins[] = {0,1.25,2.5,3.75,5,6.25,7.5,8.75,10,11.25,12.5,15,17.5,20,25,30,35,40,45,50,60,70,80,90,100,110,130,150,170,190,220,250,400,1000};
   Double_t ZPtBins[] = {20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,215,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300,350,400,500,700,3000};

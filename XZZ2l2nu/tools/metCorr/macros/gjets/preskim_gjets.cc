@@ -50,8 +50,9 @@ int main(int argc, char** argv) {
   tree->GetEntry(0);
 
   // select branches
-  tree->SetBranchStatus("photon_*",0);
+//  tree->SetBranchStatus("photon_*",0);
   tree->SetBranchStatus("jet_*",0);
+/*
   tree->SetBranchStatus("gjet_l*_px",0);
   tree->SetBranchStatus("gjet_l*_py",0);
   tree->SetBranchStatus("gjet_l*_pz",0);
@@ -67,6 +68,7 @@ int main(int argc, char** argv) {
   tree->SetBranchStatus("gjet_l1_phIso",0);
   tree->SetBranchStatus("gjet_l1_neuHadIso",0);
   tree->SetBranchStatus("gjet_l2_metSig",0);
+*/
   if (!isData) {
     tree->SetBranchStatus("HLT_*",0); 
     tree->SetBranchStatus("gjet_l1_mcMatchId",0);
@@ -76,7 +78,29 @@ int main(int argc, char** argv) {
     tree->SetBranchStatus("gjet_l2_genPt",0);
   }
 
-  TTree* tree_out = tree->CloneTree(-1);
+  tree->SetAlias("absDeltaPhi", "fabs(TVector2::Phi_mpi_pi(gjet_l2_phi-gjet_l1_phi))");
+  tree->SetAlias("metPara", "gjet_l2_pt*cos(gjet_l2_phi-gjet_l1_phi)");
+  tree->SetAlias("metPerp", "gjet_l2_pt*sin(gjet_l2_phi-gjet_l1_phi)");
+  tree->SetAlias("uPara", "-gjet_l2_pt*cos(gjet_l2_phi-gjet_l1_phi)-gjet_l1_pt");
+  tree->SetAlias("uPerp", "-gjet_l2_pt*sin(gjet_l2_phi-gjet_l1_phi)");
+  tree->SetAlias("ut", "sqrt(uPara*uPara+uPerp*uPerp)");
+  tree->SetAlias("eta", "gjet_l1_eta");
+  tree->SetAlias("phi", "gjet_l1_phi");
+  tree->SetAlias("pt", "gjet_l1_pt");
+  tree->SetAlias("metfilter", "(Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_HBHENoiseFilter&&Flag_globalTightHalo2016Filter&&Flag_eeBadScFilter&&Flag_CSCTightHalo2015Filter)");
+
+  tree->SetAlias("ieta", "gjet_l1_ieta");
+  tree->SetAlias("iphi", "gjet_l1_iphi");
+
+  tree->SetAlias("flag1", "!((ieta==5&&iphi==41)||(ieta==-51&&iphi==196)||(ieta==56&&iphi==67)||(ieta==-45&&iphi==340)||(ieta==58&&iphi==74)||(ieta==79&&iphi==67)||(ieta==72&&iphi==67)||(ieta==4&&iphi==70)||(ieta==17&&iphi==290)||(ieta==-44&&iphi==133)||(ieta==13&&iphi==67)||(ieta==-24&&iphi==119)||(ieta==-84&&iphi==168)||(ieta==73&&iphi==299)||(ieta==49&&iphi==6)||(ieta==-21&&iphi==308)||(ieta==59&&iphi==180)||(ieta==2&&iphi==81)||(ieta==22&&iphi==138))");
+
+  tree->SetAlias("filter1", "(gjet_l1_sigmaIetaIeta>0.001&&gjet_l1_sigmaIphiIphi>0.001&&gjet_l1_SwissCross<0.95&&gjet_l1_mipTotE<4.9&&gjet_l1_time>-2.08&&gjet_l1_time<0.92)");
+
+  //TTree* tree_out = tree->CloneTree(-1);
+
+  
+  
+  TTree* tree_out = tree->CopyTree("HLT_PHOTONIDISO&&metfilter&&fabs(eta)<1.47&&ngjet==1&&flag1&&filter1");
 
 
   foutput->cd();

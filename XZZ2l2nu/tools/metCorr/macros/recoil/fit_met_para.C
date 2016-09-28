@@ -2,7 +2,7 @@
 
 std::string channel = "all";
 bool doMC = false;
-bool doGJets = false;
+bool doGJets = true;
 bool useMzCut = false;
 bool useZSelec = false;
 bool useZSelecLowLPt = true;
@@ -18,7 +18,8 @@ bool dtHLT = false;
 // 4.) for GJets: doGJets=true, doMC=false, useZSelecLowLPt=true, useEffSf=false
 
 //std::string inputdir = "/home/heli/XZZ/80X_20160810_light_Skim";
-std::string inputdir = "/home/heli/XZZ/80X_20160825_light_Skim";
+//std::string inputdir = "/home/heli/XZZ/80X_20160825_light_Skim";
+std::string inputdir = "/home/heli/XZZ/80X_20160927_light_Skim";
 std::string filename;
 
 std::string outputdir = "./recoil_out2";
@@ -35,7 +36,9 @@ std::vector< std::string > dtfiles = {
  };
 
 std::vector< std::string > gjfiles = {
-    "SinglePhoton_Run2016BCD_PromptReco_HLTFlag3F2SiEtaNoRecoil"
+    "SinglePhoton_Run2016BCD_PromptReco_newFilterEtaPhiCutNoRecoil"
+    //"SinglePhoton_Run2016BCD_PromptReco_newFilterNoRecoil"
+    //"SinglePhoton_Run2016BCD_PromptReco_HLTFlag3F2SiEtaNoRecoil"
     //"SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_Flag2"
     //"SinglePhoton_Run2016BCD_PromptReco_HLTNoRecoil"
     //"SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_RcSmBin"
@@ -49,7 +52,9 @@ std::vector< std::string > gjfiles = {
 
 char name[1000];
 TCanvas* plots;
-std::string tag0 = "";
+//std::string tag0 = "";
+std::string tag0 = "_newfilteretaphicut";
+//std::string tag0 = "_newfilter";
 //std::string tag0 = "_smbin";
 //std::string tag0 = "_smbin_id3";
 //std::string tag0 = "_smbin_id2";
@@ -195,13 +200,14 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
     //base_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&fabs(llnunu_l1_eta)<1.47)";
     //base_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&fabs(llnunu_l1_eta)<1.47&&gjet_l1_idCutBased>=3)";
     //base_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&flag2)";
-    base_selec = "(1)";
-    //if (channel=="el")  selec = base_selec+"*(GJetsZPtWeightLowLPtEl)";
-    //else if (channel=="mu") selec = base_selec+"*(GJetsZPtWeightLowLPtMu)";
-    //else  selec = base_selec+"*(GJetsZPtWeightLowLPt)";
-    if (channel=="el")  selec = base_selec+"*(GJetsWeightLowLPtEl)";
-    else if (channel=="mu") selec = base_selec+"*(GJetsWeightLowLPtMu)";
-    else  selec = base_selec+"*(GJetsWeightLowLPt)";
+    //base_selec = "(1)";
+    base_selec = "(phi>-1&&phi<2&&fabs(eta)<1.0)";
+    if (channel=="el")  selec = base_selec+"*(GJetsZPtWeightLowLPtEl)";
+    else if (channel=="mu") selec = base_selec+"*(GJetsZPtWeightLowLPtMu)";
+    else  selec = base_selec+"*(GJetsZPtWeightLowLPt)";
+    //if (channel=="el")  selec = base_selec+"*(GJetsWeightLowLPtEl)";
+    //else if (channel=="mu") selec = base_selec+"*(GJetsWeightLowLPtMu)";
+    //else  selec = base_selec+"*(GJetsWeightLowLPt)";
   }
   // style
   gROOT->ProcessLine(".x tdrstyle.C");
@@ -252,8 +258,8 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
 
 
   // other control plots
-  //Double_t ZPtBins[] = {0,2,4,6,8,10,12,14,16,18,20,22,24,26,28, 30, 35, 40, 50, 60, 80, 100, 150, 250, 5000 };
-  Double_t ZPtBins[] = {0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,35,36,36.5,37,37.5,38,38.5,39,39.5,40,41,42,43,44,45,46,47,48,49,50,55,60,65,70,75,80,85,90,95,100,105, 110,120,125, 130,140,150,160,180,200,300,5000 };
+  Double_t ZPtBins[] = {0,2,4,6,8,10,12,14,16,18,20,22,24,26,28, 30, 35, 40, 50, 60, 80, 100, 150, 250, 5000 };
+  //Double_t ZPtBins[] = {0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,35,36,36.5,37,37.5,38,38.5,39,39.5,40,41,42,43,44,45,46,47,48,49,50,55,60,65,70,75,80,85,90,95,100,105, 110,120,125, 130,140,150,160,180,200,300,5000 };
   Int_t NZPtBins = sizeof(ZPtBins)/sizeof(ZPtBins[0]) - 1;
   const Int_t NMetParaBins=400;
   Double_t MetParaBins[NMetParaBins+1];

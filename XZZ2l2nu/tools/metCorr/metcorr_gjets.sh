@@ -1,8 +1,8 @@
 #!/bin/sh
 
 #inputs
-inputdir=/home/heli/XZZ/80X_20160810_light
-outputdir=/home/heli/XZZ/80X_20160810_light_Skim
+inputdir=/home/heli/XZZ/80X_20160927_light
+outputdir=/home/heli/XZZ/80X_20160927_light_Skim
 config=config/parameters_light_gjets
 
 mkdir -p ${outputdir}
@@ -19,7 +19,11 @@ do
 
   # options for outputs
   #outfile="${outfile/\/vvTreeProducer\/tree/}"
-  outfile="${outfile/\/vvTreeProducer\/tree/_HLTFlag3F2SiEta}"
+  outfile="${outfile/\/vvTreeProducer\/tree/_newFilterEtaPhiCut}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_newFilterEtaPhiCutNoRecoil}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_newFilter}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_newFilterNoRecoil}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_HLTFlag3F2SiEta}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_HLTFlag3F2SiEtaNoRecoil}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_HLTNoRecoil}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_HLTNo90NoRecoil}"

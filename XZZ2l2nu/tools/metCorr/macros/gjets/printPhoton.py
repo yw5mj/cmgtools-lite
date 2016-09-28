@@ -80,6 +80,10 @@ for iev,event in enumerate(events):
     #for i in xrange(triggerBits.product().size()):
     #    print "Trigger ", names.triggerName(i), ", prescale ", triggerPrescales.product().getPrescaleForIndex(i), ": ", ("PASS" if triggerBits.product().accept(i) else "fail (or not run)") 
 
+    filterNames = event.object().triggerNames(metFilters.product())
+    for i in xrange(metFilters.product().size()):
+         print "metFilter:",filterNames.triggerName(i)
+
     if not mainFilter.check(event.object(), triggerBits.product()):
         #print 'skip event'
         continue
