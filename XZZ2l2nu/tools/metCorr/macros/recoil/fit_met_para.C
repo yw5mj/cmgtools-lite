@@ -36,7 +36,8 @@ std::vector< std::string > dtfiles = {
  };
 
 std::vector< std::string > gjfiles = {
-    "SinglePhoton_Run2016BCD_PromptReco_newFilterEtaPhiCutNoRecoil"
+    "SinglePhoton_Run2016BCD_PromptReco_newFilterLepVetoNoRecoil"
+    //"SinglePhoton_Run2016BCD_PromptReco_newFilterEtaPhiCutNoRecoil"
     //"SinglePhoton_Run2016BCD_PromptReco_newFilterNoRecoil"
     //"SinglePhoton_Run2016BCD_PromptReco_HLTFlag3F2SiEtaNoRecoil"
     //"SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_Flag2"
@@ -53,7 +54,8 @@ std::vector< std::string > gjfiles = {
 char name[1000];
 TCanvas* plots;
 //std::string tag0 = "";
-std::string tag0 = "_newfilteretaphicut";
+std::string tag0 = "_newfilterlepveto";
+//std::string tag0 = "_newfilteretaphicut";
 //std::string tag0 = "_newfilter";
 //std::string tag0 = "_smbin";
 //std::string tag0 = "_smbin_id3";

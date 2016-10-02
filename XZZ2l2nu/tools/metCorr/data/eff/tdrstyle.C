@@ -57,11 +57,10 @@ void setTDRStyle()
 //	tdrStyle->SetErrorMarker(20);
 	tdrStyle->SetErrorX(0.);
 
-	//tdrStyle->SetMarkerStyle(20);
-	tdrStyle->SetMarkerStyle(1);
+	tdrStyle->SetMarkerStyle(20);
 
 	//For the fit/function:
-	tdrStyle->SetOptFit(111);
+	tdrStyle->SetOptFit(0);
 	tdrStyle->SetFitFormat("5.4g");
 	tdrStyle->SetFuncColor(2);
 	tdrStyle->SetFuncStyle(1);
@@ -75,9 +74,7 @@ void setTDRStyle()
 	// For the statistics box:
 	tdrStyle->SetOptFile(0);
 	tdrStyle->SetOptStat(0); // To display the mean and RMS:   SetOptStat("mr");
-	//tdrStyle->SetOptStat(1); // To display the mean and RMS:   SetOptStat("mr");
-	//tdrStyle->SetStatColor(kWhite);
-	tdrStyle->SetStatColor(0);
+	tdrStyle->SetStatColor(kWhite);
 	tdrStyle->SetStatFont(42);
 	tdrStyle->SetStatFontSize(0.025);
 	tdrStyle->SetStatTextColor(1);
@@ -85,18 +82,18 @@ void setTDRStyle()
 	tdrStyle->SetStatBorderSize(1);
 	tdrStyle->SetStatH(0.1);
 	tdrStyle->SetStatW(0.15);
-         tdrStyle->SetStatStyle(4001);
-        tdrStyle->SetStatX(0.93);
-        tdrStyle->SetStatY(0.86);
+// tdrStyle->SetStatStyle(Style_t style = 1001);
+// tdrStyle->SetStatX(Float_t x = 0);
+// tdrStyle->SetStatY(Float_t y = 0);
 
 	// Margins:
-	tdrStyle->SetPadTopMargin(0.10);
-	tdrStyle->SetPadBottomMargin(0.18);
-	tdrStyle->SetPadLeftMargin(0.18);
-	tdrStyle->SetPadRightMargin(0.13);
+	tdrStyle->SetPadTopMargin(0.1);
+	tdrStyle->SetPadBottomMargin(0.15);
+	tdrStyle->SetPadLeftMargin(0.15);
+	tdrStyle->SetPadRightMargin(0.1);
 
 	// For the Global title:
-	tdrStyle->SetOptTitle(1);
+	tdrStyle->SetOptTitle(0);
 	tdrStyle->SetTitleFont(42);
 	tdrStyle->SetTitleColor(1);
 	tdrStyle->SetTitleTextColor(1);
@@ -115,8 +112,8 @@ void setTDRStyle()
 	tdrStyle->SetTitleSize(0.06, "XYZ");
 // tdrStyle->SetTitleXSize(Float_t size = 0.02); // Another way to set the size?
 // tdrStyle->SetTitleYSize(Float_t size = 0.02);
-	tdrStyle->SetTitleXOffset(1);
-	tdrStyle->SetTitleYOffset(1.2);
+	tdrStyle->SetTitleXOffset(1.2);
+	tdrStyle->SetTitleYOffset(1.0);
 // tdrStyle->SetTitleOffset(1.1, "Y"); // Another way to set the Offset
 
 	// For the axis labels:

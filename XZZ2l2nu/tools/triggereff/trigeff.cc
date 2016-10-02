@@ -11,6 +11,7 @@
 #include "tdrstyle.h"
 #include "TLegend.h"
 #include "TMath.h"
+#include "TPaveText.h"
 
 int main(){
 
@@ -18,15 +19,17 @@ int main(){
   //TFile* fin= new TFile("/data2/XZZ2/singlemuonnewtrg12p9.root");
   //TFile* fin= new TFile("/home/heli/XZZ/singlemuonnewtrg12p9.root");
   //TFile* fin= new TFile("/home/yanchu/singlemuonnewtrg12p9.root");
-  TFile* fin= new TFile("/home/heli/XZZ/80X_20160825_light/SingleEMU_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
+  //TFile* fin= new TFile("/home/heli/XZZ/80X_20160825_light/SingleEMU_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
+  TFile* fin= new TFile("/data2/XZZ2/80X_20160825_light/SingleEMU_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
 
-  TFile* fout = new TFile("trigeff_mu_20160830.root", "recreate");
-  char outputplot[] = "trigeff_mu_20160830_plots.pdf";
+  TFile* fout = new TFile("trigeff_mu_20160830_newplots.root", "recreate");
+  char outputplot[] = "trigeff_mu_20160830_plots_newplots.pdf";
   TCanvas* plots = new TCanvas("plots", "plots");
   char name[10000];
   sprintf(name, "%s[", outputplot);
   plots->Print(name);
-   
+
+  std::string h2ddrawopt("colz");   
 
   std::string sel_l1_base = "((llnunu_l1_mass>70&&llnunu_l1_mass<110)&&abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_l1_pt>20&&fabs(llnunu_l1_l1_eta)<2.4&&llnunu_l1_l2_pt>20&&fabs(llnunu_l1_l2_eta)<2.4&&(llnunu_l1_l1_highPtID>=0.99||llnunu_l1_l2_highPtID>=0.99))";
   std::string sel_l2_base = sel_l1_base+"&&(llnunu_l1_l1_pt>50)";
@@ -47,7 +50,16 @@ int main(){
 
   TTree* tree= (TTree*)fin->Get("tree");
 
+  std::string  lumiTag = "CMS 13 TeV 2016 L=12.9 fb^{-1}";
+  //if (doMC) lumiTag = "CMS 13 TeV Simulation for 2016 Data";
 
+  TPaveText* lumipt = new TPaveText(0.2,0.9,0.8,0.98,"brNDC");
+  lumipt->SetBorderSize(0);
+  lumipt->SetTextAlign(12);
+  lumipt->SetFillStyle(0);
+  lumipt->SetTextFont(42);
+  lumipt->SetTextSize(0.03);
+  lumipt->AddText(0.15,0.3, lumiTag.c_str());
 
 
   Double_t PtBins[] = {20, 25, 30, 32, 34, 36, 38, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 58, 60, 66, 72, 78, 84, 90, 96, 112, 118, 124, 130, 140, 160, 180, 200, 3000};
@@ -606,6 +618,7 @@ int main(){
   htrg_l1_pt_base->Draw();
   htrg_l2_pt_base->Draw("same");
   lg[0]->Draw("same");
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -625,6 +638,7 @@ int main(){
   htrg_l1_pt_pass->Draw();
   htrg_l1_pt_tgsf->Draw("same");
   lg[1]->Draw("same");
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -643,6 +657,7 @@ int main(){
   htrg_l2_pt_pass->Draw();
   htrg_l2_pt_tgsf->Draw("same");
   lg[2]->Draw("same");
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -661,6 +676,7 @@ int main(){
   htrg_eff_l1_pt_trig->Draw();
   htrg_eff_l1_pt_tgsf->Draw("same");
   lg[3]->Draw("same");
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -679,6 +695,7 @@ int main(){
   htrg_eff_l2_pt_trig->Draw();
   htrg_eff_l2_pt_tgsf->Draw("same");
   lg[4]->Draw("same");
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -699,6 +716,7 @@ int main(){
   htrg_l1_eta_base->Draw();
   htrg_l2_eta_base->Draw("same");
   lg[5]->Draw("same");
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -718,6 +736,7 @@ int main(){
   htrg_l1_eta_pass->Draw();
   htrg_l1_eta_tgsf->Draw("same");
   lg[6]->Draw("same");
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -736,6 +755,7 @@ int main(){
   htrg_l2_eta_pass->Draw();
   htrg_l2_eta_tgsf->Draw("same");
   lg[7]->Draw("same");
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -754,6 +774,7 @@ int main(){
   htrg_eff_l1_eta_trig->Draw();
   htrg_eff_l1_eta_tgsf->Draw("same");
   lg[8]->Draw("same");
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -772,6 +793,7 @@ int main(){
   htrg_eff_l2_eta_trig->Draw();
   htrg_eff_l2_eta_tgsf->Draw("same");
   lg[9]->Draw("same");
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -779,6 +801,7 @@ int main(){
   plots->cd();
   plots->Clear();
   htrg_l1_pt_pass_vs_tgsf->Draw();
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -786,6 +809,7 @@ int main(){
   plots->cd();
   plots->Clear();
   htrg_l2_pt_pass_vs_tgsf->Draw();
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -793,6 +817,7 @@ int main(){
   plots->cd();
   plots->Clear();
   htrg_l1_eta_pass_vs_tgsf->Draw();
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -800,6 +825,7 @@ int main(){
   plots->cd();
   plots->Clear();
   htrg_l2_eta_pass_vs_tgsf->Draw();
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -807,6 +833,7 @@ int main(){
   plots->cd();
   plots->Clear();
   htrg_eff_l1_pt_trig_vs_tgsf->Draw();
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -814,6 +841,7 @@ int main(){
   plots->cd();
   plots->Clear();
   htrg_eff_l2_pt_trig_vs_tgsf->Draw();
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -821,6 +849,7 @@ int main(){
   plots->cd();
   plots->Clear();
   htrg_eff_l1_eta_trig_vs_tgsf->Draw();
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -828,6 +857,7 @@ int main(){
   plots->cd();
   plots->Clear();
   htrg_eff_l2_eta_trig_vs_tgsf->Draw();
+  lumipt->Draw();
   sprintf(name, outputplot);
   plots->Print(name);
   plots->Clear();
@@ -941,7 +971,8 @@ int main(){
 
   plots->cd();
   plots->Clear();
-  htrg_l1_tot->Draw("colz text");
+  htrg_l1_tot->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -950,7 +981,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1pl2f->Draw("colz text");
+  htrg_l1_l1pl2f->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -959,7 +991,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1pl2p->Draw("colz text");
+  htrg_l1_l1pl2p->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -968,7 +1001,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1fl2p->Draw("colz text");
+  htrg_l1_l1fl2p->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -977,7 +1011,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_tot->Draw("colz text");
+  htrg_l2_tot->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -986,7 +1021,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1pl2f->Draw("colz text");
+  htrg_l2_l1pl2f->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -995,7 +1031,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1pl2p->Draw("colz text");
+  htrg_l2_l1pl2p->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1004,7 +1041,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1fl2p->Draw("colz text");
+  htrg_l2_l1fl2p->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1013,7 +1051,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1p->Draw("colz text");
+  htrg_l1_l1p->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1022,7 +1061,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1f->Draw("colz text");
+  htrg_l1_l1f->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1031,7 +1071,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1p->Draw("colz text");
+  htrg_l2_l1p->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1040,7 +1081,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1f->Draw("colz text");
+  htrg_l2_l1f->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1049,7 +1091,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_tot_norm->Draw("colz text");
+  htrg_l1_tot_norm->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1058,7 +1101,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_tot_norm->Draw("colz text");
+  htrg_l2_tot_norm->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1067,7 +1111,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1p_norm->Draw("colz text");
+  htrg_l1_l1p_norm->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1076,7 +1121,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1f_norm->Draw("colz text");
+  htrg_l1_l1f_norm->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1085,7 +1131,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1p_norm->Draw("colz text");
+  htrg_l2_l1p_norm->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1094,7 +1141,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1f_norm->Draw("colz text");
+  htrg_l2_l1f_norm->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1103,7 +1151,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1pl2f_norm->Draw("colz text");
+  htrg_l1_l1pl2f_norm->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1112,7 +1161,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1pl2p_norm->Draw("colz text");
+  htrg_l1_l1pl2p_norm->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1121,7 +1171,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1fl2p_norm->Draw("colz text");
+  htrg_l1_l1fl2p_norm->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1130,7 +1181,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1pl2f_norm->Draw("colz text");
+  htrg_l2_l1pl2f_norm->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1139,7 +1191,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1pl2p_norm->Draw("colz text");
+  htrg_l2_l1pl2p_norm->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1148,7 +1201,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1fl2p_norm->Draw("colz text");
+  htrg_l2_l1fl2p_norm->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1157,7 +1211,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1p_norm_vs_tot->Draw("colz text");
+  htrg_l1_l1p_norm_vs_tot->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1166,7 +1221,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1f_norm_vs_tot->Draw("colz text");
+  htrg_l1_l1f_norm_vs_tot->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1175,7 +1231,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1p_norm_vs_tot->Draw("colz text");
+  htrg_l2_l1p_norm_vs_tot->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1184,7 +1241,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1f_norm_vs_tot->Draw("colz text");
+  htrg_l2_l1f_norm_vs_tot->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1193,7 +1251,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1pl2f_norm_vs_tot->Draw("colz text");
+  htrg_l1_l1pl2f_norm_vs_tot->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1202,7 +1261,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1pl2p_norm_vs_tot->Draw("colz text");
+  htrg_l1_l1pl2p_norm_vs_tot->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1211,7 +1271,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1fl2p_norm_vs_tot->Draw("colz text");
+  htrg_l1_l1fl2p_norm_vs_tot->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1220,7 +1281,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1pl2f_norm_vs_tot->Draw("colz text");
+  htrg_l2_l1pl2f_norm_vs_tot->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1229,7 +1291,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1pl2p_norm_vs_tot->Draw("colz text");
+  htrg_l2_l1pl2p_norm_vs_tot->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1238,7 +1301,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1fl2p_norm_vs_tot->Draw("colz text");
+  htrg_l2_l1fl2p_norm_vs_tot->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1247,7 +1311,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1pl2f_norm_vs_l1p->Draw("colz text");
+  htrg_l1_l1pl2f_norm_vs_l1p->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1256,7 +1321,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1pl2p_norm_vs_l1p->Draw("colz text");
+  htrg_l1_l1pl2p_norm_vs_l1p->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1265,7 +1331,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_l1fl2p_norm_vs_l1f->Draw("colz text");
+  htrg_l1_l1fl2p_norm_vs_l1f->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1274,7 +1341,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1pl2f_norm_vs_l1p->Draw("colz text");
+  htrg_l2_l1pl2f_norm_vs_l1p->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1283,7 +1351,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1pl2p_norm_vs_l1p->Draw("colz text");
+  htrg_l2_l1pl2p_norm_vs_l1p->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1292,7 +1361,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_l1fl2p_norm_vs_l1f->Draw("colz text");
+  htrg_l2_l1fl2p_norm_vs_l1f->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1301,7 +1371,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_base->Draw("colz text");
+  htrg_l1_base->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1310,7 +1381,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_base->Draw("colz text");
+  htrg_l2_base->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1319,7 +1391,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_pass->Draw("colz text");
+  htrg_l1_pass->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1328,7 +1401,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_pass->Draw("colz text");
+  htrg_l2_pass->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1337,7 +1411,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_eff_l1_trig->Draw("colz text");
+  htrg_eff_l1_trig->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1346,7 +1421,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_eff_l2_trig->Draw("colz text");
+  htrg_eff_l2_trig->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1355,7 +1431,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_eff_l1_test->Draw("colz text");
+  htrg_eff_l1_test->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1364,7 +1441,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_eff_l2_test->Draw("colz text");
+  htrg_eff_l2_test->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1373,7 +1451,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l1_tgsf->Draw("colz text");
+  htrg_l1_tgsf->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1382,7 +1461,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_l2_tgsf->Draw("colz text");
+  htrg_l2_tgsf->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1391,7 +1471,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_eff_l1_tgsf->Draw("colz text");
+  htrg_eff_l1_tgsf->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
@@ -1400,7 +1481,8 @@ int main(){
  
   plots->cd();
   plots->Clear();
-  htrg_eff_l2_tgsf->Draw("colz text");
+  htrg_eff_l2_tgsf->Draw(h2ddrawopt.c_str());
+  lumipt->Draw();
   plots->SetLogx();
   sprintf(name, outputplot);
   plots->Print(name);
