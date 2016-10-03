@@ -2,7 +2,7 @@
 
 std::string channel = "all";
 bool doMC = false;
-bool doGJets = true;
+bool doGJets = false;
 bool useMzCut = false;
 bool useZSelec = false;
 bool useZSelecLowLPt = true;
@@ -18,8 +18,8 @@ bool dtHLT = false;
 // 4.) for GJets: doGJets=true, doMC=false, useZSelecLowLPt=true, useEffSf=false
 
 //std::string inputdir = "/home/heli/XZZ/80X_20160810_light_Skim";
-//std::string inputdir = "/home/heli/XZZ/80X_20160825_light_Skim";
-std::string inputdir = "/home/heli/XZZ/80X_20160927_light_Skim";
+std::string inputdir = "/home/heli/XZZ/80X_20160825_light_Skim";
+//std::string inputdir = "/home/heli/XZZ/80X_20160927_light_Skim";
 std::string filename;
 
 std::string outputdir = "./recoil_out2";
@@ -53,8 +53,8 @@ std::vector< std::string > gjfiles = {
 
 char name[1000];
 TCanvas* plots;
-//std::string tag0 = "";
-std::string tag0 = "_newfilterlepveto";
+std::string tag0 = "";
+//std::string tag0 = "_newfilterlepveto";
 //std::string tag0 = "_newfilteretaphicut";
 //std::string tag0 = "_newfilter";
 //std::string tag0 = "_smbin";
@@ -202,14 +202,14 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
     //base_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&fabs(llnunu_l1_eta)<1.47)";
     //base_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&fabs(llnunu_l1_eta)<1.47&&gjet_l1_idCutBased>=3)";
     //base_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&flag2)";
-    //base_selec = "(1)";
-    base_selec = "(phi>-1&&phi<2&&fabs(eta)<1.0)";
-    if (channel=="el")  selec = base_selec+"*(GJetsZPtWeightLowLPtEl)";
-    else if (channel=="mu") selec = base_selec+"*(GJetsZPtWeightLowLPtMu)";
-    else  selec = base_selec+"*(GJetsZPtWeightLowLPt)";
-    //if (channel=="el")  selec = base_selec+"*(GJetsWeightLowLPtEl)";
-    //else if (channel=="mu") selec = base_selec+"*(GJetsWeightLowLPtMu)";
-    //else  selec = base_selec+"*(GJetsWeightLowLPt)";
+    base_selec = "(1)";
+    //base_selec = "(phi>-1&&phi<2&&fabs(eta)<1.0)";
+    //if (channel=="el")  selec = base_selec+"*(GJetsZPtWeightLowLPtEl)";
+    //else if (channel=="mu") selec = base_selec+"*(GJetsZPtWeightLowLPtMu)";
+    //else  selec = base_selec+"*(GJetsZPtWeightLowLPt)";
+    if (channel=="el")  selec = base_selec+"*(GJetsWeightLowLPtEl)";
+    else if (channel=="mu") selec = base_selec+"*(GJetsWeightLowLPtMu)";
+    else  selec = base_selec+"*(GJetsWeightLowLPt)";
   }
   // style
   gROOT->ProcessLine(".x tdrstyle.C");

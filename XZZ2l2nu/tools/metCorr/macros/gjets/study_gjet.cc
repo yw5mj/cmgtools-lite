@@ -43,41 +43,36 @@ int main(int argc, char** argv) {
   // yields:
 
   // all:
-  //Data : 648231.000000
-  //WW/WZ/WJets non-reson. : 617.417435
-  //TT : 10075.407445
-  //ZZ WZ reson. : 6728.956797
-  //ZJets : 639478.277092
+  //Data : 648231.000000 // 660583.000000
+  //WW/WZ/WJets non-reson. : 617.417435 // 619.270746
+  //TT : 10075.407445  // 10113.088935
+  //ZZ WZ reson. : 6728.956797 // 6753.921537
   //ZJets Data-xxx : 630809 = 648231.0-617.417435-10075.407445-6728.956797
-  // GJets weight integral: 4805.009858
-  // scale =  630809/4805.009858 = 131.282
-  //Double_t Norm_All = 131.282;
+  //    // 643097  = 660583.000000 - 619.270746 - 10113.088935 - 6753.921537
+  // GJets weight integral: 4805.009858 // 4820.096067
+  // scale = [ZJets Data-xxx]/[GJets weight integral]
   Double_t Norm_All = 1.0;
 
   // mu: zpt [50,200]
-  //Data : 633430.000000
-  //WW/WZ/WJets non-reson. : 604.878487
-  //TT : 9929.086077
-  //ZZ WZ reson. : 6438.827293
-  //ZJets : 624855.012393
-  //ZJets Data-xxx : 616457. = 633430.000000-604.878487-9929.086077-6438.827293
-  //GJets denorminator: 2785982708649.094238
-  // GJets weight integral: 4771.470601
-  // scale = 616457./4771.470601 = 129.196
-  //Double_t Norm_Mu = 129.196;
+  //Data : 633430.000000 // 645610.000000 
+  //WW/WZ/WJets non-reson. : 604.878487 // 606.650081
+  //TT : 9929.086077 // 9966.319579
+  //ZZ WZ reson. : 6438.827293 // 6462.592193
+  //ZJets Data-xxx : 616457. = 633430.000000-604.878487-9929.086077-6438.827293 
+  //    //  645610.000000 - 606.650081 - 9966.319579 - 6462.592193 = 628574.0
+  // GJets weight integral: 4771.470601 // 4786.843272
+  // scale = [ZJets Data-xxx]/[GJets weight integral]
   Double_t Norm_Mu = 1.0;
 
   // el:
-  //Data : 14801.000000
-  //WW/WZ/WJets non-reson. : 12.538947
-  //TT : 146.321369
-  //ZZ WZ reson. : 290.129504
-  //ZJets : 14623.264525
+  //Data : 14801.000000 // 14973.000000
+  //WW/WZ/WJets non-reson. : 12.538947 // 12.620665 
+  //TT : 146.321369  // 146.769356
+  //ZZ WZ reson. : 290.129504  // 291.329345
   //ZJets Data-xxx : 14352.0 = 14801.000000-12.538947-146.321369-290.129504
-  // GJets weight integral: 6865.677331
-  // scale = 14352.0/6865.677331 = 2.09040
-  //Double_t Norm_El = 2.09040;
-  Double_t Norm_El = 1.0;
+  //    //  14522.3  = 14973.000000 - 12.620665 - 146.769356 - 291.329345
+  // GJets weight integral: 6865.677331 // 6864.595736
+  // scale = [ZJets Data-xxx]/[GJets weight integral]
 
   char name[1000];
 
