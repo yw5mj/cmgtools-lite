@@ -2,7 +2,7 @@
 
 std::string channel = "all";
 bool doMC = false;
-bool doGJets = false;
+bool doGJets = treu;
 bool useMzCut = false;
 bool useZSelec = false;
 bool useZSelecLowLPt = true;

@@ -73,6 +73,7 @@ int main(int argc, char** argv) {
   //    //  14522.3  = 14973.000000 - 12.620665 - 146.769356 - 291.329345
   // GJets weight integral: 6865.677331 // 6864.595736
   // scale = [ZJets Data-xxx]/[GJets weight integral]
+  Double_t Norm_El = 1.0;
 
   char name[1000];
 

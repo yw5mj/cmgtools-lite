@@ -85,6 +85,21 @@
   plots->SaveAs("sf_trackerIso_80X_pteta.pdf"); 
 
   
+  // 
+  TFile* file2 = TFile::Open("muontrackingsf.root");
 
+  TH1F* h1d1 = (TH1F*)file2->Get("hist_ratio_eta");
 
+  h1d1->GetXaxis()->SetTitle("#eta");
+  h1d1->GetYaxis()->SetTitle("tracking scale factor");
+  h1d1->GetYaxis()->SetTitleOffset(1.5);
+  h1d1->SetMarkerStyle(20);
+
+  plots->Clear();
+  plots->SetLogy(0);
+  h1d1->Draw();
+  lumipt->Draw();
+  plots->SaveAs("sf_muon_trackingeff_80x_eta.pdf");
+  
+  
 }

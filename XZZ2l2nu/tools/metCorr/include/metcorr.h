@@ -320,7 +320,9 @@ TH2D* _h_eff_trg_mu_l2_l1fl2p_norm_vs_l1f;
 // GJets Skimming
 //==================================================
 bool _doGJetsSkim = false;
+bool _doGJetsSkimAddPhiWeight = false;
 std::string _GJetsSkimInputFileName;
+std::string _GJetsSkimPhiWeightInputFileName;
 
 TFile* _gjets_input_file;
 TH2D* _gjets_h_zmass_zpt;
@@ -354,6 +356,8 @@ std::vector< TH1D* > _gjets_h_zmass_zpt_1d_vec;
 std::vector< TH1D* > _gjets_h_zmass_zpt_el_1d_vec;
 std::vector< TH1D* > _gjets_h_zmass_zpt_mu_1d_vec;
 
+TFile* _gjets_phi_weight_input_file;
+TH1D* _gjets_h_photon_phi_weight;
 
 //======================================================
 // ╔╦╗╦═╗╔═╗╔═╗  ╦  ╦╔═╗╦═╗╦╔═╗╔╗ ╦  ╔═╗╔═╗
@@ -416,6 +420,7 @@ Float_t _trgsf_up, _trgsf_dn, _idisotrksf_up, _idisotrksf_dn;
 
 
 // for GJets samples
+Float_t _GJetsPhiWeight;
 Float_t _GJetsWeight, _GJetsWeightEl, _GJetsWeightMu;
 Float_t _GJetsWeight_up, _GJetsWeightEl_up, _GJetsWeightMu_up;
 Float_t _GJetsWeight_dn, _GJetsWeightEl_dn, _GJetsWeightMu_dn;

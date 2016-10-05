@@ -75,6 +75,7 @@ PUWeightHistName: puweight_dtmc
 #  ╚═╝╚╝╚═╝ ╩ ╚═╝  ╚═╝╩ ╩╩╩ ╩
 #====================================================================
 doGJetsSkim: true
+doGJetsSkimAddPhiWeight: true
 #GJetsSkimInputFileName: data/gjets/study_gjets.root
 #GJetsSkimInputFileName: data/gjets/study_gjets_tight.root
 #GJetsSkimInputFileName: data/gjets/study_gjets_data.root
@@ -87,6 +88,8 @@ doGJetsSkim: true
 #GJetsSkimInputFileName: data/gjets/study_gjets_data_newFilter.root
 #GJetsSkimInputFileName: data/gjets/study_gjets_data_newFilterEtaPhiCut.root
 GJetsSkimInputFileName: data/gjets/study_gjets_data_newFilterLepVeto.root
+
+GJetsSkimPhiWeightInputFileName: data/gjets/gjet_photon_phi_weight.root
 
 
 

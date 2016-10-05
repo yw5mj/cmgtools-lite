@@ -19,7 +19,8 @@ do
 
   # options for outputs
   #outfile="${outfile/\/vvTreeProducer\/tree/}"
-  outfile="${outfile/\/vvTreeProducer\/tree/_newFilterLepVeto}"
+  outfile="${outfile/\/vvTreeProducer\/tree/_newFilterLepVetoPhiWeight}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_newFilterLepVeto}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_newFilterLepVetoNoRecoil}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_newFilterEtaPhiCut}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_newFilterEtaPhiCutNoRecoil}"

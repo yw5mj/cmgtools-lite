@@ -7,7 +7,8 @@ from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
-tag="newFilterLepVeto_GJRcHLT_DtGJetsHLT_TgEfElFineBin_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+tag="newFilterLepVetoPhiWeight_GJRcHLT_DtGJetsHLT_TgEfElFineBin_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
+#tag="newFilterLepVeto_GJRcHLT_DtGJetsHLT_TgEfElFineBin_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="newFilterEtaPhiCut_GJRcHLT_DtGJetsHLT_TgEfElFineBin_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="newFilter_GJRcHLT_DtGJetsHLT_TgEfElFineBin_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
 #tag="PhoFlag3F2SiEta_GJRcHLT_DtGJetsHLT_TgEfElFineBin_TightZPt50_BigDY_GenCutZPtwt_ElEscale_NewPuMuSf_MuPtScale_NTgEf_80X_L12p9_HLTv2_ichepPU_"
@@ -63,7 +64,7 @@ cutChain='tightzpt50to200'
 #cutChain='tightzpt100met200'
 
 # can be el or mu or both
-channel='all' 
+channel='mu' 
 LogY=False
 test=True
 DrawLeptons=False
@@ -311,7 +312,8 @@ zjetsPlotters=[]
 #zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_HLTFlag3F2SiEta'] 
 #zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_newFilter'] 
 #zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_newFilterEtaPhiCut'] 
-zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_newFilterLepVeto'] 
+#zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_newFilterLepVeto'] 
+zjetsSamples = ['SinglePhoton_Run2016BCD_PromptReco_newFilterLepVetoPhiWeight'] 
 
 
 for sample in zjetsSamples:
@@ -333,6 +335,7 @@ for sample in zjetsSamples:
         #zjetsPlotters[-1].addCorrectionFactor('(fabs(llnunu_l1_eta)<1.47)', 'photonVeto')
         #zjetsPlotters[-1].addCorrectionFactor('(gjet_l1_idCutBased>=3)', 'photonID')
         #zjetsPlotters[-1].addCorrectionFactor('(phi>-1&&phi<2&&fabs(eta)<1.0)', 'photonID')
+        zjetsPlotters[-1].addCorrectionFactor('GJetsPhiWeight','PhiWeight')
         if channel=='el' : 
             #zjetsPlotters[-1].addCorrectionFactor('GJetsZPtWeightEl','genWeight')
             zjetsPlotters[-1].addCorrectionFactor('GJetsWeightEl','genWeight')

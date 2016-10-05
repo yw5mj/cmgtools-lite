@@ -261,9 +261,13 @@ void readConfigFile()
   // Do GJets skimming
   //==============================================  
   _doGJetsSkim = parm.GetBool("doGJetsSkim", kFALSE);
+  _doGJetsSkimAddPhiWeight = parm.GetBool("doGJetsSkimAddPhiWeight", kFALSE);
 
   if (_doGJetsSkim) {
     _GJetsSkimInputFileName = parm.GetString("GJetsSkimInputFileName", "data/gjets/study_gjets.root");
+    if (_doGJetsSkimAddPhiWeight) {
+      _GJetsSkimPhiWeightInputFileName = parm.GetString("GJetsSkimPhiWeightInputFileName", "data/gjets/gjet_photon_phi_weight.root");
+    }
   }
 
 }
@@ -404,6 +408,7 @@ bool  prepareTrees()
 
   // GJets Skim
   if (_doGJetsSkim){
+    _tree_out->Branch("GJetsPhiWeight", &_GJetsPhiWeight, "GJetsPhiWeight/F");
     _tree_out->Branch("GJetsWeight", &_GJetsWeight, "GJetsWeight/F");
     _tree_out->Branch("GJetsWeightEl", &_GJetsWeightEl, "GJetsWeightEl/F");
     _tree_out->Branch("GJetsWeightMu", &_GJetsWeightMu, "GJetsWeightMu/F");
@@ -1378,6 +1383,12 @@ void prepareGJetsSkim()
       }
       _gjets_h_zmass_zpt_zrap_mu_1d_vec.push_back(h_zmass_zpt_mu_temp);
     }
+
+    // photon phi weight
+    if (_doGJetsSkimAddPhiWeight) {
+      _gjets_phi_weight_input_file = TFile::Open(_GJetsSkimPhiWeightInputFileName.c_str());
+      _gjets_h_photon_phi_weight = (TH1D*)_gjets_phi_weight_input_file->Get("h_gjet_phi_weight");
+    }    
   }
 
 }
@@ -1497,6 +1508,11 @@ void doGJetsSkim()
   _GJetsZPtWeightLowLPt = _gjets_h_zpt_lowlpt_ratio->GetBinContent(ipt);
   _GJetsZPtWeightLowLPtEl = _gjets_h_zpt_lowlpt_ratio_el->GetBinContent(ipt);
   _GJetsZPtWeightLowLPtMu = _gjets_h_zpt_lowlpt_ratio_mu->GetBinContent(ipt);
+
+  // get photon phi weight
+  if (_doGJetsSkimAddPhiWeight) {
+    _GJetsPhiWeight = _gjets_h_photon_phi_weight->GetBinContent(_gjets_h_photon_phi_weight->FindBin(_llnunu_l1_phi));
+  }
 
 }
 
