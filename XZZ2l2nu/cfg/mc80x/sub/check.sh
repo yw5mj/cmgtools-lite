@@ -11,7 +11,8 @@
 
 dir=mc1
 #out=/home/heli/80X_20160825_Chunks
-out=/data2/XZZ2/80X_20160825_Chunks
+#out=/data2/XZZ2/80X_20160825_Chunks
+out=/data2/XZZ2/80X_20161006_Chunks
 
 mkdir -p $out
 
@@ -49,7 +50,7 @@ do
     echo " > rm -rf $job"
     rm -rf $job
   else
-    echo "- job is not finished or has problem to be resubmitted .. "
+    echo "- job is not finished or has problem to be resubmitted .. with ${n1} root files and ${n2} pck files "
   fi
 
 done
