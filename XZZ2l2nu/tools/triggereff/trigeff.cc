@@ -20,10 +20,14 @@ int main(){
   //TFile* fin= new TFile("/home/heli/XZZ/singlemuonnewtrg12p9.root");
   //TFile* fin= new TFile("/home/yanchu/singlemuonnewtrg12p9.root");
   //TFile* fin= new TFile("/home/heli/XZZ/80X_20160825_light/SingleEMU_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
-  TFile* fin= new TFile("/data2/XZZ2/80X_20160825_light/SingleEMU_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
+  //TFile* fin= new TFile("/data2/XZZ2/80X_20160825_light/SingleEMU_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
+  //TFile* fin= new TFile("/home/heli/XZZ/80X_20161006_light/SingleEMU_Run2016B2G_PromptReco/vvTreeProducer/tree.root");
+  TFile* fin= new TFile("/data2/XZZ2/80X_20161006/MET_Run2016B2G_PromptReco/vvTreeProducer/tree.root");
 
-  TFile* fout = new TFile("trigeff_mu_20160830_newplots.root", "recreate");
-  char outputplot[] = "trigeff_mu_20160830_plots_newplots.pdf";
+  //TFile* fout = new TFile("trigeff_mu_datab2g.root", "recreate");
+  //char outputplot[] = "trigeff_mu_datab2g.pdf";
+  TFile* fout = new TFile("trigeff_mu_datametb2g.root", "recreate");
+  char outputplot[] = "trigeff_mu_datametb2g.pdf";
   TCanvas* plots = new TCanvas("plots", "plots");
   char name[10000];
   sprintf(name, "%s[", outputplot);
@@ -45,12 +49,13 @@ int main(){
   std::string sel_l1_l1f = sel_l2_base+"&&((llnunu_l1_l1_trigerob_HLTbit&12)==0)";
 
   std::string sel_base = sel_l1_base+"&&(llnunu_l1_l1_pt>50)";
-  //std::string sel_pass = sel_base+"&&(HLT_MUv2||HLT_ELEv2)";
-  std::string sel_pass = sel_base+"&&(HLT_MUv2)";
+  std::string sel_pass = sel_base+"&&(HLT_MUv2||HLT_ELEv2)";
+  //std::string sel_pass = sel_base+"&&(HLT_MUv2)";
 
   TTree* tree= (TTree*)fin->Get("tree");
 
-  std::string  lumiTag = "CMS 13 TeV 2016 L=12.9 fb^{-1}";
+  std::string  lumiTag = "CMS 13 TeV 2016 L=27.22 fb^{-1}";
+  //std::string  lumiTag = "CMS 13 TeV 2016 L=12.9 fb^{-1}";
   //if (doMC) lumiTag = "CMS 13 TeV Simulation for 2016 Data";
 
   TPaveText* lumipt = new TPaveText(0.2,0.9,0.8,0.98,"brNDC");

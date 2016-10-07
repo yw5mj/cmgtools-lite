@@ -27,17 +27,19 @@ int main(int argc, char** argv) {
 
 
   TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160825_light_Skim/DYJetsToLL_M50_BIG.root");
+  TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20161006_light/SinglePhoton_Run2016B2G_PromptReco/vvTreeProducer/tree.root");
   //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/GJet_Pt_20toInf_DoubleEMEnriched/vvTreeProducer/tree.root");
   //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
-  TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160927_light/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
+  //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160927_light/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
 
+  std::string outtag="study_gjets_data_b2g_newFilterLepVeto";
   //std::string outtag="study_gjets_tight";
   //std::string outtag="study_gjets";
   //std::string outtag="study_gjets_data";
   //std::string outtag="study_gjets_data_hlt";
   //std::string outtag="study_gjets_data_hlt_dtscale_nohlt90";
   //std::string outtag="study_gjets_data_hlt_dtscale_flag3_f2_sIetaCut";
-  std::string outtag="study_gjets_data_newFilterLepVeto";
+  //std::string outtag="study_gjets_data_newFilterLepVeto";
 
 
   // yields:

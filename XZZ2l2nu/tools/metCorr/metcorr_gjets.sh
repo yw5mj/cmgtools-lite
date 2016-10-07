@@ -1,8 +1,10 @@
 #!/bin/sh
 
 #inputs
-inputdir=/home/heli/XZZ/80X_20160927_light
-outputdir=/home/heli/XZZ/80X_20160927_light_Skim
+inputdir=/home/heli/XZZ/80X_20161006_light
+outputdir=/home/heli/XZZ/80X_20161006_light_Skim
+#inputdir=/home/heli/XZZ/80X_20160927_light
+#outputdir=/home/heli/XZZ/80X_20160927_light_Skim
 config=config/parameters_light_gjets
 
 mkdir -p ${outputdir}
@@ -12,35 +14,16 @@ gmake all
 njob="0"
 
 #for infile in $inputdir/GJet_Pt_20toInf_DoubleEMEnriched/vvTreeProducer/tree.root ; 
-for infile in $inputdir/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root ; 
+for infile in $inputdir/SinglePhoton_Run2016B2G_PromptReco/vvTreeProducer/tree.root ; 
 do
   echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"
 
   # options for outputs
   #outfile="${outfile/\/vvTreeProducer\/tree/}"
-  outfile="${outfile/\/vvTreeProducer\/tree/_newFilterLepVetoPhiWeight}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_newFilterLepVeto}"
+  outfile="${outfile/\/vvTreeProducer\/tree/_DataB2G_newFilterLepVetoNoRecoil}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_newFilterLepVetoNoRecoil}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_newFilterEtaPhiCut}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_newFilterEtaPhiCutNoRecoil}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_newFilter}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_newFilterNoRecoil}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_HLTFlag3F2SiEta}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_HLTFlag3F2SiEtaNoRecoil}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_HLTNoRecoil}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_HLTNo90NoRecoil}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_HLT}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_HLT_DtScale}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_HLT_DtScale_PhVeto}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_HLT_DtScale_Flag2}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_HLT_DtScale_Flag2_RcSmBin}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_HLTNo90_DtScale}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_HLT_DtScale_RcSmBin}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_NoRecoil}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_RcSmBin}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_RcSmBinNoSmooth}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_RcSmBinSmooth}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_test}"
 
   inSkimFile=${infile/vvTreeProducer\/tree.root/skimAnalyzerCount\/SkimReport.txt}

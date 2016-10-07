@@ -2,7 +2,7 @@
 
 std::string channel = "all";
 bool doMC = false;
-bool doGJets = treu;
+bool doGJets = false;
 bool useMzCut = false;
 bool useZSelec = false;
 bool useZSelecLowLPt = true;
@@ -17,12 +17,14 @@ bool dtHLT = false;
 // 3.) for MC : doMC=false, doGJets=false, useZSelecLowLPt=true, useEffSf=false
 // 4.) for GJets: doGJets=true, doMC=false, useZSelecLowLPt=true, useEffSf=false
 
+std::string inputdir = "/home/heli/XZZ/80X_20161006_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20160810_light_Skim";
-std::string inputdir = "/home/heli/XZZ/80X_20160825_light_Skim";
+//std::string inputdir = "/home/heli/XZZ/80X_20160825_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20160927_light_Skim";
 std::string filename;
 
-std::string outputdir = "./recoil_out2";
+//std::string outputdir = "./recoil_out2";
+std::string outputdir = "./recoil_out3";
 std::vector< std::string > channels = {"all", "mu", "el"};
 std::vector< std::string > mcfiles = {
     //"DYJetsToLL_M50", "DYJetsToLL_M50_MGMLM_Ext1"
@@ -32,7 +34,8 @@ std::vector< std::string > mcfiles = {
  };
 
 std::vector< std::string > dtfiles = {
-    "SingleEMU_Run2016BCD_PromptReco"
+    //"SingleEMU_Run2016BCD_PromptReco"
+    "SingleEMU_Run2016B2G_PromptReco"
  };
 
 std::vector< std::string > gjfiles = {
@@ -219,7 +222,8 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   gROOT->ProcessLine(name);
 
   // lumiTag for plotting
-  lumiTag = "CMS 13 TeV 2016 L=12.9 fb^{-1}";
+  lumiTag = "CMS 13 TeV 2016 L=27.22 fb^{-1}";
+  //lumiTag = "CMS 13 TeV 2016 L=12.9 fb^{-1}";
   if (doMC) lumiTag = "CMS 13 TeV Simulation for 2016 Data";
 
   lumipt = new TPaveText(0.2,0.9,0.8,0.98,"brNDC");

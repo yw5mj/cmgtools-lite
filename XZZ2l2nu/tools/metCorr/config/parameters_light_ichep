@@ -75,10 +75,7 @@ PUWeightHistName: puweight_dtmc
 #  ╚═╝╚╝╚═╝ ╩ ╚═╝  ╚═╝╩ ╩╩╩ ╩
 #====================================================================
 doGJetsSkim: false
-doGJetsSkimAddPhiWeight: true
-GJetsSkimInputFileName: data/gjets/study_gjets_data_b2g_newFilterLepVeto.root
-
-GJetsSkimPhiWeightInputFileName: data/gjets/gjet_photon_phi_weight.root
+GJetsSkimInputFileName: data/gjets/study_gjets_data_hlt_dtscale_flag3_f2_sIetaCut.root
 
 
 
@@ -143,12 +140,12 @@ doRecoilUseSmooth: true
 doRecoilUseSmoothGraph: true
 
 # Input files
-RecoilInputFileNameData_all: data/recoil/SingleEMU_Run2016B2G_PromptReco_met_para_study_ZSelecLowLPt.root
-RecoilInputFileNameData_mu: data/recoil/SingleEMU_Run2016B2G_PromptReco_met_para_study_ZSelecLowLPt_mu.root
-RecoilInputFileNameData_el: data/recoil/SingleEMU_Run2016B2G_PromptReco_met_para_study_ZSelecLowLPt_el.root
-#RecoilInputFileNameData_all: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt.root
-#RecoilInputFileNameData_mu: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_mu.root
-#RecoilInputFileNameData_el: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_el.root
+RecoilInputFileNameData_all: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt.root
+RecoilInputFileNameData_mu: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_mu.root
+RecoilInputFileNameData_el: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_el.root
+#RecoilInputFileNameData_all: data/recoil/SingleEMU_Run2016BCD_PromptReco_smbin_met_para_study_ZSelecLowLPt.root
+#RecoilInputFileNameData_mu: data/recoil/SingleEMU_Run2016BCD_PromptReco_smbin_met_para_study_ZSelecLowLPt_mu.root
+#RecoilInputFileNameData_el: data/recoil/SingleEMU_Run2016BCD_PromptReco_smbin_met_para_study_ZSelecLowLPt_el.root
 
 RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt_effSf.root
 RecoilInputFileNameMC_mu: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt_effSf_mu.root
@@ -158,9 +155,9 @@ RecoilInputFileNameMCLO_all: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_
 RecoilInputFileNameMCLO_mu: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_ZSelecLowLPt_effSf_mu.root
 RecoilInputFileNameMCLO_el: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_ZSelecLowLPt_effSf_el.root
 
-RecoilInputFileNameGJets_all: data/recoil/SinglePhoton_Run2016BCD_PromptReco_newFilterLepVetoNoRecoil_newfilterlepveto_met_para_study_ZSelecLowLPt.root
-RecoilInputFileNameGJets_mu:  data/recoil/SinglePhoton_Run2016BCD_PromptReco_newFilterLepVetoNoRecoil_newfilterlepveto_met_para_study_ZSelecLowLPt_mu.root
-RecoilInputFileNameGJets_el:  data/recoil/SinglePhoton_Run2016BCD_PromptReco_newFilterLepVetoNoRecoil_newfilterlepveto_met_para_study_ZSelecLowLPt_el.root
+RecoilInputFileNameGJets_all: data/recoil/SinglePhoton_Run2016BCD_PromptReco_HLTFlag3F2SiEtaNoRecoil_hlt_flag3_f2_sIetaCut_met_para_study_ZSelecLowLPt.root
+RecoilInputFileNameGJets_mu:  data/recoil/SinglePhoton_Run2016BCD_PromptReco_HLTFlag3F2SiEtaNoRecoil_hlt_flag3_f2_sIetaCut_met_para_study_ZSelecLowLPt_mu.root
+RecoilInputFileNameGJets_el:  data/recoil/SinglePhoton_Run2016BCD_PromptReco_HLTFlag3F2SiEtaNoRecoil_hlt_flag3_f2_sIetaCut_met_para_study_ZSelecLowLPt_el.root
 
 
 
@@ -178,8 +175,7 @@ EffScaleInputFileName_IdIso_Mu: data/eff/muon80x12p9.root
 EffScaleInputFileName_Trk_Mu: data/eff/muontrackingsf.root
 #EffScaleInputFileName_Trg_El: data/eff/trigereff12p9_20160902.root
 EffScaleInputFileName_Trg_El: data/eff/trigereff12p9_20160902_finebin.root
-#EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu_20160830.root
-EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu_datab2g.root
+EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu_20160830.root
 
 
 
