@@ -6,13 +6,16 @@
 g++ preskim_gjets.cc -o preskim_gjets.exe `root-config --cflags` `root-config --libs`
 
 #inputs
-indir=/home/heli/XZZ/80X_20160927
-outdir=/home/heli/XZZ/80X_20160927_light
+indir=/home/heli/XZZ/80X_20161006
+outdir=/home/heli/XZZ/80X_20161006_light
+#indir=/home/heli/XZZ/80X_20160927
+#outdir=/home/heli/XZZ/80X_20160927_light
 
 mkdir -p $outdir
 
 #for dd in ${indir}/*/vvTreeProducer;
-for dd in ${indir}/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer;
+#for dd in ${indir}/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer;
+for dd in ${indir}/SinglePhoton_Run2016B2G_PromptReco/vvTreeProducer;
 do 
   infile="${dd}/tree.root";
   oo="${dd/$indir/$outdir}";
@@ -30,7 +33,8 @@ done
 wait
 
 #for dd in  ${indir}/* ;
-for dd in  ${indir}/SinglePhoton_Run2016BCD_PromptReco ;
+#for dd in  ${indir}/SinglePhoton_Run2016BCD_PromptReco ;
+for dd in  ${indir}/SinglePhoton_Run2016B2G_PromptReco ;
 do
   echo $dd;
   ddo=${dd/$indir/$outdir}

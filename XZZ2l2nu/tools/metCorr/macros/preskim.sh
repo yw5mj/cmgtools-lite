@@ -8,12 +8,16 @@ g++ preskim.cc -o preskim.exe `root-config --cflags` `root-config --libs`
 #inputs
 #indir=/home/heli/XZZ/80X_20160825
 #outdir=/home/heli/XZZ/80X_20160825_light
-indir=/data2/XZZ2/80X_20160905
-outdir=/data2/XZZ2/80X_20160905_light
+#indir=/data2/XZZ2/80X_20160905
+#outdir=/data2/XZZ2/80X_20160905_light
+indir=/data2/XZZ2/80X_20161006
+outdir=/home/heli/XZZ/80X_20161006_light
+
 mkdir -p $outdir
 
 #for dd in ${indir}/*/vvTreeProducer;
-for dd in ${indir}/Single*/vvTreeProducer;
+#for dd in ${indir}/Single*/vvTreeProducer;
+for dd in ${indir}/SingleEMU_Run2016B2G_PromptReco/vvTreeProducer;
 do 
   infile="${dd}/tree.root";
   oo="${dd/$indir/$outdir}";
@@ -29,7 +33,8 @@ done
 
 wait
 
-for dd in  ${indir}/* ;
+#for dd in  ${indir}/* ;
+for dd in ${indir}/SingleEMU_Run2016B2G_PromptReco ;
 do
   echo $dd;
   ddo=${dd/$indir/$outdir}

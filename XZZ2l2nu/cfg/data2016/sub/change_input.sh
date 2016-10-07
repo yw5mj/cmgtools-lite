@@ -1,12 +1,14 @@
 #!/bin/sh
 
-dir=dt3_truncated
+dir=dt6
+#dir=dt3_truncated
 #dir=dt3
 
 #tag="SingleElectron_"
+#tag="SingleMuon_"
+tag="MET_"
 #from="eoscms.cern.ch\/\/eos\/cms"
 #to="cms-xrd-global.cern.ch\/"
-tag="SingleMuon_"
 from="cms-xrd-global.cern.ch"
 #to="xrootd-cms.infn.it"
 #from="xrootd-cms.infn.it"
