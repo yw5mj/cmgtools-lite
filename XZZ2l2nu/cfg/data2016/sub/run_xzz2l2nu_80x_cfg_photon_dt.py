@@ -116,8 +116,8 @@ if test==1:
     #selectedComponents = mcSamples
     #selectedComponents = SinglePhoton
     #selectedComponents = [SinglePhoton_Run2016D_PromptReco_v2]
-    #selectedComponents = [SinglePhoton_Run2016G_PromptReco_v1]
-    selectedComponents = [SinglePhoton_Run2016F_PromptReco_v1]
+    selectedComponents = [SinglePhoton_Run2016G_PromptReco_v1]
+    #selectedComponents = [SinglePhoton_Run2016F_PromptReco_v1]
     #selectedComponents = [GJet_Pt_20toInf_DoubleEMEnriched]
     #selectedComponents = [GJet_Pt_20to40_DoubleEMEnriched, GJet_Pt_40toInf_DoubleEMEnriched]
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]

@@ -22,7 +22,8 @@ do
 
   # options for outputs
   #outfile="${outfile/\/vvTreeProducer\/tree/}"
-  outfile="${outfile/\/vvTreeProducer\/tree/_DataB2G_newFilterLepVetoNoRecoil}"
+  outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2GNewFilterLepVeto}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_newFilterLepVetoNoRecoil}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_newFilterLepVetoNoRecoil}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_test}"
 

@@ -26,7 +26,8 @@
 int main(int argc, char** argv) {
 
 
-  TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160825_light_Skim/DYJetsToLL_M50_BIG.root");
+  //TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160825_light_Skim/DYJetsToLL_M50_BIG.root");
+  TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20161006_light_Skim/DYJetsToLL_M50_BIG_NoRecoil.root");
   TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20161006_light/SinglePhoton_Run2016B2G_PromptReco/vvTreeProducer/tree.root");
   //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/GJet_Pt_20toInf_DoubleEMEnriched/vvTreeProducer/tree.root");
   //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
@@ -115,15 +116,19 @@ int main(int argc, char** argv) {
   std::string base_selec_lowlpt_mu = "(" + cuts_loose_z_lowlpt + "&&(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13))";
 
   // add weight
-  std::string weight_selec = std::string("*(ZJetsGenWeight*ZPtWeight*puWeight68075*1921.8*3)");
-  std::string weight_selec_up = std::string("*(ZJetsGenWeight*ZPtWeight_up*puWeight68075*1921.8*3)");
-  std::string weight_selec_dn = std::string("*(ZJetsGenWeight*ZPtWeight_dn*puWeight68075*1921.8*3)");
+  std::string weight_selec = std::string("*(genWeight/SumWeights*ZPtWeight*puWeight68075*1921.8*3)");
+  std::string weight_selec_up = std::string("*(genWeight/SumWeights*ZPtWeight_up*puWeight68075*1921.8*3)");
+  std::string weight_selec_dn = std::string("*(genWeight/SumWeights*ZPtWeight_dn*puWeight68075*1921.8*3)");
+  //std::string weight_selec = std::string("*(ZJetsGenWeight*ZPtWeight*puWeight68075*1921.8*3)");
+  //std::string weight_selec_up = std::string("*(ZJetsGenWeight*ZPtWeight_up*puWeight68075*1921.8*3)");
+  //std::string weight_selec_dn = std::string("*(ZJetsGenWeight*ZPtWeight_dn*puWeight68075*1921.8*3)");
   //std::string weight_selec = std::string("*(ZJetsGenWeight*ZPtWeight*1921.8*3*12900.0)");
   // rho weight
-  std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
+  //std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
+  std::string rhoweight_selec = "*(1)";
   // scale factors
-  //std::string effsf_selec = std::string("*(trgsf*isosf*idsf*trksf)");
-  std::string effsf_selec = std::string("*(trgsf*isosf*idsf*trksf*(1*(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13)+1.06*(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11)))");
+  std::string effsf_selec = std::string("*(trgsf*isosf*idsf*trksf)");
+  //std::string effsf_selec = std::string("*(trgsf*isosf*idsf*trksf*(1*(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13)+1.06*(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11)))");
 
   // selec, cuts + weights
   std::string zjet_selec = base_selec + weight_selec + rhoweight_selec + effsf_selec;

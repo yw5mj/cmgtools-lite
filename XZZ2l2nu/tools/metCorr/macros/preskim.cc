@@ -50,7 +50,6 @@ int main(int argc, char** argv) {
   tree->GetEntry(0);
 
   // select branches
-  tree->SetBranchStatus("genjet_*",0);
   tree->SetBranchStatus("lep_*",0);
   tree->SetBranchStatus("jet_*",0);
   tree->SetBranchStatus("vtx_*",0);
@@ -126,9 +125,11 @@ int main(int argc, char** argv) {
   tree->SetBranchStatus("llnunu_l2_mass",0);
   //tree->SetBranchStatus("llnunu_l2_metSig",0); 
   if (!isData) {
-    tree->SetBranchStatus("HLT_*",0); 
+    //tree->SetBranchStatus("HLT_*",0); 
     tree->SetBranchStatus("genX_*",0); 
     tree->SetBranchStatus("genLep_*",0);
+    tree->SetBranchStatus("genjet_*",0);
+    //tree->SetBranchStatus("genZ_*",0);
     //tree->SetBranchStatus("genZ_px",0); 
     //tree->SetBranchStatus("genZ_py",0); 
     //tree->SetBranchStatus("genZ_pz",0); 

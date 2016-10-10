@@ -53,8 +53,9 @@ do
 
   ttin="${ddo/_light/}/vvTreeProducer"
 
-  echo "cp -rp $ttin $ddo/"
-  cp -rp $ttin $ddo/
+#  echo "cp -rp $ttin $ddo/"
+#  cp -rp $ttin $ddo/
+  mkdir -p $ddo/vvTreeProducer
   echo "mv $ddo/vvTreeProducer/tree_light.root $ddo/vvTreeProducer/tree.root"
   mv $ddo/vvTreeProducer/tree_light.root $ddo/vvTreeProducer/tree.root
 done

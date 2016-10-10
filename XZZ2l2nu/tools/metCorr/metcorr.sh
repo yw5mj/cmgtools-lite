@@ -23,13 +23,17 @@ njob="0"
 #for infile in $inputdir/*/vvTreeProducer/tree.root ;
 #for infile in $(ls $inputdir/*/vvTreeProducer/tree.root | grep -v Single | grep -v DYJets ); 
 #for infile in $inputdir/SingleEMU_*/vvTreeProducer/tree.root ; 
-for infile in $inputdir/DYJetsToLL*/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/DYJetsToLL*/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/SingleEMU_Run2016B2G_*/vvTreeProducer/tree.root ; 
+for infile in $inputdir/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root ; 
 do
   echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"
 
   # options for outputs
-  outfile="${outfile/\/vvTreeProducer\/tree/_DataB2G}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_NoRecoil}"
+  outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2GNoRhoWt}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2G}"
   #outfile="${outfile/\/vvTreeProducer\/tree/}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_test}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_TgEfElFineBin}"

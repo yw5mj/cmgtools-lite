@@ -2,7 +2,7 @@
 
 std::string channel = "all";
 bool doMC = false;
-bool doGJets = false;
+bool doGJets = true;
 bool useMzCut = false;
 bool useZSelec = false;
 bool useZSelecLowLPt = true;
@@ -28,9 +28,10 @@ std::string outputdir = "./recoil_out3";
 std::vector< std::string > channels = {"all", "mu", "el"};
 std::vector< std::string > mcfiles = {
     //"DYJetsToLL_M50", "DYJetsToLL_M50_MGMLM_Ext1"
+    "DYJetsToLL_M50_BIG_NoRecoil", 
     //"DYJetsToLL_M50_NoRecoil", "DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
     //"DYJetsToLL_M50_RecoilSmooth", "DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth"
-    "DYJetsToLL_M50_RecoilNoSmooth", "DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth"
+    //"DYJetsToLL_M50_RecoilNoSmooth", "DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth"
  };
 
 std::vector< std::string > dtfiles = {
@@ -39,7 +40,9 @@ std::vector< std::string > dtfiles = {
  };
 
 std::vector< std::string > gjfiles = {
-    "SinglePhoton_Run2016BCD_PromptReco_newFilterLepVetoNoRecoil"
+    //"SinglePhoton_Run2016B2G_PromptReco_RcDataB2GNewFilterLepVetol"
+    "SinglePhoton_Run2016B2G_PromptReco_newFilterLepVetoNoRecoil"
+    //"SinglePhoton_Run2016BCD_PromptReco_newFilterLepVetoNoRecoil"
     //"SinglePhoton_Run2016BCD_PromptReco_newFilterEtaPhiCutNoRecoil"
     //"SinglePhoton_Run2016BCD_PromptReco_newFilterNoRecoil"
     //"SinglePhoton_Run2016BCD_PromptReco_HLTFlag3F2SiEtaNoRecoil"
@@ -56,6 +59,7 @@ std::vector< std::string > gjfiles = {
 
 char name[1000];
 TCanvas* plots;
+//std::string tag0 = "_NoRhoWt";
 std::string tag0 = "";
 //std::string tag0 = "_newfilterlepveto";
 //std::string tag0 = "_newfilteretaphicut";
@@ -187,7 +191,8 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
 
   // selec, cuts + weights
   std::string selec = base_selec;
-  if (doMC) selec +=  weight_selec + rhoweight_selec;
+  //if (doMC) selec +=  weight_selec + rhoweight_selec;
+  if (doMC) selec +=  weight_selec;
   if (doMC && useEffSf) selec += effsf_selec;
   if ( (doMC && mcTrgSf) || (!doMC && dtTrgSf) ) selec += "*(trgsf)";
   

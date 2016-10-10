@@ -7,8 +7,9 @@ from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
 
-tddag="DataB2G_ICHEPcfg_"
-#tddag="Test_DataB2G_ICHEPcfg_"
+tag="DataB2G_ICHEPcfg_"
+#tag="DataB2G_ScaledNotComplete_ICHEPcfg_"
+#tag="Test_DataB2G_ICHEPcfg_"
 #tag="test_"
 #tag=""
 #cutChain='loosecut'
@@ -20,11 +21,11 @@ cutChain='tight'
 #cutChain='tightzpt100met200'
 
 # can be el or mu or both
-channel='mu' 
-LogY=True
+channel='all' 
+LogY=False
 test=False
 DrawLeptons=True
-doRhoScale=True
+doRhoScale=False
 doSys=False
 
 lepsf="trgsf*idsf*isosf*trksf"
@@ -192,30 +193,31 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 
 zjetsPlotters=[]
-zjetsSamples = ['DYJetsToLL_M50_DataB2G','DYJetsToLL_M50_MGMLM_Ext1_DataB2G']
+zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2GNoRhoWt']
+#zjetsSamples = ['DYJetsToLL_M50_DataB2G','DYJetsToLL_M50_MGMLM_Ext1_DataB2G']
 #zjetsSamples = ['DYJetsToLL_M50_NoRecoil','DYJetsToLL_M50_MGMLM_Ext1_NoRecoil']
 
 
 for sample in zjetsSamples:
     zjetsPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
-    #zjetsPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
-    zjetsPlotters[-1].addCorrectionFactor('(1)','norm')
+    zjetsPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
+    #zjetsPlotters[-1].addCorrectionFactor('(1)','norm')
     if ZJetsZPtWeight: zjetsPlotters[-1].addCorrectionFactor(ZPtWeight,'ZPtWeight')
     #zjetsPlotters[-1].addCorrectionFactor('xsec','xsec')
     zjetsPlotters[-1].addCorrectionFactor('(1921.8*3)','xsec') # FEWZ NNLO.results_z_m50_nnlo_inclusive_NNPDF30_nlo_as_0118
     #zjetsPlotters[-1].addCorrectionFactor('(1907.0*3)','xsec') # FEWZ NNLO.results_z_m50_nnlo_fsrOn_lowstat_inclusive_NNPDF30_nlo_as_0118
-    #zjetsPlotters[-1].addCorrectionFactor('genWeight','genWeight')
-    zjetsPlotters[-1].addCorrectionFactor("ZJetsGenWeight",'genWeight')
+    zjetsPlotters[-1].addCorrectionFactor('genWeight','genWeight')
+    #zjetsPlotters[-1].addCorrectionFactor("ZJetsGenWeight",'genWeight')
     zjetsPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     zjetsPlotters[-1].addCorrectionFactor(lepsf,'lepsf')
     if channel=='el' :
-        zjetsPlotters[-1].addCorrectionFactor('(26353.947198/29196.721301)','scale') #el
+        zjetsPlotters[-1].addCorrectionFactor('(0.99444646888936361)','scale') #el
         #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #el
     elif channel=='mu' :
-        zjetsPlotters[-1].addCorrectionFactor('(4116525.848893/4500261.081822)','scale') #mu
+        zjetsPlotters[-1].addCorrectionFactor('(1.009392)','scale') #mu
         #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #mu
     else :
-        zjetsPlotters[-1].addCorrectionFactor('(4142879.79609/4529457.803123)','scale') #all
+        zjetsPlotters[-1].addCorrectionFactor('(1.009296)','scale') #all
         #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #all
     allPlotters[sample] = zjetsPlotters[-1]
 
