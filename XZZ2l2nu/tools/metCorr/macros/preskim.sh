@@ -8,12 +8,20 @@ g++ preskim.cc -o preskim.exe `root-config --cflags` `root-config --libs`
 #inputs
 #indir=/home/heli/XZZ/80X_20160825
 #outdir=/home/heli/XZZ/80X_20160825_light
-indir=/data2/XZZ2/80X_20160905
-outdir=/data2/XZZ2/80X_20160905_light
+#indir=/data2/XZZ2/80X_20160905
+#outdir=/data2/XZZ2/80X_20160905_light
+indir=/data2/XZZ2/80X_20161006
+outdir=/home/heli/XZZ/80X_20161006_light
+samples="SingleEMU_Run2016B2G_PromptReco"
+#samples="DYJetsToLL_M50"
+#samples="DYJetsToLL_M50_reHLT"
+#samples="DYJetsToLL_M50_BIG"
 mkdir -p $outdir
 
 #for dd in ${indir}/*/vvTreeProducer;
-for dd in ${indir}/Single*/vvTreeProducer;
+#for dd in ${indir}/Single*/vvTreeProducer;
+#for dd in ${indir}/SingleEMU_Run2016B2G_PromptReco/vvTreeProducer;
+for dd in ${indir}/${samples}/vvTreeProducer;
 do 
   infile="${dd}/tree.root";
   oo="${dd/$indir/$outdir}";
@@ -29,7 +37,9 @@ done
 
 wait
 
-for dd in  ${indir}/* ;
+#for dd in  ${indir}/* ;
+#for dd in ${indir}/SingleEMU_Run2016B2G_PromptReco ;
+for dd in ${indir}/${samples} ;
 do
   echo $dd;
   ddo=${dd/$indir/$outdir}
@@ -48,8 +58,9 @@ do
 
   ttin="${ddo/_light/}/vvTreeProducer"
 
-  echo "cp -rp $ttin $ddo/"
-  cp -rp $ttin $ddo/
+#  echo "cp -rp $ttin $ddo/"
+#  cp -rp $ttin $ddo/
+  mkdir -p $ddo/vvTreeProducer
   echo "mv $ddo/vvTreeProducer/tree_light.root $ddo/vvTreeProducer/tree.root"
   mv $ddo/vvTreeProducer/tree_light.root $ddo/vvTreeProducer/tree.root
 done

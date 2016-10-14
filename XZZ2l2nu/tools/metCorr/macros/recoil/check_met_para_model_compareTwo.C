@@ -1,26 +1,35 @@
 {
 
-std::string  name_file1 =
-//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_MzCut_mu.root"
-//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelec_mu.root"
-//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_mu.root"
-//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_dtHLT_mu.root"
-//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelec_el.root"
-//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_dtHLT_el.root"
-//"recoil_out2/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt_effSf.root"
-//"recoil_out2/DYJetsToLL_M50_met_para_study_ZSelecLowLPt_effSf.root"
-//"recoil_out2/DYJetsToLL_M50_RecoilSmooth_met_para_study_ZSelecLowLPt_effSf.root"
-"recoil_out2/DYJetsToLL_M50_RecoilNoSmooth_met_para_study_ZSelecLowLPt_effSf.root"
-;
-std::string  name_file2 =
-//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_mu.root"
-"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_mu.root"
-//"recoil_out2/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_el.root"
-//"recoil_out2/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt.root"
+std::string indir="recoil_out2";
 
+std::string  name1 =
+"SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_mu"
+//"SingleEMU_Run2016BCD_PromptReco_smbin_met_para_study_ZSelecLowLPt_mu"
 ;
+std::string  name2 =
+//"SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_hlt_met_para_study_ZSelecLowLPt_mu"
+//"SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_RcSmBin_smbin_hlt_met_para_study_ZSelecLowLPt_mu"
+//"SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_RcSmBin_hlt_met_para_study_ZSelecLowLPt_mu"
+//"SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_RcSmBin_hlt_id2_met_para_study_ZSelecLowLPt_mu"
+//"SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_RcSmBin_hlt_id3_met_para_study_ZSelecLowLPt_mu"
+//"SinglePhoton_Run2016BCD_PromptReco_HLTNo90_DtScale_hltno90_met_para_study_ZSelecLowLPt_mu"
+//"SinglePhoton_Run2016BCD_PromptReco_HLTNo90_DtScale_hltno75_met_para_study_ZSelecLowLPt_mu"
+//"SinglePhoton_Run2016BCD_PromptReco_HLTNo90_DtScale_hlt_phvto_met_para_study_ZSelecLowLPt_mu"
+"SinglePhoton_Run2016BCD_PromptReco_HLT_DtScale_Flag2_hlt_flag2_met_para_study_ZSelecLowLPt_mu"
+;
+
+std::string name_file1 = indir+"/"+name1+".root";
+std::string name_file2 = indir+"/"+name2+".root";
 
 gROOT->ProcessLine(".x tdrstyle.C");
+char name[1000];
+std::string plots_file = indir+"/"+"plots_"+name1+"_VS_"+name2;
+
+TCanvas* plots = new TCanvas("plots");
+
+
+sprintf(name, "%s.pdf[", plots_file.c_str());
+plots->Print(name);
 
 TFile* _file_dt_sigma[10];
 TFile* _file_mc_sigma[10];
@@ -38,7 +47,7 @@ TGraphErrors* _gr_mc_met_para_shift[10];
 TGraphErrors* _gr_met_para_shift_dtmc[10];
 TGraphErrors* _gr_ratio_met_para_sigma_dtmc[10];
 TGraphErrors* _gr_ratio_met_perp_sigma_dtmc[10];
-
+TLegend* lg[1000];
 
     _file_dt_sigma[0] = new TFile(name_file1.c_str());
     _file_mc_sigma[0] = new TFile(name_file2.c_str());
@@ -106,6 +115,49 @@ _h_ratio_met_para_sigma_dtmc[0]->Draw();
 
 //  h_zpt_dtmc->Draw();
 
+
+std::cout << "come here" << std::endl;
+
+TH1D* h_met_para_vs_zpt_bin_dt[100];
+TH1D* h_met_para_vs_zpt_bin_mc[100];
+
+std::cout << "come here" << std::endl;
+for (int i=0; i<h_dt_met_para_vs_zpt->GetNbinsX(); i++){
+  sprintf(name, "h_met_para_vs_zpt_bin%d", i+1);
+  h_met_para_vs_zpt_bin_dt[i] = (TH1D*)_file_dt_sigma[0]->Get(name);
+  h_met_para_vs_zpt_bin_mc[i] = (TH1D*)_file_mc_sigma[0]->Get(name);
+
+  lg[i] = new TLegend(0.6,0.7,0.9,0.9);
+  sprintf(name, "h_met_para_vs_zpt_bin%d_dt", i+1);
+  h_met_para_vs_zpt_bin_dt[i]->SetName(name);
+  lg[i]->AddEntry(h_met_para_vs_zpt_bin_dt[i], name, "pl");
+  sprintf(name, "h_met_para_vs_zpt_bin%d_mc", i+1);
+  h_met_para_vs_zpt_bin_mc[i]->SetName(name);
+  lg[i]->AddEntry(h_met_para_vs_zpt_bin_mc[i], name, "pl");
+
+  h_met_para_vs_zpt_bin_dt[i]->Scale(1.0/h_met_para_vs_zpt_bin_dt[i]->Integral());
+  h_met_para_vs_zpt_bin_mc[i]->Scale(1.0/h_met_para_vs_zpt_bin_mc[i]->Integral());
+
+  h_met_para_vs_zpt_bin_dt[i]->SetLineColor(2);
+  h_met_para_vs_zpt_bin_dt[i]->SetMarkerColor(2);
+  
+  h_met_para_vs_zpt_bin_mc[i]->SetLineColor(4);
+  h_met_para_vs_zpt_bin_mc[i]->SetMarkerColor(4);
+
+  plots->Clear();
+  h_met_para_vs_zpt_bin_dt[i]->Draw("hist e");
+  h_met_para_vs_zpt_bin_mc[i]->Draw("hist e same");
+  lg[i]->Draw();
+  plots->SetLogy(1);
+  sprintf(name, "%s.pdf", plots_file.c_str());
+  plots->Print(name); 
+  plots->SetLogy(0);
+  plots->Clear();
+
+}
+
+sprintf(name, "%s.pdf]", plots_file.c_str());
+plots->Print(name);
 
 
 

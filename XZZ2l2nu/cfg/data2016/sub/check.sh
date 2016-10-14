@@ -9,15 +9,16 @@
 # privide chunks running directory, 
 # and directory to copy jobs out
 
-dir=dt2
-out=/data2/XZZ2/80X_20160905_Chunks
+dir=dt8
+out=/data2/XZZ2/80X_20161006_Chunks
 
 mkdir -p $out
 
 # need to check your jobs with the expected n root files and n pck files
 # to verify if the job is finished sucessfully.
 n_root_files="3"
-n_pck_files="14"
+#n_pck_files="14"
+n_pck_files="13"
 
 
 if [ ! -e "$out" ]; then
@@ -48,7 +49,7 @@ do
     echo " > rm -rf $job"
     rm -rf $job
   else
-    echo "- job is not finished or has problem to be resubmitted .. "
+    echo "- job is not finished or has problem to be resubmitted .. with ${n1} root files and ${n2} pck files. "
   fi
 
 done

@@ -35,7 +35,7 @@ n_start: 0
 n_test: -1
 
 # n entries interval between which print once entry number
-n_interval: 5000
+n_interval: 1000000
 
 # use slimmed tree or not
 useLightTree: true
@@ -44,8 +44,8 @@ useLightTree: true
 selection: (1)
 
 # store old branches 
-storeOldBranches: true
-#storeOldBranches: false
+#storeOldBranches: true
+storeOldBranches: false
 
 
 
@@ -68,6 +68,17 @@ PUInputFileNames: pileup_MC_80x_271036-276811_67921.root, pileup_MC_80x_271036-2
 # PU weight hist name
 PUWeightHistName: puweight_dtmc
 
+
+#====================================================================
+#  ╔═╗ ╦╔═╗╔╦╗╔═╗  ╔═╗╦╔═╦╔╦╗
+#  ║ ╦ ║║╣  ║ ╚═╗  ╚═╗╠╩╗║║║║
+#  ╚═╝╚╝╚═╝ ╩ ╚═╝  ╚═╝╩ ╩╩╩ ╩
+#====================================================================
+doGJetsSkim: false
+doGJetsSkimAddPhiWeight: true
+GJetsSkimInputFileName: data/gjets/study_gjets_data_b2g_newFilterLepVeto.root
+
+GJetsSkimPhiWeightInputFileName: data/gjets/gjet_photon_phi_weight.root
 
 
 
@@ -132,15 +143,37 @@ doRecoilUseSmooth: true
 doRecoilUseSmoothGraph: true
 
 # Input files
-RecoilInputFileNameData_all: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt.root
-RecoilInputFileNameData_mu: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_mu.root
-RecoilInputFileNameData_el: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_el.root
-RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt_effSf.root
-RecoilInputFileNameMC_mu: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt_effSf_mu.root
-RecoilInputFileNameMC_el: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt_effSf_el.root
-RecoilInputFileNameMCLO_all: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_ZSelecLowLPt_effSf.root
-RecoilInputFileNameMCLO_mu: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_ZSelecLowLPt_effSf_mu.root
-RecoilInputFileNameMCLO_el: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_ZSelecLowLPt_effSf_el.root
+RecoilInputFileNameData_all: data/recoil/SingleEMU_Run2016B2G_PromptReco_met_para_study_ZSelecLowLPt.root
+RecoilInputFileNameData_mu: data/recoil/SingleEMU_Run2016B2G_PromptReco_met_para_study_ZSelecLowLPt_mu.root
+RecoilInputFileNameData_el: data/recoil/SingleEMU_Run2016B2G_PromptReco_met_para_study_ZSelecLowLPt_el.root
+#RecoilInputFileNameData_all: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt.root
+#RecoilInputFileNameData_mu: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_mu.root
+#RecoilInputFileNameData_el: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_el.root
+
+RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_BIG_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt.root
+RecoilInputFileNameMC_mu: data/recoil/DYJetsToLL_M50_BIG_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt_mu.root
+RecoilInputFileNameMC_el: data/recoil/DYJetsToLL_M50_BIG_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt_el.root
+#RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt.root
+#RecoilInputFileNameMC_mu: data/recoil/DYJetsToLL_M50_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt_mu.root
+#RecoilInputFileNameMC_el: data/recoil/DYJetsToLL_M50_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt_el.root
+#RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt_effSf.root
+#RecoilInputFileNameMC_mu: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt_effSf_mu.root
+#RecoilInputFileNameMC_el: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt_effSf_el.root
+
+RecoilInputFileNameMCLO_all: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt.root
+RecoilInputFileNameMCLO_mu: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt_mu.root
+RecoilInputFileNameMCLO_el: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt_el.root
+#RecoilInputFileNameMCLO_all: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_ZSelecLowLPt_effSf.root
+#RecoilInputFileNameMCLO_mu: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_ZSelecLowLPt_effSf_mu.root
+#RecoilInputFileNameMCLO_el: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_ZSelecLowLPt_effSf_el.root
+
+RecoilInputFileNameGJets_all: data/recoil/SinglePhoton_Run2016B2G_PromptReco_newFilterLepVetoNoRecoil_met_para_study_ZSelecLowLPt.root
+RecoilInputFileNameGJets_mu:  data/recoil/SinglePhoton_Run2016B2G_PromptReco_newFilterLepVetoNoRecoil_met_para_study_ZSelecLowLPt_mu.root
+RecoilInputFileNameGJets_el:  data/recoil/SinglePhoton_Run2016B2G_PromptReco_newFilterLepVetoNoRecoil_met_para_study_ZSelecLowLPt_el.root
+#RecoilInputFileNameGJets_all: data/recoil/SinglePhoton_Run2016BCD_PromptReco_newFilterLepVetoNoRecoil_newfilterlepveto_met_para_study_ZSelecLowLPt.root
+#RecoilInputFileNameGJets_mu:  data/recoil/SinglePhoton_Run2016BCD_PromptReco_newFilterLepVetoNoRecoil_newfilterlepveto_met_para_study_ZSelecLowLPt_mu.root
+#RecoilInputFileNameGJets_el:  data/recoil/SinglePhoton_Run2016BCD_PromptReco_newFilterLepVetoNoRecoil_newfilterlepveto_met_para_study_ZSelecLowLPt_el.root
+
 
 
 #====================================================================
@@ -157,16 +190,11 @@ EffScaleInputFileName_IdIso_Mu: data/eff/muon80x12p9.root
 EffScaleInputFileName_Trk_Mu: data/eff/muontrackingsf.root
 #EffScaleInputFileName_Trg_El: data/eff/trigereff12p9_20160902.root
 EffScaleInputFileName_Trg_El: data/eff/trigereff12p9_20160902_finebin.root
-EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu_20160830.root
+#EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu_20160830.root
+EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu_datab2g.root
 
 
 
-
-#====================================================================
-# skimming gjets
-#====================================================================
-doGJetsSkim: false
-GJetsSkimInputFileName: data/gjets/study_gjets.root
 
 
 

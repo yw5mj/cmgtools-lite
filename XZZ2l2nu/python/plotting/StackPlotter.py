@@ -158,6 +158,10 @@ class StackPlotter(object):
     def setPaveText(self, paveText):
         self.paveText = paveText
 
+    def setAlias(self, alias, definition):
+        for plotter in self.plotters:
+            plotter.setAlias(alias, definition)
+
     def closePSFile(self):
         c1 = ROOT.TCanvas(self.outTag, self.outTag);
         c1.Print(self.outFileName+'.ps]')
