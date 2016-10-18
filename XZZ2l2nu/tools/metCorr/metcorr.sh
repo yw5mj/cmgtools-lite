@@ -32,8 +32,8 @@ do
 
   # options for outputs
   #outfile="${outfile/\/vvTreeProducer\/tree/_NoRecoil}"
-  outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2GNoRhoWt}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2G}"
+  outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2G}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2GNoRhoWt}"
   #outfile="${outfile/\/vvTreeProducer\/tree/}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_test}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_TgEfElFineBin}"

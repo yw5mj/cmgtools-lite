@@ -167,7 +167,11 @@ class StackPlotter(object):
         c1.Print(self.outFileName+'.ps]')
         c1.Print(self.outFileName+'.pdf]')
         #ROOT.gROOT.ProcessLine('.! ps2pdf '+self.outFileName+'.ps '+self.outFileName+'.pdf')
-        
+       
+    def closeROOTFile(self):
+        self.fout.Close()
+
+ 
     def setLog(self,doLog):
         self.log=doLog
     def addPlotter(self,plotter,name="",label = "label",typeP = "background"):

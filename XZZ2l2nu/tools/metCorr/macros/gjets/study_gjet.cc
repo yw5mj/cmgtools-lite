@@ -28,7 +28,8 @@ int main(int argc, char** argv) {
 
   //TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160825_light_Skim/DYJetsToLL_M50_BIG.root");
   TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20161006_light_Skim/DYJetsToLL_M50_BIG_NoRecoil.root");
-  TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20161006_light/SinglePhoton_Run2016B2G_PromptReco/vvTreeProducer/tree.root");
+  TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20161006_light_Skim/SinglePhoton_Run2016B2G_PromptReco_newFilterLepVetoNoRecoil.root");
+  //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20161006_light/SinglePhoton_Run2016B2G_PromptReco/vvTreeProducer/tree.root");
   //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/GJet_Pt_20toInf_DoubleEMEnriched/vvTreeProducer/tree.root");
   //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
   //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160927_light/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
@@ -89,12 +90,21 @@ int main(int argc, char** argv) {
   TTree* tree2 = (TTree*)file2->Get("tree");
 
   // some gjets alias
-  tree2->SetAlias("metPara", "gjet_l2_pt*cos(gjet_l2_phi-gjet_l1_phi)");
-  tree2->SetAlias("metPerp", "gjet_l2_pt*sin(gjet_l2_phi-gjet_l1_phi)");
-  tree2->SetAlias("absDeltaPhi", "fabs(TVector2::Phi_mpi_pi(gjet_l2_phi-gjet_l1_phi))");
-  tree2->SetAlias("eta", "gjet_l1_eta");
-  tree2->SetAlias("phi", "gjet_l1_phi");
-  tree2->SetAlias("flag2", "(!(eta>0&&eta<0.15&&phi>0.52&&phi<0.56)&&!(eta>-2.5&&eta<-1.4&&phi>-0.5&&phi<0.5)&&!(eta>1.5&&eta<2.5&&phi>-0.5&&phi<0.5)&&!(eta>1.4&&eta<1.6&&phi>-0.8&&phi<-0.5)&&!(eta>1.4&&eta<2.5&&phi>2.5&&phi<4)&&!(eta>1.4&&eta<2.5&&phi>-4&&phi<-2.5)&&!(eta>-2.5&&eta<-1.4&&phi>2.5&&phi<4)&&!(eta>-2.5&&eta<-1.4&&phi>-4&&phi<-2.5)&&!(eta>2.3&&eta<2.6&&phi>-2.5&&phi<-2.2)&&!(eta>0.2&&eta<0.3&&phi>-2.6&&phi<-2.5)&&!(eta>0.5&&eta<0.7&&phi>-1.5&&phi<-1.2)&&!(eta>-0.85&&eta<-0.7&&phi>-1.8&&phi<-1.4)&&!(eta<-2.4&&eta>-2.5&&phi<-1.75&&phi>-1.9)&&!(eta>-2.5&&eta<-2.4&&phi>-1.2&&phi<-1.1)&&!(eta>-2.4&&eta<-2.3&&phi>-2.4&&phi<-2.3))");
+  // alias to use skimmed GJets ntuple
+  tree2->SetAlias("l1_pt", "llnunu_l1_pt");
+  tree2->SetAlias("l1_phi", "llnunu_l1_phi");
+  tree2->SetAlias("l1_eta", "llnunu_l1_eta");
+  tree2->SetAlias("l1_rapidity", "llnunu_l1_rapidity");
+  tree2->SetAlias("l2_pt", "llnunu_l2_pt");
+  tree2->SetAlias("l2_phi", "llnunu_l2_phi");
+
+  //
+  //tree2->SetAlias("metPara", "gjet_l2_pt*cos(gjet_l2_phi-gjet_l1_phi)");
+  //tree2->SetAlias("metPerp", "gjet_l2_pt*sin(gjet_l2_phi-gjet_l1_phi)");
+  //tree2->SetAlias("absDeltaPhi", "fabs(TVector2::Phi_mpi_pi(gjet_l2_phi-gjet_l1_phi))");
+  //tree2->SetAlias("eta", "gjet_l1_eta");
+  //tree2->SetAlias("phi", "gjet_l1_phi");
+  //tree2->SetAlias("flag2", "(!(eta>0&&eta<0.15&&phi>0.52&&phi<0.56)&&!(eta>-2.5&&eta<-1.4&&phi>-0.5&&phi<0.5)&&!(eta>1.5&&eta<2.5&&phi>-0.5&&phi<0.5)&&!(eta>1.4&&eta<1.6&&phi>-0.8&&phi<-0.5)&&!(eta>1.4&&eta<2.5&&phi>2.5&&phi<4)&&!(eta>1.4&&eta<2.5&&phi>-4&&phi<-2.5)&&!(eta>-2.5&&eta<-1.4&&phi>2.5&&phi<4)&&!(eta>-2.5&&eta<-1.4&&phi>-4&&phi<-2.5)&&!(eta>2.3&&eta<2.6&&phi>-2.5&&phi<-2.2)&&!(eta>0.2&&eta<0.3&&phi>-2.6&&phi<-2.5)&&!(eta>0.5&&eta<0.7&&phi>-1.5&&phi<-1.2)&&!(eta>-0.85&&eta<-0.7&&phi>-1.8&&phi<-1.4)&&!(eta<-2.4&&eta>-2.5&&phi<-1.75&&phi>-1.9)&&!(eta>-2.5&&eta<-2.4&&phi>-1.2&&phi<-1.1)&&!(eta>-2.4&&eta<-2.3&&phi>-2.4&&phi<-2.3))");
 
   // define cuts
   std::string metfilter="(Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_HBHENoiseFilter&&Flag_globalTightHalo2016Filter&&Flag_eeBadScFilter)";
@@ -125,7 +135,8 @@ int main(int argc, char** argv) {
   //std::string weight_selec = std::string("*(ZJetsGenWeight*ZPtWeight*1921.8*3*12900.0)");
   // rho weight
   //std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
-  std::string rhoweight_selec = "*(1)";
+  std::string rhoweight_selec = "*(0.232+0.064*rho)";
+  //std::string rhoweight_selec = "*(1)";
   // scale factors
   std::string effsf_selec = std::string("*(trgsf*isosf*idsf*trksf)");
   //std::string effsf_selec = std::string("*(trgsf*isosf*idsf*trksf*(1*(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13)+1.06*(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11)))");
@@ -163,8 +174,9 @@ int main(int argc, char** argv) {
 
   //std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&fabs(gjet_l1_eta)<1.47)";
   //std::string gjet_selec = "("+metfilter+"&&HLT_PHOTONIDISO&&flag2)";
-  std::string gjet_selec = "(1)"; // input ntuple preselected. 
   //std::string gjet_selec = "(phi>-1&&phi<2&&fabs(eta)<1.0)"; // input ntuple preselected. 
+  //std::string gjet_selec = "(1)"; // input ntuple preselected. 
+  std::string gjet_selec = "(1)*(GJetsRhoWeight)"; // input ntuple preselected. 
 
   //Double_t ZPtBins[] = {0,1.25,2.5,3.75,5,6.25,7.5,8.75,10,11.25,12.5,15,17.5,20,25,30,35,40,45,50,60,70,80,90,100,110,130,150,170,190,220,250,400,1000};
   Double_t ZPtBins[] = {20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,215,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300,350,400,500,700,3000};
@@ -185,7 +197,7 @@ int main(int argc, char** argv) {
 
 
   tree1->Draw("llnunu_l1_pt>>hzptbb1", zjet_selec.c_str());
-  tree2->Draw("gjet_l1_pt>>hzptbb2",gjet_selec.c_str());
+  tree2->Draw("l1_pt>>hzptbb2", gjet_selec.c_str());
 
   hzptbb1->Scale(1./hzptbb1->Integral(), "width");
   //hzptbb2->Scale(1./hzptbb2->Integral(), "width");
@@ -440,7 +452,7 @@ int main(int argc, char** argv) {
 
 
   tree1->Draw("llnunu_l1_rapidity:llnunu_l1_pt>>hzpt_zrap1", zjet_selec.c_str());
-  tree2->Draw("gjet_l1_rapidity:gjet_l1_pt>>hzpt_zrap2", gjet_selec.c_str());
+  tree2->Draw("l1_rapidity:l1_pt>>hzpt_zrap2", gjet_selec.c_str());
 
   hzpt_zrap1->Scale(1.0/hzpt_zrap1->Integral(),"width");
   hzpt_zrap2->Scale(1.0,"width");

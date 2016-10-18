@@ -268,6 +268,7 @@ void readConfigFile()
     if (_doGJetsSkimAddPhiWeight) {
       _GJetsSkimPhiWeightInputFileName = parm.GetString("GJetsSkimPhiWeightInputFileName", "data/gjets/gjet_photon_phi_weight.root");
     }
+    _GJetsSkimRhoWeightInputFileName = parm.GetString("GJetsSkimRhoWeightInputFileName", "data/gjets/get_rho_weight.root");
   }
 
 }
@@ -304,6 +305,7 @@ bool  prepareTrees()
   _tree_in->SetBranchAddress("run", &_run);
   _tree_in->SetBranchAddress("lumi", &_lumi);
   _tree_in->SetBranchAddress("evt", &_evt);
+  _tree_in->SetBranchAddress("rho", &_rho);
 
   if (_doGJetsSkim) {
     _tree_in->SetBranchAddress("gjet_mt", &_gjet_mt);
@@ -409,6 +411,7 @@ bool  prepareTrees()
   // GJets Skim
   if (_doGJetsSkim){
     _tree_out->Branch("GJetsPhiWeight", &_GJetsPhiWeight, "GJetsPhiWeight/F");
+    _tree_out->Branch("GJetsRhoWeight", &_GJetsRhoWeight, "GJetsRhoWeight/F");
     _tree_out->Branch("GJetsWeight", &_GJetsWeight, "GJetsWeight/F");
     _tree_out->Branch("GJetsWeightEl", &_GJetsWeightEl, "GJetsWeightEl/F");
     _tree_out->Branch("GJetsWeightMu", &_GJetsWeightMu, "GJetsWeightMu/F");
@@ -1388,7 +1391,12 @@ void prepareGJetsSkim()
     if (_doGJetsSkimAddPhiWeight) {
       _gjets_phi_weight_input_file = TFile::Open(_GJetsSkimPhiWeightInputFileName.c_str());
       _gjets_h_photon_phi_weight = (TH1D*)_gjets_phi_weight_input_file->Get("h_gjet_phi_weight");
-    }    
+    }   
+
+    // rho weight
+    _gjet_rho_weight_input_file = TFile::Open(_GJetsSkimRhoWeightInputFileName.c_str());
+    _gjet_h_rho_weight = (TH2D*)_gjet_rho_weight_input_file->Get("h_rho_zpt_weight");
+
   }
 
 }
@@ -1513,6 +1521,9 @@ void doGJetsSkim()
   if (_doGJetsSkimAddPhiWeight) {
     _GJetsPhiWeight = _gjets_h_photon_phi_weight->GetBinContent(_gjets_h_photon_phi_weight->FindBin(_llnunu_l1_phi));
   }
+
+  // gjet rho weight
+  _GJetsRhoWeight = _gjet_h_rho_weight->GetBinContent(_gjet_h_rho_weight->FindBin(_llnunu_l1_pt, _rho));
 
 }
 

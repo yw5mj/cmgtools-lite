@@ -1,32 +1,59 @@
 #!/usr/bin/env python
 
+import optparse
 import ROOT
-import os, string, math, pickle
+import os,sys, string, math, pickle
 from CMGTools.XZZ2l2nu.plotting.TreePlotter import TreePlotter
 from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
+grootargs = []
+def callback_rootargs(option, opt, value, parser):
+    grootargs.append(opt)
 
-tag="GJets_ICHEPcfg_"
+parser = optparse.OptionParser()
+parser.add_option("-t","--tag",dest="tag",default='DataB2G_ICHEPcfg_',help="")
+parser.add_option("--channel",dest="channel",default='mu',help="")
+parser.add_option("--cutChain",dest="cutChain",default='tight',help="")
+parser.add_option("--LogY",action="store_true", dest="LogY", default=False, help="")
+parser.add_option("--Blind",action="store_true", dest="Blind", default=False,help="")
+parser.add_option("--test",action="store_true", dest="test", default=False,help="")
+parser.add_option("-l",action="callback",callback=callback_rootargs)
+parser.add_option("-q",action="callback",callback=callback_rootargs)
+parser.add_option("-b",action="callback",callback=callback_rootargs)
+
+
+
+
+
+(options,args) = parser.parse_args()
+
+tag=options.tag
+#tag="GJets_ICHEPcfg_"
 #tag="Test_GJets_ICHEPcfg_"
 #tag="test_"
 #tag=""
+cutChain=options.cutChain
 #cutChain='loosecut'
 #cutChain='tight'
 #cutChain='tightzpt20'
-cutChain='tightzpt50'
+#cutChain='tightzpt50'
 #cutChain='tightzptgt50lt200'
 #cutChain='tightzpt100'
+#cutChain='tightzpt150'
 #cutChain='tightzpt100met50'
 #cutChain='tightzpt100met100'
 #cutChain='tightzpt100met200'
 
 # can be el or mu or both
-channel='el' 
-LogY=True
-test=False
+channel=options.channel
+#channel='el' 
+LogY=options.LogY
+test=options.test
+#LogY=True
+#test=True
 DrawLeptons=False
-doRhoScale=False
+doRhoScale=True
 
 dyGJets=True
 
@@ -46,7 +73,8 @@ lepsf="trgsf*isosf*idsf*trksf"
 
 if doRhoScale: 
     tag+="RhoWt_"
-    lepsf=lepsf+"*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))"
+    lepsf=lepsf+"*(0.232+0.064*rho)"
+    #lepsf=lepsf+"*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))"
     #lepsf=lepsf+"*(0.122360+0.180976*rho+-0.010879*pow(rho,2)+0.000226*pow(rho,3)-0.000002*pow(rho,4))"
 
 outdir='plots_b2g'
@@ -55,7 +83,8 @@ indir='/home/heli/XZZ/80X_20161006_light_Skim'
 lumi=27.22
 sepSig=True
 doRatio=True
-Blind=False
+#Blind=False
+Blind=options.Blind
 FakeData=False
 UseMETFilter=True
 SignalAll1pb=True
@@ -105,6 +134,7 @@ cuts_lepaccept+="||(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11&&ll
 cuts_lepaccept+="||(llnunu_l1_l1_pdgId==19801117))"
 cuts_zmass="(llnunu_l1_mass_to_plot>70&&llnunu_l1_mass_to_plot<110)"
 cuts_zpt100="(llnunu_l1_pt>100)"
+cuts_zpt150="(llnunu_l1_pt>150)"
 cuts_met50="(llnunu_l2_pt_to_plot>50)"
 cuts_met100="(llnunu_l2_pt_to_plot>100)"
 cuts_met200="(llnunu_l2_pt_to_plot>200)"
@@ -113,6 +143,7 @@ cuts_loose_zpt20="("+cuts_lepaccept+"&&"+cuts_zmass+"&&llnunu_l1_pt>20)"
 cuts_loose_zpt50="("+cuts_lepaccept+"&&"+cuts_zmass+"&&llnunu_l1_pt>50)"
 cuts_loose_zptgt50lt200="("+cuts_lepaccept+"&&"+cuts_zmass+"&&llnunu_l1_pt>50&&llnunu_l1_pt<200)"
 cuts_loose_zll="("+cuts_lepaccept+"&&"+cuts_zmass+"&&"+cuts_zpt100+")"
+cuts_loose_zpt150="("+cuts_lepaccept+"&&"+cuts_zmass+"&&"+cuts_zpt150+")"
 cuts_loose_zll_met50="("+cuts_lepaccept+"&&"+cuts_zmass+"&&"+cuts_zpt100+"&&"+cuts_met50+")"
 cuts_loose_zll_met100="("+cuts_lepaccept+"&&"+cuts_zmass+"&&"+cuts_zpt100+"&&"+cuts_met100+")"
 cuts_loose_zll_met200="("+cuts_lepaccept+"&&"+cuts_zmass+"&&"+cuts_zpt100+"&&"+cuts_met200+")"
@@ -124,6 +155,7 @@ elif cutChain=='tightzpt20': cuts=cuts_loose_zpt20
 elif cutChain=='tightzpt50': cuts=cuts_loose_zpt50
 elif cutChain=='tightzptgt50lt200': cuts=cuts_loose_zptgt50lt200
 elif cutChain=='tightzpt100': cuts=cuts_loose_zll
+elif cutChain=='tightzpt150': cuts=cuts_loose_zpt150
 elif cutChain=='tightzpt100met50': cuts=cuts_loose_zll_met50
 elif cutChain=='tightzpt100met100': cuts=cuts_loose_zll_met100
 elif cutChain=='tightzpt100met200': cuts=cuts_loose_zll_met200
@@ -230,18 +262,22 @@ for sample in zjetsSamples:
         #zjetsPlotters[-1].addCorrectionFactor('(flag2)','flag2')
         #zjetsPlotters[-1].addCorrectionFactor('(phi>-1&&phi<2&&fabs(eta)<1.0)','photonID')
         #zjetsPlotters[-1].addCorrectionFactor('GJetsPhiWeight','PhiWeight')
+        zjetsPlotters[-1].addCorrectionFactor('GJetsRhoWeight','RhoWeight')
         if channel=='el' : 
             #zjetsPlotters[-1].addCorrectionFactor('GJetsZPtWeightEl','genWeight')
             zjetsPlotters[-1].addCorrectionFactor('GJetsWeightEl','genWeight')
-            zjetsPlotters[-1].addCorrectionFactor('(2.0065962265992)','norm') #all
+            zjetsPlotters[-1].addCorrectionFactor('(2.0023405738368289519)','norm') #all
+            #zjetsPlotters[-1].addCorrectionFactor('(2.0065962265992)','norm') #all
         elif channel=='mu' : 
             #zjetsPlotters[-1].addCorrectionFactor('GJetsZPtWeightMu','genWeight')
             zjetsPlotters[-1].addCorrectionFactor('GJetsWeightMu','genWeight')
-            zjetsPlotters[-1].addCorrectionFactor('(132.382497631379266)','norm') #mu
+            zjetsPlotters[-1].addCorrectionFactor('(131.444602454)','norm') #mu
+            #zjetsPlotters[-1].addCorrectionFactor('(132.382497631379266)','norm') #mu
         else : 
             #zjetsPlotters[-1].addCorrectionFactor('GJetsZPtWeight','genWeight')
             zjetsPlotters[-1].addCorrectionFactor('GJetsWeight','genWeight')
-            zjetsPlotters[-1].addCorrectionFactor('(134.3822520849576847)','norm') #el
+            zjetsPlotters[-1].addCorrectionFactor('(133.42692934197972932)','norm') #el
+            #zjetsPlotters[-1].addCorrectionFactor('(134.3822520849576847)','norm') #el
     else:
         zjetsPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
         #zjetsPlotters[-1].addCorrectionFactor('(1)','norm')
@@ -528,5 +564,5 @@ if DrawLeptons and not dyGJets:
 
 
 Stack.closePSFile()
-
+Stack.closeROOTFile()
 

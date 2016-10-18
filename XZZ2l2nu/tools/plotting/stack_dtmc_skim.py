@@ -1,19 +1,43 @@
 #!/usr/bin/env python
 
+import optparse
 import ROOT
-import os, string, math, pickle
+import os,sys, string, math, pickle
 from CMGTools.XZZ2l2nu.plotting.TreePlotter import TreePlotter
 from CMGTools.XZZ2l2nu.plotting.MergedPlotter import MergedPlotter
 from CMGTools.XZZ2l2nu.plotting.StackPlotter import StackPlotter
 
+grootargs = []
+def callback_rootargs(option, opt, value, parser):
+    grootargs.append(opt)
 
-tag="DataB2G_ICHEPcfg_"
+parser = optparse.OptionParser()
+parser.add_option("-t","--tag",dest="tag",default='DataB2G_ICHEPcfg_',help="")
+parser.add_option("--channel",dest="channel",default='mu',help="")
+parser.add_option("--cutChain",dest="cutChain",default='tight',help="")
+parser.add_option("--LogY",action="store_true", dest="LogY", default=False, help="")
+parser.add_option("--Blind",action="store_true", dest="Blind", default=False,help="")
+parser.add_option("--test",action="store_true", dest="test", default=False,help="")
+parser.add_option("-l",action="callback",callback=callback_rootargs)
+parser.add_option("-q",action="callback",callback=callback_rootargs)
+parser.add_option("-b",action="callback",callback=callback_rootargs)
+
+
+
+
+
+(options,args) = parser.parse_args()
+
+
+tag=options.tag
+#tag="DataB2G_ICHEPcfg_"
 #tag="DataB2G_ScaledNotComplete_ICHEPcfg_"
 #tag="Test_DataB2G_ICHEPcfg_"
 #tag="test_"
 #tag=""
+cutChain=options.cutChain
 #cutChain='loosecut'
-cutChain='tight'
+#cutChain='tight'
 #cutChain='tightzpt100'
 #cutChain='tightzptlt200'
 #cutChain='tightzpt100met50'
@@ -21,11 +45,14 @@ cutChain='tight'
 #cutChain='tightzpt100met200'
 
 # can be el or mu or both
-channel='all' 
-LogY=False
-test=False
+channel=options.channel
+#channel='mu' 
+LogY=options.LogY
+test=options.test
+#LogY=True
+#test=False
 DrawLeptons=True
-doRhoScale=False
+doRhoScale=True
 doSys=False
 
 lepsf="trgsf*idsf*isosf*trksf"
@@ -44,7 +71,8 @@ if test: DrawLeptons = False
 
 if doRhoScale: 
     tag+="RhoWt_"
-    lepsf=lepsf+"*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))"
+    lepsf=lepsf+"*(0.232+0.064*rho)"
+    #lepsf=lepsf+"*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))"
 
 outdir='plots_b2g'
 
@@ -52,7 +80,8 @@ indir='/home/heli/XZZ/80X_20161006_light_Skim'
 lumi=27.22
 sepSig=True
 doRatio=True
-Blind=True
+#Blind=True
+Blind=options.Blind
 FakeData=False
 UseMETFilter=True
 SignalAll1pb=True
@@ -193,7 +222,8 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 
 zjetsPlotters=[]
-zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2GNoRhoWt']
+zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2G']
+#zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2GNoRhoWt']
 #zjetsSamples = ['DYJetsToLL_M50_DataB2G','DYJetsToLL_M50_MGMLM_Ext1_DataB2G']
 #zjetsSamples = ['DYJetsToLL_M50_NoRecoil','DYJetsToLL_M50_MGMLM_Ext1_NoRecoil']
 
@@ -471,5 +501,5 @@ else:
 
 
 Stack.closePSFile()
-
+Stack.closeROOTFile()
 
