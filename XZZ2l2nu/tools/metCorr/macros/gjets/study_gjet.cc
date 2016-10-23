@@ -27,14 +27,17 @@ int main(int argc, char** argv) {
 
 
   //TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160825_light_Skim/DYJetsToLL_M50_BIG.root");
-  TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20161006_light_Skim/DYJetsToLL_M50_BIG_NoRecoil.root");
-  TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20161006_light_Skim/SinglePhoton_Run2016B2G_PromptReco_newFilterLepVetoNoRecoil.root");
+  //TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20161006_light_Skim/DYJetsToLL_M50_BIG_NoRecoil.root");
+  TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20161018_light_Skim/DYJetsToLL_M50_BIG_NoRecoil.root");
+  TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20161018_light_Skim/SinglePhoton_Run2016B2H29fbinv_PromptReco_newFilterLepVetoNoRecoil.root");
+  //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20161006_light_Skim/SinglePhoton_Run2016B2G_PromptReco_newFilterLepVetoNoRecoil.root");
   //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20161006_light/SinglePhoton_Run2016B2G_PromptReco/vvTreeProducer/tree.root");
   //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/GJet_Pt_20toInf_DoubleEMEnriched/vvTreeProducer/tree.root");
   //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
   //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160927_light/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
 
-  std::string outtag="study_gjets_data_b2g_newFilterLepVeto";
+  std::string outtag="study_gjets_data_b2h29fbinv_newFilterLepVeto";
+  //std::string outtag="study_gjets_data_b2g_newFilterLepVeto";
   //std::string outtag="study_gjets_tight";
   //std::string outtag="study_gjets";
   //std::string outtag="study_gjets_data";
@@ -135,7 +138,8 @@ int main(int argc, char** argv) {
   //std::string weight_selec = std::string("*(ZJetsGenWeight*ZPtWeight*1921.8*3*12900.0)");
   // rho weight
   //std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
-  std::string rhoweight_selec = "*(0.232+0.064*rho)";
+  //std::string rhoweight_selec = "*(0.232+0.064*rho)";  // for b-g 27.22fb-l
+  std::string rhoweight_selec = "*(0.038+0.118*rho-4.329e-03*rho*rho+1.011e-04*rho*rho*rho)"; // for b-h 29.53 fb-1
   //std::string rhoweight_selec = "*(1)";
   // scale factors
   std::string effsf_selec = std::string("*(trgsf*isosf*idsf*trksf)");

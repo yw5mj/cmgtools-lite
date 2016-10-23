@@ -1,8 +1,10 @@
 #!/bin/sh
 
 #inputs
-inputdir=/home/heli/XZZ/80X_20161006_light
-outputdir=/home/heli/XZZ/80X_20161006_light_Skim
+inputdir=/home/heli/XZZ/80X_20161018_light
+outputdir=/home/heli/XZZ/80X_20161018_light_Skim
+#inputdir=/home/heli/XZZ/80X_20161006_light
+#outputdir=/home/heli/XZZ/80X_20161006_light_Skim
 #inputdir=/home/heli/XZZ/80X_20160927_light
 #outputdir=/home/heli/XZZ/80X_20160927_light_Skim
 config=config/parameters_light_gjets
@@ -15,14 +17,17 @@ njob="0"
 
 #for infile in $inputdir/GJet_Pt_20toInf_DoubleEMEnriched/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root ; 
-for infile in $inputdir/SinglePhoton_Run2016B2G_PromptReco/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/SinglePhoton_Run2016B2G_PromptReco/vvTreeProducer/tree.root ; 
+for infile in $inputdir/SinglePhoton_Run2016B2H29fbinv_PromptReco/vvTreeProducer/tree.root ; 
 do
   echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"
 
   # options for outputs
   #outfile="${outfile/\/vvTreeProducer\/tree/}"
-  outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2GNewFilterLepVeto}"
+  outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2H29fbinvNewFilterLepVetoStdPtScale}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2H29fbinvNewFilterLepVeto}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2GNewFilterLepVeto}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_newFilterLepVetoNoRecoil}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_newFilterLepVetoNoRecoil}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_test}"

@@ -136,7 +136,26 @@ int main(int argc, char** argv) {
     tree->SetBranchStatus("llnunu_l2_genEta",0);
   }
 
-  TTree* tree_out = tree->CloneTree(-1);
+  // add back jets info
+  tree->SetBranchStatus("jet_rawPt",1);
+  tree->SetBranchStatus("jet_eta",1);
+  tree->SetBranchStatus("jet_phi",1);
+  tree->SetBranchStatus("jet_area",1);
+
+  // alias
+  tree->SetAlias("muselec", "(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&abs(llnunu_l1_l1_eta)<2.4&&abs(llnunu_l1_l2_eta)<2.4&&llnunu_l1_l1_pt>20&&llnunu_l1_l2_pt>20&&(llnunu_l1_l1_highPtID>0.99||llnunu_l1_l2_highPtID>0.99))");
+  tree->SetAlias("elselec", "(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11&&abs(llnunu_l1_l1_eta)<2.5&&abs(llnunu_l1_l2_eta)<2.5&&llnunu_l1_l1_pt>20&&llnunu_l1_l2_pt>20)");
+
+  tree->SetAlias("metfilter", "(Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_HBHENoiseFilter&&Flag_globalTightHalo2016Filter&&Flag_eeBadScFilter)");
+  tree->SetAlias("hlt", "(HLT_MUv2||HLT_ELEv2)");
+
+  tree->SetAlias("muv0", "(hlt&&metfilter&&muselec)");
+  tree->SetAlias("elv0", "(hlt&&metfilter&&elselec)");
+  //tree->SetAlias("selecv0", "(hlt&&metfilter&&(muselec||elselec))");
+  tree->SetAlias("selecv0", "(metfilter&&(muselec||elselec))");
+
+  //TTree* tree_out = tree->CloneTree(-1);
+  TTree* tree_out = tree->CopyTree("selecv0");
 
 
   foutput->cd();

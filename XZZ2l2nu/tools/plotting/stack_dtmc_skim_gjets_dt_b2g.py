@@ -73,16 +73,14 @@ lepsf="trgsf*isosf*idsf*trksf"
 
 if doRhoScale: 
     tag+="RhoWt_"
-    lepsf=lepsf+"*(0.038+0.118*rho-4.329e-03*rho*rho+1.011e-04*rho*rho*rho)"
-    #lepsf=lepsf+"*(0.232+0.064*rho)"
+    lepsf=lepsf+"*(0.232+0.064*rho)"
     #lepsf=lepsf+"*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))"
     #lepsf=lepsf+"*(0.122360+0.180976*rho+-0.010879*pow(rho,2)+0.000226*pow(rho,3)-0.000002*pow(rho,4))"
 
-outdir='plots_b2h29fbinv'
-#outdir='plots_b2g'
+outdir='plots_b2g'
 
-indir='/home/heli/XZZ/80X_20161018_light_Skim'
-lumi=29.53
+indir='/home/heli/XZZ/80X_20161006_light_Skim'
+lumi=27.22
 sepSig=True
 doRatio=True
 #Blind=False
@@ -242,11 +240,7 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 
 zjetsPlotters=[]
-zjetsSamples = [
-#   'SinglePhoton_Run2016B2G_PromptReco_RcDataB2GNewFilterLepVeto',
-#    'SinglePhoton_Run2016B2H29fbinv_PromptReco_RcDataB2H29fbinvNewFilterLepVeto',
-    'SinglePhoton_Run2016B2H29fbinv_PromptReco_RcDataB2H29fbinvNewFilterLepVetoStdPtScale',
-]
+zjetsSamples = ['SinglePhoton_Run2016B2G_PromptReco_RcDataB2GNewFilterLepVeto']
 
 
 for sample in zjetsSamples:
@@ -272,20 +266,17 @@ for sample in zjetsSamples:
         if channel=='el' : 
             #zjetsPlotters[-1].addCorrectionFactor('GJetsZPtWeightEl','genWeight')
             zjetsPlotters[-1].addCorrectionFactor('GJetsWeightEl','genWeight')
-            zjetsPlotters[-1].addCorrectionFactor('(1.979828677*1.03025)','norm') #all
-            #zjetsPlotters[-1].addCorrectionFactor('(2.0023405738368289519)','norm') #all
+            zjetsPlotters[-1].addCorrectionFactor('(2.0023405738368289519)','norm') #all
             #zjetsPlotters[-1].addCorrectionFactor('(2.0065962265992)','norm') #all
         elif channel=='mu' : 
             #zjetsPlotters[-1].addCorrectionFactor('GJetsZPtWeightMu','genWeight')
             zjetsPlotters[-1].addCorrectionFactor('GJetsWeightMu','genWeight')
-            zjetsPlotters[-1].addCorrectionFactor('(131.1493514)','norm') #mu
-            #zjetsPlotters[-1].addCorrectionFactor('(131.444602454)','norm') #mu
+            zjetsPlotters[-1].addCorrectionFactor('(131.444602454)','norm') #mu
             #zjetsPlotters[-1].addCorrectionFactor('(132.382497631379266)','norm') #mu
         else : 
             #zjetsPlotters[-1].addCorrectionFactor('GJetsZPtWeight','genWeight')
             zjetsPlotters[-1].addCorrectionFactor('GJetsWeight','genWeight')
-            zjetsPlotters[-1].addCorrectionFactor('(133.1037719)','norm') #el
-            #zjetsPlotters[-1].addCorrectionFactor('(133.42692934197972932)','norm') #el
+            zjetsPlotters[-1].addCorrectionFactor('(133.42692934197972932)','norm') #el
             #zjetsPlotters[-1].addCorrectionFactor('(134.3822520849576847)','norm') #el
     else:
         zjetsPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
@@ -409,8 +400,7 @@ for sample in sigSamples:
 
 dataPlotters=[]
 dataSamples = [
-#'SingleEMU_Run2016B2G_PromptReco', 
-'SingleEMU_Run2016B2H29fbinv_PromptReco',
+'SingleEMU_Run2016B2G_PromptReco', 
 ]
 for sample in dataSamples:
     dataPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
@@ -486,14 +476,9 @@ tag+='_'
 
 
 if test: 
-    #Stack.drawStack('rho', cuts, str(lumi*1000), 50, 0.0, 50.0, titlex = "#rho", units = "",output=tag+'rho',outDir=outdir,separateSignal=sepSig)
-    Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 100, 0.0, 500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt_low',outDir=outdir,separateSignal=sepSig)
-    #Stack.drawStack('llnunu_mt_to_plot', cuts, str(lumi*1000), 120, 0.0, 600.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
-
-    #Stack.drawStack('llnunu_l2_pt_to_plot', cuts, str(lumi*1000), 100, 0, 500, titlex = "MET", units = "GeV",output=tag+'met_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
-
 #    Stack.drawStack('llnunu_l1_mass_to_plot', cuts, str(lumi*1000), 50, 50, 150, titlex = "M(Z)", units = "GeV",output=tag+'zmass',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('llnunu_l1_mass_to_plot', cuts, str(lumi*1000), 50, 50, 150, titlex = "M(Z)", units = "GeV",output=tag+'zmass',outDir=outdir,separateSignal=sepSig)
+    Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 100, 0.0, 500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt_low',outDir=outdir,separateSignal=sepSig)
 #    Stack.drawStack('llnunu_l1_rapidity', cuts, str(lumi*1000), 60, -3.0, 3.0, titlex = "Rapidity(Z) ", units = "",output=tag+'zrapidity',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('llnunu_l1_l1_pt', cuts, str(lumi*1000), 200, 0.0, 1000.0, titlex = "P_{T}(l_{1})", units = "GeV",output=tag+'pTlep1',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('llnunu_l1_l2_pt_to_plot', cuts, str(lumi*1000), 200, 0.0, 500.0, titlex = "P_{T}(l_{2})", units = "GeV",output=tag+'pTlep2',outDir=outdir,separateSignal=sepSig)

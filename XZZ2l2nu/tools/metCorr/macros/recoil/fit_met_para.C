@@ -5,7 +5,7 @@ bool doMC = false;
 bool doGJets = false;
 bool useMzCut = false;
 bool useZSelec = false;
-bool useZSelecLowLPt = true;
+bool useZSelecLowLPt = false;
 bool useEffSf = false;
 bool mcTrgSf = false;
 bool dtTrgSf = false;
@@ -42,8 +42,10 @@ std::vector< std::string > dtfiles = {
  };
 
 std::vector< std::string > gjfiles = {
+    "SinglePhoton_Run2016B2H29fbinv_PromptReco_newFilterLepVetoNoRecoil"
+    //"SinglePhoton_Run2016B2G_PromptReco_newFilterLepVetoNoRecoil"
     //"SinglePhoton_Run2016B2G_PromptReco_RcDataB2GNewFilterLepVetol"
-    "SinglePhoton_Run2016B2G_PromptReco_newFilterLepVetoNoRecoil"
+    //"SinglePhoton_Run2016B2G_PromptReco_newFilterLepVetoNoRecoil"
     //"SinglePhoton_Run2016BCD_PromptReco_newFilterLepVetoNoRecoil"
     //"SinglePhoton_Run2016BCD_PromptReco_newFilterEtaPhiCutNoRecoil"
     //"SinglePhoton_Run2016BCD_PromptReco_newFilterNoRecoil"
@@ -61,9 +63,9 @@ std::vector< std::string > gjfiles = {
 
 char name[1000];
 TCanvas* plots;
-//std::string tag0 = "_DtB2H29fbinv";
+std::string tag0 = "_DtB2H29fbinv";
 //std::string tag0 = "_NoRhoWt";
-std::string tag0 = "";
+//std::string tag0 = "";
 //std::string tag0 = "_newfilterlepveto";
 //std::string tag0 = "_newfilteretaphicut";
 //std::string tag0 = "_newfilter";
@@ -234,7 +236,8 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   gROOT->ProcessLine(name);
 
   // lumiTag for plotting
-  lumiTag = "CMS 13 TeV 2016 L=27.22 fb^{-1}";
+  lumiTag = "CMS 13 TeV 2016 L=29.53 fb^{-1}";
+  //lumiTag = "CMS 13 TeV 2016 L=27.22 fb^{-1}";
   //lumiTag = "CMS 13 TeV 2016 L=12.9 fb^{-1}";
   if (doMC) lumiTag = "CMS 13 TeV Simulation for 2016 Data";
 

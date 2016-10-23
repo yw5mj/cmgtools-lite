@@ -113,6 +113,10 @@ int main(int argc, char** argv) {
   TTree* tree_tmp1 = tree->CopyTree("HLT_PHOTONIDISO&&metfilter&&ngjet==1&&Max$(jet_pt[]*jet_chargedEmEnergyFraction[])<10&&Max$(jet_pt[]*jet_muonEnergyFraction[])<10&&flag3&&filter1");
  
   tree_tmp1->SetBranchStatus("jet_*",0);
+  tree_tmp1->SetBranchStatus("jet_rawPt",1);
+  tree_tmp1->SetBranchStatus("jet_eta",1);
+  tree_tmp1->SetBranchStatus("jet_phi",1);
+  tree_tmp1->SetBranchStatus("jet_area",1);
  
   TFile* ftmp2 = TFile::Open("/tmp/fout_tmp2.root", "recreate");
   TTree* tree_tmp2 = tree_tmp1->CopyTree("((eta<-1.566)||flg1eb||flg1eep)");

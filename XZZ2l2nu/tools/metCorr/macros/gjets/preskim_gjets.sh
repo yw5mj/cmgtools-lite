@@ -5,9 +5,12 @@
 # compile
 g++ preskim_gjets.cc -o preskim_gjets.exe `root-config --cflags` `root-config --libs`
 
+samples="SinglePhoton_Run2016B2H29fbinv_PromptReco"
 #inputs
-indir=/home/heli/XZZ/80X_20161006
-outdir=/home/heli/XZZ/80X_20161006_light
+indir=/home/heli/XZZ/80X_20161018
+outdir=/home/heli/XZZ/80X_20161018_light
+#indir=/home/heli/XZZ/80X_20161006
+#outdir=/home/heli/XZZ/80X_20161006_light
 #indir=/home/heli/XZZ/80X_20160927
 #outdir=/home/heli/XZZ/80X_20160927_light
 
@@ -15,7 +18,9 @@ mkdir -p $outdir
 
 #for dd in ${indir}/*/vvTreeProducer;
 #for dd in ${indir}/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer;
-for dd in ${indir}/SinglePhoton_Run2016B2G_PromptReco/vvTreeProducer;
+#for dd in ${indir}/SinglePhoton_Run2016B2G_PromptReco/vvTreeProducer;
+#for dd in ${indir}/SinglePhoton_Run2016B2H29fbinv_PromptReco/vvTreeProducer;
+for dd in ${indir}/${samples}/vvTreeProducer;
 do 
   infile="${dd}/tree.root";
   oo="${dd/$indir/$outdir}";
@@ -34,7 +39,7 @@ wait
 
 #for dd in  ${indir}/* ;
 #for dd in  ${indir}/SinglePhoton_Run2016BCD_PromptReco ;
-for dd in  ${indir}/SinglePhoton_Run2016B2G_PromptReco ;
+for dd in  ${indir}/${samples} ;
 do
   echo $dd;
   ddo=${dd/$indir/$outdir}
