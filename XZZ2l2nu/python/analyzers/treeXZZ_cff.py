@@ -71,6 +71,8 @@ vvTreeProducer = cfg.Analyzer(
          NTupleVariable("rho", lambda ev: ev.rho, float),
          NTupleVariable("lheNb", lambda ev: ev.lheNb, int, mcOnly=True),
          NTupleVariable("lheNj", lambda ev: ev.lheNj, int, mcOnly=True),
+         NTupleVariable("pdf_x1", lambda ev: ev.pdf_x1, float, mcOnly=True),
+         NTupleVariable("pdf_x2", lambda ev: ev.pdf_x2, float, mcOnly=True),
      ],
 
      globalObjects =  {

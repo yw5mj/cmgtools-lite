@@ -24,6 +24,9 @@ class XZZGenAnalyzer( Analyzer ):
                                                   mayFail=True,
                                                   fallbackLabel='source',
                                                   lazy=False )
+        #GenEventInfoProduct                   "generator"                 ""                "SIM"
+        self.mchandles['GenInfo'] = AutoHandle('generator', 'GenEventInfoProduct', mayFail=True,fallbackLabel='source',lazy=False )
+
                
     def beginLoop(self,setup):
         super(XZZGenAnalyzer,self).beginLoop(setup)
@@ -79,9 +82,9 @@ class XZZGenAnalyzer( Analyzer ):
 
         event.genIncomingQuarks = [ p for p in pruned if abs(p.pdgId())>=1 and abs(p.pdgId())<=5 and p.status()==21 ]
 
-        print "###### print genincomingQuarks #####" 
-        for idx,p in enumerate(event.genIncomingQuarks):
-            print "- [",idx,"], pdgId, pT, Eta, Phi: ",p.pdgId(),p.p4().Pt(),p.p4().Eta(),p.p4().Phi()
+        #print "###### print genincomingQuarks #####" 
+        #for idx,p in enumerate(event.genIncomingQuarks):
+        #    print "- [",idx,"], pdgId, pT, Eta, Phi: ",p.pdgId(),p.p4().Pt(),p.p4().Eta(),p.p4().Phi()
 
 
 
@@ -169,7 +172,12 @@ class XZZGenAnalyzer( Analyzer ):
             status = lheEvent.ISTUP[idxParticle]
             if status == 1 and idx==5:  event.lheNb += 1
             if status == 1 and ((idx >= 1 and idx <= 6) or idx == 21) : event.lheNj += 1
-              
+
+        # get incoming pdf fractions
+        genInfo = self.mchandles['GenInfo'].product()
+        event.pdf_x1 = genInfo.pdf().x.first
+        event.pdf_x2 = genInfo.pdf().x.second
+
 
     def process(self, event):
         self.readCollections( event.input )
