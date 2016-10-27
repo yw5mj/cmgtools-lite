@@ -10,17 +10,18 @@
 # and directory to copy jobs out
 
 dir=mc2
+out=/data2/XZZ2/80X_20161018_Chunks
 #out=/home/heli/80X_20160825_Chunks
 #out=/data2/XZZ2/80X_20160825_Chunks
-out=/data2/XZZ2/80X_20161006_Chunks
+#out=/data2/XZZ2/80X_20161006_Chunks
 
 mkdir -p $out
 
 # need to check your jobs with the expected n root files and n pck files
 # to verify if the job is finished sucessfully.
 n_root_files="3"
-#n_pck_files="14"
-n_pck_files="13"
+n_pck_files="14"
+#n_pck_files="13"
 
 
 if [ ! -e "$out" ]; then

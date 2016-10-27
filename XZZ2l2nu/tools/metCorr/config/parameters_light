@@ -26,7 +26,7 @@
 #====================================================================
 
 # debug
-debug: false
+debug: true
 
 # starting entry number 
 n_start: 0
@@ -92,6 +92,15 @@ doMuonPtRecalib: false
 MuonPtRecalibInputForData: data/kalman/DATA_80X_13TeV.root
 MuonPtRecalibInputForMC: data/kalman/MC_80X_13TeV.root
 
+
+#====================================================================
+#  ╔═╗╔╦╗  ╔═╗╔═╗  ╔═╗╔═╗╦═╗╦═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔
+#  ╚═╗║║║  ╔═╝╔═╝  ║  ║ ║╠╦╝╠╦╝║╣ ║   ║ ║║ ║║║║
+#  ╚═╝╩ ╩  ╚═╝╚═╝  ╚═╝╚═╝╩╚═╩╚═╚═╝╚═╝ ╩ ╩╚═╝╝╚╝
+#====================================================================
+addZZCorrections: true
+ZZCorrectionEwkInputFileName: data/zzcorr/ZZ_EwkCorrections.dat
+ZZCorrectionQcdInputFileName: data/zzcorr/zzqcd.root
 
 
 #====================================================================

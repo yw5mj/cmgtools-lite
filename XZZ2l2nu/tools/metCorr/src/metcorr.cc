@@ -44,7 +44,12 @@ int main(int argc, char** argv) {
   //   both strings "DYJets" and "MGMLM". 
   _isDyJets = (_file_out_name.find("DYJets")!=std::string::npos);
   _isDyJetsLO = (_file_out_name.find("DYJets")!=std::string::npos && _file_out_name.find("MGMLM")!=std::string::npos);
-  
+ 
+
+  // check if it is sm ZZ sample, based on file names
+  _isZZ = (_file_out_name.find("ZZTo2L2Nu")!=std::string::npos);
+
+ 
   if (_debug) std::cout << "DEBUG: isDyJets = " << _isDyJets << ", isDyJetsLO = " << _isDyJetsLO << std::endl;
 
 
@@ -66,6 +71,9 @@ int main(int argc, char** argv) {
 
   // prepare inputs for addDyZPtWeight
   if (_addDyZPtWeight && !_isData && _isDyJets && !_doGJetsSkim) prepareDyZPtWeight();
+
+  // prepare inputs for addZZCorrections
+  if (_addZZCorrections && !_isData && _isZZ ) prepareZZCorrections();
 
   // prepare inputs for simple met recoil tune.
   if (_doRecoil && ((!_isData && _isDyJets) || (_isData && _doGJetsSkim)) ) prepareRecoil();
@@ -114,6 +122,9 @@ int main(int argc, char** argv) {
 
     //  addDyZPtWeight
     if (_addDyZPtWeight && !_isData && _isDyJets && !_doGJetsSkim) addDyZPtWeight();
+
+    //  addZZCorrections
+    if (_addZZCorrections && !_isData && _isZZ ) addZZCorrections();
 
     // simple met recoil tune.
     if (_doRecoil && ((!_isData && _isDyJets) || (_isData && _doGJetsSkim))) doRecoil();
@@ -217,6 +228,18 @@ void readConfigFile()
     _addDyZPtWeightLOUseFunction = parm.GetBool("addDyZPtWeightLOUseFunction", kTRUE);
     _DyZPtWeightInputFileName = parm.GetString("DyZPtWeightInputFileName", "data/zptweight/dyjets_zpt_weight_lo_nlo_sel.root");
     _addDyNewGenWeight = parm.GetBool("addDyNewGenWeight", kTRUE);;
+  }
+
+  //========================
+  // Add ZZ correction
+  //========================
+  _addZZCorrections = parm.GetBool("addZZCorrections", kTRUE);
+  
+  if (_addZZCorrections) {
+    _ZZCorrectionEwkInputFileName = parm.GetString("ZZCorrectionEwkInputFileName", "data/zzcorr/ZZ_EwkCorrections.dat");
+    _ZZCorrectionQcdInputFileName = parm.GetString("ZZCorrectionQcdInputFileName", "data/zzcorr/zzqcd.root");
+    
+
   }
 
   //==============================================
@@ -376,6 +399,23 @@ bool  prepareTrees()
   if (!_isData&&!_doGJetsSkim) {
     _tree_in->SetBranchAddress("ngenZ", &_ngenZ);
     _tree_in->SetBranchAddress("genZ_pt", _genZ_pt);
+    if(_addZZCorrections&&_isZZ) {
+      _tree_in->SetBranchAddress("pdf_x1", &_pdf_x1);
+      _tree_in->SetBranchAddress("pdf_x2", &_pdf_x2);
+      _tree_in->SetBranchAddress("genZ_eta", _genZ_eta);
+      _tree_in->SetBranchAddress("genZ_phi", _genZ_phi);
+      _tree_in->SetBranchAddress("genZ_mass", _genZ_mass);
+      _tree_in->SetBranchAddress("ngenQ", &_ngenQ);
+      _tree_in->SetBranchAddress("genQ_pdgId", _genQ_pdgId);
+      _tree_in->SetBranchAddress("ngenLep", &_ngenLep);
+      _tree_in->SetBranchAddress("genLep_pt", _genLep_pt);
+      _tree_in->SetBranchAddress("genLep_eta", _genLep_eta);
+      _tree_in->SetBranchAddress("genLep_phi", _genLep_phi);
+      _tree_in->SetBranchAddress("ngenNeu", &_ngenNeu);
+      _tree_in->SetBranchAddress("genNeu_pt", _genNeu_pt);
+      _tree_in->SetBranchAddress("genNeu_eta", _genNeu_eta);
+      _tree_in->SetBranchAddress("genNeu_phi", _genNeu_phi);
+    }
   }
 
 
@@ -406,6 +446,16 @@ bool  prepareTrees()
     _tree_out->Branch("llnunu_l1_l2_eta_old", &_llnunu_l1_l2_eta_old, "llnunu_l1_l2_eta_old/F");
     _tree_out->Branch("llnunu_l1_l2_phi_old", &_llnunu_l1_l2_phi_old, "llnunu_l1_l2_phi_old/F");
     _tree_out->Branch("llnunu_l1_l2_ptErr_old", &_llnunu_l1_l2_ptErr_old, "llnunu_l1_l2_ptErr_old/F");
+  }
+
+  // for add SM qqZZ QCD/EW corrections
+  if (_addZZCorrections&&_isZZ){
+    _tree_out->Branch("ZZEwkCorrWeight", &_ZZEwkCorrWeight, "ZZEwkCorrWeight/F");
+    _tree_out->Branch("ZZEwkCorrWeight_up", &_ZZEwkCorrWeight_up, "ZZEwkCorrWeight_up/F");
+    _tree_out->Branch("ZZEwkCorrWeight_dn", &_ZZEwkCorrWeight_dn, "ZZEwkCorrWeight_dn/F");
+    _tree_out->Branch("ZZQcdCorrWeight", &_ZZQcdCorrWeight, "ZZQcdCorrWeight/F");
+    _tree_out->Branch("ZZQcdCorrWeight_up", &_ZZQcdCorrWeight_up, "ZZQcdCorrWeight_up/F");
+    _tree_out->Branch("ZZQcdCorrWeight_dn", &_ZZQcdCorrWeight_dn, "ZZQcdCorrWeight_dn/F");
   }
 
   // GJets Skim
@@ -566,6 +616,40 @@ void doMuonPtRecalib()
   }
 }
 
+
+// prepare inputs addZZCorrections
+void prepareZZCorrections()
+{
+  _zzCorr = new ZZCorrections();
+  _zzCorr->loadEwkTable(_ZZCorrectionEwkInputFileName);
+  _zzCorr->loadQcdFile(_ZZCorrectionQcdInputFileName);
+
+}
+
+// addZZCorrections
+void addZZCorrections()
+{
+  // Ewk corr and error
+  TLorentzVector V1, V2;
+  V1.SetPtEtaPhiM(_genZ_pt[0],_genZ_eta[0],_genZ_phi[0],_genZ_mass[0]);
+  V2.SetPtEtaPhiM(_genZ_pt[1],_genZ_eta[1],_genZ_phi[1],_genZ_mass[1]);
+  float sum4Pt = _genLep_pt[0]+_genLep_pt[1]+_genNeu_pt[0]+_genNeu_pt[1];
+  float ewkCorrections_error;
+  _ZZEwkCorrWeight = _zzCorr->getEwkCorrections(ewkCorrections_error, _genQ_pdgId[0], _pdf_x1, _pdf_x2, V1, V2, sum4Pt );
+  _ZZEwkCorrWeight_up = _ZZEwkCorrWeight+ewkCorrections_error;
+  _ZZEwkCorrWeight_dn = _ZZEwkCorrWeight-ewkCorrections_error;
+
+  // Qcd corr and error
+  float mZZ = (V1+V2).M();
+  _ZZQcdCorrWeight = _zzCorr->getKfactor_qqZZ_qcd_mZZ(mZZ);
+  _ZZQcdCorrWeight_up = _zzCorr->getKfactor_qqZZ_qcd_mZZ_up(mZZ);
+  _ZZQcdCorrWeight_dn = _zzCorr->getKfactor_qqZZ_qcd_mZZ_dn(mZZ);
+
+  if (_debug) {
+    std::cout << " qqZZEwkCorr,up,dn = " << _ZZEwkCorrWeight << "," << _ZZEwkCorrWeight_up << "," << _ZZEwkCorrWeight_dn << std::endl;
+    std::cout << " qqZZQcdCorr,up,dn = " << _ZZQcdCorrWeight << "," << _ZZQcdCorrWeight_up << "," << _ZZQcdCorrWeight_dn << std::endl;
+  }
+}
 
 // prepare inputs for addDyZPtWeight
 void prepareDyZPtWeight()

@@ -35,7 +35,7 @@
 #include "tdrstyle.h"
 #include "PParameterReader.h"
 #include "KalmanMuonCalibrator.h"
-
+#include "ZZCorrections.h"
 
 
 //======================================================
@@ -67,6 +67,9 @@ std::string _plots_out_name;
 
 // if DYJets samples
 bool _isDyJets, _isDyJetsLO;
+
+// if SM ZZ samples
+bool _isZZ;
 
 // strings for temporary usage
 char name[3000], name1[3000], name2[3000];
@@ -171,6 +174,22 @@ TF1*   _fcdyzpt_dtmc_ratio_resbos;
 TH1D*  _hdyzpt_mc_nlo_lo_ratio;
 TF1*   _fcdyzpt_mc_nlo_lo_ratio;
 
+
+
+//========================
+// Add SM ZZ Corrections 
+//========================
+// Add SM ZZ NNLO/NLO QCD corrections and NLO EW corrections
+
+// 
+bool _addZZCorrections = true;
+
+// ew correction input file name
+std::string _ZZCorrectionEwkInputFileName = "data/zzcorr/ZZ_EwkCorrections.dat";
+std::string _ZZCorrectionQcdInputFileName = "data/zzcorr/zzqcd.root";
+
+// not from config file
+ZZCorrections* _zzCorr;
 
 
 //==============================================
@@ -408,7 +427,21 @@ Int_t   _nTrueInt;
 Float_t _genWeight;
 Int_t   _ngenZ;
 Float_t _genZ_pt[10];
-
+Float_t _pdf_x1;
+Float_t _pdf_x2;
+Int_t   _ngenQ;
+Int_t   _genQ_pdgId[10];
+Float_t _genZ_eta[10];
+Float_t _genZ_phi[10];
+Float_t _genZ_mass[10];
+Int_t   _ngenLep;
+Float_t _genLep_pt[10];
+Float_t _genLep_eta[10];
+Float_t _genLep_phi[10];
+Int_t   _ngenNeu;
+Float_t _genNeu_pt[10];
+Float_t _genNeu_eta[10];
+Float_t _genNeu_phi[10];
 
 // tree_out only
 
@@ -422,6 +455,10 @@ Float_t _llnunu_l1_l2_pt_old, _llnunu_l1_l2_eta_old, _llnunu_l1_l2_phi_old, _lln
 // zpt gen weights
 Float_t _ZPtWeight, _ZPtWeight_up, _ZPtWeight_dn;
 Float_t _ZJetsGenWeight;
+
+// sm qqZZ QCD and EW corrections
+Float_t _ZZEwkCorrWeight, _ZZEwkCorrWeight_up, _ZZEwkCorrWeight_dn;
+Float_t _ZZQcdCorrWeight, _ZZQcdCorrWeight_up, _ZZQcdCorrWeight_dn;
 
 // efficiency scale factors
 Float_t _trgsf, _isosf, _idsf, _trksf, _idisotrksf;
@@ -479,6 +516,13 @@ void prepareDyZPtWeight();
 
 // addDyZPtWeight
 void addDyZPtWeight();
+
+
+// prepare for addZZCorrections
+void prepareZZCorrections();
+
+// addZCorrections
+void addZZCorrections();
 
 // prepare inputs for simple met recoil tune.
 void prepareRecoil();
