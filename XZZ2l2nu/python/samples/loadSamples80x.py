@@ -155,6 +155,57 @@ MET= [MET_Run2016B_PromptReco,
       MET_Run2016H_PromptReco_v2,
       ]
 
+SingleMuon23Sep2016=[
+            SingleMuon_Run2016B_23Sep2016,
+#            SingleMuon_Run2016B_23Sep2016_v2,
+            SingleMuon_Run2016C_23Sep2016,
+#            SingleMuon_Run2016D_23Sep2016,
+            SingleMuon_Run2016E_23Sep2016,
+            SingleMuon_Run2016F_23Sep2016,
+#            SingleMuon_Run2016G_23Sep2016,
+            ]
+SingleElectron23Sep2016=[
+                SingleElectron_Run2016B_23Sep2016,
+#                SingleElectron_Run2016B_23Sep2016_v2,
+                SingleElectron_Run2016C_23Sep2016,
+                SingleElectron_Run2016D_23Sep2016,
+                SingleElectron_Run2016E_23Sep2016,
+                SingleElectron_Run2016F_23Sep2016,
+                SingleElectron_Run2016G_23Sep2016,
+               ]
+SinglePhoton23Sep2016=[
+              SinglePhoton_Run2016B_23Sep2016,
+              SinglePhoton_Run2016B_23Sep2016_v2,
+              SinglePhoton_Run2016C_23Sep2016,
+              SinglePhoton_Run2016D_23Sep2016,
+              SinglePhoton_Run2016E_23Sep2016,
+              SinglePhoton_Run2016F_23Sep2016,
+              SinglePhoton_Run2016G_23Sep2016,
+             ]
+MuonEG23Sep2016=[
+      MuonEG_Run2016B_23Sep2016,
+      MuonEG_Run2016B_23Sep2016_v2,
+      MuonEG_Run2016C_23Sep2016,
+      MuonEG_Run2016D_23Sep2016,
+      MuonEG_Run2016E_23Sep2016,
+      MuonEG_Run2016F_23Sep2016,
+      MuonEG_Run2016G_23Sep2016,
+      ]
+
+MET23Sep2016=[
+      MET_Run2016B_23Sep2016,
+      MET_Run2016B_23Sep2016_v2,
+      MET_Run2016C_23Sep2016,
+      MET_Run2016D_23Sep2016,
+      MET_Run2016E_23Sep2016,
+      MET_Run2016F_23Sep2016,
+      MET_Run2016G_23Sep2016,
+      ]
+
+Data23Sep2016 = SingleMuon23Sep2016+SingleElectron23Sep2016+SinglePhoton23Sep2016+MuonEG23Sep2016+MET23Sep2016
+
+
+
 for s in SingleMuon:
     #s.triggers = triggers_1mu_noniso
     s.triggers = [] 
@@ -177,7 +228,11 @@ for s in MET:
     s.trigers = []
     s.vetoTriggers = []
 
-dataSamples=SingleMuon+SingleElectron #+jercRefdt
+for s in Data23Sep2016:
+    s.triggers = []
+    s.vetoTriggers = []
+
+dataSamples=SingleMuon+SingleElectron+Data23Sep2016
 
 otherDataSamples=MuonEG+MET 
 
@@ -196,8 +251,9 @@ silverJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/1
 #goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-279931_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
 #goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-280385_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
 #goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-280385_13TeV_PromptReco_Collisions16_JSON_NoL1T_v2.txt'
-goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-282037_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
-run_range = (271036,282037)
+#goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-282037_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
+goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-283685_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
+run_range = (271036,283685)
 
 jsonFile = goldenJson
 

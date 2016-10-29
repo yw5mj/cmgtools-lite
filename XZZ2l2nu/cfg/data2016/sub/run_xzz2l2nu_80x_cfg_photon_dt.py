@@ -116,13 +116,15 @@ if test==1:
     #selectedComponents = dataSamples
     #selectedComponents = mcSamples
     #selectedComponents = SinglePhoton
-    selectedComponents = [SinglePhoton_Run2016B_PromptReco,
-                          SinglePhoton_Run2016B_PromptReco_v2,
-                          SinglePhoton_Run2016C_PromptReco_v2,
-                          SinglePhoton_Run2016D_PromptReco_v2,
-                          SinglePhoton_Run2016E_PromptReco_v2,
-                          SinglePhoton_Run2016F_PromptReco_v1,
-                          SinglePhoton_Run2016G_PromptReco_v1,]
+    selectedComponents = SinglePhoton23Sep2016
+    #selectedComponents = SinglePhoton23Sep2016+[SinglePhoton_Run2016H_PromptReco_v2]
+    #selectedComponents = [SinglePhoton_Run2016B_PromptReco,
+    #                      SinglePhoton_Run2016B_PromptReco_v2,
+    #                      SinglePhoton_Run2016C_PromptReco_v2,
+    #                      SinglePhoton_Run2016D_PromptReco_v2,
+    #                      SinglePhoton_Run2016E_PromptReco_v2,
+    #                      SinglePhoton_Run2016F_PromptReco_v1,
+    #                      SinglePhoton_Run2016G_PromptReco_v1,]
  
     #selectedComponents = [SinglePhoton_Run2016D_PromptReco_v2]
     
@@ -148,7 +150,7 @@ if test==1:
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
         #c.files = c.files[3:10]
-        c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
+        c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
         #c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso

@@ -87,13 +87,15 @@ if test==1:
     #                      SingleElectron_Run2016D_PromptReco_v2, SingleMuon_Run2016D_PromptReco_v2,
     #                     ] 
 
-    selectedComponents = [SingleElectron_Run2016H_PromptReco_v1, SingleElectron_Run2016H_PromptReco_v2,
-                          SingleMuon_Run2016H_PromptReco_v1, SingleMuon_Run2016H_PromptReco_v2, 
-                          SinglePhoton_Run2016H_PromptReco_v1, SinglePhoton_Run2016H_PromptReco_v2, 
-                          MET_Run2016H_PromptReco_v1, MET_Run2016H_PromptReco_v2 
-                         ] 
+    #selectedComponents = [SingleElectron_Run2016H_PromptReco_v1, SingleElectron_Run2016H_PromptReco_v2,
+    #                      SingleMuon_Run2016H_PromptReco_v1, SingleMuon_Run2016H_PromptReco_v2, 
+    #                      SinglePhoton_Run2016H_PromptReco_v1, SinglePhoton_Run2016H_PromptReco_v2, 
+    #                      MET_Run2016H_PromptReco_v1, MET_Run2016H_PromptReco_v2 
+    #                     ] 
 
     #selectedComponents = [SingleElectron_Run2016H_PromptReco_v1] 
+    #selectedComponents = [SingleMuon_Run2016G_PromptReco_v1] 
+    selectedComponents = [SingleElectron_Run2016G_23Sep2016] 
     #selectedComponents = [MET_Run2016G_PromptReco_v1] 
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2,SingleElectron_Run2016B_PromptReco_v2] 
     #selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG

@@ -89,13 +89,13 @@ if test==1:
 
     #selectedComponents = [SingleElectron_Run2016H_PromptReco_v1, SingleElectron_Run2016H_PromptReco_v2,
     #                      SingleMuon_Run2016H_PromptReco_v1, SingleMuon_Run2016H_PromptReco_v2, 
-                         # MET_Run2016H_PromptReco_v1, MET_Run2016H_PromptReco_v2 
+    #                      SinglePhoton_Run2016H_PromptReco_v1, SinglePhoton_Run2016H_PromptReco_v2, 
+    #                      MET_Run2016H_PromptReco_v1, MET_Run2016H_PromptReco_v2 
     #                     ] 
 
-    selectedComponents = [MET_Run2016H_PromptReco_v1, MET_Run2016H_PromptReco_v2]
-
-    #selectedComponents = [SinglePhoton_Run2016H_PromptReco_v1, SinglePhoton_Run2016H_PromptReco_v2]
     #selectedComponents = [SingleElectron_Run2016H_PromptReco_v1] 
+    #selectedComponents = [SingleMuon_Run2016G_PromptReco_v1] 
+    #selectedComponents = [SingleElectron_Run2016G_23Sep2016] 
     #selectedComponents = [MET_Run2016G_PromptReco_v1] 
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2,SingleElectron_Run2016B_PromptReco_v2] 
     #selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG
@@ -106,6 +106,8 @@ if test==1:
     #selectedComponents = [DY1JetsToLL_M50_MGMLM, DY2JetsToLL_M50_MGMLM, DY3JetsToLL_M50_MGMLM, DY4JetsToLL_M50_MGMLM, DYBJetsToLL_M50_MGMLM]
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1600] 
     #selectedComponents = signalSamples
+    selectedComponents = SingleElectron23Sep2016+SingleMuon23Sep2016+MET23Sep2016+MuonEG23Sep2016
+    selectedComponents +=[SingleElectron_Run2016H_PromptReco_v2, SingleMuon_Run2016H_PromptReco_v2, MET_Run2016H_PromptReco_v2,MuonEG_Run2016H_PromptReco_v1,MuonEG_Run2016H_PromptReco_v2] 
     #selectedComponents = signalSamples+backgroundSamples
     #selectedComponents = backgroundSamples
     #selectedComponents = SingleMuon+SingleElectron

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-dir="dt12"
+dir="dt1"
 queue="2nd"
 
 # need to check your jobs with the expected n root files and n pck files
