@@ -11,13 +11,13 @@ do
   log=`grep processed log.txt`; 
   if [ -z "$log" ]; then 
     echo "run the job now" ; 
-    python $CMSSW_BASE/src/PhysicsTools/HeppyCore/python/framework/looper.py pycfg.py config.pck --options=options.json &> local.log && mv Loop/* . &
+    python $CMSSW_BASE/src/PhysicsTools/HeppyCore/python/framework/looper.py pycfg.py config.pck --options=options.json &> local.log && cp -rp Loop/* . && rm -rf Loop &
   else 
     echo "processed before"; 
   fi
   cd ../
   njob=$(( njob + 1 ))
-  if [ "$njob" -eq "6" ]; then
+  if [ "$njob" -eq "10" ]; then
     wait
     njob="0"
   fi

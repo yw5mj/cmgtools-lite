@@ -157,16 +157,16 @@ MET= [MET_Run2016B_PromptReco,
 
 SingleMuon23Sep2016=[
             SingleMuon_Run2016B_23Sep2016,
-#            SingleMuon_Run2016B_23Sep2016_v2,
+            SingleMuon_Run2016B_23Sep2016_v2,
             SingleMuon_Run2016C_23Sep2016,
-#            SingleMuon_Run2016D_23Sep2016,
+            SingleMuon_Run2016D_23Sep2016,
             SingleMuon_Run2016E_23Sep2016,
             SingleMuon_Run2016F_23Sep2016,
-#            SingleMuon_Run2016G_23Sep2016,
+            SingleMuon_Run2016G_23Sep2016,
             ]
 SingleElectron23Sep2016=[
                 SingleElectron_Run2016B_23Sep2016,
-#                SingleElectron_Run2016B_23Sep2016_v2,
+                SingleElectron_Run2016B_23Sep2016_v2,
                 SingleElectron_Run2016C_23Sep2016,
                 SingleElectron_Run2016D_23Sep2016,
                 SingleElectron_Run2016E_23Sep2016,

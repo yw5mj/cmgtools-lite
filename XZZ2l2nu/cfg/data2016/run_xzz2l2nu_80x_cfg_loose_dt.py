@@ -95,7 +95,9 @@ if test==1:
 
     #selectedComponents = [SingleElectron_Run2016H_PromptReco_v1] 
     #selectedComponents = [SingleMuon_Run2016G_PromptReco_v1] 
-    selectedComponents = [SingleElectron_Run2016G_23Sep2016] 
+    #selectedComponents = [SingleElectron_Run2016G_23Sep2016] 
+
+    selectedComponents = [SingleMuon_Run2016D_23Sep2016, SingleMuon_Run2016G_23Sep2016, SingleMuon_Run2016B_23Sep2016_v2, SingleElectron_Run2016B_23Sep2016_v2]
     #selectedComponents = [MET_Run2016G_PromptReco_v1] 
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2,SingleElectron_Run2016B_PromptReco_v2] 
     #selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG
