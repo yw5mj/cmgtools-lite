@@ -1,0 +1,20 @@
+Counter events :
+	 all events                                       0 	 -1.00 	 -1.0000
+	 pass events                                      0 	 -1.00 	 -1.0000
+	 pass 2mu events                                  0 	 -1.00 	 -1.0000
+	 pass 2el events                                  0 	 -1.00 	 -1.0000
+	 pass 2mu kin events                              0 	 -1.00 	 -1.0000
+	 pass 2el kin events                              0 	 -1.00 	 -1.0000
+	 pass 2mu kin+id events                           0 	 -1.00 	 -1.0000
+	 pass 2el kin+id events                           0 	 -1.00 	 -1.0000
+	 pass 2mu kin+id+iso events                       0 	 -1.00 	 -1.0000
+	 pass 2el kin+id+iso events                       0 	 -1.00 	 -1.0000
+	 pass 2mu kin+id+iso+acc events                   0 	 -1.00 	 -1.0000
+	 pass 2el kin+id+iso+acc events                   0 	 -1.00 	 -1.0000
+	 pass 1mu kin events                              0 	 -1.00 	 -1.0000
+	 pass 1el kin events                              0 	 -1.00 	 -1.0000
+	 pass 1mu kin+id events                           0 	 -1.00 	 -1.0000
+	 pass 1el kin+id events                           0 	 -1.00 	 -1.0000
+	 pass 1mu kin+id+iso events                       0 	 -1.00 	 -1.0000
+	 pass 1el kin+id+iso events                       0 	 -1.00 	 -1.0000
+

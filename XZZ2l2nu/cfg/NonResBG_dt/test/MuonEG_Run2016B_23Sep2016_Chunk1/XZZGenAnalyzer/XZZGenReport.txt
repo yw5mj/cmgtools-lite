@@ -1,0 +1,6 @@
+Counter XZZGenReport :
+	 XZZ2l2nu Events                                  0 	 -1.00 	 -1.0000
+	 XZZ2l2j Events                                   0 	 -1.00 	 -1.0000
+	 emu2nu Events                                    0 	 -1.00 	 -1.0000
+	 pass events                                      0 	 -1.00 	 -1.0000
+

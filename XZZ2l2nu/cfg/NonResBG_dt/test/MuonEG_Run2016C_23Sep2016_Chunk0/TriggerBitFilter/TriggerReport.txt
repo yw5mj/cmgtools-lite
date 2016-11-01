@@ -1,0 +1,4 @@
+Counter TriggerReport :
+	 All Events                                       0 	 -1.00 	 -1.0000
+	 Pass Trigger Events                              0 	 -1.00 	 -1.0000
+

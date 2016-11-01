@@ -1,0 +1,4 @@
+Counter events :
+	 all events                                     505 	 1.00 	 1.0000
+	 passed skim                                    505 	 1.00 	 1.0000
+

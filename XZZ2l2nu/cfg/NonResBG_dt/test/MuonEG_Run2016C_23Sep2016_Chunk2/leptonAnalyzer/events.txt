@@ -1,0 +1,20 @@
+Counter events :
+	 all events                                   89632 	 1.00 	 1.0000
+	 pass events                                  89632 	 1.00 	 1.0000
+	 pass 2mu events                               1127 	 0.01 	 0.0126
+	 pass 2el events                                 32 	 0.03 	 0.0004
+	 pass 2mu kin events                          74412 	 2325.38 	 0.8302
+	 pass 2el kin events                           2437 	 0.03 	 0.0272
+	 pass 2mu kin+id events                        8297 	 3.40 	 0.0926
+	 pass 2el kin+id events                          84 	 0.01 	 0.0009
+	 pass 2mu kin+id+iso events                    1127 	 13.42 	 0.0126
+	 pass 2el kin+id+iso events                      32 	 0.03 	 0.0004
+	 pass 2mu kin+id+iso+acc events                 110 	 3.44 	 0.0012
+	 pass 2el kin+id+iso+acc events                   3 	 0.03 	 0.0000
+	 pass 1mu kin events                          89574 	 29858.00 	 0.9994
+	 pass 1el kin events                          36827 	 0.41 	 0.4109
+	 pass 1mu kin+id events                       65315 	 1.77 	 0.7287
+	 pass 1el kin+id events                        8290 	 0.13 	 0.0925
+	 pass 1mu kin+id+iso events                   16195 	 1.95 	 0.1807
+	 pass 1el kin+id+iso events                    2379 	 0.15 	 0.0265
+

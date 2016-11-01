@@ -1,0 +1,6 @@
+Counter events :
+	 all events                                     376 	 1.00 	 1.0000
+	 pass llNuNu events                             376 	 1.00 	 1.0000
+	 pass elmuNuNu events                             0 	 0.00 	 0.0000
+	 pass PhotonJets events                           0 	 -1.00 	 0.0000
+

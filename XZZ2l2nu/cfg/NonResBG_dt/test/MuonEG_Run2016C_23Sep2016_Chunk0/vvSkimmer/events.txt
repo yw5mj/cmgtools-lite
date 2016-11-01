@@ -1,0 +1,4 @@
+Counter events :
+	 all events                                      20 	 1.00 	 1.0000
+	 passed skim                                     20 	 1.00 	 1.0000
+
