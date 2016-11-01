@@ -1,3 +1,0 @@
-Counter jets :
-	 All Events                                  126889 	 1.00 	 1.0000
-

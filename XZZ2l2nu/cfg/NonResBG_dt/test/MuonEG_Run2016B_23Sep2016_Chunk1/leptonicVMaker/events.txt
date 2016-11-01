@@ -1,7 +1,0 @@
-Counter events :
-	 all events                                       0 	 -1.00 	 -1.0000
-	 pass events                                      0 	 -1.00 	 -1.0000
-	 pass el events                                   0 	 -1.00 	 -1.0000
-	 pass mu events                                   0 	 -1.00 	 -1.0000
-	 pass el-mu events                                0 	 -1.00 	 -1.0000
-

@@ -1,4 +1,0 @@
-Counter JSON :
-	 All Events                                  140250 	 1.00 	 1.0000
-	 Passed Events                               126891 	 0.90 	 0.9047
-

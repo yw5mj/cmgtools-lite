@@ -1,4 +1,0 @@
-Counter events :
-	 all events                                     501 	 1.00 	 1.0000
-	 passed skim                                    501 	 1.00 	 1.0000
-

@@ -1,4 +1,0 @@
-Counter GoodVertex :
-	 All Events                                   92130 	 1.00 	 1.0000
-	 Events With Good Vertex                      92100 	 1.00 	 0.9997
-
