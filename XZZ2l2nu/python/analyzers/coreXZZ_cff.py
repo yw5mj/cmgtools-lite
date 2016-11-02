@@ -121,6 +121,7 @@ multtrg = cfg.Analyzer(
         'HLT_IsoTkMu20',
         'HLT_IsoMu27',
         ],
+    photonjet=False
 )
 
 ## Photon Analyzer (generic)

@@ -187,6 +187,10 @@ isoTrackType = NTupleObjectType("isoTrack",  baseObjectTypes = [ particleType ],
 ##------------------------------------------  
 
 photonType = NTupleObjectType("gamma", baseObjectTypes = [ particleType ], variables = [
+    NTupleVariable("trigerob_HLTbit", lambda x : getattr(x,'triggerbit',-100), int, help="photon matched HLT object path bit"),
+    NTupleVariable("trigerob_pt", lambda x : getattr(x,'triggerpt',-100), help="photon matched HLT object pt"),
+    NTupleVariable("trigerob_eta", lambda x : getattr(x,'triggereta',-100), help="photon matched HLT object eta"),
+    NTupleVariable("trigerob_phi", lambda x : getattr(x,'triggerphi',-100), help="photon matched HLT object phi"),
     NTupleVariable("idCutBased", lambda x : x.idCutBased, int, help="1,2,3 if the gamma passes the POG_SPRING15_25ns_(Loose,Medium,Tight)"),
     NTupleVariable("hOverE",  lambda x : x.hOVERe(), float, help="hoverE for photons"),
     NTupleVariable("ieta",  lambda x : x.iEta(), float, help=" "),

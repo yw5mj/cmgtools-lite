@@ -102,10 +102,33 @@ coreSequence = [
     eventFlagsAna,
     triggerFlagsAna,
 ]
-    
+multtrg.photonjet=True
+multtrg.HLTlist=[
+    "HLT_Photon22_R9Id90_HE10_IsoM_v",
+    "HLT_Photon30_R9Id90_HE10_IsoM_v",
+    "HLT_Photon36_R9Id90_HE10_IsoM_v",
+    "HLT_Photon50_R9Id90_HE10_IsoM_v",
+    "HLT_Photon75_R9Id90_HE10_IsoM_v",
+    "HLT_Photon90_R9Id90_HE10_IsoM_v",
+    "HLT_Photon120_R9Id90_HE10_IsoM_v",
+    "HLT_Photon165_R9Id90_HE10_IsoM_v",
+    ]    
+#for ihlt in multtrg.HLTlist:
+#    vvTreeProducer.globalVariables.append(
+#         NTupleVariable("PreScale"+ihlt[3:-2],  lambda ev: getattr(ev,ihlt+"PS"), int, help="Photon HLT prescale")
+#)
+vvTreeProducer.globalVariables.append(NTupleVariable("PreScale22",  lambda ev: getattr(ev,"HLT_Photon22_R9Id90_HE10_IsoM_vPS"), int, help="Photon HLT prescale"))
+vvTreeProducer.globalVariables.append(NTupleVariable("PreScale30",  lambda ev: getattr(ev,"HLT_Photon30_R9Id90_HE10_IsoM_vPS"), int, help="Photon HLT prescale"))
+vvTreeProducer.globalVariables.append(NTupleVariable("PreScale36",  lambda ev: getattr(ev,"HLT_Photon36_R9Id90_HE10_IsoM_vPS"), int, help="Photon HLT prescale"))
+vvTreeProducer.globalVariables.append(NTupleVariable("PreScale50",  lambda ev: getattr(ev,"HLT_Photon50_R9Id90_HE10_IsoM_vPS"), int, help="Photon HLT prescale"))
+vvTreeProducer.globalVariables.append(NTupleVariable("PreScale75",  lambda ev: getattr(ev,"HLT_Photon75_R9Id90_HE10_IsoM_vPS"), int, help="Photon HLT prescale"))
+vvTreeProducer.globalVariables.append(NTupleVariable("PreScale90",  lambda ev: getattr(ev,"HLT_Photon90_R9Id90_HE10_IsoM_vPS"), int, help="Photon HLT prescale"))
+vvTreeProducer.globalVariables.append(NTupleVariable("PreScale120",  lambda ev: getattr(ev,"HLT_Photon120_R9Id90_HE10_IsoM_vPS"), int, help="Photon HLT prescale"))
+vvTreeProducer.globalVariables.append(NTupleVariable("PreScale165",  lambda ev: getattr(ev,"HLT_Photon165_R9Id90_HE10_IsoM_vPS"), int, help="Photon HLT prescale"))
+
 #sequence = cfg.Sequence(coreSequence)
-sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
-#sequence = cfg.Sequence(coreSequence+[vvSkimmer,multtrg,vvTreeProducer])
+#sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
+sequence = cfg.Sequence(coreSequence+[vvSkimmer,multtrg,vvTreeProducer])
 #sequence = cfg.Sequence(coreSequence+[vvSkimmer,fullTreeProducer])
  
 
@@ -116,9 +139,9 @@ if test==1:
     #selectedComponents = dataSamples
     #selectedComponents = mcSamples
     #selectedComponents = SinglePhoton
-    #selectedComponents = SinglePhoton23Sep2016
+    selectedComponents = SinglePhoton23Sep2016+[SinglePhoton_Run2016H_PromptReco_v1,SinglePhoton_Run2016H_PromptReco_v2]
     #selectedComponents = SinglePhoton23Sep2016+[SinglePhoton_Run2016H_PromptReco_v2]
-    selectedComponents = [SinglePhoton_Run2016C_23Sep2016]
+    #selectedComponents = [SinglePhoton_Run2016C_23Sep2016]
     #selectedComponents = [SinglePhoton_Run2016B_PromptReco,
     #                      SinglePhoton_Run2016B_PromptReco_v2,
     #                      SinglePhoton_Run2016C_PromptReco_v2,
