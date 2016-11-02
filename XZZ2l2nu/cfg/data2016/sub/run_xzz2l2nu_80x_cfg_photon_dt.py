@@ -113,6 +113,12 @@ multtrg.HLTlist=[
     "HLT_Photon120_R9Id90_HE10_IsoM_v",
     "HLT_Photon165_R9Id90_HE10_IsoM_v",
     ]    
+'''
+README
+
+The branch gjet_l1_trigerob_HLTbit in the output ntuple can be used to determin which HLT object could be matched with the photon. For example, "HLT_Photon50_R9Id90_HE10_IsoM" is the 3rd element in the list multtrg.HLTlist, then by doing "(gjet_l1_trigerob_HLTbit>>3)&1", one can tell if HLT_Photon50_R9Id90_HE10_IsoM is matched with the photon (1 for yes 0 for no)
+
+'''
 #for ihlt in multtrg.HLTlist:
 #    vvTreeProducer.globalVariables.append(
 #         NTupleVariable("PreScale"+ihlt[3:-2],  lambda ev: getattr(ev,ihlt+"PS"), int, help="Photon HLT prescale")
