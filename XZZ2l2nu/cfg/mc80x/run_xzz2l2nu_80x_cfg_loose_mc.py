@@ -80,8 +80,8 @@ if test==1:
     #selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
     #selectedComponents = [WJetsToLNu]
-    selectedComponents = [ZZTo2L2Nu]
-    #selectedComponents = [DYJetsToLL_M50_reHLT]
+    #selectedComponents = [ZZTo2L2Nu]
+    selectedComponents = [DYJetsToLL_M50_reHLT]
     #selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
     #selectedComponents = [DY1JetsToLL_M50_MGMLM]

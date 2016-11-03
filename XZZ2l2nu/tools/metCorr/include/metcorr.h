@@ -193,6 +193,64 @@ ZZCorrections* _zzCorr;
 
 
 //==============================================
+// Do JEC JER
+//==============================================
+
+bool _doJEC = false;
+bool _doJER = false;
+
+// JEC parameters
+// data jec
+std::string _JECParTxt_DATA_L2L3Residual;
+std::string _JECParTxt_DATA_L3Absolute;
+std::string _JECParTxt_DATA_L2Relative; 
+std::string _JECParTxt_DATA_L1FastJet;
+std::string _JECParTxt_DATA_Uncertianty;
+// mc jec
+std::string _JECParTxt_MC_L2L3Residual;
+std::string _JECParTxt_MC_L3Absolute;
+std::string _JECParTxt_MC_L2Relative; 
+std::string _JECParTxt_MC_L1FastJet;
+std::string _JECParTxt_MC_Uncertianty;
+
+// JER parameters
+std::string _JERParTxt_Reso_DATA;
+std::string _JERParTxt_Reso_MC;
+std::string _JERParTxt_SF_DATA;
+std::string _JERParTxt_SF_MC;
+
+
+// not from config file
+// JEC parameters
+// data
+JetCorrectorParameters *_JEC_ResJetPar_DATA;
+JetCorrectorParameters *_JEC_L3JetPar_DATA;
+JetCorrectorParameters *_JEC_L2JetPar_DATA;
+JetCorrectorParameters *_JEC_L1JetPar_DATA;
+// mc
+JetCorrectorParameters *_JEC_ResJetPar_MC;
+JetCorrectorParameters *_JEC_L3JetPar_MC;
+JetCorrectorParameters *_JEC_L2JetPar_MC;
+JetCorrectorParameters *_JEC_L1JetPar_MC;
+
+// jec parametesrs vec
+std::vector<JetCorrectorParameters> _JEC_vPar_DATA;
+std::vector<JetCorrectorParameters> _JEC_vPar_MC;
+
+// jec corrector
+FactorizedJetCorrector *_JEC_JetCorrector_DATA;
+FactorizedJetCorrector *_JEC_JetCorrector_MC;
+
+// JER parameters
+JME::JetResolution* _JER_Reso_DATA;
+JME::JetResolution* _JER_Reso_MC;
+
+JME::JetParameters* _JERPar_Reso_DATA;
+JME::JetParameters* _JERPar_Reso_MC;
+
+
+
+//==============================================
 // Do simple version of the MET recoil tuning
 //==============================================
 

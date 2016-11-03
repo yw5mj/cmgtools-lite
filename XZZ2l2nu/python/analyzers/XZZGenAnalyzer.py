@@ -165,13 +165,15 @@ class XZZGenAnalyzer( Analyzer ):
         # get n partons info
         event.lheNb = 0
         event.lheNj = 0
-        lheEvent = self.mchandles['LHEinfo'].product().hepeup();
-        lheParticles = lheEvent.PUP;
-        for idxParticle in range(len(lheParticles)):
-            idx = abs(lheEvent.IDUP[idxParticle])
-            status = lheEvent.ISTUP[idxParticle]
-            if status == 1 and idx==5:  event.lheNb += 1
-            if status == 1 and ((idx >= 1 and idx <= 6) or idx == 21) : event.lheNj += 1
+        lheinfo = self.mchandles['LHEinfo'].product();
+        if lheinfo:
+            lheEvent = lheinfo.hepeup();
+            lheParticles = lheEvent.PUP;
+            for idxParticle in range(len(lheParticles)):
+                idx = abs(lheEvent.IDUP[idxParticle])
+                status = lheEvent.ISTUP[idxParticle]
+                if status == 1 and idx==5:  event.lheNb += 1
+                if status == 1 and ((idx >= 1 and idx <= 6) or idx == 21) : event.lheNj += 1
 
         # get incoming pdf fractions
         genInfo = self.mchandles['GenInfo'].product()

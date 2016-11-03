@@ -79,6 +79,7 @@ vvTreeProducer.globalObjects =  {  }
 vvTreeProducer.collections = {
 	 "jets"       : NTupleCollection("jet",JetType,100, help="all jets in miniaod"),
 #         "selectedPhotons"       : NTupleCollection("photon",photonType,100, help="selected photons in miniaod"),
+         "selectedLeptons" : NTupleCollection("lep",leptonType,10, help="selected leptons"),
          "PhotonJets"     : NTupleCollection("gjet",PhotonJetType ,100, help="photon and MET"),
      }
 
@@ -93,7 +94,7 @@ coreSequence = [
     triggerAna,
     pileUpAna,
     vertexAna,
-    #lepAna,
+    lepAna,
     photonAna, 
     jetAna,
     metAna,
@@ -129,7 +130,9 @@ if test==1:
     #selectedComponents = [SingleMuon_Run2016D_PromptReco_v2,SingleElectron_Run2016D_PromptReco_v2] 
     #selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
-    selectedComponents = [WJetsToLNu]
+    #selectedComponents = [WJetsToLNu]
+    selectedComponents = [GJet_Pt_20toInf_DoubleEMEnriched]
+    #selectedComponents = [GJet_Pt_40toInf_DoubleEMEnriched]
     #selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_600] 

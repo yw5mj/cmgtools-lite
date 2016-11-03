@@ -148,6 +148,7 @@ if test==1:
     selectedComponents = SinglePhoton23Sep2016+[SinglePhoton_Run2016H_PromptReco_v1,SinglePhoton_Run2016H_PromptReco_v2]
     #selectedComponents = SinglePhoton23Sep2016+[SinglePhoton_Run2016H_PromptReco_v2]
     #selectedComponents = [SinglePhoton_Run2016C_23Sep2016]
+    #selectedComponents = [SinglePhoton_Run2016D_23Sep2016]
     #selectedComponents = [SinglePhoton_Run2016B_PromptReco,
     #                      SinglePhoton_Run2016B_PromptReco_v2,
     #                      SinglePhoton_Run2016C_PromptReco_v2,
@@ -160,6 +161,7 @@ if test==1:
     
     #selectedComponents = [SinglePhoton_Run2016H_PromptReco_v1, SinglePhoton_Run2016H_PromptReco_v2]
     #selectedComponents = [SinglePhoton_Run2016H_PromptReco_v1]
+    selectedComponents = [SinglePhoton_Run2016H_PromptReco_v2]
 
     #selectedComponents = [SinglePhoton_Run2016F_PromptReco_v1]
     #selectedComponents = [GJet_Pt_20toInf_DoubleEMEnriched]
