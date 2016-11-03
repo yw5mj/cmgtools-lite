@@ -36,6 +36,11 @@
 #include "PParameterReader.h"
 #include "KalmanMuonCalibrator.h"
 #include "ZZCorrections.h"
+#include "JetCorrectorParameters.h"
+#include "FactorizedJetCorrector.h"
+#include "JetResolution.h"
+
+
 
 
 //======================================================
