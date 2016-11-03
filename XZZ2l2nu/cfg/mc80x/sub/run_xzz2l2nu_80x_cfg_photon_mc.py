@@ -120,7 +120,7 @@ if test==1:
     #selectedComponents = [SinglePhoton_Run2016G_PromptReco_v1]
     #selectedComponents = [SinglePhoton_Run2016F_PromptReco_v1]
     #selectedComponents = [GJet_Pt_20toInf_DoubleEMEnriched]
-    #selectedComponents = [GJet_Pt_20to40_DoubleEMEnriched, GJet_Pt_40toInf_DoubleEMEnriched]
+    selectedComponents = [GJet_Pt_20to40_DoubleEMEnriched, GJet_Pt_40toInf_DoubleEMEnriched]
     #selectedComponents = [GJet_Pt_20toInf_DoubleEMEnriched, GJet_Pt_20to40_DoubleEMEnriched, GJet_Pt_40toInf_DoubleEMEnriched]
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #selectedComponents = [SingleMuon_Run2015C_25ns_16Dec]
@@ -130,7 +130,8 @@ if test==1:
     #selectedComponents = [SingleMuon_Run2016D_PromptReco_v2,SingleElectron_Run2016D_PromptReco_v2] 
     #selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
-    selectedComponents = [WJetsToLNu]
+    #selectedComponents = [WJetsToLNu]
+    #selectedComponents = MajorGJetsMC
     #selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_600] 
