@@ -79,6 +79,7 @@ vvTreeProducer.globalObjects =  {  }
 vvTreeProducer.collections = {
 	 "jets"       : NTupleCollection("jet",JetType,100, help="all jets in miniaod"),
 #         "selectedPhotons"       : NTupleCollection("photon",photonType,100, help="selected photons in miniaod"),
+         "selectedLeptons" : NTupleCollection("lep",leptonType,10, help="selected leptons"),
          "PhotonJets"     : NTupleCollection("gjet",PhotonJetType ,100, help="photon and MET"),
      }
 
@@ -93,7 +94,7 @@ coreSequence = [
     triggerAna,
     pileUpAna,
     vertexAna,
-    #lepAna,
+    lepAna,
     photonAna, 
     jetAna,
     metAna,

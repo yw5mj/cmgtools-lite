@@ -9,8 +9,9 @@
 # privide chunks running directory, 
 # and directory to copy jobs out
 
-dir=mc2
-out=/data2/XZZ2/80X_20161018_Chunks
+dir=mc1
+out=/data2/XZZ2/80X_20161029_Chunks
+#out=/data2/XZZ2/80X_20161018_Chunks
 #out=/home/heli/80X_20160825_Chunks
 #out=/data2/XZZ2/80X_20160825_Chunks
 #out=/data2/XZZ2/80X_20161006_Chunks

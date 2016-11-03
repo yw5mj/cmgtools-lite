@@ -9,7 +9,7 @@
 # privide chunks running directory, 
 # and directory to copy jobs out
 
-dir=dt6
+dir=dt10
 out=/data2/XZZ2/80X_20161029_Chunks
 
 mkdir -p $out
