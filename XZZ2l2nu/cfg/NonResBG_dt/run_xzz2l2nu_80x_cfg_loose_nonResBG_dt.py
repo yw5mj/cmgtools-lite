@@ -12,14 +12,21 @@ from PhysicsTools.HeppyCore.framework.heppy_loop import getHeppyOption
 from CMGTools.XZZ2l2nu.analyzers.coreXZZ_cff import *
 
 #-------- SAMPLES AND TRIGGERS -----------
-from CMGTools.XZZ2l2nu.samples.loadSamples76x import *
+from CMGTools.XZZ2l2nu.samples.loadSamples80x import *
 selectedComponents = mcSamples+dataSamples
 
 triggerFlagsAna.triggerBits ={
     "ISOMU":triggers_1mu_iso,
     "MU":triggers_1mu_noniso,
+    "MUv2":triggers_1mu_noniso_v2,
+    "MU50":triggers_1mu_noniso_M50,
     "ISOELE":triggers_1e,
     "ELE":triggers_1e_noniso,
+    "ELEv2":triggers_1e_noniso_v2,
+    "ELE115":triggers_1e_noniso_E115,
+    "MUMU": triggers_mumu,
+    "MUMUNOISO":triggers_mumu_noniso,
+    "ELEL": triggers_ee,
     "HT800":triggers_HT800,
     "HT900":triggers_HT900,
     "JJ":triggers_dijet_fat,
@@ -30,18 +37,12 @@ triggerFlagsAna.triggerBits ={
 #-------- Analyzer
 from CMGTools.XZZ2l2nu.analyzers.treeXZZ_cff import *
 
-# make VV selection loosened as ElMu selection
-#leptonicVAna.selectVBoson = (lambda x: x.pt()>100.0 and x.mass()>30.0 and x.mass()<150.0 and x.leg2.pt()>50.0)
-#multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.pt()>100.0 and x.leg1.mass()>30.0 and x.leg1.mass()<150.0 and x.leg2.pt()>50.0)
-
-leptonicVAna.selectVBoson = (lambda x: x.mass()>30.0)
-leptonicVAna.selectFakeBoson = (lambda x: x.mass()>30.0)
-multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>30.0)
-multiStateAna.selectPairElMuNuNu = (lambda x: x.leg1.mass()>30.0)
+leptonicVAna.doElMu = True
+leptonicVAna.selectElMuPair =(lambda x: x.leg1.pt()>20.0 or x.leg2.pt()>20.0 )
+leptonicVAna.selectVBoson = (lambda x: x.mass()>30.0 and x.mass()<200.0)
+multiStateAna.selectPairLLNuNu = (lambda x: x.leg1.mass()>30.0 and x.leg1.mass()<200.0)
 
 #-------- SEQUENCE
-#sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
-
 coreSequence = [
     skimAnalyzer,
     genAna,
@@ -52,28 +53,47 @@ coreSequence = [
     lepAna,
     jetAna,
     metAna,
+    #photonAna,
     leptonicVAna,
     multiStateAna,
     eventFlagsAna,
-#    triggerFlagsAna,
+    triggerFlagsAna,
 ]
     
 #sequence = cfg.Sequence(coreSequence)
-#sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
-sequence = cfg.Sequence(coreSequence+[vvSkimmer,fullTreeProducer])
+sequence = cfg.Sequence(coreSequence+[vvSkimmer,vvTreeProducer])
+#sequence = cfg.Sequence(coreSequence+[vvSkimmer,fullTreeProducer])
+ 
 
 #-------- HOW TO RUN
 test = 1
 if test==1:
     # test a single component, using a single thread.
-    #selectedComponents = MuEG
-    selectedComponents = dataSamples
+    #selectedComponents = dataSamples
+    #selectedComponents = mcSamples
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
-    #selectedComponents = [SingleMuon_Run2015C_25ns_16Dec] 
+    #selectedComponents = [SingleMuon_Run2015C_25ns_16Dec]
+    #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2] 
+    #selectedComponents = [SingleMuon_Run2016D_PromptReco_v2] 
+    #selectedComponents = [SingleMuon_Run2016G_PromptReco_v1] 
+    #selectedComponents = SingleMuon+SingleElectron
+    #selectedComponents = SingleMuon[:4]
+    #selectedComponents = MuonEG[4:]
+    selectedComponents = MuonEG23Sep2016
+    #selectedComponents = [SingleMuon_Run2016D_PromptReco_v2,SingleElectron_Run2016D_PromptReco_v2] 
+    #selectedComponents = [MuonEG_Run2015D_16Dec] #MuEG
+    #selectedComponents = [RSGravToZZToZZinv_narrow_800]
+    #selectedComponents = [DYJetsToLL_M50]
+    #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
+    #selectedComponents = [BulkGravToZZToZlepZinv_narrow_600] 
+    #selectedComponents = signalSamples
+    #selectedComponents = [TTTo2L2Nu]
+    #selectedComponents = [BulkGravToZZ_narrow_800]
+    #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        #c.files = c.files[0]
+        #c.files = c.files[:3]
         #c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
-        c.splitFactor = (len(c.files)/10 if len(c.files)>10 else 1)
+        c.splitFactor = len(c.files)
         #c.splitFactor = 1
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso
@@ -100,7 +120,5 @@ config = cfg.Config( components = selectedComponents,
                      sequence = sequence,
                      services = [],
                      events_class = event_class)
-
-
 
 

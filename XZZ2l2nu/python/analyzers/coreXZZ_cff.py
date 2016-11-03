@@ -121,6 +121,7 @@ multtrg = cfg.Analyzer(
         'HLT_IsoTkMu20',
         'HLT_IsoMu27',
         ],
+    photonjet=False
 )
 
 ## Photon Analyzer (generic)
@@ -221,7 +222,6 @@ leptonicVAna = cfg.Analyzer(
     selectVBoson = (lambda x: x.pt()>100.0 and x.mass()>60.0 and x.mass()<120.0),
     doElMu = False, # it would save events with ElMu final states + LL final stats
     selectElMuPair = (lambda x: (x.leg1.pt()>115.0) or (x.leg2.highPtID and x.leg2.pt()>50.0 and abs(x.leg2.eta())<2.1)), # be sure to have leg1=e, leg2=mu
-    selectFakeBoson = (lambda x: x.pt()>100.0 and x.mass()>30.0 and x.mass()<150.0),
     )
 
 packedAna = cfg.Analyzer(
