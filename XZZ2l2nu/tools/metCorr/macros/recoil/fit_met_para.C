@@ -1,7 +1,7 @@
 
 
 std::string channel = "all";
-bool doMC = false;
+bool doMC = true;
 bool doGJets = false;
 bool useMzCut = false;
 bool useZSelec = false;
@@ -190,7 +190,8 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   // rho weight
   //std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
   //std::string rhoweight_selec = std::string("*(0.232+0.064*rho)");
-  std::string rhoweight_selec = std::string("*(0.038+0.118*rho-4.329e-03*rho*rho+1.011e-04*rho*rho*rho)");
+  //std::string rhoweight_selec = std::string("*(0.038+0.118*rho-4.329e-03*rho*rho+1.011e-04*rho*rho*rho)"); // prompt 29.5fb-1
+  std::string rhoweight_selec = std::string("*(0.019+0.114*rho+-4.705e-03*rho*rho+1.491e-04*rho*rho*rho)"); // rereco 33.59 fb-1
   // scale factors
   std::string effsf_selec = std::string("*(isosf*idsf*trksf)");
 
