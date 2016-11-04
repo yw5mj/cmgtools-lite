@@ -1,9 +1,9 @@
 #!/bin/sh
 
 #inputs
-inputdir=/home/heli/XZZ/80X_20161029_light
+#inputdir=/home/heli/XZZ/80X_20161029_light
 outputdir=/home/heli/XZZ/80X_20161029_light_Skim
-#inputdir=/home/heli/XZZ/80X_20161018_light
+inputdir=/home/heli/XZZ/80X_20161018_light
 #outputdir=/home/heli/XZZ/80X_20161018_light_Skim
 #inputdir=/home/heli/XZZ/80X_20161006_light
 #inputdir=/home/heli/XZZ/80X_20160825_light

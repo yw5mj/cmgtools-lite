@@ -17,8 +17,8 @@ bool dtHLT = false;
 // 3.) for MC : doMC=false, doGJets=false, useZSelecLowLPt=true, useEffSf=false
 // 4.) for GJets: doGJets=true, doMC=false, useZSelecLowLPt=true, useEffSf=false
 
-std::string inputdir = "/home/heli/XZZ/80X_20161029_light_Skim";
-//std::string inputdir = "/home/heli/XZZ/80X_20161018_light_Skim";
+//std::string inputdir = "/home/heli/XZZ/80X_20161029_light_Skim";
+std::string inputdir = "/home/heli/XZZ/80X_20161018_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20161006_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20160810_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20160825_light_Skim";
