@@ -26,10 +26,26 @@
 int main(int argc, char** argv) {
 
 
-  TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20161029_light_Skim/DYJetsToLL_M50_BIG_NoRecoil.root");
-  TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20161029_GJets_light_Skim/SinglePhoton_Run2016B2H_ReReco_33fbinv_NoRecoil.root");
+  //TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20160825_light_Skim/DYJetsToLL_M50_BIG.root");
+  //TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20161006_light_Skim/DYJetsToLL_M50_BIG_NoRecoil.root");
+  TFile* file1 = TFile::Open("/home/heli/XZZ/80X_20161018_light_Skim/DYJetsToLL_M50_BIG_NoRecoil.root");
+  TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20161018_light_Skim/SinglePhoton_Run2016B2H29fbinv_PromptReco_newFilterLepVetoNoRecoil.root");
+  //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20161006_light_Skim/SinglePhoton_Run2016B2G_PromptReco_newFilterLepVetoNoRecoil.root");
+  //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20161006_light/SinglePhoton_Run2016B2G_PromptReco/vvTreeProducer/tree.root");
+  //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/GJet_Pt_20toInf_DoubleEMEnriched/vvTreeProducer/tree.root");
+  //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160810_light/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
+  //TFile* file2 = TFile::Open("/home/heli/XZZ/80X_20160927_light/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
 
-  std::string outtag="study_gjets_data_b2h33fbinv";
+  std::string outtag="study_gjets_data_b2h29fbinv_newFilterLepVeto";
+  //std::string outtag="study_gjets_data_b2g_newFilterLepVeto";
+  //std::string outtag="study_gjets_tight";
+  //std::string outtag="study_gjets";
+  //std::string outtag="study_gjets_data";
+  //std::string outtag="study_gjets_data_hlt";
+  //std::string outtag="study_gjets_data_hlt_dtscale_nohlt90";
+  //std::string outtag="study_gjets_data_hlt_dtscale_flag3_f2_sIetaCut";
+  //std::string outtag="study_gjets_data_newFilterLepVeto";
+
 
   // yields:
 
@@ -86,6 +102,14 @@ int main(int argc, char** argv) {
   tree2->SetAlias("l2_phi", "llnunu_l2_phi");
 
   //
+  //tree2->SetAlias("metPara", "gjet_l2_pt*cos(gjet_l2_phi-gjet_l1_phi)");
+  //tree2->SetAlias("metPerp", "gjet_l2_pt*sin(gjet_l2_phi-gjet_l1_phi)");
+  //tree2->SetAlias("absDeltaPhi", "fabs(TVector2::Phi_mpi_pi(gjet_l2_phi-gjet_l1_phi))");
+  //tree2->SetAlias("eta", "gjet_l1_eta");
+  //tree2->SetAlias("phi", "gjet_l1_phi");
+  //tree2->SetAlias("flag2", "(!(eta>0&&eta<0.15&&phi>0.52&&phi<0.56)&&!(eta>-2.5&&eta<-1.4&&phi>-0.5&&phi<0.5)&&!(eta>1.5&&eta<2.5&&phi>-0.5&&phi<0.5)&&!(eta>1.4&&eta<1.6&&phi>-0.8&&phi<-0.5)&&!(eta>1.4&&eta<2.5&&phi>2.5&&phi<4)&&!(eta>1.4&&eta<2.5&&phi>-4&&phi<-2.5)&&!(eta>-2.5&&eta<-1.4&&phi>2.5&&phi<4)&&!(eta>-2.5&&eta<-1.4&&phi>-4&&phi<-2.5)&&!(eta>2.3&&eta<2.6&&phi>-2.5&&phi<-2.2)&&!(eta>0.2&&eta<0.3&&phi>-2.6&&phi<-2.5)&&!(eta>0.5&&eta<0.7&&phi>-1.5&&phi<-1.2)&&!(eta>-0.85&&eta<-0.7&&phi>-1.8&&phi<-1.4)&&!(eta<-2.4&&eta>-2.5&&phi<-1.75&&phi>-1.9)&&!(eta>-2.5&&eta<-2.4&&phi>-1.2&&phi<-1.1)&&!(eta>-2.4&&eta<-2.3&&phi>-2.4&&phi<-2.3))");
+
+  // define cuts
   std::string metfilter="(Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_HBHENoiseFilter&&Flag_globalTightHalo2016Filter&&Flag_eeBadScFilter)";
   std::string cuts_lepaccept="((abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_l1_pt>50&&abs(llnunu_l1_l1_eta)<2.4&&llnunu_l1_l2_pt>20&&abs(llnunu_l1_l2_eta)<2.4&&(llnunu_l1_l1_highPtID==1||llnunu_l1_l2_highPtID==1))";
   cuts_lepaccept+="||(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11&&llnunu_l1_l1_pt>115&&abs(llnunu_l1_l1_eta)<2.5&&llnunu_l1_l2_pt>35&&abs(llnunu_l1_l2_eta)<2.5))";
@@ -108,37 +132,40 @@ int main(int argc, char** argv) {
   std::string weight_selec = std::string("*(genWeight/SumWeights*ZPtWeight*puWeight68075*1921.8*3)");
   std::string weight_selec_up = std::string("*(genWeight/SumWeights*ZPtWeight_up*puWeight68075*1921.8*3)");
   std::string weight_selec_dn = std::string("*(genWeight/SumWeights*ZPtWeight_dn*puWeight68075*1921.8*3)");
+  //std::string weight_selec = std::string("*(ZJetsGenWeight*ZPtWeight*puWeight68075*1921.8*3)");
+  //std::string weight_selec_up = std::string("*(ZJetsGenWeight*ZPtWeight_up*puWeight68075*1921.8*3)");
+  //std::string weight_selec_dn = std::string("*(ZJetsGenWeight*ZPtWeight_dn*puWeight68075*1921.8*3)");
+  //std::string weight_selec = std::string("*(ZJetsGenWeight*ZPtWeight*1921.8*3*12900.0)");
   // rho weight
   //std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
   //std::string rhoweight_selec = "*(0.232+0.064*rho)";  // for b-g 27.22fb-l
-  //std::string rhoweight_selec = "*(0.038+0.118*rho-4.329e-03*rho*rho+1.011e-04*rho*rho*rho)"; // for b-h 29.53 fb-1
-  std::string rhoweight_selec = "*(0.019+0.114*rho+-4.705e-03*rho*rho+1.491e-04*rho*rho*rho)"; // for b-h 33.59 fb-1
+  std::string rhoweight_selec = "*(0.038+0.118*rho-4.329e-03*rho*rho+1.011e-04*rho*rho*rho)"; // for b-h 29.53 fb-1
   //std::string rhoweight_selec = "*(1)";
   // scale factors
   std::string effsf_selec = std::string("*(trgsf*isosf*idsf*trksf)");
-  std::string effsf_selec_lowlpt = std::string("*(isosf*idsf*trksf)");
+  //std::string effsf_selec = std::string("*(trgsf*isosf*idsf*trksf*(1*(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13)+1.06*(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11)))");
 
   // selec, cuts + weights
   std::string zjet_selec = base_selec + weight_selec + rhoweight_selec + effsf_selec;
   std::string zjet_selec_el = base_selec_el + weight_selec + rhoweight_selec + effsf_selec;
   std::string zjet_selec_mu = base_selec_mu + weight_selec + rhoweight_selec + effsf_selec;
-  std::string zjet_selec_lowlpt = base_selec_lowlpt + weight_selec + rhoweight_selec + effsf_selec_lowlpt;
-  std::string zjet_selec_lowlpt_el = base_selec_lowlpt_el + weight_selec + rhoweight_selec + effsf_selec_lowlpt;
-  std::string zjet_selec_lowlpt_mu = base_selec_lowlpt_mu + weight_selec + rhoweight_selec + effsf_selec_lowlpt;
+  std::string zjet_selec_lowlpt = base_selec_lowlpt + weight_selec + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_lowlpt_el = base_selec_lowlpt_el + weight_selec + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_lowlpt_mu = base_selec_lowlpt_mu + weight_selec + rhoweight_selec + effsf_selec;
 
   std::string zjet_selec_up = base_selec + weight_selec_up + rhoweight_selec + effsf_selec;
   std::string zjet_selec_el_up = base_selec_el + weight_selec_up + rhoweight_selec + effsf_selec;
   std::string zjet_selec_mu_up = base_selec_mu + weight_selec_up + rhoweight_selec + effsf_selec;
-  std::string zjet_selec_lowlpt_up = base_selec_lowlpt + weight_selec_up + rhoweight_selec + effsf_selec_lowlpt;
-  std::string zjet_selec_lowlpt_el_up = base_selec_lowlpt_el + weight_selec_up + rhoweight_selec + effsf_selec_lowlpt;
-  std::string zjet_selec_lowlpt_mu_up = base_selec_lowlpt_mu + weight_selec_up + rhoweight_selec + effsf_selec_lowlpt;
+  std::string zjet_selec_lowlpt_up = base_selec_lowlpt + weight_selec_up + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_lowlpt_el_up = base_selec_lowlpt_el + weight_selec_up + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_lowlpt_mu_up = base_selec_lowlpt_mu + weight_selec_up + rhoweight_selec + effsf_selec;
 
   std::string zjet_selec_dn = base_selec + weight_selec_dn + rhoweight_selec + effsf_selec;
   std::string zjet_selec_el_dn = base_selec_el + weight_selec_dn + rhoweight_selec + effsf_selec;
   std::string zjet_selec_mu_dn = base_selec_mu + weight_selec_dn + rhoweight_selec + effsf_selec;
-  std::string zjet_selec_lowlpt_dn = base_selec_lowlpt + weight_selec_dn + rhoweight_selec + effsf_selec_lowlpt;
-  std::string zjet_selec_lowlpt_el_dn = base_selec_lowlpt_el + weight_selec_dn + rhoweight_selec + effsf_selec_lowlpt;
-  std::string zjet_selec_lowlpt_mu_dn = base_selec_lowlpt_mu + weight_selec_dn + rhoweight_selec + effsf_selec_lowlpt;
+  std::string zjet_selec_lowlpt_dn = base_selec_lowlpt + weight_selec_dn + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_lowlpt_el_dn = base_selec_lowlpt_el + weight_selec_dn + rhoweight_selec + effsf_selec;
+  std::string zjet_selec_lowlpt_mu_dn = base_selec_lowlpt_mu + weight_selec_dn + rhoweight_selec + effsf_selec;
 
 
 

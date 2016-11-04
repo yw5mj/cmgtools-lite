@@ -79,7 +79,7 @@ doGJetsSkimAddPhiWeight: true
 GJetsSkimInputFileName: data/gjets/study_gjets_data_b2g_newFilterLepVeto.root
 
 GJetsSkimPhiWeightInputFileName: data/gjets/gjet_photon_phi_weight.root
-GJetsSkimRhoWeightInputFileName: data/gjets/get_rho_weight.root
+GJetsSkimRhoWeightInputFileName: data/gjets/get_rho_weight_33fbinv.root
 
 
 
@@ -150,7 +150,7 @@ DyZPtWeightInputFileName: data/zptweight/dyjets_zpt_weight_lo_nlo_genAcc.root
 #====================================================================
 
 # default use histogram
-doRecoil: false
+doRecoil: true
 
 # use smoothed hist
 doRecoilUseSmooth: true
@@ -159,45 +159,21 @@ doRecoilUseSmooth: true
 doRecoilUseSmoothGraph: true
 
 # Input files
-RecoilInputFileNameData_all: data/recoil/SingleEMU_Run2016B2H29fbinv_PromptReco_met_para_study_ZSelecLowLPt.root
-RecoilInputFileNameData_mu: data/recoil/SingleEMU_Run2016B2H29fbinv_PromptReco_met_para_study_ZSelecLowLPt_mu.root
-RecoilInputFileNameData_el: data/recoil/SingleEMU_Run2016B2H29fbinv_PromptReco_met_para_study_ZSelecLowLPt_el.root
-#RecoilInputFileNameData_all: data/recoil/SingleEMU_Run2016B2G_PromptReco_met_para_study_ZSelecLowLPt.root
-#RecoilInputFileNameData_mu: data/recoil/SingleEMU_Run2016B2G_PromptReco_met_para_study_ZSelecLowLPt_mu.root
-#RecoilInputFileNameData_el: data/recoil/SingleEMU_Run2016B2G_PromptReco_met_para_study_ZSelecLowLPt_el.root
-#RecoilInputFileNameData_all: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt.root
-#RecoilInputFileNameData_mu: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_mu.root
-#RecoilInputFileNameData_el: data/recoil/SingleEMU_Run2016BCD_PromptReco_met_para_study_ZSelecLowLPt_el.root
+RecoilInputFileNameData_all: data/recoil/SingleEMU_Run2016B2H_ReReco_33fbinv_met_para_study_ZSelecLowLPt.root
+RecoilInputFileNameData_mu: data/recoil/SingleEMU_Run2016B2H_ReReco_33fbinv_met_para_study_ZSelecLowLPt_mu.root
+RecoilInputFileNameData_el: data/recoil/SingleEMU_Run2016B2H_ReReco_33fbinv_met_para_study_ZSelecLowLPt_el.root
 
-RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_BIG_NoRecoil_DtB2H29fbinv_met_para_study_ZSelecLowLPt.root
-RecoilInputFileNameMC_mu:  data/recoil/DYJetsToLL_M50_BIG_NoRecoil_DtB2H29fbinv_met_para_study_ZSelecLowLPt_mu.root
-RecoilInputFileNameMC_el:  data/recoil/DYJetsToLL_M50_BIG_NoRecoil_DtB2H29fbinv_met_para_study_ZSelecLowLPt_el.root
-#RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_BIG_NoRecoil_met_para_study_ZSelecLowLPt.root
-#RecoilInputFileNameMC_mu:  data/recoil/DYJetsToLL_M50_BIG_NoRecoil_met_para_study_ZSelecLowLPt_mu.root
-#RecoilInputFileNameMC_el:  data/recoil/DYJetsToLL_M50_BIG_NoRecoil_met_para_study_ZSelecLowLPt_el.root
-#RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_BIG_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt.root
-#RecoilInputFileNameMC_mu:  data/recoil/DYJetsToLL_M50_BIG_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt_mu.root
-#RecoilInputFileNameMC_el:  data/recoil/DYJetsToLL_M50_BIG_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt_el.root
-#RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt.root
-#RecoilInputFileNameMC_mu:  data/recoil/DYJetsToLL_M50_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt_mu.root
-#RecoilInputFileNameMC_el:  data/recoil/DYJetsToLL_M50_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt_el.root
-#RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt_effSf.root
-#RecoilInputFileNameMC_mu:  data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt_effSf_mu.root
-#RecoilInputFileNameMC_el:  data/recoil/DYJetsToLL_M50_NoRecoil_met_para_study_ZSelecLowLPt_effSf_el.root
+RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_BIG_NoRecoil_met_para_study_ZSelecLowLPt.root
+RecoilInputFileNameMC_mu:  data/recoil/DYJetsToLL_M50_BIG_NoRecoil_met_para_study_ZSelecLowLPt_mu.root
+RecoilInputFileNameMC_el:  data/recoil/DYJetsToLL_M50_BIG_NoRecoil_met_para_study_ZSelecLowLPt_el.root
 
 RecoilInputFileNameMCLO_all: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt.root
 RecoilInputFileNameMCLO_mu: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt_mu.root
 RecoilInputFileNameMCLO_el: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt_el.root
-#RecoilInputFileNameMCLO_all: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_ZSelecLowLPt_effSf.root
-#RecoilInputFileNameMCLO_mu: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_ZSelecLowLPt_effSf_mu.root
-#RecoilInputFileNameMCLO_el: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_met_para_study_ZSelecLowLPt_effSf_el.root
 
 RecoilInputFileNameGJets_all: data/recoil/SinglePhoton_Run2016B2G_PromptReco_newFilterLepVetoNoRecoil_met_para_study_ZSelecLowLPt.root
 RecoilInputFileNameGJets_mu:  data/recoil/SinglePhoton_Run2016B2G_PromptReco_newFilterLepVetoNoRecoil_met_para_study_ZSelecLowLPt_mu.root
 RecoilInputFileNameGJets_el:  data/recoil/SinglePhoton_Run2016B2G_PromptReco_newFilterLepVetoNoRecoil_met_para_study_ZSelecLowLPt_el.root
-#RecoilInputFileNameGJets_all: data/recoil/SinglePhoton_Run2016BCD_PromptReco_newFilterLepVetoNoRecoil_newfilterlepveto_met_para_study_ZSelecLowLPt.root
-#RecoilInputFileNameGJets_mu:  data/recoil/SinglePhoton_Run2016BCD_PromptReco_newFilterLepVetoNoRecoil_newfilterlepveto_met_para_study_ZSelecLowLPt_mu.root
-#RecoilInputFileNameGJets_el:  data/recoil/SinglePhoton_Run2016BCD_PromptReco_newFilterLepVetoNoRecoil_newfilterlepveto_met_para_study_ZSelecLowLPt_el.root
 
 
 
@@ -213,12 +189,7 @@ EffScaleInputFileName_IdIso_El: data/eff/egammaEffi.txt_SF2D.root
 EffScaleInputFileName_Trk_El: data/eff/egammatracking.root
 EffScaleInputFileName_IdIso_Mu: data/eff/muon80x12p9.root
 EffScaleInputFileName_Trk_Mu: data/eff/muontrackingsf.root
-#EffScaleInputFileName_Trg_El: data/eff/trigereff12p9_20160902.root
-#EffScaleInputFileName_Trg_El: data/eff/trigereff12p9_20160902_finebin.root
 EffScaleInputFileName_Trg_El: data/eff/trigereff_el_b2h33fbinv.root
-#EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu_20160830.root
-#EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu_datab2g.root
-#EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu_datab2h29fbinv.root
 EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu_datab2h33fbinv.root
 
 

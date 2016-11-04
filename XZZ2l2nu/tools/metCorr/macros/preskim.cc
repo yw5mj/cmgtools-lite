@@ -131,6 +131,7 @@ int main(int argc, char** argv) {
     //tree->SetBranchStatus("HLT_*",0); 
     tree->SetBranchStatus("genX_*",0); 
     tree->SetBranchStatus("genLep_*",0);
+    tree->SetBranchStatus("genLepFsr_*",0);
     tree->SetBranchStatus("genjet_*",0);
     //tree->SetBranchStatus("genZ_*",0);
     //tree->SetBranchStatus("genZ_px",0); 
@@ -139,7 +140,6 @@ int main(int argc, char** argv) {
     tree->SetBranchStatus("llnunu_l2_genEta",0);
     tree->SetBranchStatus("genQ_*",0);
     tree->SetBranchStatus("genNeu_*",0);
-    tree->SetBranchStatus("genZ_*",0);
   }
 
   // add back jets info
@@ -153,7 +153,6 @@ int main(int argc, char** argv) {
 
   // add back special for ggZZ2l2nu
   if (isZZ) {
-    tree->SetBranchStatus("genZ*",1);
     tree->SetBranchStatus("genQ_pdgId",1);
     tree->SetBranchStatus("genLep*",1);
     tree->SetBranchStatus("genNeu*",1);

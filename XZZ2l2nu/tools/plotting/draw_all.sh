@@ -1,7 +1,8 @@
 #!/bin/sh
 
 
-tag="ForRhoWeight_DataB2H33fbinv_"
+tag="Test1_DataB2H33fbinv_"
+#tag="ForRhoWeight_DataB2H33fbinv_"
 channels="all mu el"
 #cutChains="tight tightzpt100 tightzpt100met50"
 #cutChains="tightzpt100 tightzpt100met50"
@@ -22,8 +23,8 @@ do
       #./stack_dtmc_skim.py -l -b -q  --tag="$tag" --cutChain="$cutChain" --channel="$channel" --Blind &> ${logdir}/${tag}${cutChain}_bld_${channel}.log &
       #./stack_dtmc_skim.py -l -b -q  --tag="$tag" --cutChain="$cutChain" --channel="$channel" --LogY &> ${logdir}/${tag}${cutChain}_log_${channel}.log &
       #./stack_dtmc_skim.py -l -b -q  --tag="$tag" --cutChain="$cutChain" --channel="$channel" &> ${logdir}/${tag}${cutChain}_${channel}.log &
-      ./stack_dtmc_skim.py -l -b -q  --tag="$tag" --cutChain="$cutChain" --channel="$channel" --test &> ${logdir}/${tag}${cutChain}_${channel}.log &
-      #./stack_dtmc_skim.py -l -b -q  --tag="$tag" --cutChain="$cutChain" --channel="$channel" --LogY  --test &> ${logdir}/${tag}${cutChain}_${channel}.log &
+      #./stack_dtmc_skim.py -l -b -q  --tag="$tag" --cutChain="$cutChain" --channel="$channel" --test &> ${logdir}/${tag}${cutChain}_${channel}.log &
+      ./stack_dtmc_skim.py -l -b -q  --tag="$tag" --cutChain="$cutChain" --channel="$channel" --LogY  --test &> ${logdir}/${tag}${cutChain}_${channel}.log &
 
    done
 done

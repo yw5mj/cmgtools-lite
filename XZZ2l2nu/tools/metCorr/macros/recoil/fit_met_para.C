@@ -5,7 +5,7 @@ bool doMC = true;
 bool doGJets = false;
 bool useMzCut = false;
 bool useZSelec = false;
-bool useZSelecLowLPt = false;
+bool useZSelecLowLPt = true;
 bool useEffSf = false;
 bool mcTrgSf = false;
 bool dtTrgSf = false;
@@ -294,11 +294,10 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   h2d2 = new TH2D("h_met_perp_vs_zpt", "h_met_perp_vs_zpt", NZPtBins, ZPtBins, NMetPerpBins, MetPerpBins);
   h2d1->Sumw2();
   h2d2->Sumw2();
-  std::cout << "start draw" << std::endl;
+  std::cout << "start draw1, selec="<< selec << std::endl;
   tree->Draw("llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi):llnunu_l1_pt>>h_met_para_vs_zpt", selec.c_str(), "colz");
-  std::cout << "end draw1" << std::endl;
+  std::cout << "start draw2, selec="<< selec << std::endl;
   tree->Draw("llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi):llnunu_l1_pt>>h_met_perp_vs_zpt", selec.c_str(), "colz");
-  std::cout << "end draw2" << std::endl;
   
   h2d1->GetXaxis()->SetTitle("P_{T}(Z) (GeV)");
   h2d1->GetYaxis()->SetTitle("MET para (GeV)");
