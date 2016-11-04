@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
   if (_addZZCorrections && !_isData && _isZZ ) prepareZZCorrections();
 
   // prepare inputs for JEC/JER
-  if (_doJEC )  prepareJECJER();
+//  if (_doJEC )  prepareJECJER();
 
   // prepare inputs for simple met recoil tune.
   if (_doRecoil && ((!_isData && _isDyJets) || (_isData && _doGJetsSkim)) ) prepareRecoil();
@@ -130,7 +130,7 @@ int main(int argc, char** argv) {
     if (_addZZCorrections && !_isData && _isZZ ) addZZCorrections();
 
     // doJECJER
-    if (_doJEC )  doJECJER()
+//    if (_doJEC )  doJECJER()
     
     // simple met recoil tune.
     if (_doRecoil && ((!_isData && _isDyJets) || (_isData && _doGJetsSkim))) doRecoil();

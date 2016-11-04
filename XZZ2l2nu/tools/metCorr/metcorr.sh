@@ -1,8 +1,10 @@
 #!/bin/sh
 
 #inputs
-inputdir=/home/heli/XZZ/80X_20161018_light
-outputdir=/home/heli/XZZ/80X_20161018_light_Skim
+inputdir=/home/heli/XZZ/80X_20161029_light
+outputdir=/home/heli/XZZ/80X_20161029_light_Skim
+#inputdir=/home/heli/XZZ/80X_20161018_light
+#outputdir=/home/heli/XZZ/80X_20161018_light_Skim
 #inputdir=/home/heli/XZZ/80X_20161006_light
 #inputdir=/home/heli/XZZ/80X_20160825_light
 #outputdir=/home/heli/XZZ/80X_20161006_light_Skim
@@ -16,26 +18,29 @@ gmake all
 njob="0"
 
 #for infile in $inputdir/*/vvTreeProducer/tree.root ; 
-#for infile in $inputdir/Bulk*/vvTreeProducer/tree.root ; 
 #for infile in $(ls $inputdir/Single*/vvTreeProducer/tree.root ); 
 #for infile in $(ls $inputdir/Single*/vvTreeProducer/tree.root ); 
 #for infile in $inputdir/DYJetsToLL_M50_MGMLM/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/DYJetsToLL_M50_MGMLM_Ext1/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/DYJetsToLL_M50/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/*/vvTreeProducer/tree.root ;
-#for infile in $(ls $inputdir/*/vvTreeProducer/tree.root | grep -v Single | grep -v DYJets ); 
 #for infile in $inputdir/SingleEMU_*/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/DYJetsToLL*/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/SingleEMU_Run2016B2G_*/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/SingleEMU_Run2016B2H29fbinv_*/vvTreeProducer/tree.root ; 
-#for infile in $inputdir/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root ; 
-for infile in $inputdir/DYJetsToLL_M50_reHLT/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/DYJetsToLL_M50_reHLT/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/Bulk*/vvTreeProducer/tree.root ; 
+#for infile in $(ls $inputdir/*/vvTreeProducer/tree.root | grep -v Single | grep -v DYJets ); 
+#for infile in $(ls $inputdir/*/vvTreeProducer/tree.root | grep -v Single | grep -v DYJets | grep -v Bulk); 
+#for infile in $inputdir/SingleEMU_Run2016B2H_ReReco_33fbinv/vvTreeProducer/tree.root ; 
+for infile in $inputdir/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root ; 
 do
   echo "+++ skimming $infile +++"
   outfile="${outputdir}/${infile/$inputdir\//}"
 
   # options for outputs
-  outfile="${outfile/\/vvTreeProducer\/tree/_NoRecoil}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_NoRecoil}"
+  outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2H33fbinv}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2H29fbinv}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2G}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2GNoRhoWt}"

@@ -57,7 +57,7 @@ if __name__=='__main__':
     c=TCanvas()
     if 'TH2' in str(type(ez1)):ez1.Draw('colz')
     else:ez1.Draw()
-    c.Print('plots/'+sys.argv[2]+'.png')
+    c.Print('plots/'+sys.argv[2]+'.pdf')
     fo.Close()
     t1.Close()
 

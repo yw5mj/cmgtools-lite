@@ -39,6 +39,9 @@ int main(int argc, char** argv) {
   TFile* finput = TFile::Open(inputfile.c_str());
   TFile* foutput = TFile::Open(outputfile.c_str(), "recreate");
 
+  // check if it is sm ZZ sample, based on file names
+  bool isZZ = (inputfile.find("ZZTo2L2Nu")!=std::string::npos);
+
   // tree
   TTree* tree = (TTree*)finput->Get("tree");
 
@@ -128,12 +131,15 @@ int main(int argc, char** argv) {
     //tree->SetBranchStatus("HLT_*",0); 
     tree->SetBranchStatus("genX_*",0); 
     tree->SetBranchStatus("genLep_*",0);
+    tree->SetBranchStatus("genLepFsr_*",0);
     tree->SetBranchStatus("genjet_*",0);
     //tree->SetBranchStatus("genZ_*",0);
     //tree->SetBranchStatus("genZ_px",0); 
     //tree->SetBranchStatus("genZ_py",0); 
     //tree->SetBranchStatus("genZ_pz",0); 
     tree->SetBranchStatus("llnunu_l2_genEta",0);
+    tree->SetBranchStatus("genQ_*",0);
+    tree->SetBranchStatus("genNeu_*",0);
   }
 
   // add back jets info
@@ -141,6 +147,17 @@ int main(int argc, char** argv) {
   tree->SetBranchStatus("jet_eta",1);
   tree->SetBranchStatus("jet_phi",1);
   tree->SetBranchStatus("jet_area",1);
+  tree->SetBranchStatus("jet_neutralEmEnergyFraction",1);
+  tree->SetBranchStatus("jet_chargedEmEnergyFraction",1);
+  tree->SetBranchStatus("jet_muonEnergyFraction",1);
+
+  // add back special for ggZZ2l2nu
+  if (isZZ) {
+    tree->SetBranchStatus("genQ_pdgId",1);
+    tree->SetBranchStatus("genLep*",1);
+    tree->SetBranchStatus("genNeu*",1);
+  }
+
 
   // alias
   tree->SetAlias("muselec", "(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&abs(llnunu_l1_l1_eta)<2.4&&abs(llnunu_l1_l2_eta)<2.4&&llnunu_l1_l1_pt>20&&llnunu_l1_l2_pt>20&&(llnunu_l1_l1_highPtID>0.99||llnunu_l1_l2_highPtID>0.99))");
