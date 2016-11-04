@@ -64,10 +64,24 @@ int main(int argc, char** argv) {
   tree->SetBranchStatus("gjet_CosDeltaPhi",0);
   tree->SetBranchStatus("gjet_metOvSqSET",0);
   tree->SetBranchStatus("gjet_l1_mass",0);
-//  tree->SetBranchStatus("gjet_l1_chHadIso",0);
-//  tree->SetBranchStatus("gjet_l1_phIso",0);
-//  tree->SetBranchStatus("gjet_l1_neuHadIso",0);
+  tree->SetBranchStatus("gjet_l1_chHadIso",0);
+  tree->SetBranchStatus("gjet_l1_phIso",0);
+  tree->SetBranchStatus("gjet_l1_neuHadIso",0);
+  tree->SetBranchStatus("gjet_l1_e5x5",0);
+  tree->SetBranchStatus("gjet_l1_e3x3",0);
+  tree->SetBranchStatus("gjet_l1_e2x5",0);
+  tree->SetBranchStatus("gjet_l1_e1x5",0);
+  tree->SetBranchStatus("gjet_l1_eTop",0);
+  tree->SetBranchStatus("gjet_l1_eBottom",0);
+  tree->SetBranchStatus("gjet_l1_eLeft",0);
+  tree->SetBranchStatus("gjet_l1_eRight",0);
+  tree->SetBranchStatus("gjet_l1_eMax",0);
   tree->SetBranchStatus("gjet_l2_metSig",0);
+
+
+  tree->SetBranchStatus("gjet_l2_*smear*", 0);
+  tree->SetBranchStatus("gjet_l2_*JER*",0);
+  tree->SetBranchStatus("gjet_l2_*Smear*",0);
 
   if (!isData) {
     tree->SetBranchStatus("HLT_*",0); 
@@ -112,11 +126,13 @@ int main(int argc, char** argv) {
   TFile* ftmp1 = TFile::Open("/tmp/fout_tmp1.root", "recreate");
   TTree* tree_tmp1 = tree->CopyTree("HLT_PHOTONIDISO&&metfilter&&ngjet==1&&Max$(jet_pt[]*jet_chargedEmEnergyFraction[])<10&&Max$(jet_pt[]*jet_muonEnergyFraction[])<10&&flag3&&filter1");
  
+  tree_tmp1->SetBranchStatus("Flag_*",0);
+  tree_tmp1->SetBranchStatus("HLT_*",0);
   tree_tmp1->SetBranchStatus("jet_*",0);
-  tree_tmp1->SetBranchStatus("jet_rawPt",1);
-  tree_tmp1->SetBranchStatus("jet_eta",1);
-  tree_tmp1->SetBranchStatus("jet_phi",1);
-  tree_tmp1->SetBranchStatus("jet_area",1);
+  //tree_tmp1->SetBranchStatus("jet_rawPt",1);
+  //tree_tmp1->SetBranchStatus("jet_eta",1);
+  //tree_tmp1->SetBranchStatus("jet_phi",1);
+  //tree_tmp1->SetBranchStatus("jet_area",1);
  
   TFile* ftmp2 = TFile::Open("/tmp/fout_tmp2.root", "recreate");
   TTree* tree_tmp2 = tree_tmp1->CopyTree("((eta<-1.566)||flg1eb||flg1eep)");

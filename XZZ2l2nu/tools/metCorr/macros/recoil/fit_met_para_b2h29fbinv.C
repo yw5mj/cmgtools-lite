@@ -17,15 +17,15 @@ bool dtHLT = false;
 // 3.) for MC : doMC=false, doGJets=false, useZSelecLowLPt=true, useEffSf=false
 // 4.) for GJets: doGJets=true, doMC=false, useZSelecLowLPt=true, useEffSf=false
 
-std::string inputdir = "/home/heli/XZZ/80X_20161029_light_Skim";
-//std::string inputdir = "/home/heli/XZZ/80X_20161018_light_Skim";
+std::string inputdir = "/home/heli/XZZ/80X_20161018_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20161006_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20160810_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20160825_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20160927_light_Skim";
 std::string filename;
 
-std::string outputdir = "./recoil_out5";
+//std::string outputdir = "./recoil_out2";
+std::string outputdir = "./recoil_out4";
 std::vector< std::string > channels = {"all", "mu", "el"};
 std::vector< std::string > mcfiles = {
     //"DYJetsToLL_M50", "DYJetsToLL_M50_MGMLM_Ext1"
@@ -36,7 +36,9 @@ std::vector< std::string > mcfiles = {
  };
 
 std::vector< std::string > dtfiles = {
-    "SingleEMU_Run2016B2H_ReReco_33fbinv"
+    //"SingleEMU_Run2016BCD_PromptReco"
+    //"SingleEMU_Run2016B2G_PromptReco"
+    "SingleEMU_Run2016B2H29fbinv_PromptReco"
  };
 
 std::vector< std::string > gjfiles = {
@@ -61,9 +63,9 @@ std::vector< std::string > gjfiles = {
 
 char name[1000];
 TCanvas* plots;
-//std::string tag0 = "_DtB2H29fbinv";
+std::string tag0 = "_DtB2H29fbinv";
 //std::string tag0 = "_NoRhoWt";
-std::string tag0 = "";
+//std::string tag0 = "";
 //std::string tag0 = "_newfilterlepveto";
 //std::string tag0 = "_newfilteretaphicut";
 //std::string tag0 = "_newfilter";
@@ -234,8 +236,7 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   gROOT->ProcessLine(name);
 
   // lumiTag for plotting
-  lumiTag = "CMS 13 TeV 2016 L=33.59 fb^{-1}";
-  //lumiTag = "CMS 13 TeV 2016 L=29.53 fb^{-1}";
+  lumiTag = "CMS 13 TeV 2016 L=29.53 fb^{-1}";
   //lumiTag = "CMS 13 TeV 2016 L=27.22 fb^{-1}";
   //lumiTag = "CMS 13 TeV 2016 L=12.9 fb^{-1}";
   if (doMC) lumiTag = "CMS 13 TeV Simulation for 2016 Data";
