@@ -17,8 +17,8 @@ bool dtHLT = false;
 // 3.) for MC : doMC=false, doGJets=false, useZSelecLowLPt=true, useEffSf=false
 // 4.) for GJets: doGJets=true, doMC=false, useZSelecLowLPt=true, useEffSf=false
 
-//std::string inputdir = "/home/heli/XZZ/80X_20161029_light_Skim";
-std::string inputdir = "/home/heli/XZZ/80X_20161018_light_Skim";
+std::string inputdir = "/home/heli/XZZ/80X_20161029_light_Skim";
+//std::string inputdir = "/data2/XZZ2/80X_20161018_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20161006_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20160810_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20160825_light_Skim";
@@ -63,7 +63,8 @@ char name[1000];
 TCanvas* plots;
 //std::string tag0 = "_DtB2H29fbinv";
 //std::string tag0 = "_NoRhoWt";
-std::string tag0 = "";
+std::string tag0 = "_NoRhoWt_VtxWt";
+//std::string tag0 = "";
 //std::string tag0 = "_newfilterlepveto";
 //std::string tag0 = "_newfilteretaphicut";
 //std::string tag0 = "_newfilter";
@@ -192,12 +193,16 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   //std::string rhoweight_selec = std::string("*(0.232+0.064*rho)");
   //std::string rhoweight_selec = std::string("*(0.038+0.118*rho-4.329e-03*rho*rho+1.011e-04*rho*rho*rho)"); // prompt 29.5fb-1
   std::string rhoweight_selec = std::string("*(0.019+0.114*rho+-4.705e-03*rho*rho+1.491e-04*rho*rho*rho)"); // rereco 33.59 fb-1
+
+  // reco vtx
+  std::string vtxweight_selec = std::string("*(0.807+0.007*nVert+-3.689e-05*nVert*nVert+6.730e-04*exp(2.500e-01*nVert))"); // rereco 33.59 fb-1
   // scale factors
   std::string effsf_selec = std::string("*(isosf*idsf*trksf)");
 
   // selec, cuts + weights
   std::string selec = base_selec;
-  if (doMC) selec +=  weight_selec + rhoweight_selec;
+  //if (doMC) selec +=  weight_selec + rhoweight_selec;
+  if (doMC) selec +=  weight_selec + vtxweight_selec;
   //if (doMC) selec +=  weight_selec;
   if (doMC && useEffSf) selec += effsf_selec;
   if ( (doMC && mcTrgSf) || (!doMC && dtTrgSf) ) selec += "*(trgsf)";

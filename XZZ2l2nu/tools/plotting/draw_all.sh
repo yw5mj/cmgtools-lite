@@ -1,8 +1,18 @@
 #!/bin/sh
 
 
-tag="Test1_DataB2H33fbinv_"
+tag="Test1_DataB2H33fbinv_RecoilZJets_NoRhoWt_VtxWt_"
+#tag="Test1_DataB2H33fbinv_NoRecoilZJets_NoRhoWt_VtxWt_"
+#tag="Test1_DataB2H33fbinv_RecoilZJets_NoRhoWt_"
+#tag="DataB2H33fbinv_RecoilZJets_NoRhoWt_"
+#tag="DataB2H33fbinv_NoRecoilZJets_NoRhoWt_"
+#tag="Test1_NoRecoilZJets_NoRhoWt_DataB2H33fbinv_"
+#tag="Test1_NoRecoilZJets_DataB2H33fbinv_"
+#tag="Test1_Old29fbinvZJets_DataB2H33fbinv_"
+#tag="Test1_Old29fbinvZJets_NoRhoWt_DataB2H33fbinv_"
+#tag="Test1_DataB2H33fbinv_"
 #tag="ForRhoWeight_DataB2H33fbinv_"
+#channels="mu"
 channels="all mu el"
 #cutChains="tight tightzpt100 tightzpt100met50"
 #cutChains="tightzpt100 tightzpt100met50"
@@ -25,6 +35,7 @@ do
       #./stack_dtmc_skim.py -l -b -q  --tag="$tag" --cutChain="$cutChain" --channel="$channel" &> ${logdir}/${tag}${cutChain}_${channel}.log &
       #./stack_dtmc_skim.py -l -b -q  --tag="$tag" --cutChain="$cutChain" --channel="$channel" --test &> ${logdir}/${tag}${cutChain}_${channel}.log &
       ./stack_dtmc_skim.py -l -b -q  --tag="$tag" --cutChain="$cutChain" --channel="$channel" --LogY  --test &> ${logdir}/${tag}${cutChain}_${channel}.log &
+      ./stack_dtmc_skim.py -l -b -q  --tag="$tag" --cutChain="$cutChain" --channel="$channel" --LogY --Blind  --test &> ${logdir}/${tag}${cutChain}_${channel}.log &
 
    done
 done
