@@ -9,7 +9,7 @@
 # privide chunks running directory, 
 # and directory to copy jobs out
 
-dir=gjetsmc4
+dir=gjetsmc7
 out=/data2/XZZ2/80X_20161029_Chunks
 #out=/data2/XZZ2/80X_20161018_Chunks
 #out=/home/heli/80X_20160825_Chunks

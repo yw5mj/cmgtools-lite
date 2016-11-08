@@ -1,6 +1,6 @@
 #!/bin/sh
 
-dir="gjetsmc4"
+dir="gjetsmc7"
 queue="2nd"
 
 # need to check your jobs with the expected n root files and n pck files

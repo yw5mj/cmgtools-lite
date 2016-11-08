@@ -192,7 +192,6 @@ class StackPlotter(object):
 
     def drawStack(self,var,cut,lumi,bins,mini,maxi,titlex = "", units = "", output = 'out', outDir='.', separateSignal=False, blinding=False, blindingCut=100.0, fakeData=False):
 
-        #fout = ROOT.TFile.Open(outDir+'/'+outputTag+'_'+output+'.root', 'recreate')
 
         self.fout.cd()
 
@@ -466,7 +465,8 @@ class StackPlotter(object):
 
 
 
-    def drawComp(self,var,cut,bins,mini,maxi,titlex = "", units = "", output='out.eps'):
+    def drawComp(self,var,cut,bins,mini,maxi,titlex = "", units = "", output='out' ):
+
         canvas = ROOT.TCanvas("canvas","")
         ROOT.SetOwnership(canvas,False)
         canvas.cd()

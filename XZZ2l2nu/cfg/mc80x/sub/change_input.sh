@@ -1,11 +1,12 @@
 #!/bin/sh
 
-dir=gjetsmc2
+dir=gjetsmc3
 #dir=dt3_truncated
 #dir=dt3
 
-tag="ZJetsToNuNu_HT200to400_Chunk*"
+#tag="ZJetsToNuNu_HT200to400_Chunk*"
 #tag="*_Run2016D*"
+tag="*_*"
 #tag="WZTo3LNu*"
 #tag="MuonEG_"
 #tag="SingleMuon_Run2016H_PromptReco_v2"
@@ -14,15 +15,15 @@ tag="ZJetsToNuNu_HT200to400_Chunk*"
 #tag="SingleElectron_"
 #tag="SingleMuon_"
 #tag="MET_"
-from="eoscms.cern.ch\/\/eos\/cms"
-#to="eoscms.cern.ch\/\/eos\/cms"
+#from="eoscms.cern.ch\/\/eos\/cms"
+to="eoscms.cern.ch\/\/eos\/cms"
 #to="cms-xrd-global.cern.ch\/"
-#from="cms-xrd-global.cern.ch"
+from="cms-xrd-global.cern.ch"
 #to="cmsxrootd.fnal.gov"
 #to="xrootd-cms.infn.it"
 #from="xrootd-cms.infn.it"
 #from="cmsxrootd.fnal.gov"
-to="cms-xrd-global.cern.ch"
+#to="cms-xrd-global.cern.ch"
 
 cd $dir
 
