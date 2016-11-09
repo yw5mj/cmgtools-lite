@@ -1,6 +1,6 @@
 #!/bin/sh
 
-dir=dt10
+dir=dt8
 #dir=dt3_truncated
 #dir=dt3
 
@@ -14,12 +14,13 @@ tag="*_*"
 #tag="SingleMuon_"
 #tag="MET_"
 #from="eoscms.cern.ch\/\/eos\/cms"
-#to="cms-xrd-global.cern.ch\/"
 from="cms-xrd-global.cern.ch"
-to="cmsxrootd.fnal.gov"
-#to="xrootd-cms.infn.it"
 #from="xrootd-cms.infn.it"
 #from="cmsxrootd.fnal.gov"
+to="eoscms.cern.ch\/\/eos\/cms"
+#to="cms-xrd-global.cern.ch\/"
+#to="cmsxrootd.fnal.gov"
+#to="xrootd-cms.infn.it"
 #to="cms-xrd-global.cern.ch"
 
 cd $dir

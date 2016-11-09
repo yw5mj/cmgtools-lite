@@ -109,7 +109,11 @@ if test==1:
     #selectedComponents = SingleElectron23Sep2016+SingleMuon23Sep2016+MET23Sep2016+MuonEG23Sep2016
     #selectedComponents =[SingleElectron_Run2016H_PromptReco_v2, SingleMuon_Run2016H_PromptReco_v2, MET_Run2016H_PromptReco_v2,MuonEG_Run2016H_PromptReco_v1,MuonEG_Run2016H_PromptReco_v2] 
     #selectedComponents =[SingleElectron_Run2016H_PromptReco_v1, SingleMuon_Run2016H_PromptReco_v1, MET_Run2016H_PromptReco_v1] 
-    selectedComponents = [SingleMuon_Run2016D_23Sep2016, SingleMuon_Run2016G_23Sep2016, SingleMuon_Run2016B_23Sep2016_v2, SingleElectron_Run2016B_23Sep2016_v2]
+    #selectedComponents = [SingleMuon_Run2016D_23Sep2016, SingleMuon_Run2016G_23Sep2016, SingleMuon_Run2016B_23Sep2016_v2, SingleElectron_Run2016B_23Sep2016_v2]
+    #selectedComponents = [SingleElectron_Run2016H_PromptReco_v2, SingleElectron_Run2016H_PromptReco_v3, 
+    #                      SingleMuon_Run2016H_PromptReco_v2, SingleMuon_Run2016H_PromptReco_v3]
+    #selectedComponents = [SingleElectron_Run2016H_PromptReco_v2, SingleElectron_Run2016H_PromptReco_v3] 
+    selectedComponents = [SingleMuon_Run2016H_PromptReco_v2, SingleMuon_Run2016H_PromptReco_v3]
     #selectedComponents = signalSamples+backgroundSamples
     #selectedComponents = backgroundSamples
     #selectedComponents = SingleMuon+SingleElectron
