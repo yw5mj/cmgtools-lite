@@ -81,6 +81,7 @@ if test==1:
     #selectedComponents = [RSGravToZZToZZinv_narrow_800]
     #selectedComponents = [WJetsToLNu]
     #selectedComponents = [ZZTo2L2Nu]
+    selectedComponents = [DYJetsToLL_M50, DYJetsToLL_M50_reHLT]
     #selectedComponents = [DYJetsToLL_M50_reHLT]
     #selectedComponents = [DYJetsToLL_M50]
     #selectedComponents = [DYJetsToLL_M50_MGMLM_Ext1]
@@ -89,7 +90,6 @@ if test==1:
     #selectedComponents = [BulkGravToZZToZlepZinv_narrow_1600] 
     #selectedComponents = signalSamples
     #selectedComponents = signalSamples+backgroundSamples[4:]
-    selectedComponents = signalSamples+backgroundSamples
     #selectedComponents = backgroundSamples[1:4]
     #selectedComponents = [TTTo2L2Nu]
     #selectedComponents = [ZZTo2L2Nu]
@@ -114,17 +114,23 @@ output_service = cfg.Service(
     )
 outputService.append(output_service)
 
+from PhysicsTools.Heppy.utils.cmsswPreprocessor import CmsswPreprocessor
+preprocessor = CmsswPreprocessor("pogRecipes.py")
+
 from PhysicsTools.HeppyCore.framework.eventsfwlite import Events
-from CMGTools.TTHAnalysis.tools.EOSEventsWithDownload import EOSEventsWithDownload
-event_class = EOSEventsWithDownload
 event_class = Events
-if getHeppyOption("nofetch"):
-    event_class = Events
 config = cfg.Config( components = selectedComponents,
                      sequence = sequence,
                      services = [],
+                     preprocessor=preprocessor, #this would run cmsRun before running Heppy
                      events_class = event_class)
 
+# and the following runs the process directly if running as with python filename.py  
+if __name__ == '__main__':
+    from PhysicsTools.HeppyCore.framework.looper import Looper
+    looper = Looper( 'Loop', config, nPrint = 5,nEvents=300)
+    looper.loop()
+    looper.write()
 
 
 

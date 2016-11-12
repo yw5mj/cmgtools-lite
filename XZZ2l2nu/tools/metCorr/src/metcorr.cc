@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
   if (_addZZCorrections && !_isData && _isZZ ) prepareZZCorrections();
 
   // prepare inputs for JEC/JER
-//  if (_doJEC )  prepareJECJER();
+  if (_doJEC )  prepareJECJER();
 
   // prepare inputs for simple met recoil tune.
   if (_doRecoil && ((!_isData && _isDyJets) || (_isData && _doGJetsSkim)) ) prepareRecoil();
@@ -130,7 +130,7 @@ int main(int argc, char** argv) {
     if (_addZZCorrections && !_isData && _isZZ ) addZZCorrections();
 
     // doJECJER
-//    if (_doJEC )  doJECJER()
+    if (_doJEC )  doJECJER();
     
     // simple met recoil tune.
     if (_doRecoil && ((!_isData && _isDyJets) || (_isData && _doGJetsSkim))) doRecoil();
@@ -254,27 +254,22 @@ void readConfigFile()
   _doJEC = parm.GetBool("doJEC", kFALSE); 
   _doJER = parm.GetBool("doJER", kFALSE); 
   
-  if (_doJEC) {
-    // data jec
-    _JECParTxt_DATA_L2L3Residual = parm.GetString("JECParTxt_DATA_L2L3Residual", "data/jec2016/Spring16_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
-    _JECParTxt_DATA_L3Absolute   = parm.GetString("JECParTxt_DATA_L3Absolute", "data/jec2016/Spring16_25nsV6_DATA_L3Absolute_AK4PFchs.txt");
-    _JECParTxt_DATA_L2Relative   = parm.GetString("JECParTxt_DATA_L2Relative", "data/jec2016/Spring16_25nsV6_DATA_L2Relative_AK4PFchs.txt");
-    _JECParTxt_DATA_L1FastJet    = parm.GetString("JECParTxt_DATA_L1FastJet", "data/jec2016/Spring16_25nsV6_DATA_L1FastJet_AK4PFchs.txt");
-    _JECParTxt_DATA_Uncertianty  = parm.GetString("JECParTxt_DATA_Uncertianty", "data/jec2016/Spring16_25nsV6_DATA_Uncertainty_AK4PFchs.txt"); 
-    // mc jec
-    _JECParTxt_MC_L2L3Residual = parm.GetString("JECParTxt_MC_L2L3Residual", "data/jec2016/Spring16_25nsV6_MC_L2L3Residual_AK4PFchs.txt");
-    _JECParTxt_MC_L3Absolute   = parm.GetString("JECParTxt_MC_L3Absolute", "data/jec2016/Spring16_25nsV6_MC_L3Absolute_AK4PFchs.txt");
-    _JECParTxt_MC_L2Relative   = parm.GetString("JECParTxt_MC_L2Relative", "data/jec2016/Spring16_25nsV6_MC_L2Relative_AK4PFchs.txt");
-    _JECParTxt_MC_L1FastJet    = parm.GetString("JECParTxt_MC_L1FastJet", "data/jec2016/Spring16_25nsV6_MC_L1FastJet_AK4PFchs.txt");
-    _JECParTxt_MC_Uncertianty  = parm.GetString("JECParTxt_MC_Uncertianty", "data/jec2016/Spring16_25nsV6_MC_Uncertainty_AK4PFchs.txt"); 
+  // data jec
+  _JECParTxt_DATA_L2L3Residual = parm.GetString("JECParTxt_DATA_L2L3Residual", "data/jec2016/Spring16_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
+  _JECParTxt_DATA_L3Absolute   = parm.GetString("JECParTxt_DATA_L3Absolute", "data/jec2016/Spring16_25nsV6_DATA_L3Absolute_AK4PFchs.txt");
+  _JECParTxt_DATA_L2Relative   = parm.GetString("JECParTxt_DATA_L2Relative", "data/jec2016/Spring16_25nsV6_DATA_L2Relative_AK4PFchs.txt");
+  _JECParTxt_DATA_L1FastJet    = parm.GetString("JECParTxt_DATA_L1FastJet", "data/jec2016/Spring16_25nsV6_DATA_L1FastJet_AK4PFchs.txt");
+  _JECParTxt_DATA_Uncertainty  = parm.GetString("JECParTxt_DATA_Uncertainty", "data/jec2016/Spring16_25nsV6_DATA_Uncertainty_AK4PFchs.txt"); 
+  // mc jec
+  _JECParTxt_MC_L2L3Residual = parm.GetString("JECParTxt_MC_L2L3Residual", "data/jec2016/Spring16_25nsV6_MC_L2L3Residual_AK4PFchs.txt");
+  _JECParTxt_MC_L3Absolute   = parm.GetString("JECParTxt_MC_L3Absolute", "data/jec2016/Spring16_25nsV6_MC_L3Absolute_AK4PFchs.txt");
+  _JECParTxt_MC_L2Relative   = parm.GetString("JECParTxt_MC_L2Relative", "data/jec2016/Spring16_25nsV6_MC_L2Relative_AK4PFchs.txt");
+  _JECParTxt_MC_L1FastJet    = parm.GetString("JECParTxt_MC_L1FastJet", "data/jec2016/Spring16_25nsV6_MC_L1FastJet_AK4PFchs.txt");
+  _JECParTxt_MC_Uncertainty  = parm.GetString("JECParTxt_MC_Uncertainty", "data/jec2016/Spring16_25nsV6_MC_Uncertainty_AK4PFchs.txt"); 
 
-    if (_doJER) {
-      _JERParTxt_Reso_DATA = parm.GetString("JERParTxt_Reso_DATA", "data/jer2016/Spring16_25nsV6_DATA_PtResolution_AK4PFchs.txt");
-      _JERParTxt_SF_DATA = parm.GetString("JERParTxt_SF_DATA", "data/jer2016/Spring16_25nsV6_DATA_SF_AK4PFchs.txt");
-      _JERParTxt_Reso_MC = parm.GetString("JERParTxt_Reso_MC", "data/jer2016/Spring16_25nsV6_MC_PtResolution_AK4PFchs.txt");
-      _JERParTxt_SF_MC = parm.GetString("JERParTxt_SF_MC", "data/jer2016/Spring16_25nsV6_MC_SF_AK4PFchs.txt");
-    }
-  } 
+  _JERParTxt_Reso_DATA = parm.GetString("JERParTxt_Reso_DATA", "data/jer2016/Spring16_25nsV6_DATA_PtResolution_AK4PFchs.txt");
+  _JERParTxt_Reso_MC = parm.GetString("JERParTxt_Reso_MC", "data/jer2016/Spring16_25nsV6_MC_PtResolution_AK4PFchs.txt");
+  _JERParTxt_SF_MC = parm.GetString("JERParTxt_SF_MC", "data/jer2016/Spring16_25nsV6_MC_SF_AK4PFchs.txt");
 
   //==============================================
   // Do simple version of the MET recoil tuning
@@ -771,6 +766,58 @@ void addDyZPtWeight()
       _ZJetsGenWeight = _genWeight/ZJetsLOSumWeights*ZJetsLOSumEvents/(ZJetsNLOSumEvents+ZJetsLOSumEvents);
     }
   }
+
+}
+
+
+// prepare JEC/JER
+void prepareJECJER()
+{
+
+  // JEC parameters
+  // data
+  _JEC_ResJetPar_DATA = new JetCorrectorParameters(_JECParTxt_DATA_L2L3Residual);
+  _JEC_L3JetPar_DATA  = new JetCorrectorParameters(_JECParTxt_DATA_L3Absolute);
+  _JEC_L2JetPar_DATA  = new JetCorrectorParameters(_JECParTxt_DATA_L2Relative);
+  _JEC_L1JetPar_DATA  = new JetCorrectorParameters(_JECParTxt_DATA_L1FastJet);
+  // mc
+  _JEC_ResJetPar_MC = new JetCorrectorParameters(_JECParTxt_MC_L2L3Residual);
+  _JEC_L3JetPar_MC  = new JetCorrectorParameters(_JECParTxt_MC_L3Absolute);
+  _JEC_L2JetPar_MC  = new JetCorrectorParameters(_JECParTxt_MC_L2Relative);
+  _JEC_L1JetPar_MC  = new JetCorrectorParameters(_JECParTxt_MC_L1FastJet);
+
+  // jec parametesrs vec
+  _JEC_vPar_DATA.push_back(*_JEC_ResJetPar_DATA);
+  _JEC_vPar_DATA.push_back(*_JEC_L3JetPar_DATA);
+  _JEC_vPar_DATA.push_back(*_JEC_L2JetPar_DATA);
+  _JEC_vPar_DATA.push_back(*_JEC_L1JetPar_DATA);
+  _JEC_vPar_MC.push_back(*_JEC_ResJetPar_MC);
+  _JEC_vPar_MC.push_back(*_JEC_L3JetPar_MC);
+  _JEC_vPar_MC.push_back(*_JEC_L2JetPar_MC);
+  _JEC_vPar_MC.push_back(*_JEC_L1JetPar_MC);    
+
+  // jec corrector
+  _JEC_JetCorrector_DATA = new FactorizedJetCorrector(_JEC_vPar_DATA);
+  _JEC_JetCorrector_MC   = new FactorizedJetCorrector(_JEC_vPar_MC);
+
+  // jec uncertaities
+  _JEC_Uncertainty_DATA = new JetCorrectionUncertainty(_JECParTxt_DATA_Uncertainty);
+  _JEC_Uncertainty_MC   = new JetCorrectionUncertainty(_JECParTxt_MC_Uncertainty);
+    
+
+  // JER parameters
+  _JER_Reso_DATA = new JME::JetResolution(_JERParTxt_Reso_DATA);
+  _JER_Reso_MC   = new JME::JetResolution(_JERParTxt_Reso_MC);
+  _JER_SF_MC     = new JME::JetResolutionScaleFactor(_JERParTxt_SF_MC);
+
+}
+
+
+// do JEC/JER
+void doJECJER() 
+{
+
+
 
 }
 

@@ -37,9 +37,9 @@
 #include "KalmanMuonCalibrator.h"
 #include "ZZCorrections.h"
 #include "JetCorrectorParameters.h"
+#include "JetCorrectionUncertainty.h"
 #include "FactorizedJetCorrector.h"
 #include "JetResolution.h"
-
 
 
 
@@ -210,18 +210,17 @@ std::string _JECParTxt_DATA_L2L3Residual;
 std::string _JECParTxt_DATA_L3Absolute;
 std::string _JECParTxt_DATA_L2Relative; 
 std::string _JECParTxt_DATA_L1FastJet;
-std::string _JECParTxt_DATA_Uncertianty;
+std::string _JECParTxt_DATA_Uncertainty;
 // mc jec
 std::string _JECParTxt_MC_L2L3Residual;
 std::string _JECParTxt_MC_L3Absolute;
 std::string _JECParTxt_MC_L2Relative; 
 std::string _JECParTxt_MC_L1FastJet;
-std::string _JECParTxt_MC_Uncertianty;
+std::string _JECParTxt_MC_Uncertainty;
 
 // JER parameters
 std::string _JERParTxt_Reso_DATA;
 std::string _JERParTxt_Reso_MC;
-std::string _JERParTxt_SF_DATA;
 std::string _JERParTxt_SF_MC;
 
 
@@ -246,9 +245,14 @@ std::vector<JetCorrectorParameters> _JEC_vPar_MC;
 FactorizedJetCorrector *_JEC_JetCorrector_DATA;
 FactorizedJetCorrector *_JEC_JetCorrector_MC;
 
+// jec uncertainty
+JetCorrectionUncertainty *_JEC_Uncertainty_DATA; 
+JetCorrectionUncertainty *_JEC_Uncertainty_MC; 
+
 // JER parameters
 JME::JetResolution* _JER_Reso_DATA;
 JME::JetResolution* _JER_Reso_MC;
+JME::JetResolutionScaleFactor* _JER_SF_MC;
 
 JME::JetParameters* _JERPar_Reso_DATA;
 JME::JetParameters* _JERPar_Reso_MC;
@@ -586,6 +590,12 @@ void prepareZZCorrections();
 
 // addZCorrections
 void addZZCorrections();
+
+// prepare JEC/JER
+void prepareJECJER();
+
+// do JEC/JER
+void doJECJER();
 
 // prepare inputs for simple met recoil tune.
 void prepareRecoil();
