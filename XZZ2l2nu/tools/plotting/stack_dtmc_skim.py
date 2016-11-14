@@ -30,33 +30,19 @@ parser.add_option("-b",action="callback",callback=callback_rootargs)
 
 
 tag=options.tag
-#tag="DataB2G_ICHEPcfg_"
-#tag="DataB2G_ScaledNotComplete_ICHEPcfg_"
-#tag="Test_DataB2G_ICHEPcfg_"
-#tag="test_"
-#tag=""
 cutChain=options.cutChain
-#cutChain='loosecut'
-#cutChain='tight'
-#cutChain='tightzpt100'
-#cutChain='tightzptlt200'
-#cutChain='tightzpt100met50'
-#cutChain='tightzpt100met100'
-#cutChain='tightzpt100met200'
 
 # can be el or mu or both
 channel=options.channel
-#channel='mu' 
 LogY=options.LogY
 test=options.test
-#LogY=True
-#test=False
 DrawLeptons=True
 doRhoScale=False
 doVtxScale=False
 doSys=False
 
-lepsf="trgsf*idsf*isosf*trksf"
+lepsf="trgsf*idsf*isosf"
+#lepsf="trgsf*idsf*isosf*trksf"
 #lepsf="trgsf_up*idisotrksf"
 #lepsf="trgsf_dn*idisotrksf"
 #lepsf="trgsf*idisotrksf_up"
@@ -81,14 +67,10 @@ if doVtxScale:
     tag+="VtxWt_"
     lepsf=lepsf+"*(0.807+0.007*nVert+-3.689e-05*nVert*nVert+6.730e-04*exp(2.500e-01*nVert))" # b2h rereco 33.59fb-1
 
-outdir='plots_b2h33fbinv'
-#outdir='plots_b2h29fbinv'
-#outdir='plots_b2g'
+outdir='plots_b2h36p1fbinv'
 
 indir='/home/heli/XZZ/80X_20161029_light_Skim'
-#indir='/home/heli/XZZ/80X_20161018_light_Skim'
-#indir='/home/heli/XZZ/80X_20161006_light_Skim'
-lumi=33.59
+lumi=36.1
 sepSig=True
 doRatio=True
 #Blind=True
@@ -96,7 +78,8 @@ Blind=options.Blind
 FakeData=False
 UseMETFilter=True
 SignalAll1pb=True
-puWeight='puWeight68075'
+puWeight='puWeightmoriondMC'
+#puWeight='puWeight68075'
 #puWeight='puWeight'
 ZJetsZPtWeight=True
 DataHLT=True
@@ -234,10 +217,10 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 zjetsPlotters=[]
 #zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H29fbinv']
-#zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H33fbinv']
+zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H36p1fbinv']
 #zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H33fbinvNoRhoWt']
 #zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H33fbinvNoRhoWtVtxWt']
-zjetsSamples = ['DYJetsToLL_M50_BIG_NoRecoil']
+#zjetsSamples = ['DYJetsToLL_M50_BIG_NoRecoil']
 
 
 for sample in zjetsSamples:
@@ -253,14 +236,14 @@ for sample in zjetsSamples:
     zjetsPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     zjetsPlotters[-1].addCorrectionFactor(lepsf,'lepsf')
     if channel=='el' :
-        zjetsPlotters[-1].addCorrectionFactor('(1.03186)','scale') #el
-        #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #el
+        #zjetsPlotters[-1].addCorrectionFactor('(1.03186)','scale') #el
+        zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #el
     elif channel=='mu' :
-        zjetsPlotters[-1].addCorrectionFactor('(1.04247)','scale') #mu
-        #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #mu
+        #zjetsPlotters[-1].addCorrectionFactor('(1.04247)','scale') #mu
+        zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #mu
     else :
-        zjetsPlotters[-1].addCorrectionFactor('(1.04235)','scale') #all
-        #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #all
+        #zjetsPlotters[-1].addCorrectionFactor('(1.04235)','scale') #all
+        zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #all
     allPlotters[sample] = zjetsPlotters[-1]
 
 
@@ -367,7 +350,8 @@ for sample in sigSamples:
 
 dataPlotters=[]
 dataSamples = [
-'SingleEMU_Run2016B2H_ReReco_33fbinv', 
+'SingleEMU_Run2016B2H_ReReco_36p1fbinv', 
+#'SingleEMU_Run2016B2H_ReReco_33fbinv', 
 #'SingleEMU_Run2016B2H29fbinv_PromptReco', 
 #'SingleEMU_Run2016B2G_PromptReco', 
 ]

@@ -127,9 +127,9 @@ int main(int argc, char** argv) {
   tree->SetBranchStatus("llnunu_l2_rapidity",0);
   tree->SetBranchStatus("llnunu_l2_mass",0);
   //tree->SetBranchStatus("llnunu_l2_metSig",0);
-  tree->SetBranchStatus("llnunu_l2_*smear*", 0);
-  tree->SetBranchStatus("llnunu_l2_*JER*",0);
-  tree->SetBranchStatus("llnunu_l2_*Smear*",0); 
+  //tree->SetBranchStatus("llnunu_l2_*smear*", 0);
+  //tree->SetBranchStatus("llnunu_l2_*JER*",0);
+  //tree->SetBranchStatus("llnunu_l2_*Smear*",0); 
   if (!isData) {
     //tree->SetBranchStatus("HLT_*",0); 
     tree->SetBranchStatus("genX_*",0); 
