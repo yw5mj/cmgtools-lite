@@ -84,9 +84,12 @@ puWeight='puWeightmoriondMC'
 ZJetsZPtWeight=True
 DataHLT=True
 k=1 # signal scale
+UseRhoCut=True
 
 elChannel='(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11)'
 muChannel='(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13)'
+
+rhoCut='(rho<22)'
 
 if not os.path.exists(outdir): os.system('mkdir '+outdir)
 
@@ -94,6 +97,8 @@ tag = tag+cutChain+'_'
 tag = tag+puWeight+'_'
 
 if doSys: tag = tag+"sys_"
+
+if UseRhoCut: tag=tag+'rhoCut_'
 
 if UseMETFilter: tag = tag+'metfilter_'
 
@@ -142,7 +147,13 @@ if channel=='el': cuts = cuts+'&&'+elChannel
 elif channel=='mu': cuts = cuts+'&&'+muChannel
 
 if UseMETFilter:
-    cuts = '('+cuts+'&&'+metfilter+')'
+    cuts = cuts+'&&'+metfilter
+
+if UseRhoCut:
+    cuts = cuts+'&&'+rhoCut
+
+cuts = '('+cuts+')'
+
 
 ROOT.gROOT.ProcessLine('.x tdrstyle.C') 
 
@@ -236,14 +247,17 @@ for sample in zjetsSamples:
     zjetsPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     zjetsPlotters[-1].addCorrectionFactor(lepsf,'lepsf')
     if channel=='el' :
-        #zjetsPlotters[-1].addCorrectionFactor('(1.03186)','scale') #el
-        zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #el
+        zjetsPlotters[-1].addCorrectionFactor('(1.08859)','scale') #el with rho<22 cut
+        #zjetsPlotters[-1].addCorrectionFactor('(1.09989)','scale') #el
+        #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #el
     elif channel=='mu' :
-        #zjetsPlotters[-1].addCorrectionFactor('(1.04247)','scale') #mu
-        zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #mu
+        zjetsPlotters[-1].addCorrectionFactor('(1.13569)','scale') #mu with rho<22 cut
+        #zjetsPlotters[-1].addCorrectionFactor('(1.13519)','scale') #mu
+        #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #mu
     else :
-        #zjetsPlotters[-1].addCorrectionFactor('(1.04235)','scale') #all
-        zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #all
+        zjetsPlotters[-1].addCorrectionFactor('(1.13511)','scale') #all with rho<22 cut
+        #zjetsPlotters[-1].addCorrectionFactor('(1.13462)','scale') #all
+        #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #all
     allPlotters[sample] = zjetsPlotters[-1]
 
 
@@ -401,7 +415,7 @@ if test:
     #Stack.drawStack('llnunu_l1_l2_trackerIso', cuts+"&&(abs(llnunu_l1_l2_pdgId)==13)", str(lumi*1000), 100, 0.0, 0.2, titlex = "trackerISO_{rel}(#mu_{2})", units = "",output=tag+'ISOlep2_mu',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('abs(llnunu_l1_pt+llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi))/llnunu_l1_pt', cuts, str(lumi*1000), 100, 0, 5, titlex = "#Delta P_{T}^{#parallel}(Z,MET)/P_{T}(Z)", units = "",output=tag+'dPTParaRel',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 300, 0.0, 3000.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_high3',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
-    Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 120, 0.0, 600.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
+#    Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 120, 0.0, 600.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
 
     Stack.drawStack('llnunu_l2_pt', cuts, str(lumi*1000), 100, 0, 500, titlex = "MET", units = "GeV",output=tag+'met_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
     Stack.drawStack('llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi)', cuts, str(lumi*1000), 100, -200, 200.0, titlex = "MET_{#parallel}", units = "GeV",output=tag+'met_para',outDir=outdir,separateSignal=sepSig)
