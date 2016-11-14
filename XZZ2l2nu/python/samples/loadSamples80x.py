@@ -260,6 +260,7 @@ SingleMuon=[SingleMuon_Run2016B_PromptReco,
             SingleMuon_Run2016G_PromptReco_v1,
             SingleMuon_Run2016H_PromptReco_v1,
             SingleMuon_Run2016H_PromptReco_v2,
+            SingleMuon_Run2016H_PromptReco_v3,
             ]
 SingleElectron=[SingleElectron_Run2016B_PromptReco,
                 SingleElectron_Run2016B_PromptReco_v2,
@@ -270,6 +271,7 @@ SingleElectron=[SingleElectron_Run2016B_PromptReco,
                 SingleElectron_Run2016G_PromptReco_v1,
                 SingleElectron_Run2016H_PromptReco_v1,
                 SingleElectron_Run2016H_PromptReco_v2,
+                SingleElectron_Run2016H_PromptReco_v3,
                ]
 SinglePhoton=[SinglePhoton_Run2016B_PromptReco,
               SinglePhoton_Run2016B_PromptReco_v2,
@@ -280,6 +282,7 @@ SinglePhoton=[SinglePhoton_Run2016B_PromptReco,
               SinglePhoton_Run2016G_PromptReco_v1,
               SinglePhoton_Run2016H_PromptReco_v1,
               SinglePhoton_Run2016H_PromptReco_v2,
+              SinglePhoton_Run2016H_PromptReco_v3,
              ]
 MuonEG=[MuonEG_Run2016B_PromptReco,
       MuonEG_Run2016B_PromptReco_v2,
@@ -290,6 +293,7 @@ MuonEG=[MuonEG_Run2016B_PromptReco,
       MuonEG_Run2016G_PromptReco_v1,
       MuonEG_Run2016H_PromptReco_v1,
       MuonEG_Run2016H_PromptReco_v2,
+      MuonEG_Run2016H_PromptReco_v3,
       ]
 
 MET= [MET_Run2016B_PromptReco,
@@ -301,6 +305,7 @@ MET= [MET_Run2016B_PromptReco,
       MET_Run2016G_PromptReco_v1,
       MET_Run2016H_PromptReco_v1,
       MET_Run2016H_PromptReco_v2,
+      MET_Run2016H_PromptReco_v3,
       ]
 
 SingleMuon23Sep2016=[
@@ -400,8 +405,9 @@ silverJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/1
 #goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-280385_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
 #goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-280385_13TeV_PromptReco_Collisions16_JSON_NoL1T_v2.txt'
 #goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-282037_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
-goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-283685_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
-run_range = (271036,283685)
+#goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-283685_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
+goldenJson = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
+run_range = (271036,284044)
 
 jsonFile = goldenJson
 

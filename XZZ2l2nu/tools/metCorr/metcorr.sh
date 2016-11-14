@@ -1,9 +1,11 @@
 #!/bin/sh
 
 #inputs
-#inputdir=/home/heli/XZZ/80X_20161029_light
+inputdir=/home/heli/XZZ/80X_20161029_light
 outputdir=/home/heli/XZZ/80X_20161029_light_Skim
-inputdir=/home/heli/XZZ/80X_20161018_light
+#inputdir=/datab/heli/XZZ/80X_20161029_light
+#inputdir=/data2/XZZ2/80X_20161018_light
+#inputdir=/home/heli/XZZ/80X_20161018_light
 #outputdir=/home/heli/XZZ/80X_20161018_light_Skim
 #inputdir=/home/heli/XZZ/80X_20161006_light
 #inputdir=/home/heli/XZZ/80X_20160825_light
@@ -30,9 +32,13 @@ njob="0"
 #for infile in $inputdir/SingleEMU_Run2016B2H29fbinv_*/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/DYJetsToLL_M50_reHLT/vvTreeProducer/tree.root ; 
 #for infile in $inputdir/Bulk*/vvTreeProducer/tree.root ; 
-#for infile in $(ls $inputdir/*/vvTreeProducer/tree.root | grep -v Single | grep -v DYJets ); 
 #for infile in $(ls $inputdir/*/vvTreeProducer/tree.root | grep -v Single | grep -v DYJets | grep -v Bulk); 
 #for infile in $inputdir/SingleEMU_Run2016B2H_ReReco_33fbinv/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/ZZTo2L2Nu/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/SingleEMU_Run2016B2G_ReReco_27fbinv/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/DYJetsToLL_M50_BIG_JEC/vvTreeProducer/tree.root ; 
+#for infile in $inputdir/SingleEMU_Run2016B2H_ReReco_36p1fbinv/vvTreeProducer/tree.root ; 
+#for infile in $(ls $inputdir/*/vvTreeProducer/tree.root | grep -v Single | grep -v DYJets ); 
 for infile in $inputdir/DYJetsToLL_M50_BIG/vvTreeProducer/tree.root ; 
 do
   echo "+++ skimming $infile +++"
@@ -40,7 +46,9 @@ do
 
   # options for outputs
   #outfile="${outfile/\/vvTreeProducer\/tree/_NoRecoil}"
-  outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2H33fbinv}"
+  outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2H36p1fbinv}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2H33fbinvNoRhoWt}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2H33fbinvNoRhoWtVtxWt}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2H29fbinv}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2G}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2GNoRhoWt}"

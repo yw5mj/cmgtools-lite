@@ -17,15 +17,15 @@ bool dtHLT = false;
 // 3.) for MC : doMC=false, doGJets=false, useZSelecLowLPt=true, useEffSf=false
 // 4.) for GJets: doGJets=true, doMC=false, useZSelecLowLPt=true, useEffSf=false
 
-//std::string inputdir = "/home/heli/XZZ/80X_20161029_light_Skim";
-std::string inputdir = "/home/heli/XZZ/80X_20161018_light_Skim";
+std::string inputdir = "/home/heli/XZZ/80X_20161029_light_Skim";
+//std::string inputdir = "/data2/XZZ2/80X_20161018_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20161006_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20160810_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20160825_light_Skim";
 //std::string inputdir = "/home/heli/XZZ/80X_20160927_light_Skim";
 std::string filename;
 
-std::string outputdir = "./recoil_out5";
+std::string outputdir = "./recoil_out6";
 std::vector< std::string > channels = {"all", "mu", "el"};
 std::vector< std::string > mcfiles = {
     //"DYJetsToLL_M50", "DYJetsToLL_M50_MGMLM_Ext1"
@@ -36,7 +36,7 @@ std::vector< std::string > mcfiles = {
  };
 
 std::vector< std::string > dtfiles = {
-    "SingleEMU_Run2016B2H_ReReco_33fbinv"
+    "SingleEMU_Run2016B2H_ReReco_36p1fbinv"
  };
 
 std::vector< std::string > gjfiles = {
@@ -63,6 +63,7 @@ char name[1000];
 TCanvas* plots;
 //std::string tag0 = "_DtB2H29fbinv";
 //std::string tag0 = "_NoRhoWt";
+//std::string tag0 = "_NoRhoWt_VtxWt";
 std::string tag0 = "";
 //std::string tag0 = "_newfilterlepveto";
 //std::string tag0 = "_newfilteretaphicut";
@@ -186,19 +187,25 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
 
 
   // add weight
-  std::string weight_selec = std::string("*(genWeight*ZPtWeight*puWeight68075/SumWeights*1921.8*3*12900.0)");
+  //std::string weight_selec = std::string("*(genWeight*ZPtWeight*puWeight68075/SumWeights*1921.8*3*12900.0)");
+  std::string weight_selec = std::string("*(genWeight*ZPtWeight*puWeightmoriondMC/SumWeights*1921.8*3*12900.0)");
   // rho weight
   //std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
   //std::string rhoweight_selec = std::string("*(0.232+0.064*rho)");
   //std::string rhoweight_selec = std::string("*(0.038+0.118*rho-4.329e-03*rho*rho+1.011e-04*rho*rho*rho)"); // prompt 29.5fb-1
   std::string rhoweight_selec = std::string("*(0.019+0.114*rho+-4.705e-03*rho*rho+1.491e-04*rho*rho*rho)"); // rereco 33.59 fb-1
+
+  // reco vtx
+  std::string vtxweight_selec = std::string("*(0.807+0.007*nVert+-3.689e-05*nVert*nVert+6.730e-04*exp(2.500e-01*nVert))"); // rereco 33.59 fb-1
   // scale factors
-  std::string effsf_selec = std::string("*(isosf*idsf*trksf)");
+  //std::string effsf_selec = std::string("*(isosf*idsf*trksf)");
+  std::string effsf_selec = std::string("*(isosf*idsf)");
 
   // selec, cuts + weights
   std::string selec = base_selec;
-  if (doMC) selec +=  weight_selec + rhoweight_selec;
-  //if (doMC) selec +=  weight_selec;
+  //if (doMC) selec +=  weight_selec + rhoweight_selec;
+  //if (doMC) selec +=  weight_selec + vtxweight_selec;
+  if (doMC) selec +=  weight_selec;
   if (doMC && useEffSf) selec += effsf_selec;
   if ( (doMC && mcTrgSf) || (!doMC && dtTrgSf) ) selec += "*(trgsf)";
   
@@ -235,7 +242,8 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   gROOT->ProcessLine(name);
 
   // lumiTag for plotting
-  lumiTag = "CMS 13 TeV 2016 L=33.59 fb^{-1}";
+  lumiTag = "CMS 13 TeV 2016 L=36.1 fb^{-1}";
+  //lumiTag = "CMS 13 TeV 2016 L=33.59 fb^{-1}";
   //lumiTag = "CMS 13 TeV 2016 L=29.53 fb^{-1}";
   //lumiTag = "CMS 13 TeV 2016 L=27.22 fb^{-1}";
   //lumiTag = "CMS 13 TeV 2016 L=12.9 fb^{-1}";
@@ -279,7 +287,8 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
 
 
   // other control plots
-  Double_t ZPtBins[] = {0,2,4,6,8,10,12,14,16,18,20,22,24,26,28, 30, 35, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 220, 240, 260, 300, 500, 5000 };
+  Double_t ZPtBins[] = {0,2,4,6,8,10,12,14,16,18,20,22,24,26,28, 30, 35, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 220, 240, 260, 300,  5000 };
+  //Double_t ZPtBins[] = {0,2,4,6,8,10,12,14,16,18,20,22,24,26,28, 30, 35, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 220, 240, 260, 300, 500, 5000 };
   //Double_t ZPtBins[] = {0,2,4,6,8,10,12,14,16,18,20,22,24,26,28, 30, 35, 40, 50, 60, 80, 100, 150, 250, 5000 };
   //Double_t ZPtBins[] = {0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,35,36,36.5,37,37.5,38,38.5,39,39.5,40,41,42,43,44,45,46,47,48,49,50,55,60,65,70,75,80,85,90,95,100,105, 110,120,125, 130,140,150,160,180,200,300,5000 };
   Int_t NZPtBins = sizeof(ZPtBins)/sizeof(ZPtBins[0]) - 1;
