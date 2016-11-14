@@ -1,11 +1,10 @@
 
 
 std::string channel = "all";
-bool doMC = true;
+bool doMC = false;
 bool doGJets = false;
-bool useMzCut = false;
-bool useZSelec = false;
 bool useZSelecLowLPt = true;
+bool useRhoCut = true;
 bool useEffSf = false;
 bool mcTrgSf = false;
 bool dtTrgSf = false;
@@ -154,9 +153,8 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
 
   // tags
   std::string tag = tag0+"_met_para_study";
-  if (useMzCut) tag += "_MzCut";
-  if (useZSelec) tag += "_ZSelec"; 
   if (useZSelecLowLPt) tag += "_ZSelecLowLPt";
+  if (useRhoCut) tag += "_RhoCut";
   if (doMC && useEffSf) tag += "_effSf";
   if ( (doMC && mcTrgSf) || (!doMC && dtTrgSf))  tag += "_trgSf";
   if (!doMC && dtHLT) tag += "_dtHLT";
@@ -174,16 +172,20 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   std::string cuts_loose_z="("+metfilter+"&&"+cuts_lepaccept+"&&"+cuts_zmass+")";
   std::string cuts_loose_z_lowlpt="("+metfilter+"&&"+cuts_lepaccept_lowlpt+"&&"+cuts_zmass+")";
 
-  base_selec = "(llnunu_l1_mass>50&&llnunu_l1_mass<180)";
-  if (useMzCut)  base_selec = "(llnunu_l1_mass>70&&llnunu_l1_mass<110)";
 
-  if (useZSelec) base_selec =  cuts_loose_z;
+  std::string cuts_rho="(rho<22)";
+
+  base_selec =  cuts_loose_z;
   if (useZSelecLowLPt) base_selec =  cuts_loose_z_lowlpt;
 
-  if (channel=="el") base_selec = "("+base_selec+"&&(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11))";
-  else if (channel=="mu") base_selec = "("+base_selec+"&&(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13))";
+  if (useRhoCut) base_selec = base_selec+"&&"+cuts_rho;
 
-  if (!doMC && dtHLT) base_selec = "((HLT_MUv2||HLT_ELEv2)&&"+base_selec+")";
+  if (channel=="el") base_selec = base_selec+"&&(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11)";
+  else if (channel=="mu") base_selec = base_selec+"&&(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13)";
+
+  if (!doMC && dtHLT) base_selec = "(HLT_MUv2||HLT_ELEv2)&&"+base_selec;
+
+  base_selec = "("+base_selec+")";
 
 
   // add weight

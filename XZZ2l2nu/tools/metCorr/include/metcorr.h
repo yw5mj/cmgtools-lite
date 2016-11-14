@@ -106,6 +106,9 @@ int _n_interval = 1000;
 // use slimmed tree or not
 bool _useLightTree = true;
 
+// store errs
+bool _storeErr = true;
+
 // tree selection string
 std::string _selection = "(1)";
 

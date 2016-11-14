@@ -47,19 +47,9 @@ do
   # options for outputs
   #outfile="${outfile/\/vvTreeProducer\/tree/_NoRecoil}"
   outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2H36p1fbinv}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2H33fbinvNoRhoWt}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2H33fbinvNoRhoWtVtxWt}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2H29fbinv}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2G}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2GNoRhoWt}"
+  #outfile="${outfile/\/vvTreeProducer\/tree/_RcDataB2H36p1fbinvRhoCut}"
   #outfile="${outfile/\/vvTreeProducer\/tree/}"
   #outfile="${outfile/\/vvTreeProducer\/tree/_test}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_TgEfElFineBin}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilNoPUWtNoSmooth}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_NoRecoil}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilNoSmooth}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilSmooth}"
-  #outfile="${outfile/\/vvTreeProducer\/tree/_RecoilGraph}"
 
   inSkimFile=${infile/vvTreeProducer\/tree.root/skimAnalyzerCount\/SkimReport.txt}
 

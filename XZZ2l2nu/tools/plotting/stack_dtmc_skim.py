@@ -227,10 +227,8 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 
 zjetsPlotters=[]
-#zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H29fbinv']
-zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H36p1fbinv']
-#zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H33fbinvNoRhoWt']
-#zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H33fbinvNoRhoWtVtxWt']
+#zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H36p1fbinv']
+zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H36p1fbinvRhoCut']
 #zjetsSamples = ['DYJetsToLL_M50_BIG_NoRecoil']
 
 
