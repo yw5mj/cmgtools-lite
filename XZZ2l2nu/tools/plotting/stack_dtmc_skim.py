@@ -37,7 +37,7 @@ channel=options.channel
 LogY=options.LogY
 test=options.test
 DrawLeptons=True
-doRhoScale=False
+doRhoScale=True
 doVtxScale=False
 doSys=False
 
@@ -58,7 +58,8 @@ if test: DrawLeptons = False
 
 if doRhoScale: 
     tag+="RhoWt_"
-    lepsf=lepsf+"*(0.019+0.114*rho+-4.705e-03*rho*rho+1.491e-04*rho*rho*rho)" # b2h rereco 33.59 fb-1
+    lepsf=lepsf+"*(0.32+0.42*TMath::Erf((rho-4.16)/4.58)+0.31*TMath::Erf((rho+115.00)/29.58))" # b2h rereco 36.1 fb-1
+    #lepsf=lepsf+"*(0.019+0.114*rho+-4.705e-03*rho*rho+1.491e-04*rho*rho*rho)" # b2h rereco 33.59 fb-1
     #lepsf=lepsf+"*(0.038+0.118*rho-4.329e-03*rho*rho+1.011e-04*rho*rho*rho)" # b2h prompt 29fb-1
     #lepsf=lepsf+"*(0.232+0.064*rho)"
     #lepsf=lepsf+"*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))"
@@ -84,7 +85,7 @@ puWeight='puWeightmoriondMC'
 ZJetsZPtWeight=True
 DataHLT=True
 k=1 # signal scale
-UseRhoCut=True
+UseRhoCut=False
 
 elChannel='(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11)'
 muChannel='(abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13)'
@@ -228,8 +229,8 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 zjetsPlotters=[]
 #zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H36p1fbinv']
-zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H36p1fbinvRhoCut']
-#zjetsSamples = ['DYJetsToLL_M50_BIG_NoRecoil']
+#zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H36p1fbinvRhoCut']
+zjetsSamples = ['DYJetsToLL_M50_BIG_NoRecoil']
 
 
 for sample in zjetsSamples:
@@ -245,16 +246,16 @@ for sample in zjetsSamples:
     zjetsPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     zjetsPlotters[-1].addCorrectionFactor(lepsf,'lepsf')
     if channel=='el' :
-        zjetsPlotters[-1].addCorrectionFactor('(1.08859)','scale') #el with rho<22 cut
-        #zjetsPlotters[-1].addCorrectionFactor('(1.09989)','scale') #el
+        #zjetsPlotters[-1].addCorrectionFactor('(1.08859)','scale') #el with rho<22 cut
+        zjetsPlotters[-1].addCorrectionFactor('(1.09989)','scale') #el
         #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #el
     elif channel=='mu' :
-        zjetsPlotters[-1].addCorrectionFactor('(1.13569)','scale') #mu with rho<22 cut
-        #zjetsPlotters[-1].addCorrectionFactor('(1.13519)','scale') #mu
+        #zjetsPlotters[-1].addCorrectionFactor('(1.13569)','scale') #mu with rho<22 cut
+        zjetsPlotters[-1].addCorrectionFactor('(1.13519)','scale') #mu
         #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #mu
     else :
-        zjetsPlotters[-1].addCorrectionFactor('(1.13511)','scale') #all with rho<22 cut
-        #zjetsPlotters[-1].addCorrectionFactor('(1.13462)','scale') #all
+        #zjetsPlotters[-1].addCorrectionFactor('(1.13511)','scale') #all with rho<22 cut
+        zjetsPlotters[-1].addCorrectionFactor('(1.13462)','scale') #all
         #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #all
     allPlotters[sample] = zjetsPlotters[-1]
 
