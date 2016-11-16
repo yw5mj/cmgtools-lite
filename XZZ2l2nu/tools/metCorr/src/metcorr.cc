@@ -199,7 +199,7 @@ void readConfigFile()
   // use slimmed tree or not
   //=========================
   _useLightTree = parm.GetBool("useLightTree", kTRUE);
-
+  _storeErr = parm.GetBool("storeErr", kTRUE);
 
   //=========================
   // add PU weights
@@ -548,6 +548,16 @@ bool  prepareTrees()
       _tree_out->SetBranchStatus("gjet_l1_r9", 1);
       _tree_out->SetBranchStatus("gjet_l1_sigmaIetaIeta", 1);
     }
+  }
+
+
+  // _storeErr 
+  if (!_storeErr) {
+    _tree_out->SetBranchStatus("llnunu_l2_t1*_*", 0);
+    _tree_out->SetBranchStatus("*_err", 0);
+    _tree_out->SetBranchStatus("*_up", 0);
+    _tree_out->SetBranchStatus("*_dn", 0);
+
   }
 
   return true;
