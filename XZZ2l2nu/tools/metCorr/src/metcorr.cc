@@ -360,12 +360,24 @@ bool  prepareTrees()
   _tree_in->SetBranchAddress("rho", &_rho);
 
   if (_doGJetsSkim) {
+    etree_in->SetBranchAddress("PreScale22", &_PreScale22);
+    _tree_in->SetBranchAddress("PreScale30", &_PreScale30);
+    _tree_in->SetBranchAddress("PreScale36", &_PreScale36);
+    _tree_in->SetBranchAddress("PreScale50", &_PreScale50);
+    _tree_in->SetBranchAddress("PreScale75", &_PreScale75);
+    _tree_in->SetBranchAddress("PreScale90", &_PreScale90);
+    _tree_in->SetBranchAddress("PreScale120", &_PreScale120);
+    _tree_in->SetBranchAddress("PreScale165", &_PreScale165);
     _tree_in->SetBranchAddress("gjet_mt", &_gjet_mt);
     _tree_in->SetBranchAddress("gjet_l1_pt", &_gjet_l1_pt);
     _tree_in->SetBranchAddress("gjet_l1_eta", &_gjet_l1_eta);
     _tree_in->SetBranchAddress("gjet_l1_rapidity", &_gjet_l1_rapidity);
     _tree_in->SetBranchAddress("gjet_l1_phi", &_gjet_l1_phi);
     _tree_in->SetBranchAddress("gjet_l1_idCutBased", &_gjet_l1_idCutBased);
+    _tree_in->SetBranchAddress("gjet_l1_trigerob_HLTbit", &_gjet_l1_trigerob_HLTbit);
+    _tree_in->SetBranchAddress("gjet_l1_trigerob_pt", &_gjet_l1_trigerob_pt);
+    _tree_in->SetBranchAddress("gjet_l1_trigerob_eta", &_gjet_l1_trigerob_eta);
+    _tree_in->SetBranchAddress("gjet_l1_trigerob_phi", &_gjet_l1_trigerob_phi);
     _tree_in->SetBranchAddress("gjet_l2_pt", &_gjet_l2_pt);
     _tree_in->SetBranchAddress("gjet_l2_phi", &_gjet_l2_phi);
     _tree_in->SetBranchAddress("gjet_l2_sumEt", &_gjet_l2_sumEt);

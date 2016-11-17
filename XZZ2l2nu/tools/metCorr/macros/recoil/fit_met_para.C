@@ -1,10 +1,10 @@
 
 
 std::string channel = "all";
-bool doMC = false;
+bool doMC = true;
 bool doGJets = false;
 bool useZSelecLowLPt = true;
-bool useRhoCut = true;
+bool useRhoCut = false;
 bool useEffSf = false;
 bool mcTrgSf = false;
 bool dtTrgSf = false;
@@ -27,11 +27,7 @@ std::string filename;
 std::string outputdir = "./recoil_out6";
 std::vector< std::string > channels = {"all", "mu", "el"};
 std::vector< std::string > mcfiles = {
-    //"DYJetsToLL_M50", "DYJetsToLL_M50_MGMLM_Ext1"
     "DYJetsToLL_M50_BIG_NoRecoil", 
-    //"DYJetsToLL_M50_NoRecoil", "DYJetsToLL_M50_MGMLM_Ext1_NoRecoil"
-    //"DYJetsToLL_M50_RecoilSmooth", "DYJetsToLL_M50_MGMLM_Ext1_RecoilSmooth"
-    //"DYJetsToLL_M50_RecoilNoSmooth", "DYJetsToLL_M50_MGMLM_Ext1_RecoilNoSmooth"
  };
 
 std::vector< std::string > dtfiles = {
@@ -61,9 +57,9 @@ std::vector< std::string > gjfiles = {
 char name[1000];
 TCanvas* plots;
 //std::string tag0 = "_DtB2H29fbinv";
-//std::string tag0 = "_NoRhoWt";
-//std::string tag0 = "_NoRhoWt_VtxWt";
-std::string tag0 = "";
+std::string tag0 = "_RhoWt";
+//std::string tag0 = "_VtxWt";
+//std::string tag0 = "";
 //std::string tag0 = "_newfilterlepveto";
 //std::string tag0 = "_newfilteretaphicut";
 //std::string tag0 = "_newfilter";
@@ -195,7 +191,8 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   //std::string rhoweight_selec = std::string("*(0.602*exp(-0.5*pow((rho-8.890)/6.187,2))+0.829*exp(-0.5*pow((rho-21.404)/10.866,2)))");
   //std::string rhoweight_selec = std::string("*(0.232+0.064*rho)");
   //std::string rhoweight_selec = std::string("*(0.038+0.118*rho-4.329e-03*rho*rho+1.011e-04*rho*rho*rho)"); // prompt 29.5fb-1
-  std::string rhoweight_selec = std::string("*(0.019+0.114*rho+-4.705e-03*rho*rho+1.491e-04*rho*rho*rho)"); // rereco 33.59 fb-1
+  //std::string rhoweight_selec = std::string("*(0.019+0.114*rho+-4.705e-03*rho*rho+1.491e-04*rho*rho*rho)"); // rereco 33.59 fb-1
+  std::string rhoweight_selec = std::string("*(0.32+0.42*TMath::Erf((rho-4.16)/4.58)+0.31*TMath::Erf((rho+115.00)/29.58))"); // rereco 36.1 fb-1
 
   // reco vtx
   std::string vtxweight_selec = std::string("*(0.807+0.007*nVert+-3.689e-05*nVert*nVert+6.730e-04*exp(2.500e-01*nVert))"); // rereco 33.59 fb-1
@@ -205,9 +202,9 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
 
   // selec, cuts + weights
   std::string selec = base_selec;
-  //if (doMC) selec +=  weight_selec + rhoweight_selec;
+  if (doMC) selec +=  weight_selec + rhoweight_selec;
   //if (doMC) selec +=  weight_selec + vtxweight_selec;
-  if (doMC) selec +=  weight_selec;
+  //if (doMC) selec +=  weight_selec;
   if (doMC && useEffSf) selec += effsf_selec;
   if ( (doMC && mcTrgSf) || (!doMC && dtTrgSf) ) selec += "*(trgsf)";
   
