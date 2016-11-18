@@ -180,15 +180,17 @@ WW.setFillProperties(1001,ROOT.kOrange)
 vvPlotters=[]
 vvSamples = ['WZTo2L2Q','WZTo3LNu_AMCNLO',
 'ZZTo2L2Nu',
-'ZZTo2L2Q','ZZTo4L']
-
+'ZZTo2L2Q','ZZTo4L',
+'ggZZTo2e2nu','ggZZTo2mu2nu']
 for sample in vvSamples:
     vvPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
     vvPlotters[-1].addCorrectionFactor('1/SumWeights','norm')
-    vvPlotters[-1].addCorrectionFactor('xsec','xsec')
     vvPlotters[-1].addCorrectionFactor('genWeight','genWeight')
     vvPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     vvPlotters[-1].addCorrectionFactor(lepsf, 'lepsf')
+    if sample == 'ZZTo2L2Nu' : vvPlotters[-1].addCorrectionFactor("(ZZEwkCorrWeight*ZZQcdCorrWeight)", 'nnlo')
+    if 'ggZZTo2' in sample: vvPlotters[-1].addCorrectionFactor('0.01898','xsec') 
+    else: vvPlotters[-1].addCorrectionFactor('xsec','xsec')
     allPlotters[sample] = vvPlotters[-1]
 
 VV = MergedPlotter(vvPlotters)
@@ -229,8 +231,9 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 zjetsPlotters=[]
 #zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H36p1fbinv']
-#zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H36p1fbinvRhoCut']
-zjetsSamples = ['DYJetsToLL_M50_BIG_NoRecoil']
+zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H36p1fbinvRhoWt']
+#zjetsSamples = ['DYJetsToLL_M50_BIG_NoRecoil']
+
 
 
 for sample in zjetsSamples:

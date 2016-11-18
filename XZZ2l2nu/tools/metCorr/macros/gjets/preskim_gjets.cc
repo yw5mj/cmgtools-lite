@@ -76,12 +76,12 @@ int main(int argc, char** argv) {
   tree->SetBranchStatus("gjet_l1_eLeft",0);
   tree->SetBranchStatus("gjet_l1_eRight",0);
   tree->SetBranchStatus("gjet_l1_eMax",0);
-  tree->SetBranchStatus("gjet_l2_metSig",0);
+  //tree->SetBranchStatus("gjet_l2_metSig",0);
 
-
-  tree->SetBranchStatus("gjet_l2_*smear*", 0);
-  tree->SetBranchStatus("gjet_l2_*JER*",0);
-  tree->SetBranchStatus("gjet_l2_*Smear*",0);
+  tree->SetBranchStatus("gjet_l2_t1*",0);
+//  tree->SetBranchStatus("gjet_l2_*smear*", 0);
+//  tree->SetBranchStatus("gjet_l2_*JER*",0);
+//  tree->SetBranchStatus("gjet_l2_*Smear*",0);
 
   if (!isData) {
     tree->SetBranchStatus("HLT_*",0); 
@@ -137,10 +137,13 @@ int main(int argc, char** argv) {
   TFile* ftmp2 = TFile::Open("/tmp/fout_tmp2.root", "recreate");
   TTree* tree_tmp2 = tree_tmp1->CopyTree("((eta<-1.566)||flg1eb||flg1eep)");
 
+  TFile* ftmp3 = TFile::Open("/tmp/fout_tmp3.root", "recreate");
+  TTree* tree_tmp3 = tree_tmp2->CopyTree("((eta>-1.566)||flg1eem)");
+
 
   foutput->cd();  
   //TTree* tree_out = tree->CopyTree("HLT_PHOTONIDISO&&metfilter&&fabs(eta)<1.47&&ngjet==1&&flag1&&filter1");
-  TTree* tree_out = tree_tmp2->CopyTree("((eta>-1.566)||flg1eem)");
+  TTree* tree_out = tree_tmp3->CopyTree("(gjet_l1_trigerob_HLTbit>>0&1&&gjet_l1_trigerob_pt<=30)||(gjet_l1_trigerob_HLTbit>>1&1&&gjet_l1_trigerob_pt<=36)||(gjet_l1_trigerob_HLTbit>>2&1&&gjet_l1_trigerob_pt<=50)||(gjet_l1_trigerob_HLTbit>>3&1&&gjet_l1_trigerob_pt<=75)||(gjet_l1_trigerob_HLTbit>>4&1&&gjet_l1_trigerob_pt<=90)||(gjet_l1_trigerob_HLTbit>>5&1&&gjet_l1_trigerob_pt<=120)||(gjet_l1_trigerob_HLTbit>>6&1&&gjet_l1_trigerob_pt<=165)||(gjet_l1_trigerob_HLTbit>>7&1&&gjet_l1_trigerob_pt<=10000000)");
 
 
   foutput->cd();
