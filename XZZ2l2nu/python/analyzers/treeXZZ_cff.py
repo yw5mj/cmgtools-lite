@@ -87,7 +87,7 @@ vvTreeProducer = cfg.Analyzer(
      collections = {
          #"LL"  : NTupleCollection("Zll",LLType,5, help="Z to ll"),
          #"ElMu"  : NTupleCollection("elmu",LLType,5, help="electron - muon pair for non-resonant bkg"),
-         "selectedLeptons" : NTupleCollection("lep",leptonType,100, help="selected leptons"),
+#        "selectedLeptons" : NTupleCollection("lep",leptonType,100, help="selected leptons"),
          "genNeutrinos" : NTupleCollection("genNeu", genParticleType, 100, mcOnly=True, help="Generated neutrinos (e/mu) from W/Z decays"),
          "genLeptons" : NTupleCollection("genLep", genParticleType, 100, mcOnly=True, help="Generated leptons (e/mu) from W/Z decays"),
          "genLeptonsFsr" : NTupleCollection("genLepFsr", genParticleType, 100, mcOnly=True, help="Generated leptons (e/mu) from W/Z decays"),
@@ -95,7 +95,7 @@ vvTreeProducer = cfg.Analyzer(
          "genIncomingQuarks" : NTupleCollection("genQ", genParticleType, 100, mcOnly=True, help="Generated incoming quarks"),
          "LLNuNu"     : NTupleCollection("llnunu",LLNuNuType ,5, help="VV candidate with di-lepton and MET"),
          "genXZZ" : NTupleCollection("genX", tlorentzFourVectorType, 10, mcOnly=True, help="Generated X->ZZ"),
-	 "jets"       : NTupleCollection("jet",JetTypeExtra,300, help="all jets in miniaod"),
+#	 "jets"       : NTupleCollection("jet",JetTypeExtra,300, help="all jets in miniaod"),
          #"LHE_weights"    : NTupleCollection("LHEweight",  weightsInfoType, 1000, mcOnly=True, help="LHE weight info"),
          "genJets"       : NTupleCollection("genjet",genJetType,300, mcOnly=True, help="genJets in miniaod"),
          #"selectedPhotons"       : NTupleCollection("photon",photonType,100, help="selected photons in miniaod"),
