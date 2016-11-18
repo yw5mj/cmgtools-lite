@@ -120,7 +120,7 @@ nonresSamples = ['muonegtrgsf']
 for sample in nonresSamples:
     nonresPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
     nonresPlotters[-1].addCorrectionFactor('etrgsf', 'etrgsf')
-    nonresPlotters[-1].addCorrectionFactor('0.319863566207', 'norm')
+    nonresPlotters[-1].addCorrectionFactor('0.364097979853', 'norm')
     nonresPlotters[-1].addCorrectionFactor('1./({0}*1000)'.format(lumi), 'lumi')
     allPlotters[sample] = nonresPlotters[-1]
 NONRES = MergedPlotter(nonresPlotters)
@@ -166,8 +166,8 @@ Stack = StackPlotter(outTag=tag, outDir=outdir)
 Stack.setPaveText(paveText)
 Stack.addPlotter(Data, "data_obs", "Data", "data")
 #Stack.addPlotter(WJets, "WJets","W+Jets", "background")
-Stack.addPlotter(VV, "VVZReso","ZZ WZ reson.", "background")
 Stack.addPlotter(NONRES, "NONReso","non reson.", "background")
+Stack.addPlotter(VV, "VVZReso","ZZ WZ reson.", "background")
 #Stack.addPlotter(ggZZ, "ggZZ","ggZZ", "background")
 Stack.addPlotter(ZJets, "ZJets","ZJets", "background")
 
