@@ -5,8 +5,8 @@
 # compile
 g++ preskim_gjets.cc -o preskim_gjets.exe `root-config --cflags` `root-config --libs`
 
-#samples="SinglePhoton_Run2016H_PromptReco_new"
-samples="SinglePhoton_Run2016B2H_ReReco_36p1fbinv"
+samples="SinglePhoton_Run2016H_PromptReco_new"
+#samples="SinglePhoton_Run2016B2H_ReReco_36p1fbinv"
 indir=/data2/XZZ2/80X_20161029
 outdir=/home/heli/XZZ/80X_20161029_light
 #samples="SinglePhoton_Run2016B2H29fbinv_PromptReco"
