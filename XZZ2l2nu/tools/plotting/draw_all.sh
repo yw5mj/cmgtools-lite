@@ -1,10 +1,11 @@
 #!/bin/sh
 
 
+tag="Test1_DataB2H36p1fbinv_RcDataB2H36p1fbinvRhoWt_ZZCorr_ggZZ_"
 #tag="Test1_DataB2H36p1fbinv_RcDataB2H36p1fbinv_"
-#tag="Test1_DataB2H36p1fbinv_RcDataB2H36p1fbinvRhoCut_"
+#tag="Test1_DataB2H36p1fbinv_RcDataB2H36p1fbinvRhoWt_"
 #tag="DataB2H36p1fbinv_RcDataB2H36p1fbinv_"
-tag="Test1_DataB2H36p1fbinv_NoRecoilZJets_"
+#tag="Test1_DataB2H36p1fbinv_NoRecoilZJets_"
 #tag="DataB2H36p1fbinv_NoRecoilZJets_"
 #tag="ForRhoWeight_DataB2H33fbinv_"
 #channels="mu"

@@ -37,11 +37,8 @@ n_test: -1
 # n entries interval between which print once entry number
 n_interval: 1000000
 
-# tree branch config
+# use slimmed tree or not
 useLightTree: true
-storeErr: false
-removeHLTFlag: true
-removeMETFlag: true
 
 # tree selection string
 selection: (1)
@@ -57,16 +54,16 @@ storeOldBranches: false
 #  ╠═╝║ ║  ║║║║╣ ║║ ╦╠═╣ ║ ╚═╗
 #  ╩  ╚═╝  ╚╩╝╚═╝╩╚═╝╩ ╩ ╩ ╚═╝
 #====================================================================
-addPUWeights: true
+addPUWeights: false
 
 # PU input files directory
 PUInputDir: data/pileup
 
 # PU input tags, "puWeight<tag>" branches will be added
-PUTags: 67921, 68075, 69200, moriondMC 
+PUTags: 67921, 68075, 69200 
 
 # PU input root files, one-to-one correspnding to the tags above
-PUInputFileNames: pileup_MC_80x_271036-276811_67921.root, pileup_MC_80x_271036-276811_68075.root, pileup_MC_80x_271036-276811_69200.root, mcpileupmoriond.root
+PUInputFileNames: pileup_MC_80x_271036-276811_67921.root, pileup_MC_80x_271036-276811_68075.root, pileup_MC_80x_271036-276811_69200.root
 
 # PU weight hist name
 PUWeightHistName: puweight_dtmc
@@ -77,9 +74,9 @@ PUWeightHistName: puweight_dtmc
 #  ║ ╦ ║║╣  ║ ╚═╗  ╚═╗╠╩╗║║║║
 #  ╚═╝╚╝╚═╝ ╩ ╚═╝  ╚═╝╩ ╩╩╩ ╩
 #====================================================================
-doGJetsSkim: false
-doGJetsSkimAddPhiWeight: true
-GJetsSkimInputFileName: data/gjets/study_gjets_data_b2g_newFilterLepVeto.root
+doGJetsSkim: true
+doGJetsSkimAddPhiWeight: false
+GJetsSkimInputFileName: data/gjets/study_gjets_data_b2h29fbinv_newFilterLepVeto.root
 
 GJetsSkimPhiWeightInputFileName: data/gjets/gjet_photon_phi_weight.root
 GJetsSkimRhoWeightInputFileName: data/gjets/get_rho_weight_33fbinv.root
@@ -101,7 +98,7 @@ MuonPtRecalibInputForMC: data/kalman/MC_80X_13TeV.root
 #  ╚═╗║║║  ╔═╝╔═╝  ║  ║ ║╠╦╝╠╦╝║╣ ║   ║ ║║ ║║║║
 #  ╚═╝╩ ╩  ╚═╝╚═╝  ╚═╝╚═╝╩╚═╩╚═╚═╝╚═╝ ╩ ╩╚═╝╝╚╝
 #====================================================================
-addZZCorrections: true
+addZZCorrections: false
 ZZCorrectionEwkInputFileName: data/zzcorr/ZZ_EwkCorrections.dat
 ZZCorrectionQcdInputFileName: data/zzcorr/zzqcd.root
 
@@ -111,22 +108,6 @@ ZZCorrectionQcdInputFileName: data/zzcorr/zzqcd.root
 #====================================================================
 doJEC: false
 doJER: false
-
-JECParTxt_DATA_L2L3Residual: data/jec2016/Spring16_25nsV6_DATA_L2L3Residual_AK4PFchs.txt
-JECParTxt_DATA_L3Absolute:   data/jec2016/Spring16_25nsV6_DATA_L3Absolute_AK4PFchs.txt
-JECParTxt_DATA_L2Relative:   data/jec2016/Spring16_25nsV6_DATA_L2Relative_AK4PFchs.txt
-JECParTxt_DATA_L1FastJet:    data/jec2016/Spring16_25nsV6_DATA_L1FastJet_AK4PFchs.txt
-JECParTxt_DATA_Uncertainty:  data/jec2016/Spring16_25nsV6_DATA_Uncertainty_AK4PFchs.txt
-
-JECParTxt_MC_L2L3Residual: data/jec2016/Spring16_25nsV6_MC_L2L3Residual_AK4PFchs.txt
-JECParTxt_MC_L3Absolute:   data/jec2016/Spring16_25nsV6_MC_L3Absolute_AK4PFchs.txt
-JECParTxt_MC_L2Relative:   data/jec2016/Spring16_25nsV6_MC_L2Relative_AK4PFchs.txt
-JECParTxt_MC_L1FastJet:    data/jec2016/Spring16_25nsV6_MC_L1FastJet_AK4PFchs.txt
-JECParTxt_MC_Uncertainty:  data/jec2016/Spring16_25nsV6_MC_Uncertainty_AK4PFchs.txt
-
-JERParTxt_Reso_DATA: data/jer2016/Spring16_25nsV6_DATA_PtResolution_AK4PFchs.txt
-JERParTxt_Reso_MC:   data/jer2016/Spring16_25nsV6_MC_PtResolution_AK4PFchs.txt
-JERParTxt_SF_MC:     data/jer2016/Spring16_25nsV6_MC_SF_AK4PFchs.txt
 
 #====================================================================
 #  ╦═╗╔═╗╦ ╦╔═╗╦╔═╗╦ ╦╔╦╗  ╔╦╗╦ ╦╦╔═╗╔╦╗╔═╗
@@ -138,7 +119,7 @@ JERParTxt_SF_MC:     data/jer2016/Spring16_25nsV6_MC_SF_AK4PFchs.txt
 # will also reweight LO to NLO MC samples to gain statistics.
 
 # default will use histograms for both NLO and LO reweight
-addDyZPtWeight: true
+addDyZPtWeight: false
 
 # for NLO MC use function parametrization instead of hist.
 addDyZPtWeightUseFunction: true
@@ -169,7 +150,7 @@ DyZPtWeightInputFileName: data/zptweight/dyjets_zpt_weight_lo_nlo_genAcc.root
 #====================================================================
 
 # default use histogram
-doRecoil: true
+doRecoil: false
 
 # use smoothed hist
 doRecoilUseSmooth: true
@@ -178,17 +159,13 @@ doRecoilUseSmooth: true
 doRecoilUseSmoothGraph: true
 
 # Input files
-RecoilInputFileNameData_all: data/recoil/SingleEMU_Run2016B2H_ReReco_36p1fbinv_met_para_study_ZSelecLowLPt.root
-RecoilInputFileNameData_mu: data/recoil/SingleEMU_Run2016B2H_ReReco_36p1fbinv_met_para_study_ZSelecLowLPt_mu.root
-RecoilInputFileNameData_el: data/recoil/SingleEMU_Run2016B2H_ReReco_36p1fbinv_met_para_study_ZSelecLowLPt_el.root
+RecoilInputFileNameData_all: data/recoil/SingleEMU_Run2016B2H29fbinv_PromptReco_met_para_study_ZSelecLowLPt.root
+RecoilInputFileNameData_mu: data/recoil/SingleEMU_Run2016B2H29fbinv_PromptReco_met_para_study_ZSelecLowLPt_mu.root
+RecoilInputFileNameData_el: data/recoil/SingleEMU_Run2016B2H29fbinv_PromptReco_met_para_study_ZSelecLowLPt_el.root
 
-RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_BIG_NoRecoil_RhoWt_met_para_study_ZSelecLowLPt.root
-RecoilInputFileNameMC_mu:  data/recoil/DYJetsToLL_M50_BIG_NoRecoil_RhoWt_met_para_study_ZSelecLowLPt_mu.root
-RecoilInputFileNameMC_el:  data/recoil/DYJetsToLL_M50_BIG_NoRecoil_RhoWt_met_para_study_ZSelecLowLPt_el.root
-#RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_BIG_NoRecoil_met_para_study_ZSelecLowLPt.root
-#RecoilInputFileNameMC_mu:  data/recoil/DYJetsToLL_M50_BIG_NoRecoil_met_para_study_ZSelecLowLPt_mu.root
-#RecoilInputFileNameMC_el:  data/recoil/DYJetsToLL_M50_BIG_NoRecoil_met_para_study_ZSelecLowLPt_el.root
-
+RecoilInputFileNameMC_all: data/recoil/DYJetsToLL_M50_BIG_NoRecoil_DtB2H29fbinv_met_para_study_ZSelecLowLPt.root
+RecoilInputFileNameMC_mu:  data/recoil/DYJetsToLL_M50_BIG_NoRecoil_DtB2H29fbinv_met_para_study_ZSelecLowLPt_mu.root
+RecoilInputFileNameMC_el:  data/recoil/DYJetsToLL_M50_BIG_NoRecoil_DtB2H29fbinv_met_para_study_ZSelecLowLPt_el.root
 
 RecoilInputFileNameMCLO_all: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt.root
 RecoilInputFileNameMCLO_mu: data/recoil/DYJetsToLL_M50_MGMLM_Ext1_NoRecoil_NoRhoWt_met_para_study_ZSelecLowLPt_mu.root
@@ -205,7 +182,7 @@ RecoilInputFileNameGJets_el:  data/recoil/SinglePhoton_Run2016B2G_PromptReco_new
 #  ║  ║╣ ╠═╝ ║ ║ ║║║║  ║╣ ╠╣ ╠╣   ║  ║ ║╠╦╝╠╦╝
 #  ╩═╝╚═╝╩   ╩ ╚═╝╝╚╝  ╚═╝╚  ╚    ╚═╝╚═╝╩╚═╩╚═
 #====================================================================
-addEffScale: true
+addEffScale: false
 addEffScaleOnData: true
 # input files
 EffScaleInputFileName_IdIso_El: data/eff/egammaEffi.txt_SF2D.root

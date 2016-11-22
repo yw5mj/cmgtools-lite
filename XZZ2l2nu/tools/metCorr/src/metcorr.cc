@@ -200,6 +200,8 @@ void readConfigFile()
   //=========================
   _useLightTree = parm.GetBool("useLightTree", kTRUE);
   _storeErr = parm.GetBool("storeErr", kTRUE);
+  _removeHLTFlag = parm.GetBool("removeHLTFlag", kFALSE);
+  _removeMETFlag = parm.GetBool("removeMETFlag", kFALSE);
 
   //=========================
   // add PU weights
@@ -360,12 +362,24 @@ bool  prepareTrees()
   _tree_in->SetBranchAddress("rho", &_rho);
 
   if (_doGJetsSkim) {
+    _tree_in->SetBranchAddress("PreScale22", &_PreScale22);
+    _tree_in->SetBranchAddress("PreScale30", &_PreScale30);
+    _tree_in->SetBranchAddress("PreScale36", &_PreScale36);
+    _tree_in->SetBranchAddress("PreScale50", &_PreScale50);
+    _tree_in->SetBranchAddress("PreScale75", &_PreScale75);
+    _tree_in->SetBranchAddress("PreScale90", &_PreScale90);
+    _tree_in->SetBranchAddress("PreScale120", &_PreScale120);
+    _tree_in->SetBranchAddress("PreScale165", &_PreScale165);
     _tree_in->SetBranchAddress("gjet_mt", &_gjet_mt);
     _tree_in->SetBranchAddress("gjet_l1_pt", &_gjet_l1_pt);
     _tree_in->SetBranchAddress("gjet_l1_eta", &_gjet_l1_eta);
     _tree_in->SetBranchAddress("gjet_l1_rapidity", &_gjet_l1_rapidity);
     _tree_in->SetBranchAddress("gjet_l1_phi", &_gjet_l1_phi);
     _tree_in->SetBranchAddress("gjet_l1_idCutBased", &_gjet_l1_idCutBased);
+    _tree_in->SetBranchAddress("gjet_l1_trigerob_HLTbit", &_gjet_l1_trigerob_HLTbit);
+    _tree_in->SetBranchAddress("gjet_l1_trigerob_pt", &_gjet_l1_trigerob_pt);
+    _tree_in->SetBranchAddress("gjet_l1_trigerob_eta", &_gjet_l1_trigerob_eta);
+    _tree_in->SetBranchAddress("gjet_l1_trigerob_phi", &_gjet_l1_trigerob_phi);
     _tree_in->SetBranchAddress("gjet_l2_pt", &_gjet_l2_pt);
     _tree_in->SetBranchAddress("gjet_l2_phi", &_gjet_l2_phi);
     _tree_in->SetBranchAddress("gjet_l2_sumEt", &_gjet_l2_sumEt);
@@ -489,6 +503,7 @@ bool  prepareTrees()
 
   // GJets Skim
   if (_doGJetsSkim){
+    _tree_out->Branch("GJetsPreScaleWeight", &_GJetsPreScaleWeight, "GJetsPreScaleWeight/F");
     _tree_out->Branch("GJetsPhiWeight", &_GJetsPhiWeight, "GJetsPhiWeight/F");
     _tree_out->Branch("GJetsRhoWeight", &_GJetsRhoWeight, "GJetsRhoWeight/F");
     _tree_out->Branch("GJetsWeight", &_GJetsWeight, "GJetsWeight/F");
@@ -515,6 +530,10 @@ bool  prepareTrees()
     _tree_out->Branch("llnunu_l1_phi", &_llnunu_l1_phi, "llnunu_l1_phi/F");
     _tree_out->Branch("llnunu_l1_eta", &_llnunu_l1_eta, "llnunu_l1_eta/F");
     _tree_out->Branch("llnunu_l1_rapidity", &_llnunu_l1_rapidity, "llnunu_l1_rapidity/F");
+    _tree_out->Branch("llnunu_l1_trigerob_HLTbit", &_llnunu_l1_trigerob_HLTbit, "llnunu_l1_trigerob_HLTbit/I");
+    _tree_out->Branch("llnunu_l1_trigerob_pt", &_llnunu_l1_trigerob_pt, "llnunu_l1_trigerob_pt/F");
+    _tree_out->Branch("llnunu_l1_trigerob_eta", &_llnunu_l1_trigerob_eta, "llnunu_l1_trigerob_eta/F");
+    _tree_out->Branch("llnunu_l1_trigerob_phi", &_llnunu_l1_trigerob_phi, "llnunu_l1_trigerob_phi/F");
     _tree_out->Branch("llnunu_l2_pt", &_llnunu_l2_pt, "llnunu_l2_pt/F");
     _tree_out->Branch("llnunu_l2_phi", &_llnunu_l2_phi, "llnunu_l2_phi/F");
     _tree_out->Branch("llnunu_l2_sumEt", &_llnunu_l2_sumEt, "llnunu_l2_sumEt/F");
@@ -543,10 +562,11 @@ bool  prepareTrees()
     }
     if (!_storeOldBranches) {
       _tree_out->SetBranchStatus("gjet_*", 0);
-      _tree_out->SetBranchStatus("gjet_l1_idCutBased", 1);
-      _tree_out->SetBranchStatus("gjet_l1_hOverE", 1);
-      _tree_out->SetBranchStatus("gjet_l1_r9", 1);
-      _tree_out->SetBranchStatus("gjet_l1_sigmaIetaIeta", 1);
+      //_tree_out->SetBranchStatus("gjet_l1_idCutBased", 1);
+      //_tree_out->SetBranchStatus("gjet_l1_hOverE", 1);
+      //_tree_out->SetBranchStatus("gjet_l1_r9", 1);
+      //_tree_out->SetBranchStatus("gjet_l1_sigmaIetaIeta", 1);
+      _tree_out->SetBranchStatus("PreScale*", 0);
     }
   }
 
@@ -559,6 +579,15 @@ bool  prepareTrees()
     _tree_out->SetBranchStatus("*_dn", 0);
 
   }
+  // store HLT flags, only if not data
+  if (_removeHLTFlag && !_isData ){
+    _tree_out->SetBranchStatus("HLT_*", 0);
+  }
+  // store MET flags
+  if (_removeMETFlag){
+    _tree_out->SetBranchStatus("Flag_*", 0);
+  }
+ 
 
   return true;
 
@@ -1588,6 +1617,10 @@ void doGJetsSkim()
   _llnunu_l1_eta = _gjet_l1_eta;
   _llnunu_l1_rapidity = _gjet_l1_rapidity;
   _llnunu_l1_phi = _gjet_l1_phi;
+  _llnunu_l1_trigerob_HLTbit = _gjet_l1_trigerob_HLTbit;
+  _llnunu_l1_trigerob_pt = _gjet_l1_trigerob_pt;
+  _llnunu_l1_trigerob_eta = _gjet_l1_trigerob_eta;
+  _llnunu_l1_trigerob_phi = _gjet_l1_trigerob_phi;
   _llnunu_l2_pt = _gjet_l2_pt;
   _llnunu_l2_phi = _gjet_l2_phi;
   _llnunu_l2_sumEt = _gjet_l2_sumEt;
@@ -1611,6 +1644,43 @@ void doGJetsSkim()
   if (!_isData){
     _llnunu_l2_genPhi = _gjet_l2_genPhi;
     _llnunu_l2_genEta = _gjet_l2_genEta;  
+  }
+
+
+  // get prescale
+  if (_llnunu_l1_trigerob_HLTbit>>0&1&&_llnunu_l1_trigerob_pt<30) {
+    _GJetsPreScaleWeight = _PreScale22;
+  }
+  else 
+  if (_llnunu_l1_trigerob_HLTbit>>1&1&&_llnunu_l1_trigerob_pt<36) {
+    _GJetsPreScaleWeight = (float)_PreScale30;
+  }
+  else 
+  if (_llnunu_l1_trigerob_HLTbit>>2&1&&_llnunu_l1_trigerob_pt<50) {
+    _GJetsPreScaleWeight = (float)_PreScale36;
+  }
+  else 
+  if (_llnunu_l1_trigerob_HLTbit>>3&1&&_llnunu_l1_trigerob_pt<75) {
+    _GJetsPreScaleWeight = (float)_PreScale50;
+  }
+  else 
+  if (_llnunu_l1_trigerob_HLTbit>>4&1&&_llnunu_l1_trigerob_pt<90) {
+    _GJetsPreScaleWeight = (float)_PreScale75;
+  }
+  else 
+  if (_llnunu_l1_trigerob_HLTbit>>5&1&&_llnunu_l1_trigerob_pt<120) {
+    _GJetsPreScaleWeight = (float)_PreScale90;
+  }
+  else 
+  if (_llnunu_l1_trigerob_HLTbit>>6&1&&_llnunu_l1_trigerob_pt<165) {
+    _GJetsPreScaleWeight = (float)_PreScale120;
+  }
+  else 
+  if (_llnunu_l1_trigerob_HLTbit>>7&1) {
+    _GJetsPreScaleWeight = (float)_PreScale165;
+  }
+  else {
+    _GJetsPreScaleWeight = 1.0;
   }
 
   // generate z mass

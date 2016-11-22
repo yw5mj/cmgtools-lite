@@ -5,10 +5,10 @@
 # compile
 g++ preskim_gjets.cc -o preskim_gjets.exe `root-config --cflags` `root-config --libs`
 
-#samples="SinglePhoton_Run2016C_23Sep2016"
-samples="SinglePhoton_Run2016B2H_ReReco_33fbinv"
-indir=/data2/XZZ2/80X_20161029_GJets
-outdir=/home/heli/XZZ/80X_20161029_GJets_light
+samples="SinglePhoton_Run2016H_PromptReco_new"
+#samples="SinglePhoton_Run2016B2H_ReReco_36p1fbinv"
+indir=/data2/XZZ2/80X_20161029
+outdir=/home/heli/XZZ/80X_20161029_light
 #samples="SinglePhoton_Run2016B2H29fbinv_PromptReco"
 #indir=/home/heli/XZZ/80X_20161018
 #outdir=/home/heli/XZZ/80X_20161018_light
@@ -53,9 +53,11 @@ do
   do
     if [[ ${dd2} != *"vvTree"* ]]; then
       #echo $dd2;
-      ddo2="${dd2/$indir/$outdir} "
-      echo "cp -rp $dd2 $ddo2 " 
-      cp -rp $dd2 $ddo2
+      #ddo2="${dd2/$indir/$outdir} "
+      #echo "cp -rp $dd2 $ddo2 " 
+      #cp -rp $dd2 $ddo2
+      echo "cp -rp $dd2 $ddo/ " 
+      cp -rp $dd2 $ddo/
     fi
   done;
 
@@ -65,5 +67,7 @@ do
 #  cp -rp $ttin $ddo/
   mkdir -p $ddo/vvTreeProducer
   echo "mv $ddo/vvTreeProducer/tree_light.root $ddo/vvTreeProducer/tree.root"
-  mv $ddo/vvTreeProducer/tree_light.root $ddo/vvTreeProducer/tree.root
+  #mv $ddo/vvTreeProducer/tree_light.root $ddo/vvTreeProducer/tree.root
+  cp -p $ddo/vvTreeProducer/tree_light.root $ddo/vvTreeProducer/tree.root
+  rm $ddo/vvTreeProducer/tree_light.root
 done
