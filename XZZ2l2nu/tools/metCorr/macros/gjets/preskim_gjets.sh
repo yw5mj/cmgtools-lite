@@ -67,7 +67,6 @@ do
 #  cp -rp $ttin $ddo/
   mkdir -p $ddo/vvTreeProducer
   echo "mv $ddo/vvTreeProducer/tree_light.root $ddo/vvTreeProducer/tree.root"
-  #mv $ddo/vvTreeProducer/tree_light.root $ddo/vvTreeProducer/tree.root
-  cp -p $ddo/vvTreeProducer/tree_light.root $ddo/vvTreeProducer/tree.root
-  rm $ddo/vvTreeProducer/tree_light.root
+  rm $ddo/vvTreeProducer/tree.root
+  mv $ddo/vvTreeProducer/tree_light.root $ddo/vvTreeProducer/tree.root
 done

@@ -14,7 +14,9 @@
 #include <string>
 #include <vector>
 #include <ctime>
+#include "TROOT.h"
 
+bool biggerTree=false;
 
 int main(int argc, char** argv) {
 
@@ -106,7 +108,8 @@ int main(int argc, char** argv) {
   tree->SetAlias("ieta", "gjet_l1_ieta");
   tree->SetAlias("iphi", "gjet_l1_iphi");
 
-  tree->SetAlias("flag3", "((pt>=60&&!(eta>-2.5&&eta<-1.4&&phi>2.4&&phi<3.2)&&!(eta>-2.5&&eta<-1.4&&phi>-0.9&&phi<0.9)&&!(eta>-2.5&&eta<-1.4&&phi>-3.2&&phi<-2.4)&&!(eta>1.4&&eta<2.5&&phi>2.4&&phi<3.2)&&!(eta>1.4&&eta<2.5&&phi>-0.9&&phi<0.9)&&!(eta>1.4&&eta<2.5&&phi>-3.2&&phi<-2.0)&&!(eta>-2.1&&eta<-1.8&&phi>1.2&&phi<1.6)&&!(eta>-2.0&&eta<-1.6&&phi>-2.1&&phi<-1.8)&&!(eta>-0.3&&eta<0.0&&phi>2.5&&phi<3.0)&&!(eta>0.0&&eta<0.3&&phi>2.8&&phi<3.2)&&!(eta>-0.2&&eta<0.3&&phi>0.2&&phi<0.8)&&!(eta>-0.5&&eta<-0.2&&phi>-2.4&&phi<2.0)&&!(eta>2.3&&eta<2.5&&phi>-1.5&&phi<-1.0))||(pt<60&&!(eta>-2.5&&eta<-2.2&&phi>-3.0&&phi<-2.6)&&!(eta>0&&eta<0.3&&phi>-2.4&&phi<-1.4)&&!(eta>-0.2&&eta<0.2&&phi>-3.2&&phi<-2.6)&&!(eta>2.3&&eta<2.5&&phi>-2.6&&phi<-2.0)))");
+//  tree->SetAlias("flag3", "((pt>=60&&!(eta>-2.5&&eta<-1.4&&phi>2.4&&phi<3.2)&&!(eta>-2.5&&eta<-1.4&&phi>-0.9&&phi<0.9)&&!(eta>-2.5&&eta<-1.4&&phi>-3.2&&phi<-2.4)&&!(eta>1.4&&eta<2.5&&phi>2.4&&phi<3.2)&&!(eta>1.4&&eta<2.5&&phi>-0.9&&phi<0.9)&&!(eta>1.4&&eta<2.5&&phi>-3.2&&phi<-2.0)&&!(eta>-2.1&&eta<-1.8&&phi>1.2&&phi<1.6)&&!(eta>-2.0&&eta<-1.6&&phi>-2.1&&phi<-1.8)&&!(eta>-0.3&&eta<0.0&&phi>2.5&&phi<3.0)&&!(eta>0.0&&eta<0.3&&phi>2.8&&phi<3.2)&&!(eta>-0.2&&eta<0.3&&phi>0.2&&phi<0.8)&&!(eta>-0.5&&eta<-0.2&&phi>-2.4&&phi<2.0)&&!(eta>2.3&&eta<2.5&&phi>-1.5&&phi<-1.0))||(pt<60&&!(eta>-2.5&&eta<-2.2&&phi>-3.0&&phi<-2.6)&&!(eta>0&&eta<0.3&&phi>-2.4&&phi<-1.4)&&!(eta>-0.2&&eta<0.2&&phi>-3.2&&phi<-2.6)&&!(eta>2.3&&eta<2.5&&phi>-2.6&&phi<-2.0)))");
+  tree->SetAlias("flag3", "(((gjet_l1_iphi>75||gjet_l1_iphi<25)&&fabs(gjet_l1_eta)>1.5)||(fabs(gjet_l1_eta)<1.5))");
 
   // EB flag
   tree->SetAlias("flg1eb", "(fabs(eta)<1.47&&!((ieta==5&&iphi==41)||(ieta==-51&&iphi==196)||(ieta==56&&iphi==67)||(ieta==-45&&iphi==340)||(ieta==58&&iphi==74)||(ieta==79&&iphi==67)||(ieta==72&&iphi==67)||(ieta==4&&iphi==70)||(ieta==17&&iphi==290)||(ieta==-44&&iphi==133)||(ieta==13&&iphi==67)||(ieta==-24&&iphi==119)||(ieta==-84&&iphi==168)||(ieta==73&&iphi==299)||(ieta==49&&iphi==6)||(ieta==-21&&iphi==308)||(ieta==59&&iphi==180)||(ieta==2&&iphi==81)||(ieta==22&&iphi==138)))");
@@ -123,8 +126,19 @@ int main(int argc, char** argv) {
 
   //TTree* tree_out = tree->CloneTree(-1);
 
-  TFile* ftmp1 = TFile::Open("/tmp/fout_tmp1.root", "recreate");
-  TTree* tree_tmp1 = tree->CopyTree("HLT_PHOTONIDISO&&metfilter&&ngjet==1&&Max$(jet_pt[]*jet_chargedEmEnergyFraction[])<10&&Max$(jet_pt[]*jet_muonEnergyFraction[])<10&&flag3&&filter1");
+  char ftmp1_name[1000];
+  sprintf(ftmp1_name, "%s_tmp1.root", outputfile.c_str() );
+  TFile* ftmp1 = TFile::Open(ftmp1_name, "recreate");
+  TTree* tree_tmp1;
+  TTree* tree_tmp2;
+  TTree* tree_tmp3;
+
+  if (biggerTree){
+    tree_tmp1 = tree->CopyTree("HLT_PHOTONIDISO&&metfilter&&ngjet==1");
+  }
+  else {
+    tree_tmp1 = tree->CopyTree("HLT_PHOTONIDISO&&metfilter&&ngjet==1&&Max$(jet_pt[]*jet_chargedEmEnergyFraction[])<10&&Max$(jet_pt[]*jet_muonEnergyFraction[])<10&&flag3&&filter1");
+  }
  
   tree_tmp1->SetBranchStatus("Flag_*",0);
   tree_tmp1->SetBranchStatus("HLT_*",0);
@@ -133,13 +147,14 @@ int main(int argc, char** argv) {
   //tree_tmp1->SetBranchStatus("jet_eta",1);
   //tree_tmp1->SetBranchStatus("jet_phi",1);
   //tree_tmp1->SetBranchStatus("jet_area",1);
- 
-  TFile* ftmp2 = TFile::Open("/tmp/fout_tmp2.root", "recreate");
-  TTree* tree_tmp2 = tree_tmp1->CopyTree("((eta<-1.566)||flg1eb||flg1eep)");
 
-  TFile* ftmp3 = TFile::Open("/tmp/fout_tmp3.root", "recreate");
-  TTree* tree_tmp3 = tree_tmp2->CopyTree("((eta>-1.566)||flg1eem)");
-
+//  if (biggerTree){
+//    tree_tmp2 = tree_tmp1->CopyTree("((eta<-1.566)||flg1eb||flg1eep)");
+//    tree_tmp3 = tree_tmp2->CopyTree("((eta>-1.566)||flg1eem)");
+//  }
+//  else {
+    tree_tmp3 = tree_tmp1;
+//  }
 
   foutput->cd();  
   //TTree* tree_out = tree->CopyTree("HLT_PHOTONIDISO&&metfilter&&fabs(eta)<1.47&&ngjet==1&&flag1&&filter1");
@@ -151,6 +166,9 @@ int main(int argc, char** argv) {
   foutput->Close();
   finput->Close();
 
+  char line[1000];
+  sprintf(line, ".! rm %s", ftmp1_name);
+  gROOT->ProcessLine(line);
 
   now = time(0);
   dt = ctime(&now);
