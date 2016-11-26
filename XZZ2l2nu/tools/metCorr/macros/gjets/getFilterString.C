@@ -1,5 +1,11 @@
 {
 
+  std::string option="eb";
+  std::string tag="_more1";
+  std::string foutname="getFileterString_"+option+tag;
+
+
+
   TFile *_file0 = TFile::Open("/home/heli/XZZ/80X_20161029_light/SinglePhoton_Run2016B2H_ReReco_36p1fbinv/vvTreeProducer/tree.root");
   //TFile *_file0 = TFile::Open("/home/heli/XZZ/80X_20160927/SinglePhoton_Run2016D_PromptReco_v2/vvTreeProducer/tree.root");
   //TFile *_file0 = TFile::Open("/home/heli/XZZ/80X_20160927/SinglePhoton_Run2016BCD_PromptReco/vvTreeProducer/tree.root");
@@ -26,31 +32,45 @@
   //tree->Draw("gjet_l1_iphi:gjet_l1_ieta>>h077(100,0.5,100.5,100,0.5,100.5)", "HLT_PHOTONIDISO&&metfilter&&eta>1.562&&ngjet==1&&flag3&&ut<150&&metPara<-60&&pt>60", "colz");
   //tree->Draw("gjet_l1_iphi:gjet_l1_ieta>>h077(100,0.5,100.5,100,0.5,100.5)", "HLT_PHOTONIDISO&&metfilter&&eta<-1.562&&ngjet==1&&flag3&&ut<150&&metPara<-60&&pt>60", "colz");
 
+
+  sprintf(name, "%s.root", foutname.c_str());
+  TFile* fout = TFile::Open(name, "recreate");
+
+  TCanvas* plots = new TCanvas("plots", "plots");
+
+  sprintf(name, "%s.pdf[", foutname.c_str());
+  plots->Print(name);
+
   // ee+
-  //tree->Draw("gjet_l1_iphi:gjet_l1_ieta>>hist(100,0.5,100.5,100,0.5,100.5)", "eta>1.566&&fabs(uPara)<50", "colz");
+  if (option=="eep") tree->Draw("gjet_l1_iphi:gjet_l1_ieta>>hist(100,0.5,100.5,100,0.5,100.5)", "eta>1.566&&fabs(uPara)<100", "colz");
   // ee-
-  //tree->Draw("gjet_l1_iphi:gjet_l1_ieta>>hist(100,0.5,100.5,100,0.5,100.5)", "eta<-1.566&&fabs(uPara)<50", "colz");
+  else if (option=="eem") tree->Draw("gjet_l1_iphi:gjet_l1_ieta>>hist(100,0.5,100.5,100,0.5,100.5)", "eta<-1.566&&fabs(uPara)<100", "colz");
   // eb
-  tree->Draw("gjet_l1_iphi:gjet_l1_ieta>>hist(181,-90.5,90.5,360,0.5,360.5)", "fabs(eta)<1.566&&fabs(uPara)<50", "colz");
+  else if (option=="eb") tree->Draw("gjet_l1_iphi:gjet_l1_ieta>>hist(181,-90.5,90.5,360,0.5,360.5)", "fabs(eta)<1.47&&fabs(uPara)<100", "colz");
+  else std::cout << "wrong option do nothing" << std::endl;
 
   TH2D* hist = (TH2D*)gDirectory->Get("hist");
 
-  //tree->Draw("metPara/pt:gjet_l1_iphi:gjet_l1_ieta>>h087(181,-90.5,90.5,360,0.5,360.5,1000,-10,10)", "HLT_PHOTONIDISO&&metfilter&&fabs(eta)<1.47&&ngjet==1", "e");
-  //TH3D* h087 = (TH3D*)gDirectory->Get("h087");
+  plots->Clear();
+  hist->Draw("colz");
+  sprintf(name, "%s.pdf[", foutname.c_str());
+  plots->Print(name);
+  plots->Clear();
 
-  //std::vector< TH1D* > 
+  hist->Write("hist_map_before");
 
   char name[1000];
   std::string selec ;
   //selec = "HLT_PHOTONIDISO&&metfilter&&fabs(eta)<1.47&&ngjet==1";
   //selec = "HLT_PHOTONIDISO&&metfilter&&eta>1.562&&ngjet==1&&flag3";
   //selec = "HLT_PHOTONIDISO&&metfilter&&eta<-1.562&&ngjet==1&&flag3";
-  //selec = "eta>1.566";
-  //selec = "eta<-1.566";
-  selec = "fabs(eta)<1.566";
+  if (option=="eep") selec = "eta>1.566";
+  else if (option=="eem") selec = "eta<-1.566";
+  else if (option=="eb") selec = "fabs(eta)<1.47";
+  else std::cout << "wrong option do nothing" << std::endl;
 
   float utcut=0.5;
-  Int_t n_loop=10;
+  Int_t n_loop=50;
 
   Int_t cx;   Int_t cy;   Int_t bc;
   Int_t bx;   Int_t by; Int_t bz;
@@ -63,27 +83,42 @@
     cx = (Int_t)hist->GetXaxis()->GetBinCenter(bx);
     cy = (Int_t)hist->GetYaxis()->GetBinCenter(by);
     bc = (Int_t)hist->GetBinContent(bx,by);
-    //std::cout << "(ieta!=" << cx << "||iphi!=" << cy << ")&&";
     std::cout << "(ieta==" << cx << "&&iphi==" << cy << ")||";
     std::cout  << "    # bc="<<bc ;
-    //sprintf(name, "HLT_PHOTONIDISO&&metfilter&&fabs(eta)<1.47&&fabs(uPara)/pt<%f&&ieta==%d&&iphi==%d", utcut, cx, cy);
-    //n1 = tree->GetEntries(name);
-    //sprintf(name, "HLT_PHOTONIDISO&&metfilter&&fabs(eta)<1.47&&fabs(uPara)/pt>%f&&ieta==%d&&iphi==%d", utcut, cx, cy);
-    //n2 = tree->GetEntries(name);
-    //if (n1>=n2) std::cout << "  noise " << std::endl;
-    //else std::cout << "  good one " << std::endl;
     std::cout << std::endl;
 
-    if (i==n_loop-1) sprintf(name, "(ieta==%d&&iphi==%d)", cx, cy);
-    else sprintf(name, "(ieta==%d&&iphi==%d)||", cx, cy);
+    sprintf(name, "(ieta==%d&&iphi==%d)", cx, cy);
 
-    flag1 += std::string(name);
+    if (i==n_loop-1) flag1 += std::string(name);
+    else flag1 += std::string(name)+"||";
+
+    // draw the xtal
+    sprintf(name, "(ieta==%d&&iphi==%d)", cx, cy);
+    std::string xtal_selec = selec+"&&"+std::string(name);
+
+    plots->Clear();
+    tree->Draw("metPara/pt>>hist1(60,-3,3)", xtal_selec.c_str(), "e");
+    TH1D* hist1 = (TH1D*)gDirectory->Get("hist1");
+    sprintf(name, "hmetparavpt_%i", i);
+    hist1->SetName(name);
+    sprintf(name, "(ieta==%d&&iphi==%d)", cx, cy);
+    hist1->SetTitle(name);
+    sprintf(name, "%s.pdf", foutname.c_str());
+    plots->Print(name);
+    hist1->Write();
+    plots->Clear();
+
+
+
 
     hist->SetBinContent(bx,by,0);
   }; 
   
+  hist->Write("hist_map_after");
+
   flag1 += ")";
-  std::cout << ")" << std::endl;
+
+  std::cout << flag1 << std::endl;
 
   std::string selec_flag1 = selec+"&&"+flag1;
   std::string selec_notflag1 = selec+"&&!"+flag1;
@@ -100,10 +135,18 @@
   h_flg1->SetLineColor(2);
   h_nflg1->SetLineColor(4);
 
+  plots->Clear();
   h_flg1->Draw();
   h_nflg1->Draw("same");
+  sprintf(name, "%s.pdf", foutname.c_str());
+  plots->Print(name);
+  plots->Clear();
+
+  h_flg1->Write();
+  h_nflg1->Write();
 
 
-
+  sprintf(name, "%s.pdf]", foutname.c_str());
+  plots->Print(name);
 
 }

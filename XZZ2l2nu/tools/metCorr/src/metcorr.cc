@@ -362,14 +362,6 @@ bool  prepareTrees()
   _tree_in->SetBranchAddress("rho", &_rho);
 
   if (_doGJetsSkim) {
-    _tree_in->SetBranchAddress("PreScale22", &_PreScale22);
-    _tree_in->SetBranchAddress("PreScale30", &_PreScale30);
-    _tree_in->SetBranchAddress("PreScale36", &_PreScale36);
-    _tree_in->SetBranchAddress("PreScale50", &_PreScale50);
-    _tree_in->SetBranchAddress("PreScale75", &_PreScale75);
-    _tree_in->SetBranchAddress("PreScale90", &_PreScale90);
-    _tree_in->SetBranchAddress("PreScale120", &_PreScale120);
-    _tree_in->SetBranchAddress("PreScale165", &_PreScale165);
     _tree_in->SetBranchAddress("gjet_mt", &_gjet_mt);
     _tree_in->SetBranchAddress("gjet_l1_pt", &_gjet_l1_pt);
     _tree_in->SetBranchAddress("gjet_l1_eta", &_gjet_l1_eta);
@@ -389,6 +381,16 @@ bool  prepareTrees()
     if (!_isData) {
       _tree_in->SetBranchAddress("gjet_l2_genPhi", &_gjet_l2_genPhi);
       _tree_in->SetBranchAddress("gjet_l2_genEta", &_gjet_l2_genEta);
+    }
+    if (_isData){
+      _tree_in->SetBranchAddress("PreScale22", &_PreScale22);
+      _tree_in->SetBranchAddress("PreScale30", &_PreScale30);
+      _tree_in->SetBranchAddress("PreScale36", &_PreScale36);
+      _tree_in->SetBranchAddress("PreScale50", &_PreScale50);
+      _tree_in->SetBranchAddress("PreScale75", &_PreScale75);
+      _tree_in->SetBranchAddress("PreScale90", &_PreScale90);
+      _tree_in->SetBranchAddress("PreScale120", &_PreScale120);
+      _tree_in->SetBranchAddress("PreScale165", &_PreScale165);
     }
   } 
   else {
@@ -503,8 +505,6 @@ bool  prepareTrees()
 
   // GJets Skim
   if (_doGJetsSkim){
-    _tree_out->Branch("GJetsPreScaleWeight", &_GJetsPreScaleWeight, "GJetsPreScaleWeight/F");
-    _tree_out->Branch("GJetsPhiWeight", &_GJetsPhiWeight, "GJetsPhiWeight/F");
     _tree_out->Branch("GJetsRhoWeight", &_GJetsRhoWeight, "GJetsRhoWeight/F");
     _tree_out->Branch("GJetsWeight", &_GJetsWeight, "GJetsWeight/F");
     _tree_out->Branch("GJetsWeightEl", &_GJetsWeightEl, "GJetsWeightEl/F");
@@ -559,6 +559,12 @@ bool  prepareTrees()
     if (!_isData) {
       _tree_out->Branch("llnunu_l2_genPhi", &_llnunu_l2_genPhi, "llnunu_l2_genPhi/F");
       _tree_out->Branch("llnunu_l2_genEta", &_llnunu_l2_genEta, "llnunu_l2_genEta/F");
+    }
+    if (_isData){
+      _tree_out->Branch("GJetsPreScaleWeight", &_GJetsPreScaleWeight, "GJetsPreScaleWeight/F");
+    }
+    if (_doGJetsSkimAddPhiWeight) {
+      _tree_out->Branch("GJetsPhiWeight", &_GJetsPhiWeight, "GJetsPhiWeight/F");
     }
     if (!_storeOldBranches) {
       _tree_out->SetBranchStatus("gjet_*", 0);
@@ -1647,40 +1653,42 @@ void doGJetsSkim()
   }
 
 
-  // get prescale
-  if (_llnunu_l1_trigerob_HLTbit>>0&1&&_llnunu_l1_trigerob_pt<30) {
-    _GJetsPreScaleWeight = _PreScale22;
-  }
-  else 
-  if (_llnunu_l1_trigerob_HLTbit>>1&1&&_llnunu_l1_trigerob_pt<36) {
-    _GJetsPreScaleWeight = (float)_PreScale30;
-  }
-  else 
-  if (_llnunu_l1_trigerob_HLTbit>>2&1&&_llnunu_l1_trigerob_pt<50) {
-    _GJetsPreScaleWeight = (float)_PreScale36;
-  }
-  else 
-  if (_llnunu_l1_trigerob_HLTbit>>3&1&&_llnunu_l1_trigerob_pt<75) {
-    _GJetsPreScaleWeight = (float)_PreScale50;
-  }
-  else 
-  if (_llnunu_l1_trigerob_HLTbit>>4&1&&_llnunu_l1_trigerob_pt<90) {
-    _GJetsPreScaleWeight = (float)_PreScale75;
-  }
-  else 
-  if (_llnunu_l1_trigerob_HLTbit>>5&1&&_llnunu_l1_trigerob_pt<120) {
-    _GJetsPreScaleWeight = (float)_PreScale90;
-  }
-  else 
-  if (_llnunu_l1_trigerob_HLTbit>>6&1&&_llnunu_l1_trigerob_pt<165) {
-    _GJetsPreScaleWeight = (float)_PreScale120;
-  }
-  else 
-  if (_llnunu_l1_trigerob_HLTbit>>7&1) {
-    _GJetsPreScaleWeight = (float)_PreScale165;
-  }
-  else {
-    _GJetsPreScaleWeight = 1.0;
+  // get prescale/ only for data
+  if (_isData){
+    if (_llnunu_l1_trigerob_HLTbit>>0&1&&_llnunu_l1_trigerob_pt<30) {
+      _GJetsPreScaleWeight = _PreScale22*1000;
+    }
+    else 
+    if (_llnunu_l1_trigerob_HLTbit>>1&1&&_llnunu_l1_trigerob_pt<36) {
+      _GJetsPreScaleWeight = (float)_PreScale30*140;
+    }
+    else 
+    if (_llnunu_l1_trigerob_HLTbit>>2&1&&_llnunu_l1_trigerob_pt<50) {
+      _GJetsPreScaleWeight = (float)_PreScale36*140;
+    }
+    else 
+    if (_llnunu_l1_trigerob_HLTbit>>3&1&&_llnunu_l1_trigerob_pt<75) {
+      _GJetsPreScaleWeight = (float)_PreScale50;
+    }
+    else 
+    if (_llnunu_l1_trigerob_HLTbit>>4&1&&_llnunu_l1_trigerob_pt<90) {
+      _GJetsPreScaleWeight = (float)_PreScale75;
+    }
+    else 
+    if (_llnunu_l1_trigerob_HLTbit>>5&1&&_llnunu_l1_trigerob_pt<120) {
+      _GJetsPreScaleWeight = (float)_PreScale90;
+    }
+    else 
+    if (_llnunu_l1_trigerob_HLTbit>>6&1&&_llnunu_l1_trigerob_pt<165) {
+      _GJetsPreScaleWeight = (float)_PreScale120;
+    }
+    else 
+    if (_llnunu_l1_trigerob_HLTbit>>7&1) {
+      _GJetsPreScaleWeight = (float)_PreScale165;
+    }
+    else {
+      _GJetsPreScaleWeight = 1.0;
+    }
   }
 
   // generate z mass
