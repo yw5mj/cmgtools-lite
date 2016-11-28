@@ -55,7 +55,7 @@ doRatio=True
 Blind=options.Blind
 puWeight='puWeightmoriondMC'
 
-if not os.path.exists(outdir): os.system('mkdir '+outdir)
+if not os.path.exists(outdir): os.system('mkdir -p '+outdir)
 
 tag = tag+cutChain+'_'
 tag = tag+puWeight+'_'

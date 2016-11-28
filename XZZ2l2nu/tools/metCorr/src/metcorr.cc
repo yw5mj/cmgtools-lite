@@ -1467,19 +1467,28 @@ void addEffScale()
 void prepareGJetsSkim() 
 {
   if (_doGJetsSkim) {
+    
+    // input file
     _gjets_input_file = TFile::Open(_GJetsSkimInputFileName.c_str());
+
+    // for mass generation
     _gjets_h_zmass_zpt_zrap = (TH3D*)_gjets_input_file->Get("h_zmass_zpt_zrap_lowlpt");
     _gjets_h_zmass_zpt_zrap_el = (TH3D*)_gjets_input_file->Get("h_zmass_zpt_zrap_lowlpt_el");
     _gjets_h_zmass_zpt_zrap_mu = (TH3D*)_gjets_input_file->Get("h_zmass_zpt_zrap_lowlpt_mu");
     _gjets_h_zmass_zpt = (TH2D*)_gjets_input_file->Get("h_zmass_zpt_lowlpt");
     _gjets_h_zmass_zpt_el = (TH2D*)_gjets_input_file->Get("h_zmass_zpt_lowlpt_el");
     _gjets_h_zmass_zpt_mu = (TH2D*)_gjets_input_file->Get("h_zmass_zpt_lowlpt_mu");
+
+    // for zpt reweighting
+    // zpt 1d
     _gjets_h_zpt_ratio = (TH1D*)_gjets_input_file->Get("h_zpt_ratio");
     _gjets_h_zpt_ratio_el = (TH1D*)_gjets_input_file->Get("h_zpt_ratio_el");
     _gjets_h_zpt_ratio_mu = (TH1D*)_gjets_input_file->Get("h_zpt_ratio_mu");
     _gjets_h_zpt_lowlpt_ratio = (TH1D*)_gjets_input_file->Get("h_zpt_lowlpt_ratio");
     _gjets_h_zpt_lowlpt_ratio_el = (TH1D*)_gjets_input_file->Get("h_zpt_lowlpt_ratio_el");
     _gjets_h_zpt_lowlpt_ratio_mu = (TH1D*)_gjets_input_file->Get("h_zpt_lowlpt_ratio_mu");
+
+    // zpt zrap 2d
     _gjets_h_zpt_zrap_ratio = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio");
     _gjets_h_zpt_zrap_ratio_el = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio_el");
     _gjets_h_zpt_zrap_ratio_mu = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_ratio_mu");
@@ -1493,7 +1502,13 @@ void prepareGJetsSkim()
     _gjets_h_zpt_zrap_lowlpt_ratio_el = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_lowlpt_ratio_el");
     _gjets_h_zpt_zrap_lowlpt_ratio_mu = (TH2D*)_gjets_input_file->Get("h_zpt_zrap_lowlpt_ratio_mu");
 
-//new TGraphErrors
+
+    // change to tgraph for smoothing
+    _gjets_gr_zpt_lowlpt_ratio = new TGraphErrors(_gjets_h_zpt_lowlpt_ratio);
+    _gjets_gr_zpt_lowlpt_ratio_el = new TGraphErrors(_gjets_h_zpt_lowlpt_ratio_el);
+    _gjets_gr_zpt_lowlpt_ratio_mu = new TGraphErrors(_gjets_h_zpt_lowlpt_ratio_mu);
+
+    //new TGraphErrors
 
     for (int ix=0; ix<(int)_gjets_h_zmass_zpt->GetNbinsX(); ix++) {
       for (int iy=0; iy<(int)_gjets_h_zmass_zpt->GetNbinsY(); iy++) {
@@ -1767,9 +1782,12 @@ void doGJetsSkim()
   _GJetsZPtWeight = _gjets_h_zpt_ratio->GetBinContent(ipt);
   _GJetsZPtWeightEl = _gjets_h_zpt_ratio_el->GetBinContent(ipt);
   _GJetsZPtWeightMu = _gjets_h_zpt_ratio_mu->GetBinContent(ipt);
-  _GJetsZPtWeightLowLPt = _gjets_h_zpt_lowlpt_ratio->GetBinContent(ipt);
-  _GJetsZPtWeightLowLPtEl = _gjets_h_zpt_lowlpt_ratio_el->GetBinContent(ipt);
-  _GJetsZPtWeightLowLPtMu = _gjets_h_zpt_lowlpt_ratio_mu->GetBinContent(ipt);
+  //_GJetsZPtWeightLowLPt = _gjets_h_zpt_lowlpt_ratio->GetBinContent(ipt);
+  //_GJetsZPtWeightLowLPtEl = _gjets_h_zpt_lowlpt_ratio_el->GetBinContent(ipt);
+  //_GJetsZPtWeightLowLPtMu = _gjets_h_zpt_lowlpt_ratio_mu->GetBinContent(ipt);
+  _GJetsZPtWeightLowLPt = _gjets_gr_zpt_lowlpt_ratio->Eval(_llnunu_l1_pt);
+  _GJetsZPtWeightLowLPtEl = _gjets_gr_zpt_lowlpt_ratio_el->Eval(_llnunu_l1_pt);
+  _GJetsZPtWeightLowLPtMu = _gjets_gr_zpt_lowlpt_ratio_mu->Eval(_llnunu_l1_pt);
 
   // get photon phi weight
   if (_doGJetsSkimAddPhiWeight) {
