@@ -1,6 +1,6 @@
 #!/bin/sh
 
-outdir=gjetsmc1
+outdir=gjetsmc10
 #outdir=gjetsmc2
 #outdir=gjetsmc3
 config=run_xzz2l2nu_80x_cfg_photon_mc.py

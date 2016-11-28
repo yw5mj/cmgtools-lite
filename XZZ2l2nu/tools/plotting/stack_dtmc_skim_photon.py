@@ -33,7 +33,7 @@ cutChain=options.cutChain
 
 LogY=options.LogY
 test=options.test
-doRhoScale=False
+doRhoScale=True
 doVtxScale=False
 
 scale='(1)'
@@ -72,8 +72,10 @@ paveText="#sqrt{s} = 13 TeV 2016 L = "+"{:.3}".format(float(lumi))+" fb^{-1}"
 
 
 cuts_loose='(1)'
+cuts_tight='llnunu_l1_pt>50'
 
 if cutChain=='loosecut': cuts=cuts_loose
+elif cutChain=='tight': cuts=cuts_tight
 else : cuts=cuts_loose
 
 cuts = '('+cuts+')'
@@ -120,7 +122,7 @@ for sample in znnSamples:
     allPlotters[sample] = znnPlotters[-1]
 
 ZNN = MergedPlotter(znnPlotters)
-ZNN.setFillProperties(1001,ROOT.kOrange)
+ZNN.setFillProperties(1001,ROOT.kMagenta)
 
 
 wPlotters=[]
@@ -139,12 +141,16 @@ for sample in wSamples:
     allPlotters[sample] = wPlotters[-1]
 
 W = MergedPlotter(wPlotters)
-W.setFillProperties(1001,ROOT.kOrange)
+W.setFillProperties(1001,ROOT.kRed)
 
 
 gjetsPlotters=[]
 gjetsSamples = [
-'GJet_Pt_20toInf_DoubleEMEnriched_NoRecoil',
+#'GJet_Pt_20toInf_DoubleEMEnriched',
+'GJets_HT100to200',
+'GJets_HT200to400',
+'GJets_HT400to600',
+'GJets_HT600toInf',
 ]
 
 for sample in gjetsSamples:
@@ -157,25 +163,25 @@ for sample in gjetsSamples:
     allPlotters[sample] = gjetsPlotters[-1]
 
 GJETS = MergedPlotter(gjetsPlotters)
-GJETS.setFillProperties(1001,ROOT.kOrange)
+GJETS.setFillProperties(1001,ROOT.kBlue-6)
 
-#QCD_HT1000to1500_BIG.root
-#QCD_HT1500to2000_BIG.root
-#QCD_HT2000toInf_BIG.root
-#QCD_HT200to300_BIG.root
-#QCD_HT300to500_BIG.root
-#QCD_HT500to700_BIG.root
-#QCD_HT700to1000_BIG.root
 
 qcdPlotters=[]
 qcdSamples = [
-'QCD_Pt20to30_EMEnriched',
-'QCD_Pt30to50_EMEnriched',
+#'QCD_Pt20to30_EMEnriched',
+#'QCD_Pt30to50_EMEnriched',
 'QCD_Pt50to80_EMEnriched',
 'QCD_Pt80to120_EMEnriched',
 'QCD_Pt120to170_EMEnriched',
 'QCD_Pt170to300_EMEnriched',
 'QCD_Pt300toInf_EMEnriched',
+#'QCD_HT200to300_BIG',
+#'QCD_HT300to500_BIG',
+#'QCD_HT500to700_BIG',
+#'QCD_HT700to1000_BIG',
+#'QCD_HT1000to1500_BIG',
+#'QCD_HT1500to2000_BIG',
+#'QCD_HT2000toInf_BIG',
 ]
 
 for sample in qcdSamples:
@@ -188,7 +194,7 @@ for sample in qcdSamples:
     allPlotters[sample] = qcdPlotters[-1]
 
 QCD = MergedPlotter(qcdPlotters)
-QCD.setFillProperties(1001,ROOT.kOrange)
+QCD.setFillProperties(1001,ROOT.kGreen+2)
 
 tPlotters=[]
 tSamples = [
@@ -210,7 +216,7 @@ for sample in tSamples:
     allPlotters[sample] = tPlotters[-1]
 
 T = MergedPlotter(tPlotters)
-T.setFillProperties(1001,ROOT.kOrange)
+T.setFillProperties(1001,ROOT.kAzure-9)
 
 
 dataPlotters=[]
@@ -219,6 +225,7 @@ dataSamples = [
 ]
 for sample in dataSamples:
     dataPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
+    dataPlotters[-1].addCorrectionFactor('GJetsPreScaleWeight','prescale')
 
 
 Data = MergedPlotter(dataPlotters)
@@ -245,9 +252,9 @@ tag+='_'
 
 if test: 
     Stack.drawStack('nVert', cuts, str(lumi*1000), 50, 0.0, 50.0, titlex = "N vertices", units = "",output=tag+'nVert',outDir=outdir,separateSignal=sepSig)
-#    Stack.drawStack('rho', cuts, str(lumi*1000), 50, 0.0, 50.0, titlex = "#rho", units = "",output=tag+'rho',outDir=outdir,separateSignal=sepSig)
-#    Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 100, 0.0, 500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt_low',outDir=outdir,separateSignal=sepSig)
-#    Stack.drawStack('llnunu_l2_pt', cuts, str(lumi*1000), 100, 0, 500, titlex = "MET", units = "GeV",output=tag+'met_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
+    Stack.drawStack('rho', cuts, str(lumi*1000), 50, 0.0, 50.0, titlex = "#rho", units = "",output=tag+'rho',outDir=outdir,separateSignal=sepSig)
+    Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 100, 0.0, 500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt_low',outDir=outdir,separateSignal=sepSig)
+    Stack.drawStack('llnunu_l2_pt', cuts, str(lumi*1000), 100, 0, 500, titlex = "MET", units = "GeV",output=tag+'met_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
 #    Stack.drawStack('llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi)', cuts, str(lumi*1000), 100, -200, 200.0, titlex = "MET_{#parallel}", units = "GeV",output=tag+'met_para',outDir=outdir,separateSignal=sepSig)
     #Stack.drawStack('llnunu_l2_pt*sin(llnunu_l2_phi-llnunu_l1_phi)', cuts, str(lumi*1000), 100, -200, 200.0, titlex = "MET_{#perp}", units = "GeV",output=tag+'met_perp',outDir=outdir,separateSignal=sepSig)
 

@@ -122,13 +122,17 @@ if test==1:
     #selectedComponents = [SinglePhoton_Run2016D_PromptReco_v2]
     #selectedComponents = [SinglePhoton_Run2016G_PromptReco_v1]
     #selectedComponents = [SinglePhoton_Run2016F_PromptReco_v1]
-    selectedComponents = [GJet_Pt_20toInf_DoubleEMEnriched]
+    #selectedComponents = [GJet_Pt_20toInf_DoubleEMEnriched]
     #selectedComponents = [GJet_Pt_40toInf_DoubleEMEnriched]
     #selectedComponents = [GJet_Pt_20to40_DoubleEMEnriched, GJet_Pt_40toInf_DoubleEMEnriched]
     #selectedComponents = [GJet_Pt_20toInf_DoubleEMEnriched, GJet_Pt_20to40_DoubleEMEnriched, GJet_Pt_40toInf_DoubleEMEnriched]
     #selectedComponents = [SingleMuon_Run2015D_Promptv4,SingleElectron_Run2015D_Promptv4]
     #selectedComponents = [SingleMuon_Run2015C_25ns_16Dec]
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2] 
+    #selectedComponents = [GJets_HT40to100,GJets_HT100to200,GJets_HT200to400,GJets_HT400to600,GJets_HT600toInf,]
+    #selectedComponents = [GJets_HT40to100]
+    #selectedComponents = [QCD_HT100to200]
+    selectedComponents = [QCD_HT200to300]
     #selectedComponents = SingleMuon+SingleElectron
     #selectedComponents = [SingleMuon_Run2016B_PromptReco_v2,SingleElectron_Run2016B_PromptReco_v2] 
     #selectedComponents = [SingleMuon_Run2016D_PromptReco_v2,SingleElectron_Run2016D_PromptReco_v2] 
@@ -144,9 +148,10 @@ if test==1:
     #selectedComponents = [BulkGravToZZ_narrow_800]
     #selectedComponents = [BulkGravToZZToZlepZhad_narrow_800]
     for c in selectedComponents:
-        c.files = c.files[3:10]
+        #c.files = c.files[3:10]
         #c.splitFactor = (len(c.files)/5 if len(c.files)>5 else 1)
-        c.splitFactor = 1
+        #c.splitFactor = 1
+        c.splitFactor = len(c.files)
         #c.triggers=triggers_1mu_noniso
         #c.triggers=triggers_1e_noniso
 
