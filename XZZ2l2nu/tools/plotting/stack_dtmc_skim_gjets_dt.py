@@ -218,13 +218,13 @@ for sample in zjetsSamples:
         zjetsPlotters[-1].addCorrectionFactor('GJetsPreScaleWeight','PreScaleWeight')
         if channel=='el' : 
             zjetsPlotters[-1].addCorrectionFactor('GJetsZPtWeightEl','genWeight')
-            zjetsPlotters[-1].addCorrectionFactor('(2.04127)','norm') #el
+            zjetsPlotters[-1].addCorrectionFactor('(2.03831)','norm') #el
         elif channel=='mu' : 
             zjetsPlotters[-1].addCorrectionFactor('GJetsZPtWeightMu','genWeight')
-            zjetsPlotters[-1].addCorrectionFactor('(137.006)','norm') #mu
+            zjetsPlotters[-1].addCorrectionFactor('(173.157)','norm') #mu
         else : 
             zjetsPlotters[-1].addCorrectionFactor('GJetsZPtWeight','genWeight')
-            zjetsPlotters[-1].addCorrectionFactor('(138.917)','norm') #all
+            zjetsPlotters[-1].addCorrectionFactor('(174.999)','norm') #all
     else:
         zjetsPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
         if ZJetsZPtWeight: zjetsPlotters[-1].addCorrectionFactor('ZPtWeight','ZPtWeight')
@@ -419,13 +419,14 @@ tag+='_'
 
 
 if test: 
-    Stack.drawStack('nVert', cuts, str(lumi*1000), 70, 0.0, 70.0, titlex = "N vertices", units = "",output=tag+'nVert',outDir=outdir,separateSignal=sepSig)
-    Stack.drawStack('rho', cuts, str(lumi*1000), 70, 0.0, 70.0, titlex = "#rho", units = "",output=tag+'rho',outDir=outdir,separateSignal=sepSig)
-    Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 50, 0.0, 500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt_low',outDir=outdir,separateSignal=sepSig)
+#    Stack.drawStack('nVert', cuts, str(lumi*1000), 70, 0.0, 70.0, titlex = "N vertices", units = "",output=tag+'nVert',outDir=outdir,separateSignal=sepSig)
+#    Stack.drawStack('rho', cuts, str(lumi*1000), 70, 0.0, 70.0, titlex = "#rho", units = "",output=tag+'rho',outDir=outdir,separateSignal=sepSig)
+#    Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 50, 0.0, 500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt_low',outDir=outdir,separateSignal=sepSig)
     Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 50, 0.0, 1000.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt',outDir=outdir,separateSignal=sepSig)
-    Stack.drawStack('llnunu_mt_to_plot', cuts, str(lumi*1000), 50, 100.0, 600.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
+#    Stack.drawStack('llnunu_mt_to_plot', cuts, str(lumi*1000), 50, 100.0, 600.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
 
-    Stack.drawStack('llnunu_l2_pt_to_plot', cuts, str(lumi*1000), 50, 0, 500, titlex = "MET", units = "GeV",output=tag+'met_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
+#    Stack.drawStack('llnunu_l2_pt_to_plot', cuts, str(lumi*1000), 50, 0, 500, titlex = "MET", units = "GeV",output=tag+'met_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
+#    Stack.drawStack('llnunu_l2_pt_to_plot', cuts, str(lumi*1000), 50, 0, 1000, titlex = "MET", units = "GeV",output=tag+'met',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
 
 else: 
     Stack.drawStack('nVert', cuts, str(lumi*1000), 70, 0.0, 70.0, titlex = "N vertices", units = "",output=tag+'nVert',outDir=outdir,separateSignal=sepSig)
