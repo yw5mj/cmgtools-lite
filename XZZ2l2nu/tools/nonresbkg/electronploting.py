@@ -78,6 +78,7 @@ cuts_met200="(llnunu_l2_pt>200)"
 cuts=''
 if "metzpt30" in tag:cuts=cuts_zmass+'&&(llnunu_l1_pt>30)&&(llnunu_l2_pt>30)'
 elif "metzpt50" in tag:cuts=cuts_zmass+'&&(llnunu_l1_pt>50)&&(llnunu_l2_pt>50)'
+elif "metzpt60" in tag:cuts=cuts_zmass+'&&(llnunu_l1_pt>60)&&(llnunu_l2_pt>60)'
 elif "metzpt100" in tag:cuts=cuts_zmass+'&&(llnunu_l1_pt>100)&&(llnunu_l2_pt>100)'
 elif "zveto" in tag:cuts=cuts_zmass
 elif "full" in tag:cuts=cuts_zmassin
