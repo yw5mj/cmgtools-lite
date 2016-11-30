@@ -27,11 +27,11 @@ std::string filename;
 std::string outputdir = "./recoil_out6";
 std::vector< std::string > channels = {"all", "mu", "el"};
 std::vector< std::string > mcfiles = {
-    "DYJetsToLL_M50_BIG_NoRecoil", 
+    "DYJetsToLL_M50_BIG_ResBos_NoRecoil", 
  };
 
 std::vector< std::string > dtfiles = {
-    "SingleEMU_Run2016B2H_ReReco_36p1fbinv"
+    "SingleEMU_Run2016B2H_ReReco_36p22fbinv"
  };
 
 std::vector< std::string > gjfiles = {
@@ -56,10 +56,10 @@ std::vector< std::string > gjfiles = {
 
 char name[1000];
 TCanvas* plots;
-//std::string tag0 = "_DtB2H29fbinv";
-std::string tag0 = "_RhoWt";
+//std::string tag0 = "_36p22";
+//std::string tag0 = "_RhoWt";
 //std::string tag0 = "_VtxWt";
-//std::string tag0 = "";
+std::string tag0 = "";
 //std::string tag0 = "_newfilterlepveto";
 //std::string tag0 = "_newfilteretaphicut";
 //std::string tag0 = "_newfilter";
@@ -165,8 +165,11 @@ void do_fit_met_para(std::string& infilename, std::string& chan) {
   std::string cuts_lepaccept_lowlpt="((abs(llnunu_l1_l1_pdgId)==13&&abs(llnunu_l1_l2_pdgId)==13&&llnunu_l1_l1_pt>20&&abs(llnunu_l1_l1_eta)<2.4&&llnunu_l1_l2_pt>20&&abs(llnunu_l1_l2_eta)<2.4&&(llnunu_l1_l1_highPtID==1||llnunu_l1_l2_highPtID==1))";
   cuts_lepaccept_lowlpt+="||(abs(llnunu_l1_l1_pdgId)==11&&abs(llnunu_l1_l2_pdgId)==11&&llnunu_l1_l1_pt>20&&abs(llnunu_l1_l1_eta)<2.5&&llnunu_l1_l2_pt>20&&abs(llnunu_l1_l2_eta)<2.5))";
   std::string cuts_zmass="(llnunu_l1_mass>70&&llnunu_l1_mass<110)";
-  std::string cuts_loose_z="("+metfilter+"&&"+cuts_lepaccept+"&&"+cuts_zmass+")";
-  std::string cuts_loose_z_lowlpt="("+metfilter+"&&"+cuts_lepaccept_lowlpt+"&&"+cuts_zmass+")";
+  //std::string cuts_loose_z="("+metfilter+"&&"+cuts_lepaccept+"&&"+cuts_zmass+")";
+  //std::string cuts_loose_z_lowlpt="("+metfilter+"&&"+cuts_lepaccept_lowlpt+"&&"+cuts_zmass+")";
+  // metfilter pre-applied already for full dataset
+  std::string cuts_loose_z="("+cuts_lepaccept+"&&"+cuts_zmass+")";
+  std::string cuts_loose_z_lowlpt="("+cuts_lepaccept_lowlpt+"&&"+cuts_zmass+")";
 
 
   std::string cuts_rho="(rho<22)";
