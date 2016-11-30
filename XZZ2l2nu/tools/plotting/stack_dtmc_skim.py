@@ -68,10 +68,10 @@ if doVtxScale:
     tag+="VtxWt_"
     lepsf=lepsf+"*(0.807+0.007*nVert+-3.689e-05*nVert*nVert+6.730e-04*exp(2.500e-01*nVert))" # b2h rereco 33.59fb-1
 
-outdir='plots_b2h36p1fbinv'
+outdir='plots_36p22'
 
 indir='/home/heli/XZZ/80X_20161029_light_Skim'
-lumi=36.1
+lumi=36.22
 sepSig=True
 doRatio=True
 #Blind=True
@@ -148,7 +148,9 @@ if channel=='el': cuts = cuts+'&&'+elChannel
 elif channel=='mu': cuts = cuts+'&&'+muChannel
 
 if UseMETFilter:
-    cuts = cuts+'&&'+metfilter
+    #cuts = '('+cuts+'&&'+metfilter+')'
+    cuts = '('+cuts+')' # metfilter pre-applied in preskim
+
 
 if UseRhoCut:
     cuts = cuts+'&&'+rhoCut
@@ -216,8 +218,8 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 
 zjetsPlotters=[]
-#zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H36p1fbinv']
-zjetsSamples = ['DYJetsToLL_M50_BIG_RcDataB2H36p1fbinvRhoWt']
+zjetsSamples = ['DYJetsToLL_M50_BIG_Rc36p22']
+#zjetsSamples = ['DYJetsToLL_M50_BIG_ResBos_Rc36p22']
 #zjetsSamples = ['DYJetsToLL_M50_BIG_NoRecoil']
 
 
@@ -235,16 +237,16 @@ for sample in zjetsSamples:
     zjetsPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     zjetsPlotters[-1].addCorrectionFactor(lepsf,'lepsf')
     if channel=='el' :
-        #zjetsPlotters[-1].addCorrectionFactor('(1.08859)','scale') #el with rho<22 cut
-        zjetsPlotters[-1].addCorrectionFactor('(1.09989)','scale') #el
+        #zjetsPlotters[-1].addCorrectionFactor('(0.985054)','scale') #el ResBos
+        zjetsPlotters[-1].addCorrectionFactor('(1.06937)','scale') #el
         #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #el
     elif channel=='mu' :
-        #zjetsPlotters[-1].addCorrectionFactor('(1.13569)','scale') #mu with rho<22 cut
-        zjetsPlotters[-1].addCorrectionFactor('(1.13519)','scale') #mu
+        #zjetsPlotters[-1].addCorrectionFactor('(1.11546)','scale') #mu ResBos
+        zjetsPlotters[-1].addCorrectionFactor('(1.12403)','scale') #mu
         #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #mu
     else :
-        #zjetsPlotters[-1].addCorrectionFactor('(1.13511)','scale') #all with rho<22 cut
-        zjetsPlotters[-1].addCorrectionFactor('(1.13462)','scale') #all
+        #zjetsPlotters[-1].addCorrectionFactor('(1.11376)','scale') #all ResBos
+        zjetsPlotters[-1].addCorrectionFactor('(1.12337)','scale') #all
         #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #all
     allPlotters[sample] = zjetsPlotters[-1]
 
@@ -254,7 +256,6 @@ ZJets = MergedPlotter(zjetsPlotters)
 ZJets.setFillProperties(1001,ROOT.kGreen+2)
 
 ttPlotters=[]
-#ttSamples = ['TTTo2L2Nu']
 ttSamples = ['TTTo2L2Nu','TTZToLLNuNu','TTWJetsToLNu']
 
 for sample in ttSamples:
@@ -352,10 +353,7 @@ for sample in sigSamples:
 
 dataPlotters=[]
 dataSamples = [
-'SingleEMU_Run2016B2H_ReReco_36p1fbinv', 
-#'SingleEMU_Run2016B2H_ReReco_33fbinv', 
-#'SingleEMU_Run2016B2H29fbinv_PromptReco', 
-#'SingleEMU_Run2016B2G_PromptReco', 
+'SingleEMU_Run2016B2H_ReReco_36p22fbinv',
 ]
 for sample in dataSamples:
     dataPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
@@ -376,7 +374,6 @@ Stack.addPlotter(Data, "data_obs", "Data", "data")
 Stack.addPlotter(WW, "NonReso","WW/WZ/WJets non-reson.", "background")
 Stack.addPlotter(TT, "TT","TT", "background")
 Stack.addPlotter(VV, "VVZReso","ZZ WZ reson.", "background")
-#Stack.addPlotter(ggZZ, "ggZZ","ggZZ", "background")
 Stack.addPlotter(ZJets, "ZJets","ZJets", "background")
 
 
@@ -395,9 +392,9 @@ tag+='_'
 if test: 
     Stack.drawStack('nVert', cuts, str(lumi*1000), 70, 0.0, 70.0, titlex = "N vertices", units = "",output=tag+'nVert',outDir=outdir,separateSignal=sepSig)
     Stack.drawStack('rho', cuts, str(lumi*1000), 70, 0.0, 70.0, titlex = "#rho", units = "",output=tag+'rho',outDir=outdir,separateSignal=sepSig)
-    Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 50, 0.0, 500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt_low',outDir=outdir,separateSignal=sepSig)
-#    Stack.drawStack('llnunu_l1_mass', cuts, str(lumi*1000), 50, 50, 150, titlex = "M(Z)", units = "GeV",output=tag+'zmass',outDir=outdir,separateSignal=sepSig)
-#    Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 50, 100.0, 600.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
+    Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 75, 0.0, 1500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt',outDir=outdir,separateSignal=sepSig)
+    Stack.drawStack('llnunu_l1_mass', cuts, str(lumi*1000), 50, 50, 150, titlex = "M(Z)", units = "GeV",output=tag+'zmass',outDir=outdir,separateSignal=sepSig)
+    Stack.drawStack('llnunu_mt', cuts, str(lumi*1000), 55, 100.0, 1200.0, titlex = "M_{T}", units = "GeV",output=tag+'mt',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
 
     Stack.drawStack('llnunu_l2_pt', cuts, str(lumi*1000), 50, 0, 500, titlex = "MET", units = "GeV",output=tag+'met_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
     Stack.drawStack('llnunu_l2_pt*cos(llnunu_l2_phi-llnunu_l1_phi)', cuts, str(lumi*1000), 100, -200, 200.0, titlex = "MET_{#parallel}", units = "GeV",output=tag+'met_para',outDir=outdir,separateSignal=sepSig)
@@ -470,7 +467,7 @@ else:
     Stack.drawStack('TMath::Tan((TMath::Pi()-TMath::Abs(llnunu_l1_deltaPhi))/2.0)*TMath::Sin(TMath::ACos(TMath::TanH((llnunu_l1_l1_eta-llnunu_l1_l2_eta)/2.0)))', cuts, str(lumi*1000), 100, 0.0, 10, titlex = "#phi_{#eta}*", units = "",output=tag+'PhiStar',outDir=outdir,separateSignal=sepSig)
   
 
-    if DrawLeptons and chennel=='mu':
+    if DrawLeptons and channel=='mu':
         Stack.drawStack('llnunu_l1_l1_pt', cuts+"&&(abs(llnunu_l1_l1_pdgId)==13)", str(lumi*1000), 100, 0.0, 1000.0, titlex = "P_{T}(#mu_{1})", units = "GeV",output=tag+'pTlep1_mu',outDir=outdir,separateSignal=sepSig)
         Stack.drawStack('llnunu_l1_l1_eta', cuts+"&&(abs(llnunu_l1_l1_pdgId)==13)", str(lumi*1000), 30, -3.0, 3.0, titlex = "#eta(#mu_{1})", units = "",output=tag+'etalep1_mu',outDir=outdir,separateSignal=sepSig)
         Stack.drawStack('llnunu_l1_l1_phi', cuts+"&&(abs(llnunu_l1_l1_pdgId)==13)", str(lumi*1000), 32, -3.2, 3.2, titlex = "#phi(#mu_{1})", units = "",output=tag+'philep1_mu',outDir=outdir,separateSignal=sepSig)

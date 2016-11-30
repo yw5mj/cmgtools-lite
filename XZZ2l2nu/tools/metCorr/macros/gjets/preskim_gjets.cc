@@ -125,7 +125,7 @@ int main(int argc, char** argv) {
 
   // EE- flag
   //tree->SetAlias("flg1eem", "(eta<-1.566&&!((ieta==44&&iphi==31)||(ieta==46&&iphi==31)||(ieta==47&&iphi==32)||(ieta==50&&iphi==31)||(ieta==61&&iphi==32)||(ieta==43&&iphi==33)||(ieta==37&&iphi==34)||(ieta==61&&iphi==34)||(ieta==37&&iphi==65)||(ieta==23&&iphi==21)||(ieta==59&&iphi==29)||(ieta==58&&iphi==30)||(ieta==46&&iphi==32)||(ieta==41&&iphi==33)||(ieta==46&&iphi==33)||(ieta==61&&iphi==35)||(ieta==38&&iphi==36)||(ieta==38&&iphi==64)||(ieta==68&&iphi==28)||(ieta==59&&iphi==30)||(ieta==36&&iphi==31)||(ieta==43&&iphi==32)||(ieta==42&&iphi==33)||(ieta==41&&iphi==34)||(ieta==59&&iphi==34)||(ieta==36&&iphi==35)||(ieta==37&&iphi==37)||(ieta==43&&iphi==69)||(ieta==58&&iphi==69)||(ieta==52&&iphi==74)||(ieta==36&&iphi==26)||(ieta==46&&iphi==27)||(ieta==49&&iphi==30)||(ieta==36&&iphi==32)||(ieta==37&&iphi==32)||(ieta==42&&iphi==32)||(ieta==38&&iphi==33)||(ieta==58&&iphi==33)||(ieta==63&&iphi==34)||(ieta==39&&iphi==65)||(ieta==37&&iphi==66)||(ieta==41&&iphi==68)||(ieta==59&&iphi==68)||(ieta==62&&iphi==70)||(ieta==49&&iphi==71)||(ieta==55&&iphi==71)||(ieta==51&&iphi==72)))");
-  tree->SetAlias("flg1eem", "(eta>1.566)");
+  tree->SetAlias("flg1eem", "(eta<-1.566)");
 
 
   //tree->SetAlias("filter1", "(gjet_l1_sigmaIetaIeta>0.001&&gjet_l1_sigmaIphiIphi>0.001&&gjet_l1_SwissCross<0.95&&gjet_l1_mipTotE<4.9&&gjet_l1_time>-2.08&&gjet_l1_time<0.92)");

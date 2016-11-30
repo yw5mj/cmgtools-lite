@@ -11,8 +11,9 @@ g++ preskim_gjets.cc -o preskim_gjets.exe `root-config --cflags` `root-config --
 #samples="ZJetsToNuNu_HT*_BIG"
 #samples="W*"
 #samples="GJet_Pt*"
-samples="GJets_HT*"
+#samples="GJets_HT*"
 #samples="QCD_*_BIG"
+samples="QCD_HT100to200*_BIG"
 #samples="QCD_*_EMEnriched"
 #samples="T*"
 indir=/data2/XZZ2/80X_20161029_GJets

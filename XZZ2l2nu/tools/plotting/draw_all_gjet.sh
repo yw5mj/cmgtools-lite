@@ -1,8 +1,9 @@
 #!/bin/sh
 
 
-tag="GJets_36p22_"
-#tag="Test1_GJets_36p22_"
+#tag="GJets_36p22_"
+#tag="Test_GJets_36p22_PtFit_ResBos_"
+tag="GJets_36p22_PtFit_ResBos_"
 
 channels="all mu el"
 #cutChains="tightzpt50 tightzpt100 tightzpt100met50"
