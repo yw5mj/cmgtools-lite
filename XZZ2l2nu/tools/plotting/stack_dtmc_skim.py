@@ -218,8 +218,8 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 
 
 zjetsPlotters=[]
-zjetsSamples = ['DYJetsToLL_M50_BIG_Rc36p22']
-#zjetsSamples = ['DYJetsToLL_M50_BIG_ResBos_Rc36p22']
+#zjetsSamples = ['DYJetsToLL_M50_BIG_Rc36p22']
+zjetsSamples = ['DYJetsToLL_M50_BIG_ResBos_Rc36p22']
 #zjetsSamples = ['DYJetsToLL_M50_BIG_NoRecoil']
 
 
@@ -237,16 +237,16 @@ for sample in zjetsSamples:
     zjetsPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     zjetsPlotters[-1].addCorrectionFactor(lepsf,'lepsf')
     if channel=='el' :
-        #zjetsPlotters[-1].addCorrectionFactor('(0.985054)','scale') #el ResBos
-        zjetsPlotters[-1].addCorrectionFactor('(1.06937)','scale') #el
+        zjetsPlotters[-1].addCorrectionFactor('(0.985054)','scale') #el ResBos
+        #zjetsPlotters[-1].addCorrectionFactor('(1.06937)','scale') #el
         #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #el
     elif channel=='mu' :
-        #zjetsPlotters[-1].addCorrectionFactor('(1.11546)','scale') #mu ResBos
-        zjetsPlotters[-1].addCorrectionFactor('(1.12403)','scale') #mu
+        zjetsPlotters[-1].addCorrectionFactor('(1.11546)','scale') #mu ResBos
+        #zjetsPlotters[-1].addCorrectionFactor('(1.12403)','scale') #mu
         #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #mu
     else :
-        #zjetsPlotters[-1].addCorrectionFactor('(1.11376)','scale') #all ResBos
-        zjetsPlotters[-1].addCorrectionFactor('(1.12337)','scale') #all
+        zjetsPlotters[-1].addCorrectionFactor('(1.11376)','scale') #all ResBos
+        #zjetsPlotters[-1].addCorrectionFactor('(1.12337)','scale') #all
         #zjetsPlotters[-1].addCorrectionFactor('(1)','scale') #all
     allPlotters[sample] = zjetsPlotters[-1]
 
