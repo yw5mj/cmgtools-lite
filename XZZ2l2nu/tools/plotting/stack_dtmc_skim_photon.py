@@ -121,6 +121,22 @@ for sample in znnSamples:
 ZNN = MergedPlotter(znnPlotters)
 ZNN.setFillProperties(1001,ROOT.kMagenta)
 
+znngPlotters=[]
+znngSamples = [
+'ZNuNuGJetsGt130',
+]
+
+for sample in znngSamples:
+    znngPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
+    znngPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
+    znngPlotters[-1].addCorrectionFactor('xsec','xsec')
+    znngPlotters[-1].addCorrectionFactor('genWeight','genWeight')
+    znngPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
+    znngPlotters[-1].addCorrectionFactor(scale,'scale')
+
+ZNNG = MergedPlotter(znngPlotters)
+ZNNG.setFillProperties(1001,ROOT.kMagenta+2)
+
 
 wPlotters=[]
 wSamples = [
@@ -174,7 +190,6 @@ WJETS.setFillProperties(1001,ROOT.kRed+3)
 
 gjetsPlotters=[]
 gjetsSamples = [
-#'GJet_Pt_20toInf_DoubleEMEnriched',
 'GJets_HT100to200',
 'GJets_HT200to400',
 'GJets_HT400to600',
@@ -191,6 +206,22 @@ for sample in gjetsSamples:
 
 GJETS = MergedPlotter(gjetsPlotters)
 GJETS.setFillProperties(1001,ROOT.kBlue-6)
+
+gjetsemPlotters=[]
+gjetsemSamples = [
+'GJet_Pt_20toInf_DoubleEMEnriched',
+]
+
+for sample in gjetsemSamples:
+    gjetsemPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
+    gjetsemPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
+    gjetsemPlotters[-1].addCorrectionFactor('xsec','xsec')
+    gjetsemPlotters[-1].addCorrectionFactor('genWeight','genWeight')
+    gjetsemPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
+    gjetsemPlotters[-1].addCorrectionFactor(scale,'scale')
+
+GJETSEM = MergedPlotter(gjetsemPlotters)
+GJETSEM.setFillProperties(1001,ROOT.kBlue-3)
 
 
 qcdPlotters=[]
@@ -262,12 +293,14 @@ Stack = StackPlotter(outTag=tag, outDir=outdir)
 Stack.setPaveText(paveText)
 Stack.addPlotter(Data, "data_obs", "#gamma Data", "data")
 Stack.addPlotter(ZNN, "ZNN","Z->#nu#nu", "background")
+Stack.addPlotter(ZNNG, "ZNNG","Z#gamma->#nu#nu#gamma", "background")
 Stack.addPlotter(T, "T","Top", "background")
 Stack.addPlotter(ZLL, "ZLL","Z->ll", "background")
 #Stack.addPlotter(W, "W","W/WW", "background")
 Stack.addPlotter(WGToLNuG, "WGToLNuG","W#gamma->l#nu#gamma", "background")
 Stack.addPlotter(WJETS, "WJets","W->l#nu", "background")
 Stack.addPlotter(GJETS, "GJETS","#gamma+jets", "background")
+#Stack.addPlotter(GJETSEM, "GJETSEM","#gamma+jets EmEnrich", "background")
 Stack.addPlotter(QCD, "QCD","QCD", "background")
 
  
