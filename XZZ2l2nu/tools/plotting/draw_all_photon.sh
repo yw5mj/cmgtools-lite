@@ -1,10 +1,10 @@
 #!/bin/sh
 
 
-tag="Test1_Photon_GJHT_RhoWt_QCD50plus_"
+tag="Test_Photon_"
 #cutChains="loosecut"
 cutChains="tight"
-logdir="log_ph_b2h36p1fbinv"
+logdir="log_ph_36p22"
 
 mkdir -p $logdir
 
