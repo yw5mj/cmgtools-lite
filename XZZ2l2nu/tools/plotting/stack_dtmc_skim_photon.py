@@ -35,6 +35,7 @@ LogY=options.LogY
 test=options.test
 doRhoScale=True
 doVtxScale=False
+doEtaScale=True
 
 scale='(1)'
 
@@ -45,6 +46,10 @@ if doRhoScale:
 if doVtxScale:
     tag+="VtxWt_"
     scale=scale+"*(0.807+0.007*nVert+-3.689e-05*nVert*nVert+6.730e-04*exp(2.500e-01*nVert))" # b2h rereco 33.59fb-1
+
+if doEtaScale:
+    tag+="EtaWt_"
+    scale=scale+"*(0.87*TMath::Gaus(llnunu_l1_eta,0.65,0.56)+0.87*TMath::Gaus(llnunu_l1_eta,-0.65,0.56)+0.65*TMath::Gaus(llnunu_l1_eta,1.90,0.25)+0.65*TMath::Gaus(llnunu_l1_eta,-1.90,0.25))"
 
 outdir='plots_ph_36p22'
 
@@ -123,6 +128,7 @@ ZNN.setFillProperties(1001,ROOT.kMagenta)
 
 znngPlotters=[]
 znngSamples = [
+'ZNuNuGJetsGt40Lt130',
 'ZNuNuGJetsGt130',
 ]
 
@@ -174,7 +180,14 @@ WGToLNuG.setFillProperties(1001,ROOT.kRed-3)
 
 wjetsPlotters=[]
 wjetsSamples = [
-'WJetsToLNu',
+#'WJetsToLNu',
+'WJetsToLNu_HT100to200_BIG',
+'WJetsToLNu_HT1200to2500_BIG',
+'WJetsToLNu_HT200to400_BIG',
+'WJetsToLNu_HT2500toInf_BIG',
+'WJetsToLNu_HT400to600_BIG',
+'WJetsToLNu_HT600to800_BIG',
+'WJetsToLNu_HT800to1200_BIG',
 ]
 
 for sample in wjetsSamples:
@@ -186,10 +199,11 @@ for sample in wjetsSamples:
     wjetsPlotters[-1].addCorrectionFactor(scale,'scale')
 
 WJETS = MergedPlotter(wjetsPlotters)
-WJETS.setFillProperties(1001,ROOT.kRed+3)
+WJETS.setFillProperties(1001,ROOT.kYellow)
 
 gjetsPlotters=[]
 gjetsSamples = [
+#'GJets_HT40to100',
 'GJets_HT100to200',
 'GJets_HT200to400',
 'GJets_HT400to600',
@@ -199,10 +213,14 @@ gjetsSamples = [
 for sample in gjetsSamples:
     gjetsPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
     gjetsPlotters[-1].addCorrectionFactor('1./SumWeights','norm')
+    #gjetsPlotters[-1].addCorrectionFactor('xsec*0.6','xsec')
     gjetsPlotters[-1].addCorrectionFactor('xsec','xsec')
     gjetsPlotters[-1].addCorrectionFactor('genWeight','genWeight')
     gjetsPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     gjetsPlotters[-1].addCorrectionFactor(scale,'scale')
+    gjetsPlotters[-1].addCorrectionFactor('GJetsRhoWeight','rhoweight')
+#    gjetsPlotters[-1].addCorrectionFactor('GJetsZPtWeightMu','GJetsWeight')
+    gjetsPlotters[-1].addCorrectionFactor('(172.883)','GJetsNorm') #mu ResBos
 
 GJETS = MergedPlotter(gjetsPlotters)
 GJETS.setFillProperties(1001,ROOT.kBlue-6)
@@ -226,13 +244,14 @@ GJETSEM.setFillProperties(1001,ROOT.kBlue-3)
 
 qcdPlotters=[]
 qcdSamples = [
-#'QCD_Pt20to30_EMEnriched',
-#'QCD_Pt30to50_EMEnriched',
+'QCD_Pt20to30_EMEnriched',
+'QCD_Pt30to50_EMEnriched',
 'QCD_Pt50to80_EMEnriched',
 'QCD_Pt80to120_EMEnriched',
 'QCD_Pt120to170_EMEnriched',
 'QCD_Pt170to300_EMEnriched',
 'QCD_Pt300toInf_EMEnriched',
+#'QCD_HT100to200_BIG',
 #'QCD_HT200to300_BIG',
 #'QCD_HT300to500_BIG',
 #'QCD_HT500to700_BIG',
@@ -249,6 +268,10 @@ for sample in qcdSamples:
     qcdPlotters[-1].addCorrectionFactor('genWeight','genWeight')
     qcdPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     qcdPlotters[-1].addCorrectionFactor(scale,'scale')
+    qcdPlotters[-1].addCorrectionFactor('GJetsRhoWeight','rhoweight')
+#    qcdPlotters[-1].addCorrectionFactor('GJetsZPtWeightMu','GJetsWeight')
+    qcdPlotters[-1].addCorrectionFactor('(172.883)','GJetsNorm') #mu ResBos
+
 
 QCD = MergedPlotter(qcdPlotters)
 QCD.setFillProperties(1001,ROOT.kGreen+2)
@@ -275,6 +298,19 @@ T = MergedPlotter(tPlotters)
 T.setFillProperties(1001,ROOT.kAzure-9)
 
 
+# all physical met
+phymetPlotters = zllPlotters+znnPlotters+znngPlotters+wgtolnugPlotters+wjetsPlotters+tPlotters
+
+for i in range(len(phymetPlotters)):
+    phymetPlotters[i].addCorrectionFactor('GJetsRhoWeight','rhoweight')
+#    phymetPlotters[i].addCorrectionFactor('GJetsZPtWeightMu','GJetsWeight')
+    phymetPlotters[i].addCorrectionFactor('(172.883)','GJetsNorm') #mu ResBos
+
+PhyMET = MergedPlotter(phymetPlotters)
+PhyMET.setFillProperties(1001, ROOT.kOrange)
+
+
+
 dataPlotters=[]
 dataSamples = [
 'SinglePhoton_Run2016B2H_ReReco_36p22fbinv_NoRecoil'
@@ -283,6 +319,11 @@ for sample in dataSamples:
     dataPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
     dataPlotters[-1].addCorrectionFactor('GJetsPreScaleWeight','prescale')
     dataPlotters[-1].addCorrectionFactor('GJetsRhoWeight','rhoweight')
+#    dataPlotters[-1].addCorrectionFactor('GJetsZPtWeightMu','GJetsWeight')
+    dataPlotters[-1].addCorrectionFactor('(172.883)','GJetsNorm') #mu ResBos
+    dataPlotters[-1].setFillProperties(1,ROOT.k)
+    dataPlotters[-1].setLineProperties(1,ROOT.kBlack,1)
+    dataPlotters[-1].setMarkerProperties(22)
 
 
 Data = MergedPlotter(dataPlotters)
@@ -291,14 +332,16 @@ Data = MergedPlotter(dataPlotters)
 
 Stack = StackPlotter(outTag=tag, outDir=outdir)
 Stack.setPaveText(paveText)
-Stack.addPlotter(Data, "data_obs", "#gamma Data", "data")
-Stack.addPlotter(ZNN, "ZNN","Z->#nu#nu", "background")
-Stack.addPlotter(ZNNG, "ZNNG","Z#gamma->#nu#nu#gamma", "background")
-Stack.addPlotter(T, "T","Top", "background")
-Stack.addPlotter(ZLL, "ZLL","Z->ll", "background")
-#Stack.addPlotter(W, "W","W/WW", "background")
-Stack.addPlotter(WGToLNuG, "WGToLNuG","W#gamma->l#nu#gamma", "background")
-Stack.addPlotter(WJETS, "WJets","W->l#nu", "background")
+#Stack.addPlotter(Data, "data_obs", "#gamma Data", "data")
+Stack.addPlotter(Data, "data_obs", "#gamma Data", "signal")
+Stack.addPlotter(PhyMET, "PhyMET","Physical MET", "background")
+#Stack.addPlotter(ZNN, "ZNN","Z->#nu#nu", "background")
+#Stack.addPlotter(ZNNG, "ZNNG","Z#gamma->#nu#nu#gamma", "background")
+#Stack.addPlotter(T, "T","Top", "background")
+#Stack.addPlotter(ZLL, "ZLL","Z->ll", "background")
+##Stack.addPlotter(W, "W","W/WW", "background")
+#Stack.addPlotter(WGToLNuG, "WGToLNuG","W#gamma->l#nu#gamma", "background")
+#Stack.addPlotter(WJETS, "WJets","W->l#nu", "background")
 Stack.addPlotter(GJETS, "GJETS","#gamma+jets", "background")
 #Stack.addPlotter(GJETSEM, "GJETSEM","#gamma+jets EmEnrich", "background")
 Stack.addPlotter(QCD, "QCD","QCD", "background")

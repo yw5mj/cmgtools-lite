@@ -1,8 +1,10 @@
 #!/bin/sh
 
 
+tag="Test_Photon_PhyMET_NoZWt_DtAsSig_"
+#tag="Test_Photon_PhyMET_ZWt_"
 #tag="Test_Photon_"
-tag="Test_Photon_GJetsEM_NoQCD_"
+#tag="Test_Photon_GJetsEM_NoQCD_"
 #cutChains="loosecut"
 cutChains="tight"
 logdir="log_ph_36p22"
