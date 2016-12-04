@@ -67,7 +67,7 @@ if doGMCEtaScale:
 outdir='plots_gjets_36p22'
 
 indir='/home/heli/XZZ/80X_20161029_light_Skim'
-lumi=36.22
+lumi=36.4592
 sepSig=True
 doRatio=True
 Blind=options.Blind
@@ -153,6 +153,9 @@ cuts = '('+cuts+')'
 ROOT.gROOT.ProcessLine('.x tdrstyle.C') 
 
 
+
+
+#################
 wwPlotters=[]
 wwSamples = ['WWTo2L2Nu','WWToLNuQQ_BIG','WZTo1L1Nu2Q']
 
@@ -207,6 +210,25 @@ WJets.setFillProperties(1001,ROOT.kBlue-6)
 ################################
 # ZJets
 
+
+# parameters for GJets
+gdataLumi=36.22*1000
+gdataYield=3447971384.222
+gdataFidXsec=gdataYield/gdataLumi
+
+zjetsFidXsecAll=158.50536907646062446
+zjetsFidXsecEl =2.0703970677230105757
+zjetsFidXsecMu =156.43497200873761699
+
+zjetsFidXsecAll_up=159.3345561421179184
+zjetsFidXsecEl_up =2.1132602740550670006
+zjetsFidXsecMu_up =157.22129586806292423
+zjetsFidXsecAll_dn=157.67618228330914576
+zjetsFidXsecEl_dn =2.0275338821661335054
+zjetsFidXsecMu_dn =155.64864840114299227
+
+
+
 # for GJets photon bkg subtraction
 
 phymetPlotters=[]
@@ -237,6 +259,12 @@ phymetSamples = [
 'G_TTGJets',
 ]
 
+# all the factors below together normalized each process to the fraction of the process in the gjets data
+#   fidxsec_i / fidxsec_total
+# together with the gdata, we have:
+#  [ fidxsec_total-Sum(fidxsec_i) ]/fidxsec_total * fidxsec_zjets * lumi = zjets_yields
+# an additional scale factor GJetsNorm to absorbe the small difference.
+
 for sample in phymetSamples:
     phymetPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
     phymetPlotters[-1].addCorrectionFactor('-1/SumWeights','norm') # negative weight for subtraction
@@ -244,9 +272,8 @@ for sample in phymetSamples:
     phymetPlotters[-1].addCorrectionFactor('genWeight','genWeight')
     phymetPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     phymetPlotters[-1].addCorrectionFactor(g_scale,'scale')
+    phymetPlotters[-1].addCorrectionFactor(str(1/gdataFidXsec),'frac') # divided by g data fid-xsec
 
-PhyMET = MergedPlotter(phymetPlotters)
-PhyMET.setFillProperties(1001,ROOT.kYellow)
 
 ### the GJets data
 gdataPlotters=[]
@@ -256,52 +283,35 @@ gdataSamples = [
 ]
 
 
+
 for sample in gdataSamples:
     gdataPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
     gdataPlotters[-1].addCorrectionFactor('GJetsPreScaleWeight','GJetsPreScaleWeight')
+    gdataPlotters[-1].addCorrectionFactor(str(1/gdataYield),'GJetsNorm0')
 
 
 # the GJets plotter
-gjetsPlotters = gdataPlotters
-#gjetsPlotters = gdataPlotters+gbkgPlotters
+#gjetsPlotters = gdataPlotters
+gjetsPlotters = gdataPlotters+phymetPlotters
 
 for i in range(len(gjetsPlotters)):
     gjetsPlotters[i].addCorrectionFactor('GJetsRhoWeight','GJetsRhoWeight')
-    gjetsPlotters[i].addCorrectionFactor('(1/3447971384.222)','GJetsNorm0')
     if channel=='el' : 
         gjetsPlotters[i].addCorrectionFactor('GJetsZPtWeightEl','GJetsZPtWeight')
-        gjetsPlotters[i].addCorrectionFactor('(0.985054*2.070397)','GJetsNorm') #el ResBos
-        #gjetsPlotters[i].addCorrectionFactor('(2.03831)','GJetsNorm') #el
+        gjetsPlotters[i].addCorrectionFactor(str(zjetsFidXsecEl),'zjetsFidXsecEl') 
+#        gjetsPlotters[i].addCorrectionFactor('(0.985054)','GJetsNorm') 
     elif channel=='mu' : 
         gjetsPlotters[i].addCorrectionFactor('GJetsZPtWeightMu','GJetsWeight')
-        gjetsPlotters[i].addCorrectionFactor('(1.11546*156.434972)','GJetsNorm') #mu ResBos
-        #gjetsPlotters[i].addCorrectionFactor('(173.157)','GJetsNorm') #mu
+        gjetsPlotters[i].addCorrectionFactor(str(zjetsFidXsecMu),'zjetsFidXsecMu') 
+        gjetsPlotters[i].addCorrectionFactor('(1.12206)','GJetsNorm')
     else : 
         gjetsPlotters[i].addCorrectionFactor('GJetsZPtWeight','GJetsWeight')
-        gjetsPlotters[i].addCorrectionFactor('(1.11376*158.505369)','GJetsNorm') #all ResBos
-        #gjetsPlotters[i].addCorrectionFactor('(174.999)','GJetsNorm') #all
+        gjetsPlotters[i].addCorrectionFactor(str(zjetsFidXsecAll),'zjetsFidXsecAll') 
+        gjetsPlotters[i].addCorrectionFactor('(1.10104)','GJetsNorm')
+
 
 GJets = MergedPlotter(gjetsPlotters)
 GJets.setFillProperties(1001,ROOT.kGreen+2)
-
-for i in range(len(phymetPlotters)):
-    phymetPlotters[i].addCorrectionFactor('GJetsRhoWeight','GJetsRhoWeight')
-    if channel=='el' :
-        phymetPlotters[i].addCorrectionFactor('GJetsZPtWeightEl','GJetsZPtWeight')
-        #phymetPlotters[i].addCorrectionFactor('(2.08026)','GJetsNorm') #el ResBos
-        #phymetPlotters[i].addCorrectionFactor('(2.03831)','GJetsNorm') #el
-    elif channel=='mu' :
-        phymetPlotters[i].addCorrectionFactor('GJetsZPtWeightMu','GJetsWeight')
-        #phymetPlotters[i].addCorrectionFactor('(172.883)','GJetsNorm') #mu ResBos
-        #phymetPlotters[i].addCorrectionFactor('(173.157)','GJetsNorm') #mu
-    else :
-        phymetPlotters[i].addCorrectionFactor('GJetsZPtWeight','GJetsWeight')
-        #phymetPlotters[i].addCorrectionFactor('(174.521)','GJetsNorm') #all ResBos
-        #phymetPlotters[i].addCorrectionFactor('(174.999)','GJetsNorm') #all
-
-PhyMET = MergedPlotter(phymetPlotters)
-PhyMET.setFillProperties(1001,ROOT.kYellow)
-
 
 ##
 # choose GJets or ZJets MC
@@ -466,48 +476,16 @@ else:
     ZJets.setAlias('llnunu_l2_phi_to_plot', 'llnunu_l2_phi')
     ZJets.setAlias('llnunu_mt_to_plot', 'llnunu_mt')
 
-if dyGJets and channel=='el':
-    GJets.setAlias('llnunu_l1_mass_to_plot', 'llnunu_l1_mass_el')
-    GJets.setAlias('llnunu_l2_pt_to_plot', 'llnunu_l2_pt_el')
-    GJets.setAlias('llnunu_l2_phi_to_plot', 'llnunu_l2_phi_el')
-    GJets.setAlias('llnunu_mt_to_plot', 'llnunu_mt_el')
-elif dyGJets and channel=='mu':
-    GJets.setAlias('llnunu_l1_mass_to_plot', 'llnunu_l1_mass_mu')
-    GJets.setAlias('llnunu_l2_pt_to_plot', 'llnunu_l2_pt_mu')
-    GJets.setAlias('llnunu_l2_phi_to_plot', 'llnunu_l2_phi_mu')
-    GJets.setAlias('llnunu_mt_to_plot', 'llnunu_mt_mu')
-else:
-    GJets.setAlias('llnunu_l1_mass_to_plot', 'llnunu_l1_mass')
-    GJets.setAlias('llnunu_l2_pt_to_plot', 'llnunu_l2_pt')
-    GJets.setAlias('llnunu_l2_phi_to_plot', 'llnunu_l2_phi')
-    GJets.setAlias('llnunu_mt_to_plot', 'llnunu_mt')
 
-if dyGJets and channel=='el':
-    PhyMET.setAlias('llnunu_l1_mass_to_plot', 'llnunu_l1_mass_el')
-    PhyMET.setAlias('llnunu_l2_pt_to_plot', 'llnunu_l2_pt_el')
-    PhyMET.setAlias('llnunu_l2_phi_to_plot', 'llnunu_l2_phi_el')
-    PhyMET.setAlias('llnunu_mt_to_plot', 'llnunu_mt_el')
-elif dyGJets and channel=='mu':
-    PhyMET.setAlias('llnunu_l1_mass_to_plot', 'llnunu_l1_mass_mu')
-    PhyMET.setAlias('llnunu_l2_pt_to_plot', 'llnunu_l2_pt_mu')
-    PhyMET.setAlias('llnunu_l2_phi_to_plot', 'llnunu_l2_phi_mu')
-    PhyMET.setAlias('llnunu_mt_to_plot', 'llnunu_mt_mu')
-else:
-    PhyMET.setAlias('llnunu_l1_mass_to_plot', 'llnunu_l1_mass')
-    PhyMET.setAlias('llnunu_l2_pt_to_plot', 'llnunu_l2_pt')
-    PhyMET.setAlias('llnunu_l2_phi_to_plot', 'llnunu_l2_phi')
-    PhyMET.setAlias('llnunu_mt_to_plot', 'llnunu_mt')
 
 Stack = StackPlotter(outTag=tag, outDir=outdir)
 Stack.setPaveText(paveText)
 Stack.addPlotter(Data, "data_obs", "Data", "data")
-#Stack.addPlotter(WJets, "WJets","W+Jets", "background")
 Stack.addPlotter(WW, "NonReso","WW/WZ/WJets non-reson.", "background")
-#Stack.addPlotter(PhyMET, "PhyMET","#gamma+Jets BKG", "background")
 Stack.addPlotter(TT, "TT","TT", "background")
 Stack.addPlotter(VV, "VVZReso","ZZ WZ reson.", "background")
-Stack.addPlotter(ZJets, "ZJets","ZJets(#gamma+Jets)", "background")
-
+if dyGJets: Stack.addPlotter(ZJets, "ZJets","ZJets(#gamma+Jets)", "background")
+else: Stack.addPlotter(ZJets, "ZJets","ZJets(MC)", "background")
 
 for i in range(len(sigSamples)):
   sigPlotters[i].setLineProperties(2,ROOT.kRed+i,2)
@@ -526,12 +504,14 @@ if test:
 #    Stack.drawStack('nVert', cuts, str(lumi*1000), 100, 0.0, 100.0, titlex = "N vertices", units = "",output=tag+'nVert',outDir=outdir,separateSignal=sepSig)
 #    Stack.drawStack('rho', cuts, str(lumi*1000), 55, 0.0, 55.0, titlex = "#rho", units = "",output=tag+'rho',outDir=outdir,separateSignal=sepSig)
 #    Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 50, 0.0, 500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt_low',outDir=outdir,separateSignal=sepSig)
-    Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 75, 0.0, 1500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt',outDir=outdir,separateSignal=sepSig)
-#    Stack.drawStack('llnunu_mt_to_plot', cuts, str(lumi*1000), 50, 100.0, 600.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
+#    Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 75, 0.0, 1500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt',outDir=outdir,separateSignal=sepSig)
+    Stack.drawStack('llnunu_mt_to_plot', cuts, str(lumi*1000), 50, 100.0, 600.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
 
 #    Stack.drawStack('llnunu_l2_pt_to_plot', cuts, str(lumi*1000), 50, 0, 500, titlex = "MET", units = "GeV",output=tag+'met_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
     Stack.drawStack('llnunu_l2_pt_to_plot', cuts, str(lumi*1000), 50, 0, 1000, titlex = "MET", units = "GeV",output=tag+'met',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
-#    Stack.drawStack('fabs(llnunu_l1_pt+llnunu_l2_pt_to_plot*cos(llnunu_l2_phi_to_plot-llnunu_l1_phi))', cuts, str(lumi*1000), 100, 0, 1000, titlex = "#Delta P_{T}^{#parallel}(Z,MET)", units = "GeV",output=tag+'dPTPara',outDir=outdir,separateSignal=sepSig)
+    Stack.drawStack('llnunu_l2_pt_to_plot*cos(llnunu_l2_phi_to_plot-llnunu_l1_phi)', cuts, str(lumi*1000), 100, -200, 200.0, titlex = "MET_{#parallel}", units = "GeV",output=tag+'met_para',outDir=outdir,separateSignal=sepSig)
+#    Stack.drawStack('llnunu_l2_pt_to_plot*sin(llnunu_l2_phi_to_plot-llnunu_l1_phi)', cuts, str(lumi*1000), 100, -200, 200.0, titlex = "MET_{#perp}", units = "GeV",output=tag+'met_perp',outDir=outdir,separateSignal=sepSig)
+    Stack.drawStack('fabs(TVector2::Phi_mpi_pi(llnunu_l2_phi_to_plot-llnunu_l1_phi))', cuts, str(lumi*1000), 50, 0, 5, titlex = "#Delta#phi(Z,MET)", units = "",output=tag+'dphiZMet',outDir=outdir,separateSignal=sepSig)
 
 else: 
     Stack.drawStack('nVert', cuts, str(lumi*1000), 100, 0.0, 100.0, titlex = "N vertices", units = "",output=tag+'nVert',outDir=outdir,separateSignal=sepSig)
