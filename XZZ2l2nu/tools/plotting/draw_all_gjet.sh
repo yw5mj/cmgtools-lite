@@ -1,23 +1,8 @@
 #!/bin/sh
 
 
-#tag="GJets_36p22_"
-#tag="Test_GJets_36p22_PtFit_ResBos_"
-#tag="GJets_36p22_PtFit_ResBos_"
-#tag="GJets_PtFit_ResBos_BkgSub_"
-#tag="GJets_PtFit_ResBos_NoBkgSub_"
-#tag="GJets_PtFit_ResBos_BkgSub_Rc36p22_"
-#tag="Test2_GJets_PtFit_ResBos_NoBkgSub_Rc36p22wHLT_"
-#tag="Test1_GJets_PtFit_ResBos_NoBkgSub_Rc36p22wHLT_"
-tag="Test2_GJets_PtFit_ResBos_BkgSub_Rc36p22wHLT_"
-#tag="Test1_GJets_PtFit_ResBos_BkgSub_Rc36p22wHLT_"
-#tag="Test2_GJets_PtFit_ResBos_BkgSub_Rc36p22_"
-#tag="Test1_GJets_PtFit_ResBos_BkgSub_Rc36p22_"
-#tag="Test1_GJets_PtFit_ResBos_BkgSub_"
-#tag="Test1_GJets_PtFit_ResBos_NoBkgSub_"
-#tag="Test1_GJets_PtFit_ResBos_NoBkgSub_Rc36p22_"
-#tag="Test2_GJets_PtFit_ResBos_NoBkgSub_Rc36p22_"
-#tag="Test1_GJets_PtFit_ResBos_SepBkgSub_"
+tag="Test1_GJets_ResBos_BkgSub_Rc36p46wHLT_"
+#tag="Test1_GJets_ResBos_NoBkgSub_Rc36p46wHLT_"
 
 channels="mu el"
 #channels="all mu el"
@@ -26,7 +11,7 @@ channels="mu el"
 cutChains="tightzpt50"
 #cutChains="tightzpt100"
 #cutChains="tightzptgt50lt200"
-logdir="log_gjets_36p22"
+logdir="log_gjets_36p46"
 
 mkdir -p $logdir
 

@@ -1,12 +1,12 @@
 
 
 std::string channel = "all";
-bool doMC = true;
-bool doGJets = false;
+bool doMC = false;
+bool doGJets = true;
 bool useZSelecLowLPt = false;
-bool useNPUCut = true; // true for MC 80x old mc, not for data, not for GJets
-bool useEffSf = true;
-bool mcTrgSf = true;
+bool useNPUCut = false; // true for MC 80x old mc, not for data, not for GJets
+bool useEffSf = false;
+bool mcTrgSf = false;
 bool dtTrgSf = false;
 bool dtHLT = false;
 
@@ -17,51 +17,26 @@ bool dtHLT = false;
 // 4.) for GJets: doGJets=true, doMC=false, useZSelecLowLPt=true, useEffSf=false
 
 std::string inputdir = "/home/heli/XZZ/80X_20161029_light_Skim";
-//std::string inputdir = "/data2/XZZ2/80X_20161018_light_Skim";
-//std::string inputdir = "/home/heli/XZZ/80X_20161006_light_Skim";
-//std::string inputdir = "/home/heli/XZZ/80X_20160810_light_Skim";
-//std::string inputdir = "/home/heli/XZZ/80X_20160825_light_Skim";
-//std::string inputdir = "/home/heli/XZZ/80X_20160927_light_Skim";
 std::string filename;
 
-std::string outputdir = "./recoil_out6";
+std::string outputdir = "./recoil_out7";
 std::vector< std::string > channels = {"all", "mu", "el"};
 std::vector< std::string > mcfiles = {
     "DYJetsToLL_M50_BIG_ResBos_NoRecoil", 
  };
 
 std::vector< std::string > dtfiles = {
-    "SingleEMU_Run2016B2H_ReReco_36p22fbinv"
+    "SingleEMU_Run2016B2H_ReReco_36p46"
  };
 
 std::vector< std::string > gjfiles = {
-    "SinglePhoton_Run2016B2H_ReReco_36p22fbinv_ResBos_NoRecoil"
+    "SinglePhoton_Run2016B2H_ReReco_36p46_ResBos_NoRecoil"
  };
 
 
 char name[1000];
 TCanvas* plots;
-//std::string tag0 = "_36p22";
-//std::string tag0 = "_RhoWt";
-//std::string tag0 = "_VtxWt";
 std::string tag0 = "";
-//std::string tag0 = "_newfilterlepveto";
-//std::string tag0 = "_newfilteretaphicut";
-//std::string tag0 = "_newfilter";
-//std::string tag0 = "_smbin";
-//std::string tag0 = "_smbin_id3";
-//std::string tag0 = "_smbin_id2";
-//std::string tag0 = "_hlt";
-//std::string tag0 = "_hltno75";
-//std::string tag0 = "_hlt_phvto";
-//std::string tag0 = "_hlt_flag2";
-//std::string tag0 = "_hlt_flag2_smbin";
-//std::string tag0 = "_hlt_flag3_f2_sIetaCut";
-//std::string tag0 = "_smbin_hlt_phvto_id3";
-//std::string tag0 = "_hltno90";
-//std::string tag0 = "_hlt_id2";
-//std::string tag0 = "_hlt_id3";
-//std::string tag0 = "_smbin_hlt";
 std::string base_selec;
 std::string lumiTag;
 
