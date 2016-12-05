@@ -273,13 +273,26 @@ for sample in phymetSamples:
     phymetPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     phymetPlotters[-1].addCorrectionFactor(g_scale,'scale')
     phymetPlotters[-1].addCorrectionFactor(str(1/gdataFidXsec),'frac') # divided by g data fid-xsec
-
+    if channel=='el' :
+        gjetsPlotters[i].addCorrectionFactor('GJetsZPtWeightEl','GJetsZPtWeight')
+        gjetsPlotters[i].addCorrectionFactor(str(zjetsFidXsecEl),'zjetsFidXsecEl')
+        gjetsPlotters[i].addCorrectionFactor('(0.999)','GJetsNorm')
+    elif channel=='mu' :
+        gjetsPlotters[i].addCorrectionFactor('GJetsZPtWeightMu','GJetsZPtWeight')
+        gjetsPlotters[i].addCorrectionFactor(str(zjetsFidXsecMu),'zjetsFidXsecMu')
+        gjetsPlotters[i].addCorrectionFactor('(1.12206)','GJetsNorm')
+    else :
+        gjetsPlotters[i].addCorrectionFactor('GJetsZPtWeight','GJetsZPtWeight')
+        gjetsPlotters[i].addCorrectionFactor(str(zjetsFidXsecAll),'zjetsFidXsecAll')
+        gjetsPlotters[i].addCorrectionFactor('(1.10104)','GJetsNorm')
 
 ### the GJets data
 gdataPlotters=[]
 gdataSamples = [
 #'SinglePhoton_Run2016B2H_ReReco_36p22fbinv_NoRecoil',
-'SinglePhoton_Run2016B2H_ReReco_36p22fbinv_ResBos_NoRecoil',
+#'SinglePhoton_Run2016B2H_ReReco_36p22fbinv_ResBos_NoRecoil',
+#'SinglePhoton_Run2016B2H_ReReco_36p22fbinv_ResBos_Rc36p22',
+'SinglePhoton_Run2016B2H_ReReco_36p22fbinv_ResBos_Rc36p22wHLT',
 ]
 
 
@@ -287,25 +300,37 @@ gdataSamples = [
 for sample in gdataSamples:
     gdataPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
     gdataPlotters[-1].addCorrectionFactor('GJetsPreScaleWeight','GJetsPreScaleWeight')
+    gdataPlotters[-1].addCorrectionFactor('GJetsRhoWeight','GJetsRhoWeight')
     gdataPlotters[-1].addCorrectionFactor(str(1/gdataYield),'GJetsNorm0')
-
-
+'''
+    if channel=='el' :
+        gdataPlotters[-1].addCorrectionFactor('GJetsZPtWeightEl','GJetsZPtWeight')
+        gdataPlotters[-1].addCorrectionFactor(str(zjetsFidXsecEl),'zjetsFidXsecEl')
+        gdataPlotters[-1].addCorrectionFactor('(0.999)','GJetsNorm')
+    elif channel=='mu' :
+        gdataPlotters[-1].addCorrectionFactor('GJetsZPtWeightMu','GJetsZPtWeight')
+        gdataPlotters[-1].addCorrectionFactor(str(zjetsFidXsecMu),'zjetsFidXsecMu')
+        gdataPlotters[-1].addCorrectionFactor('(1.12206)','GJetsNorm')
+    else :
+        gdataPlotters[-1].addCorrectionFactor('GJetsZPtWeight','GJetsZPtWeight')
+        gdataPlotters[-1].addCorrectionFactor(str(zjetsFidXsecAll),'zjetsFidXsecAll')
+        gdataPlotters[-1].addCorrectionFactor('(1.10104)','GJetsNorm')
+'''
 # the GJets plotter
 #gjetsPlotters = gdataPlotters
 gjetsPlotters = gdataPlotters+phymetPlotters
 
 for i in range(len(gjetsPlotters)):
-    gjetsPlotters[i].addCorrectionFactor('GJetsRhoWeight','GJetsRhoWeight')
     if channel=='el' : 
         gjetsPlotters[i].addCorrectionFactor('GJetsZPtWeightEl','GJetsZPtWeight')
         gjetsPlotters[i].addCorrectionFactor(str(zjetsFidXsecEl),'zjetsFidXsecEl') 
-#        gjetsPlotters[i].addCorrectionFactor('(0.985054)','GJetsNorm') 
+        gjetsPlotters[i].addCorrectionFactor('(0.999)','GJetsNorm') 
     elif channel=='mu' : 
-        gjetsPlotters[i].addCorrectionFactor('GJetsZPtWeightMu','GJetsWeight')
+        gjetsPlotters[i].addCorrectionFactor('GJetsZPtWeightMu','GJetsZPtWeight')
         gjetsPlotters[i].addCorrectionFactor(str(zjetsFidXsecMu),'zjetsFidXsecMu') 
         gjetsPlotters[i].addCorrectionFactor('(1.12206)','GJetsNorm')
     else : 
-        gjetsPlotters[i].addCorrectionFactor('GJetsZPtWeight','GJetsWeight')
+        gjetsPlotters[i].addCorrectionFactor('GJetsZPtWeight','GJetsZPtWeight')
         gjetsPlotters[i].addCorrectionFactor(str(zjetsFidXsecAll),'zjetsFidXsecAll') 
         gjetsPlotters[i].addCorrectionFactor('(1.10104)','GJetsNorm')
 
@@ -505,12 +530,12 @@ if test:
 #    Stack.drawStack('rho', cuts, str(lumi*1000), 55, 0.0, 55.0, titlex = "#rho", units = "",output=tag+'rho',outDir=outdir,separateSignal=sepSig)
 #    Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 50, 0.0, 500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt_low',outDir=outdir,separateSignal=sepSig)
 #    Stack.drawStack('llnunu_l1_pt', cuts, str(lumi*1000), 75, 0.0, 1500.0, titlex = "P_{T}(Z)", units = "GeV",output=tag+'zpt',outDir=outdir,separateSignal=sepSig)
-    Stack.drawStack('llnunu_mt_to_plot', cuts, str(lumi*1000), 50, 100.0, 600.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
+#    Stack.drawStack('llnunu_mt_to_plot', cuts, str(lumi*1000), 50, 100.0, 600.0, titlex = "M_{T}", units = "GeV",output=tag+'mt_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=300)
 
 #    Stack.drawStack('llnunu_l2_pt_to_plot', cuts, str(lumi*1000), 50, 0, 500, titlex = "MET", units = "GeV",output=tag+'met_low',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
     Stack.drawStack('llnunu_l2_pt_to_plot', cuts, str(lumi*1000), 50, 0, 1000, titlex = "MET", units = "GeV",output=tag+'met',outDir=outdir,separateSignal=sepSig,blinding=Blind,blindingCut=200)
     Stack.drawStack('llnunu_l2_pt_to_plot*cos(llnunu_l2_phi_to_plot-llnunu_l1_phi)', cuts, str(lumi*1000), 100, -200, 200.0, titlex = "MET_{#parallel}", units = "GeV",output=tag+'met_para',outDir=outdir,separateSignal=sepSig)
-#    Stack.drawStack('llnunu_l2_pt_to_plot*sin(llnunu_l2_phi_to_plot-llnunu_l1_phi)', cuts, str(lumi*1000), 100, -200, 200.0, titlex = "MET_{#perp}", units = "GeV",output=tag+'met_perp',outDir=outdir,separateSignal=sepSig)
+    Stack.drawStack('llnunu_l2_pt_to_plot*sin(llnunu_l2_phi_to_plot-llnunu_l1_phi)', cuts, str(lumi*1000), 100, -200, 200.0, titlex = "MET_{#perp}", units = "GeV",output=tag+'met_perp',outDir=outdir,separateSignal=sepSig)
     Stack.drawStack('fabs(TVector2::Phi_mpi_pi(llnunu_l2_phi_to_plot-llnunu_l1_phi))', cuts, str(lumi*1000), 50, 0, 5, titlex = "#Delta#phi(Z,MET)", units = "",output=tag+'dphiZMet',outDir=outdir,separateSignal=sepSig)
 
 else: 

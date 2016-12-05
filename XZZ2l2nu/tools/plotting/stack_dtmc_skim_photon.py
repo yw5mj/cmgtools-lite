@@ -54,7 +54,7 @@ if doEtaScale:
 outdir='plots_ph_36p22'
 
 indir='/home/heli/XZZ/80X_20161029_GJets_light_Skim'
-lumi=36.22
+lumi=36.46
 sepSig=True
 doRatio=True
 Blind=options.Blind
@@ -218,13 +218,14 @@ for sample in gjetsSamples:
     gjetsPlotters[-1].addCorrectionFactor('genWeight','genWeight')
     gjetsPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     gjetsPlotters[-1].addCorrectionFactor(scale,'scale')
-    gjetsPlotters[-1].addCorrectionFactor('GJetsRhoWeight','rhoweight')
+#    gjetsPlotters[-1].addCorrectionFactor('GJetsRhoWeight','rhoweight')
 #    gjetsPlotters[-1].addCorrectionFactor('GJetsZPtWeightMu','GJetsWeight')
-    gjetsPlotters[-1].addCorrectionFactor('(172.883)','GJetsNorm') #mu ResBos
+#    gjetsPlotters[-1].addCorrectionFactor('(172.883)','GJetsNorm') #mu ResBos
 
 GJETS = MergedPlotter(gjetsPlotters)
 GJETS.setFillProperties(1001,ROOT.kBlue-6)
 
+'''
 gjetsemPlotters=[]
 gjetsemSamples = [
 'GJet_Pt_20toInf_DoubleEMEnriched',
@@ -240,7 +241,7 @@ for sample in gjetsemSamples:
 
 GJETSEM = MergedPlotter(gjetsemPlotters)
 GJETSEM.setFillProperties(1001,ROOT.kBlue-3)
-
+'''
 
 qcdPlotters=[]
 qcdSamples = [
@@ -268,9 +269,9 @@ for sample in qcdSamples:
     qcdPlotters[-1].addCorrectionFactor('genWeight','genWeight')
     qcdPlotters[-1].addCorrectionFactor(puWeight,'puWeight')
     qcdPlotters[-1].addCorrectionFactor(scale,'scale')
-    qcdPlotters[-1].addCorrectionFactor('GJetsRhoWeight','rhoweight')
+#    qcdPlotters[-1].addCorrectionFactor('GJetsRhoWeight','rhoweight')
 #    qcdPlotters[-1].addCorrectionFactor('GJetsZPtWeightMu','GJetsWeight')
-    qcdPlotters[-1].addCorrectionFactor('(172.883)','GJetsNorm') #mu ResBos
+#    qcdPlotters[-1].addCorrectionFactor('(172.883)','GJetsNorm') #mu ResBos
 
 
 QCD = MergedPlotter(qcdPlotters)
@@ -301,10 +302,10 @@ T.setFillProperties(1001,ROOT.kAzure-9)
 # all physical met
 phymetPlotters = zllPlotters+znnPlotters+znngPlotters+wgtolnugPlotters+wjetsPlotters+tPlotters
 
-for i in range(len(phymetPlotters)):
-    phymetPlotters[i].addCorrectionFactor('GJetsRhoWeight','rhoweight')
+#for i in range(len(phymetPlotters)):
+#    phymetPlotters[i].addCorrectionFactor('GJetsRhoWeight','rhoweight')
 #    phymetPlotters[i].addCorrectionFactor('GJetsZPtWeightMu','GJetsWeight')
-    phymetPlotters[i].addCorrectionFactor('(172.883)','GJetsNorm') #mu ResBos
+#    phymetPlotters[i].addCorrectionFactor('(172.883)','GJetsNorm') #mu ResBos
 
 PhyMET = MergedPlotter(phymetPlotters)
 PhyMET.setFillProperties(1001, ROOT.kOrange)
@@ -313,17 +314,17 @@ PhyMET.setFillProperties(1001, ROOT.kOrange)
 
 dataPlotters=[]
 dataSamples = [
-'SinglePhoton_Run2016B2H_ReReco_36p22fbinv_NoRecoil'
+#'SinglePhoton_Run2016B2H_ReReco_36p22fbinv_NoRecoil'
+'SinglePhoton_Run2016B2H_ReReco_36p22fbinv_ResBos_Rc36p22'
 ]
 for sample in dataSamples:
     dataPlotters.append(TreePlotter(sample, indir+'/'+sample+'.root','tree'))
     dataPlotters[-1].addCorrectionFactor('GJetsPreScaleWeight','prescale')
     dataPlotters[-1].addCorrectionFactor('GJetsRhoWeight','rhoweight')
 #    dataPlotters[-1].addCorrectionFactor('GJetsZPtWeightMu','GJetsWeight')
-    dataPlotters[-1].addCorrectionFactor('(172.883)','GJetsNorm') #mu ResBos
-    dataPlotters[-1].setFillProperties(1,ROOT.k)
-    dataPlotters[-1].setLineProperties(1,ROOT.kBlack,1)
-    dataPlotters[-1].setMarkerProperties(22)
+#    dataPlotters[-1].addCorrectionFactor('(172.883)','GJetsNorm') #mu ResBos
+#    dataPlotters[-1].setLineProperties(1,ROOT.kBlack,1)
+#    dataPlotters[-1].setMarkerProperties(22)
 
 
 Data = MergedPlotter(dataPlotters)
@@ -332,8 +333,8 @@ Data = MergedPlotter(dataPlotters)
 
 Stack = StackPlotter(outTag=tag, outDir=outdir)
 Stack.setPaveText(paveText)
-#Stack.addPlotter(Data, "data_obs", "#gamma Data", "data")
-Stack.addPlotter(Data, "data_obs", "#gamma Data", "signal")
+Stack.addPlotter(Data, "data_obs", "#gamma Data", "data")
+#Stack.addPlotter(Data, "data_obs", "#gamma Data", "signal")
 Stack.addPlotter(PhyMET, "PhyMET","Physical MET", "background")
 #Stack.addPlotter(ZNN, "ZNN","Z->#nu#nu", "background")
 #Stack.addPlotter(ZNNG, "ZNNG","Z#gamma->#nu#nu#gamma", "background")
