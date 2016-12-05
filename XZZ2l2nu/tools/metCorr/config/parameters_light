@@ -211,6 +211,7 @@ RecoilInputFileNameGJets_el:  data/recoil/SinglePhoton_Run2016B2H_ReReco_36p22fb
 #====================================================================
 addEffScale: true
 addEffScaleOnData: true
+addEMuTrgScale: false
 # input files
 EffScaleInputFileName_IdIso_El: data/eff/egammaEffi.txt_SF2D.root
 EffScaleInputFileName_Trk_El: data/eff/egammatracking.root
