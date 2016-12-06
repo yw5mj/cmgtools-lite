@@ -59,6 +59,9 @@ storeOldBranches: false
 #====================================================================
 addPUWeights: true
 
+# PU weight protection, not greater than the value below
+PUWeightProtectionCut: 10
+
 # PU input files directory
 PUInputDir: data/pileup
 

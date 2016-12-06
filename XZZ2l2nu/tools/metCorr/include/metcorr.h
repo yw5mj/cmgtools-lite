@@ -126,6 +126,8 @@ bool _storeOldBranches = false;
 // add PU weights
 //=========================
 bool _addPUWeights = true;
+// protect pu weight not greater than this value
+double _PUWeightProtectionCut = 1000;
 // PU input files directory
 std::string _PUInputDir;
 // PU input tags, "puWeight<tag>" branches will be added

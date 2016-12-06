@@ -207,6 +207,7 @@ void readConfigFile()
   // add PU weights
   //=========================
   _addPUWeights = parm.GetBool("addPUWeights", kTRUE);
+  _PUWeightProtectionCut = parm.GetDouble("PUWeightProtectionCut", 1000);
 
   if (_addPUWeights) {
     _PUTags = parm.GetVString("PUTags");
@@ -650,6 +651,8 @@ void addPUWeights()
   // for each puWeight, get the weight
   for (int i=0; i<(int)_PUTags.size(); i++){
     *(_PUWeights.at(i)) = _PUHists.at(i)->GetBinContent(_PUHists.at(i)->FindBin(_nTrueInt));
+    // protect over big PU weight
+    if ( *(_PUWeights.at(i))>_PUWeightProtectionCut ) *(_PUWeights.at(i)) = 1.0; 
   }
 }
 
