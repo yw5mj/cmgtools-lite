@@ -189,6 +189,7 @@ RecoilInputFileNameGJets_el:  data/recoil/SinglePhoton_Run2016B2G_PromptReco_new
 #====================================================================
 addEffScale: false
 addEffScaleOnData: true
+addEMuTrgScale: true
 # input files
 EffScaleInputFileName_IdIso_El: data/eff/egammaEffi.txt_SF2D.root
 EffScaleInputFileName_Trk_El: data/eff/egammatracking.root
@@ -198,7 +199,6 @@ EffScaleInputFileName_Trg_El: data/eff/trigereff_el_b2h33fbinv.root
 EffScaleInputFileName_Trg_Mu: data/eff/trigeff_mu_datab2h33fbinv.root
 
 
-addEffScale: true
 
 
 
